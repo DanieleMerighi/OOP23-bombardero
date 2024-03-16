@@ -1,8 +1,16 @@
 package it.unibo.bombardero.map.impl;
 
+import java.util.List;
+import java.util.ArrayList;
+
+import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.map.api.Map;
 
 public class MapImpl implements Map {
+
+    private final List<Enemy> enemies = new ArrayList<>(); /* Using an arrayList to hold the reference for the four AI enemies */
+    // private final Map< ,Cell  = new HashMap<>();> 
+    // private PlayerPosition, o qualcosa di simile
 
     @Override
     public void addBomb() {
