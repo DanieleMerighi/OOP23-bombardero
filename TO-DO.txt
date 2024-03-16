@@ -1,0 +1,3 @@
+DOMANDA:
+Ho pensato che in Map.java non sono utili i metodi isPlayer e isEnemy, perché tanto non sono collocati nella mappa 
+quindi piuttosto delegherei la ricerca delle posizioni dei Character alle rispettive classi usando dei getter.
