@@ -20,7 +20,7 @@ public class ResourceGetter {
             return ImageIO.read(ClassLoader.getSystemResource(RESOURCE_PATH + name + EXTENSION));
         }
         catch(IOException e) {
-            System.out.println("There was an exception loading " + name + " resource.\n");
+            System.out.println("There was an exception loading " + name + EXTENSION + " resource.\n");
         }
         return null;
     }
