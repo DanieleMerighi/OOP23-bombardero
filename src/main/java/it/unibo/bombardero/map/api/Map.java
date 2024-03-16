@@ -1,4 +1,4 @@
-package it.unibo.bombardero.map.api;
+package it.unibo.bombardero.Map.api;
 
 /**
  * The main class for managing all the aspects of the game arena
