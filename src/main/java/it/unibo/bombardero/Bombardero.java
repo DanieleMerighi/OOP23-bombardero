@@ -1,3 +1,5 @@
+package it.unibo.bombardero;
+
 import it.unibo.bombardero.view.BombarderoWindow;
 
 public class Bombardero {
