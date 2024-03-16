@@ -13,10 +13,11 @@ import javax.imageio.ImageIO;
 public class ResourceGetter {
 
     private final static String RESOURCE_PATH = "it/unibo/bombardero/";
+    private final static String EXTENSION = ".png";
 
     public BufferedImage loadImage(final String name) {
         try {
-            return ImageIO.read(ClassLoader.getSystemResource(RESOURCE_PATH + name));
+            return ImageIO.read(ClassLoader.getSystemResource(RESOURCE_PATH + name + EXTENSION));
         }
         catch(IOException e) {
             System.out.println("There was an exception loading " + name + " resource.\n");
