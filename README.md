@@ -1,4 +1,4 @@
-# Bombardero -- Bomberman Remake
+# Bombardero - Bomberman Remake
 
 Il gruppo si pone come obbiettivo quello di realizzare un videogioco ispirato a Bomberman in cui il giocatore controlla un personaggio che deve navigare attraverso un labirinto a griglia. L'obiettivo principale è uccidere gli avversari, distruggendo gli ostacoli presenti sulla mappa posizionando bombe strategicamente. Il giocatore deve evitare di farsi colpire dalle proprie bombe o da quelle degli avversari (bot). 
 
