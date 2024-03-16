@@ -6,6 +6,15 @@ import java.util.ArrayList;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.map.api.Map;
 
+/* TODO:
+ * Matrice delle celle
+ * Lista dei enemy
+ * Reference to player
+ * generazione ostacoli
+ * chiusura arena dopo un certo tempo
+ * Timer(?)
+ */
+
 public class MapImpl implements Map {
 
     private final List<Enemy> enemies = new ArrayList<>(); /* Using an arrayList to hold the reference for the four AI enemies */
