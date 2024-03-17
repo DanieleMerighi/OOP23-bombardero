@@ -4,7 +4,7 @@ package it.unibo.bombardero.map.api;
  * The main class for managing all the aspects of the game arena
  * @author Federico Bagattoni
  */
-public interface Map {
+public interface GameMap {
 
     void addBomb();
 
