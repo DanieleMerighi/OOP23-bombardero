@@ -1,12 +1,14 @@
 package it.unibo.bombardero.map.api;
 
+import it.unibo.bombardero.cell.Bomb;
+
 /**
  * The main class for managing all the aspects of the game arena
  * @author Federico Bagattoni
  */
 public interface GameMap {
 
-    void addBomb(Pair coordinate);
+    void addBomb(final Bomb bomb, Pair coordinate);
 
     void addEnemy();
 
