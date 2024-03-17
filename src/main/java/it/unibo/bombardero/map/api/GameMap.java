@@ -6,7 +6,7 @@ package it.unibo.bombardero.map.api;
  */
 public interface GameMap {
 
-    void addBomb();
+    void addBomb(Pair coordinate);
 
     void addEnemy();
 
