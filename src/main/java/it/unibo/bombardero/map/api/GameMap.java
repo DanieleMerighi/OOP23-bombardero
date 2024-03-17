@@ -26,5 +26,5 @@ public interface GameMap {
 
     boolean isUnbreakableWall(Pair coordinate);
 
-    boolean isExplosion(Pair coordinate);
+    boolean isFlame(Pair coordinate);
 }
