@@ -8,7 +8,10 @@ import java.util.Map;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;
 import it.unibo.bombardero.cell.Bomb;
+import it.unibo.bombardero.cell.BreakableWall;
 import it.unibo.bombardero.cell.Cell;
+import it.unibo.bombardero.cell.Flame;
+import it.unibo.bombardero.cell.UnbreakableWall;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 
@@ -71,26 +74,22 @@ public class GameMapImpl implements GameMap {
 
     @Override
     public boolean isBomb(Pair coordinate) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isBomb'");
+        return this.map.containsKey(coordinate) && this.map.get(coordinate) instanceof Bomb;
     }
 
     @Override
     public boolean isBreakableWall(Pair coordinate) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isBreakableWall'");
+        return this.map.containsKey(coordinate) && this.map.get(coordinate) instanceof BreakableWall;
     }
 
     @Override
     public boolean isUnbreakableWall(Pair coordinate) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isUnbreakableWall'");
+        return this.map.containsKey(coordinate) && this.map.get(coordinate) instanceof UnbreakableWall;
     }
 
     @Override
-    public boolean isExplosion(Pair coordinate) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isExplosion'");
+    public boolean isFlame(Pair coordinate) {
+        return this.map.containsKey(coordinate) && this.map.get(coordinate) instanceof Flame;
     }
     
 }
