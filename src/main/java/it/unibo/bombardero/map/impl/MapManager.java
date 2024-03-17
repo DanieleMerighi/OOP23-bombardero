@@ -6,4 +6,11 @@ package it.unibo.bombardero.map.impl;
  */
 public class MapManager {
     
+    public void placeUnbreakableObstacles() {
+
+    }
+
+    public void placeBreakableObstacles() {
+        
+    }
 }
