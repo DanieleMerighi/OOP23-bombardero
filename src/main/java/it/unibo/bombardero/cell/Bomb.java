@@ -1,5 +1,5 @@
 package it.unibo.bombardero.cell;
 
-public class Bomb {
+public class Bomb extends Cell {
     
 }
