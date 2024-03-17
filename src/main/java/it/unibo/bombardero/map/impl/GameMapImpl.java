@@ -7,6 +7,7 @@ import java.util.Map;
 
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;
+import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
@@ -32,7 +33,7 @@ public class GameMapImpl implements GameMap {
     }
 
     @Override
-    public void addBomb(Pair coordinate) {
+    public void addBomb(final Bomb bomb, final Pair coordinate) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'addBomb'");
     }
@@ -45,6 +46,7 @@ public class GameMapImpl implements GameMap {
 
     @Override
     public void addPlayer() {
+        
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'addPlayer'");
     }
