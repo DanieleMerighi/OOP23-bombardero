@@ -18,11 +18,11 @@ public interface GameMap {
 
     boolean isEnemy();
 
-    boolean isBomb();
+    boolean isBomb(Pair coordinate);
 
-    boolean isBreakableWall();
+    boolean isBreakableWall(Pair coordinate);
 
-    boolean isUnbreakableWall();
+    boolean isUnbreakableWall(Pair coordinate);
 
-    boolean isExplosion();
+    boolean isExplosion(Pair coordinate);
 }
