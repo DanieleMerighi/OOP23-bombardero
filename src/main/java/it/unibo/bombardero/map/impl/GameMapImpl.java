@@ -32,7 +32,7 @@ public class GameMapImpl implements GameMap {
     }
 
     @Override
-    public void addBomb() {
+    public void addBomb(Pair coordinate) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'addBomb'");
     }
@@ -68,25 +68,25 @@ public class GameMapImpl implements GameMap {
     }
 
     @Override
-    public boolean isBomb() {
+    public boolean isBomb(Pair coordinate) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'isBomb'");
     }
 
     @Override
-    public boolean isBreakableWall() {
+    public boolean isBreakableWall(Pair coordinate) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'isBreakableWall'");
     }
 
     @Override
-    public boolean isUnbreakableWall() {
+    public boolean isUnbreakableWall(Pair coordinate) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'isUnbreakableWall'");
     }
 
     @Override
-    public boolean isExplosion() {
+    public boolean isExplosion(Pair coordinate) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'isExplosion'");
     }
