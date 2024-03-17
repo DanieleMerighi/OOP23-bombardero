@@ -1,5 +1,5 @@
 package it.unibo.bombardero.cell;
 
-public class Flame {
+public class Flame extends Cell {
     
 }

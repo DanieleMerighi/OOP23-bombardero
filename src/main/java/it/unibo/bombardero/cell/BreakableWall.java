@@ -1,5 +1,5 @@
 package it.unibo.bombardero.cell;
 
-public class BreakableWall {
+public class BreakableWall extends Cell {
     
 }
