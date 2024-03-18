@@ -1,5 +1,5 @@
 package it.unibo.bombardero.cell;
 
-public class PowerUp {
+public class PowerUp extends Cell {
     
 }
