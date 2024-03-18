@@ -16,6 +16,7 @@ import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 
 /* TODO:
+ * Fare la mappa statica
  * Matrice delle celle
  * Lista dei enemy
  * Reference to player
