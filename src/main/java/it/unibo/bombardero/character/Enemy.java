@@ -1,20 +1,18 @@
 package it.unibo.bombardero.character;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
 
 
-import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.utils.Utils;
 
 public class Enemy extends Character {
 
     private Stack<Pair> path = new Stack<>();
     Optional<Pair> nextMove = Optional.empty();
-    protected Map<Pair, Cell> map = new HashMap<>();
+    private int[][] map = new int[Utils.ROW][Utils.COL];
     private boolean isDestReachable = true;
     private boolean isBomb = false;
 
@@ -44,5 +42,16 @@ public class Enemy extends Character {
         return 0;
 
     }
+
+    // private void getMap() {
+    //     List<Cell> entities = MapImpl.getEnemies();
+    //     for (int i = 0; i < Utils.ROW; i++) {
+    //         for (int j = 0; j < Utils.COL; j++) {
+    //             if (entities.get(i*Utils.COL + j) instanceof UnbreakableWall) {
+    //                 map[i][j] = 1;
+    //             } else if (entities.get(i*COL + j) instanceof Wall) map[i][j] = 2;
+    //         }
+    //     }
+    // }
    
 }
