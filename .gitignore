@@ -12,3 +12,6 @@ bin/
 .project
 .settings/
 .classpath
+
+# ignore .DS_STORE MacOS System files
+*.DS_STORE
