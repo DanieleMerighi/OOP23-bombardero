@@ -2,6 +2,8 @@ package it.unibo.bombardero.view;
 
 import javax.swing.JFrame;
 import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.GraphicsEnvironment;
 
 /*
  * Qui deve essere fatto il coso per calcolare la dimensione della finestra inset inclusi
@@ -11,11 +13,19 @@ import java.awt.Dimension;
  */
 
 /** 
- * 
+ * A class to compute the scale of the game relative to the window size and display size
  */
 public class ResizingEngine {
 
-    public 
+    private int currentScale;
+    private static double OPTIMAL_HEIGHT_SCALE = 0.5; // The optimal scale for the game is half of the height of the user's screen
+
+    /**
+     * Computes and saves the scale for the current display
+     */
+    public void computeScale() {
+        
+    }   
 
     /**
      * Computes the size that the window has to be in order to display correctly the panel, 
