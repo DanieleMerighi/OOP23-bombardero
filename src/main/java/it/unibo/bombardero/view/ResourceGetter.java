@@ -6,7 +6,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 /** 
- * A class that fetches the files in the resources/ directory given the name
+ * A class that gets the files in the resources/ directory given the name
  * @author Federico Bagattoni   
  */
 
