@@ -15,6 +15,10 @@ public class ResourceGetter {
     private final static String RESOURCE_PATH = "it/unibo/bombardero/";
     private final static String EXTENSION = ".png";
 
+    /**  
+     * Gets a resource named @name
+     * @name the name of the resource to get
+    */
     public BufferedImage loadImage(final String name) {
         try {
             return ImageIO.read(ClassLoader.getSystemResource(RESOURCE_PATH + name + EXTENSION));
