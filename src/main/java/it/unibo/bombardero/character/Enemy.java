@@ -3,7 +3,6 @@ package it.unibo.bombardero.character;
 import java.util.Optional;
 import java.util.Stack;
 
-
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.utils.Utils;
@@ -22,20 +21,54 @@ public class Enemy extends Character {
         super(coord, width, height);
     }
 
+    /*base AI Heuristics*/
     @Override
     protected void update() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        // Detect danger zones (bomb range)
+        detectDangerZones();
+
+        if (isInDangerZone()) {
+            findSafePlaces();
+        } else {
+            // Move towards a target (enemy or unblocked pathway)
+            moveTowardsTarget();
+        }
+    }
+
+    private void detectDangerZones() {
+        // Implementation to detect bomb range and update danger zone status
+    }
+    
+    private boolean isInDangerZone() {
+        // Check if the current position is in a danger zone
+        return false;
+    }
+    
+    private void findSafePlaces() {
+        // Implement logic to find safe places within the grid
+    }
+    
+    private void moveTowardsTarget() {
+        // Implement logic to move towards enemies or unblocked pathways
+    }
+    
+    /* for the future... */
+    private void placeBombsToUnblockPathways() {
+        // Implement logic to place bombs strategically to unblock pathways
+    }
+    
+    private void targetEnemies() {
+        // Implement logic to target nearby enemies and place bombs to eliminate them
     }
 
     public int nextDir() {
-        if(!isDestReachable) {
+        if (!isDestReachable) {
             return 0;
         }
 
         nextMove = Optional.empty();
         path.clear();
-        if(isBomb) {
+        if (isBomb) {
 
         }
 
@@ -44,14 +77,14 @@ public class Enemy extends Character {
     }
 
     // private void getMap() {
-    //     List<Cell> entities = MapImpl.getEnemies();
-    //     for (int i = 0; i < Utils.ROW; i++) {
-    //         for (int j = 0; j < Utils.COL; j++) {
-    //             if (entities.get(i*Utils.COL + j) instanceof UnbreakableWall) {
-    //                 map[i][j] = 1;
-    //             } else if (entities.get(i*COL + j) instanceof Wall) map[i][j] = 2;
-    //         }
-    //     }
+    // List<Cell> entities = MapImpl.getEnemies();
+    // for (int i = 0; i < Utils.ROW; i++) {
+    // for (int j = 0; j < Utils.COL; j++) {
+    // if (entities.get(i*Utils.COL + j) instanceof UnbreakableWall) {
+    // map[i][j] = 1;
+    // } else if (entities.get(i*COL + j) instanceof Wall) map[i][j] = 2;
     // }
-   
+    // }
+    // }
+
 }
