@@ -30,14 +30,14 @@ public class GameMapImpl implements GameMap {
     private final List<Enemy> enemies; /* Using an arrayList to hold the reference for the four AI enemies */
     private final static Map<Pair,Cell> map = new HashMap<>(); /* Using an HashMap to hold the information about the map's tiles */
     private final Player player;
-    private final MapManager mapManager;
+    private final MapManagerImpl mapManager;
     private final static int mapWidth = 13; /* the maps width and height expressed in tiles */
     private final static int mapHeight = 17;
 
     public GameMapImpl(final Player player, final List<Enemy> enemies) {
         this.player = player;
         this.enemies = enemies;
-        this.mapManager = new MapManager();
+        this.mapManager = new MapManagerImpl();
     }
 
     @Override
