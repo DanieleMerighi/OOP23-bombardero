@@ -11,5 +11,7 @@ public interface BombarderoTimer {
     void startTimer();
 
     void updateTimer();
+
+    void getTimeLeft();
     
 }
