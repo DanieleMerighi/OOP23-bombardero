@@ -28,7 +28,7 @@ import it.unibo.bombardero.map.api.Pair;
 public class GameMapImpl implements GameMap {
 
     private final List<Enemy> enemies; /* Using an arrayList to hold the reference for the four AI enemies */
-    private final static Map<Pair,Cell> map = new HashMap<>(); /* Using an HashMap to hold the information about the map's tiles */
+    private final Map<Pair,Cell> map = new HashMap<>(); /* Using an HashMap to hold the information about the map's tiles */
     private final Player player;
     private final MapManagerImpl mapManager;
     private final static int mapWidth = 13; /* the maps width and height expressed in tiles */
