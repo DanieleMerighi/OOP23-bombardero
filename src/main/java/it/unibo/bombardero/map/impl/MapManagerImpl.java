@@ -1,16 +1,31 @@
 package it.unibo.bombardero.map.impl;
 
-/**
- * A class that manages the dynamic aspects of the Arena, particularly the gradual narrowing
- * of the external bounds once the time is up and the generation of the walls
- */
-public class MapManagerImpl {
+import it.unibo.bombardero.map.api.MapManager;
+
+public class MapManagerImpl implements MapManager{
+
+    @Override
+    public void generateBreakableWalls() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'generateBreakableWalls'");
+    }
+
+    @Override
+    public void placeUnbreakableWalls() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'placeUnbreakableWalls'");
+    }
+
+    @Override
+    public void placeNextWall() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'placeNextWall'");
+    }
+
+    @Override
+    public void triggerArenaCollpse() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'triggerArenaCollpse'");
+    }
     
-    public void placeUnbreakableObstacles() {
-
-    }
-
-    public void placeBreakableObstacles() {
-        
-    }
 }
