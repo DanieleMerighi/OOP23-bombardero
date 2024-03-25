@@ -14,6 +14,10 @@ public interface GameMap {
 
     void addPlayer();
 
+    void addUnbreakableWall();
+
+    void addBreakableWall();
+
     void removeEnemy();
 
     boolean isPlayer();
