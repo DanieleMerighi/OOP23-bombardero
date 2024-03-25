@@ -7,5 +7,9 @@ package it.unibo.bombardero.map.api;
  */
 
 public interface BombarderoTimer {
+
+    void startTimer();
+
+    void updateTimer();
     
 }
