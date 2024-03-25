@@ -60,6 +60,18 @@ public class GameMapImpl implements GameMap {
     }
 
     @Override
+    public void addUnbreakableWall() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addUnbreakableWall'");
+    }
+
+    @Override
+    public void addBreakableWall() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addBreakableWall'");
+    }
+
+    @Override
     public void removeEnemy() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'removeEnemy'");
