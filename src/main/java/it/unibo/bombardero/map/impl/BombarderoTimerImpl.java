@@ -25,7 +25,6 @@ public class BombarderoTimerImpl implements BombarderoTimer {
     }
 
     public long getTimeLeft() {
-        updateTimer();
         return this.timeLeft;
     }
 
