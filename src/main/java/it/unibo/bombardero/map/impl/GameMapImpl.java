@@ -60,7 +60,7 @@ public class GameMapImpl implements GameMap {
     }
 
     @Override
-    public void addUnbreakableWall() {
+    public void addUnbreakableWall(Pair coord, Cell wall) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'addUnbreakableWall'");
     }
