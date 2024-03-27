@@ -13,11 +13,6 @@ public class BombarderoTimerImpl implements BombarderoTimer {
     
     private long startTime = 0l;
     private long timeLeft = 0l;
-    private final MapManager manager;
-
-    public BombarderoTimerImpl(MapManager manager) {
-        this.manager = manager;
-    }
 
     @Override
     public void startTimer() {
