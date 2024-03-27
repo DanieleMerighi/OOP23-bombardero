@@ -16,7 +16,8 @@ public interface BombarderoTimer {
     /**
      * Checks if the time is over, if such it alerts the @manager 
      * so the proper changes can be made to the map. 
-     * This method is assumed to be called peiodically
+     * This method is assumed to be called peiodically and after the @startTimer method
+     * has been called at least once. 
      */
     void updateTimer();
 
