@@ -17,5 +17,7 @@ public class Utils {
     public static final int WALL = 3;
     public static final int PLAYER = 4;
 
+    // Valori per il timer
+    private final static long GAME_TIME = 120000l;
     
 }
