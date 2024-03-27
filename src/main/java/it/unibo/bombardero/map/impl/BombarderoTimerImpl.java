@@ -5,12 +5,14 @@ import it.unibo.bombardero.map.api.MapManager;
 import it.unibo.bombardero.utils.Utils;
 
 public class BombarderoTimerImpl implements BombarderoTimer {
-    
-    private long startTime = 0l;
-    private final MapManager manager;
+
+    /* Magic number for formatting the time properly */
     private final static int SECONDS_TO_MILLIS = 1000;
     private final static int MINUTES_TO_SECONDS = 60;
     private final static String TIME_SEPARATOR = ":";
+    
+    private long startTime = 0l;
+    private final MapManager manager;
 
     public BombarderoTimerImpl(MapManager manager) {
         this.manager = manager;
