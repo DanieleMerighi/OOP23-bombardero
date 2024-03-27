@@ -14,17 +14,23 @@ public interface BombarderoTimer {
     void startTimer();
 
     /**
-     * Checks if the time is over, if such it alerts the @manager 
-     * so the proper changes can be made to the map. 
+     * Updates the timer
      * This method is assumed to be called peiodically and after the @startTimer method
      * has been called at least once. 
      */
     void updateTimer();
 
+    /** 
+     * Returns the time left for the logic to check, no formatting is done
+     * @return the time left
+    */
+    long getTimeLeft();
+
     /**
-     * Formats the time properly for displaying as such: "MM:SS"
+     * Formats the time properly for displaying as such: "MM:SS" and 
+     * returns a String type
      * @return the properly formatted time
      */
-    String getTimeLeft();
+    String getFormattedTimeLeft();
     
 }

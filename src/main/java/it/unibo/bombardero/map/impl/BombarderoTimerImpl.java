@@ -12,6 +12,7 @@ public class BombarderoTimerImpl implements BombarderoTimer {
     private final static String TIME_SEPARATOR = ":";
     
     private long startTime = 0l;
+    private long timeLeft = 0l;
     private final MapManager manager;
 
     public BombarderoTimerImpl(MapManager manager) {
@@ -25,13 +26,16 @@ public class BombarderoTimerImpl implements BombarderoTimer {
 
     @Override
     public void updateTimer() {
-        if(System.currentTimeMillis() - startTime >= Utils.GAME_TIME) {
-            manager.triggerArenaCollpse();
-        }
+        this.timeLeft = System.currentTimeMillis() - startTime;
+    }
+
+    public long getTimeLeft() {
+        updateTimer();
+        return this.timeLeft;
     }
 
     @Override
-    public String getTimeLeft() {
+    public String getFormattedTimeLeft() {
         double secondsLeft = (System.currentTimeMillis() - this.startTime)/SECONDS_TO_MILLIS;
         return Double.toString(Math.ceil(secondsLeft/BombarderoTimerImpl.MINUTES_TO_SECONDS)) + 
             BombarderoTimerImpl.TIME_SEPARATOR + 
