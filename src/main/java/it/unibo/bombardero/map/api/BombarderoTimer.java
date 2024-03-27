@@ -12,6 +12,6 @@ public interface BombarderoTimer {
 
     void updateTimer();
 
-    void getTimeLeft();
+    String getTimeLeft();
     
 }
