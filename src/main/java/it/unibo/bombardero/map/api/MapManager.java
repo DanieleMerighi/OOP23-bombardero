@@ -13,6 +13,6 @@ public interface MapManager {
 
     void placeNextWall();
 
-    void triggerArenaCollpse();
+    void triggerArenaCollapse();
 
 }
