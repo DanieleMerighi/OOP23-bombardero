@@ -37,7 +37,7 @@ public class GameMapImpl implements GameMap {
     public GameMapImpl(final Player player, final List<Enemy> enemies) {
         this.player = player;
         this.enemies = enemies;
-        this.mapManager = new MapManagerImpl();
+        this.mapManager = new MapManagerImpl(this);
     }
 
     @Override
