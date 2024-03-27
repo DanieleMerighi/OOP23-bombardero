@@ -9,6 +9,10 @@ public interface MapManager {
 
     void generateBreakableWalls();
 
+    /** 
+     * This method is assumed to be called once and places the unbreakable obstacles
+     * in the map, the placement for the obstacles is always the same
+     */
 	void placeUnbreakableWalls();
 
     void placeNextWall();
