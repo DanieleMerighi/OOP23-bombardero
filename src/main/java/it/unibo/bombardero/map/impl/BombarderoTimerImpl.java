@@ -32,9 +32,9 @@ public class BombarderoTimerImpl implements BombarderoTimer {
     @Override
     public String getFormattedTimeLeft() {
         double secondsLeft = (System.currentTimeMillis() - this.startTime)/SECONDS_TO_MILLIS;
-        return Double.toString(Math.ceil(secondsLeft/BombarderoTimerImpl.MINUTES_TO_SECONDS)) + 
+        return Integer.toString((int)Math.ceil(secondsLeft/BombarderoTimerImpl.MINUTES_TO_SECONDS)) + 
             BombarderoTimerImpl.TIME_SEPARATOR + 
-            Double.toString(secondsLeft%BombarderoTimerImpl.MINUTES_TO_SECONDS);
+            Integer.toString((int)secondsLeft%BombarderoTimerImpl.MINUTES_TO_SECONDS);
     }
     
 }
