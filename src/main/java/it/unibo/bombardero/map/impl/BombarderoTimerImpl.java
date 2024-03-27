@@ -1,8 +1,6 @@
 package it.unibo.bombardero.map.impl;
 
 import it.unibo.bombardero.map.api.BombarderoTimer;
-import it.unibo.bombardero.map.api.MapManager;
-import it.unibo.bombardero.utils.Utils;
 
 public class BombarderoTimerImpl implements BombarderoTimer {
 
