@@ -22,6 +22,7 @@ public class BombarderoGraphics {
     private final BufferedImage staticMapImage = resourceGetter.loadImage("map");
 
     private JFrame frame = new JFrame();
+    /* TODO: add component listener to update the GUI at each resize, the GUI must get the scale at each update */
     private JPanel deck = new JPanel(new CardLayout());
     private CardLayout layout = (CardLayout)deck.getLayout();
     
