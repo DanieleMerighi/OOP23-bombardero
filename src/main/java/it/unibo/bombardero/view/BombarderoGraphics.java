@@ -21,12 +21,18 @@ public class BombarderoGraphics {
     private final ResizingEngine resizingEngine = new ResizingEngine();
     private final BufferedImage staticMapImage = resourceGetter.loadImage("map");
 
-    private JFrame frame = new JFrame();
+    private JFrame frame; 
     /* TODO: add component listener to update the GUI at each resize, the GUI must get the scale at each update */
-    private JPanel deck = new JPanel(new CardLayout());
-    private CardLayout layout = (CardLayout)deck.getLayout();
+    private JPanel deck;
+    private CardLayout layout;
     
     public BombarderoGraphics() {
-
+        this.frame = new JFrame();
+        this.deck = new JPanel(new CardLayout());
+        this.layout = (CardLayout)deck.getLayout();
     }
+
+    /* TODO: initialize main menu, game and gamover panels: one class for each that extends JPanel and in which
+     * we draw
+     */
 }
