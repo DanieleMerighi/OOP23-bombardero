@@ -14,7 +14,7 @@ public class BombarderoWindow extends JFrame {
 
     private final ResourceGetter resourceGetter = new ResourceGetter();
     private final ResizingEngine resizingEngine = new ResizingEngine();
-    private final BufferedImage staticMap = resourceGetter.loadImage("map");
+    private final BufferedImage staticMapImage = resourceGetter.loadImage("map");
     private JPanel deck = new JPanel(new CardLayout());
     private CardLayout layout = (CardLayout)deck.getLayout();
     
