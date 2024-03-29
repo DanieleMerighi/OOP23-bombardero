@@ -17,7 +17,7 @@ import java.awt.GraphicsEnvironment;
  */
 public class ResizingEngine {
 
-    private int currentScale;
+    private double currentScale;
     private static double OPTIMAL_HEIGHT_SCALE = 0.5; // The optimal scale for the game is half of the height of the user's screen
 
     /**
@@ -26,6 +26,14 @@ public class ResizingEngine {
     public void computeScale() {
         
     }   
+
+    /** 
+     *  Updates the scale according to the frame size and returns it
+     * @return the scale to which scale each component
+     */
+    public double getScale() {
+        return currentScale;
+    }
 
     /**
      * Computes the size that the window has to be in order to display correctly the panel, 
