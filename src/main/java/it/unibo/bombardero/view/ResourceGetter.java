@@ -17,7 +17,7 @@ public class ResourceGetter {
 
     /**  
      * Gets a resource named @name
-     * @name the name of the resource to get
+     * @param name the name of the resource to get
     */
     public BufferedImage loadImage(final String name) {
         try {
