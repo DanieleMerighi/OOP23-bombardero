@@ -104,5 +104,10 @@ public class GameMapImpl implements GameMap {
     public boolean isFlame(Pair coordinate) {
         return this.map.containsKey(coordinate) && this.map.get(coordinate) instanceof Flame;
     }
+
+    @Override
+    public boolean isEmpty(Pair coordinate) {
+        return this.map.containsKey(coordinate);
+    }
     
 }
