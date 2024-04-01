@@ -1,5 +1,6 @@
 package it.unibo.bombardero.map.impl;
 
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
@@ -15,7 +16,7 @@ import it.unibo.bombardero.utils.Utils;
 public class MapManagerImpl implements MapManager {
 
     private final GameMap map;
-    private Pair nextWallToCollapse;
+    private Optional<Pair> nextWallToCollapse = Optional.empty();
 
     public MapManagerImpl(GameMap map) {
         this.map = map;
@@ -47,7 +48,7 @@ public class MapManagerImpl implements MapManager {
 
     @Override
     public void triggerArenaCollapse() {
-        this.nextWallToCollapse = new Pair(Utils.MAP_ROWS, Utils.MAP_COLS);
+        this.nextWallToCollapse = Optional.of(new Pair(Utils.MAP_ROWS, Utils.MAP_COLS));
     }
 
     @Override
@@ -55,8 +56,13 @@ public class MapManagerImpl implements MapManager {
         placeNextWall();
     }
     
+    /**
+     * Places the next wall into the map, if present. Then updates to the next wall to place. 
+     */
     private void placeNextWall() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'placeNextWall'");
+        /* if(this.nextWallToCollapse.isPresent()) {
+            this.map.addUnbreakableWall(nextWallToCollapse.get(), new UnbreakableWall());
+
+        } */
     }
 }
