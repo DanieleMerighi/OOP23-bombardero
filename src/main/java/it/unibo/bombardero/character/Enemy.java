@@ -11,7 +11,7 @@ public class Enemy extends Character {
 
     private Stack<Pair> path = new Stack<>();
     Optional<Pair> nextMove = Optional.empty();
-    private int[][] map = new int[Utils.ROW][Utils.COL];
+    private int[][] map = new int[Utils.MAP_ROWS][Utils.MAP_COLS];
     private boolean isDestReachable = true;
     private boolean isBomb = false;
 
