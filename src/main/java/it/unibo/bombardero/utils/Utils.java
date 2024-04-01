@@ -8,8 +8,8 @@ public class Utils {
     public static final int DOWN = 4;
 
     //ho messo valori a caso, da aggiornarci
-    public static final int ROW = 17;
-    public static final int COL = 13;
+    public static final int MAP_ROWS = 17;
+    public static final int MAP_COLS = 13;
 
     //valori per mappa
     public static final int GRASS = 1;
