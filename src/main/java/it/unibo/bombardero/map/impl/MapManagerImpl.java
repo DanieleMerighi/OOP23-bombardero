@@ -15,6 +15,7 @@ import it.unibo.bombardero.utils.Utils;
 public class MapManagerImpl implements MapManager {
 
     private final GameMap map;
+    private Pair nextWallToCollapse;
 
     public MapManagerImpl(GameMap map) {
         this.map = map;
@@ -44,21 +45,18 @@ public class MapManagerImpl implements MapManager {
             .forEach(coord -> map.addUnbreakableWall(coord, new UnbreakableWall()));
     }
 
-    public void placeNextWall() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'placeNextWall'");
-    }
-
     @Override
     public void triggerArenaCollapse() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'triggerArenaCollpse'");
+        this.nextWallToCollapse = new Pair(Utils.MAP_ROWS, Utils.MAP_COLS);
     }
 
     @Override
     public void update() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        placeNextWall();
     }
     
+    private void placeNextWall() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'placeNextWall'");
+    }
 }
