@@ -1,5 +1,6 @@
 package it.unibo.bombardero.map.impl;
 
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.IntStream;
@@ -21,8 +22,13 @@ public class MapManagerImpl implements MapManager {
 
     @Override
     public void generateBreakableWalls() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'generateBreakableWalls'");
+        /* new Random()
+            .ints(0, Utils.MAP_COLS)
+            .boxed()
+            .mapToObj(x -> new Pair(IntStream.ints(0, Utils.MAP_ROWS).findAny(), x))
+            .filter(coord -> map.isEmpty(coord))
+            .forEach(coord -> map.addBreakableWall(coord));
+        */
     }
 
     @Override
@@ -38,7 +44,6 @@ public class MapManagerImpl implements MapManager {
             .forEach(coord -> map.addUnbreakableWall(coord, new UnbreakableWall()));
     }
 
-    @Override
     public void placeNextWall() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'placeNextWall'");
@@ -48,6 +53,12 @@ public class MapManagerImpl implements MapManager {
     public void triggerArenaCollapse() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'triggerArenaCollpse'");
+    }
+
+    @Override
+    public void update() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
     
 }

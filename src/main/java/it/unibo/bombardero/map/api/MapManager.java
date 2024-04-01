@@ -17,4 +17,5 @@ public interface MapManager {
 
     void triggerArenaCollapse();
 
+    void update(); 
 }
