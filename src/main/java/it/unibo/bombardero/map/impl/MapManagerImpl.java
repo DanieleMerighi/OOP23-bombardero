@@ -1,11 +1,7 @@
 package it.unibo.bombardero.map.impl;
 
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.List;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import it.unibo.bombardero.cell.UnbreakableWall;
 import it.unibo.bombardero.map.api.GameMap;
@@ -16,7 +12,7 @@ import it.unibo.bombardero.utils.Utils;
 public class MapManagerImpl implements MapManager {
 
     private final GameMap map;
-    private Optional<Pair> nextWallToCollapse = Optional.empty();
+    private List<Pair> nextWallToCollapse;
 
     public MapManagerImpl(GameMap map) {
         this.map = map;
@@ -48,7 +44,30 @@ public class MapManagerImpl implements MapManager {
 
     @Override
     public void triggerArenaCollapse() {
-        this.nextWallToCollapse = Optional.of(new Pair(Utils.MAP_ROWS, Utils.MAP_COLS));
+        int top = 0, bottom = Utils.MAP_ROWS - 1, left = 0, right = Utils.MAP_COLS - 1;
+        while(top <= bottom && left <= right) {
+
+            for (int i = left; i <= right; i++) {
+                this.nextWallToCollapse.add(new Pair(top, i));
+            }
+            top++;
+            for (int i = top; i <= bottom; i++) {
+                this.nextWallToCollapse.add(new Pair(i, right));
+            }
+            right--;
+            if(top <= bottom) {
+                for (int i = right; i >= left; i--) {
+                    this.nextWallToCollapse.add(new Pair(bottom, i));
+                } 
+                bottom--;
+            }
+            if (left <= right) {
+                for (int i = bottom; i >= top; i--) {
+                    this.nextWallToCollapse.add(new Pair(i, left));
+                }
+                left++;
+            }
+        }
     }
 
     @Override
