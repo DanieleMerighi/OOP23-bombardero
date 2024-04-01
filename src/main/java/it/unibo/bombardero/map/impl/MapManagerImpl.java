@@ -2,6 +2,7 @@ package it.unibo.bombardero.map.impl;
 
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import it.unibo.bombardero.cell.UnbreakableWall;
@@ -26,11 +27,15 @@ public class MapManagerImpl implements MapManager {
 
     @Override
     public void placeUnbreakableWalls() {
-        for(int i = 0; i < Utils.ROW; i++) {
-            for(int j = 0; j < Utils.COL; j++) {
-                map.addUnbreakableWall(new Pair(i, j), new UnbreakableWall());
-            }
-        }
+        IntStream
+            .range(0, Utils.MAP_ROWS)
+            .filter(num -> num%2 == 0)
+            .boxed()
+            .flatMap(x -> IntStream
+                .range(0, Utils.MAP_COLS)
+                .mapToObj(y -> new Pair(x, y))
+            )
+            .forEach(coord -> map.addUnbreakableWall(coord, new UnbreakableWall()));
     }
 
     @Override
