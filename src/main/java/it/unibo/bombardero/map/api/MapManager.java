@@ -15,8 +15,6 @@ public interface MapManager {
      */
 	void placeUnbreakableWalls();
 
-    void placeNextWall();
-
     void triggerArenaCollapse();
 
 }
