@@ -17,5 +17,8 @@ public interface MapManager {
 
     void triggerArenaCollapse();
 
+    /** 
+     * Updates the dynamic aspect of the mapManager, mainly adding a nextWall to the collapse
+     */ 
     void update(); 
 }
