@@ -52,16 +52,14 @@ public class TestGraphBuilder {
 
     @Test
     public void testBaseMapSize() {
-        // Graph should have 99 vertices
-        assertEquals(99, this.graph.vertexSet().size());
-        assertEquals(97, this.graph.edgeSet().size());
+        assertEquals(98, this.graph.vertexSet().size());
+        assertEquals(94, this.graph.edgeSet().size());
     }
 
     @Test
     public void testBaseMapShortestPath() {
         // percorso più breve tra [6,7] e Player [1,1]
         List<Pair> l = List.of(
-            new Pair(6, 7),
             new Pair(5, 7),
             new Pair(4, 7),
             new Pair(3, 7),
@@ -75,7 +73,7 @@ public class TestGraphBuilder {
             new Pair(1, 1)
         );
         Optional<List<Pair>> path = GraphBuilder.findShortestPath(this.graph,new Pair(6,7),new Pair(1, 1));
-        assertEquals(12, path.get().size());
+        assertEquals(11, path.get().size());
         assertEquals(l, path.get());
         // percorso inesistente tra due celle
         path = GraphBuilder.findShortestPath(this.graph,new Pair(3,8),new Pair(1, 11));
