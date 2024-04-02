@@ -15,8 +15,10 @@ public interface MapManager {
      */
 	void placeUnbreakableWalls();
 
-    void placeNextWall();
-
     void triggerArenaCollapse();
 
+    /** 
+     * Updates the dynamic aspect of the mapManager, mainly adding a nextWall to the collapse
+     */ 
+    void update(); 
 }

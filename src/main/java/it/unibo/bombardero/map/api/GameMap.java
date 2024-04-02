@@ -32,4 +32,6 @@ public interface GameMap {
     boolean isUnbreakableWall(Pair coordinate);
 
     boolean isFlame(Pair coordinate);
+
+    boolean isEmpty(Pair coordinate);
 }
