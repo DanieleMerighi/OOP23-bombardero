@@ -1,14 +1,14 @@
 package it.unibo.bombardero.character;
 
-import it.unibo.bombardero.map.api.Coord;
+import it.unibo.bombardero.map.api.Pair;
 
 public abstract class Character {
 
-    protected Coord coord;
+    protected Pair coord;
     protected int width, height;
     protected boolean isAlive = true;
 
-    public Character(Coord coord, int width, int height) {
+    public Character(Pair coord, int width, int height) {
         this.coord = coord;
         this.width = width;
         this.height = height;
@@ -18,6 +18,10 @@ public abstract class Character {
 
     public boolean isAlive() {
         return isAlive;
+    }
+
+    public Pair getCoord() {
+        return this.coord;
     }
 
     public void kill() {
