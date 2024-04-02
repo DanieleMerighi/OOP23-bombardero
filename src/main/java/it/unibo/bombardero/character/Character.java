@@ -14,7 +14,7 @@ public abstract class Character {
         this.height = height;
     }
 
-    protected abstract void update();
+    public abstract void update();
 
     public boolean isAlive() {
         return isAlive;
