@@ -2,12 +2,6 @@ package it.unibo.bombardero.utils;
 
 public class Utils {
 
-    public static final int LEFT = 1;
-    public static final int RIGHT = 2;
-    public static final int UP = 3;
-    public static final int DOWN = 4;
-
-    //ho messo valori a caso, da aggiornarci
     public static final int MAP_ROWS = 17;
     public static final int MAP_COLS = 13;
 
@@ -22,5 +16,10 @@ public class Utils {
 
     // Valori per il timer
     public final static long GAME_TIME = 120000l;
+
+    // Valori per l'esplosione
+    public static final int EXPLOSION_RADIUS = 4;
+    public static final int ENEMY_DETECTION_RADIUS = 4;
+    public static final int ENEMY_STARTING_BOMBS = 3;
     
 }
