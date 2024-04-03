@@ -56,6 +56,12 @@ public class GameMapImpl implements GameMap {
     }
 
     @Override
+    public void addFlame() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addEnemy'");
+    }
+
+    @Override
     public void addUnbreakableWall(Pair coord, Cell wall) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'addUnbreakableWall'");
