@@ -19,6 +19,12 @@ public class MapManagerImpl implements MapManager {
     }
 
     @Override
+    public GameMap getMap() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getMap'");
+    }
+
+    @Override
     public void generateBreakableWalls() {
         /* new Random()
             .ints(0, Utils.MAP_COLS)
