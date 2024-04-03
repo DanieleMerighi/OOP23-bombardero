@@ -78,7 +78,7 @@ public class MapManagerImpl implements MapManager {
 
     @Override
     public void update() {
-        placeNextWall();
+
     }
     
     /**
