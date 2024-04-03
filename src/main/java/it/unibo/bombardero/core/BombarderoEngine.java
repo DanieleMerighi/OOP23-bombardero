@@ -1,8 +1,18 @@
 package it.unibo.bombardero.core;
 
+import it.unibo.bombardero.core.api.GameManager;
+import it.unibo.bombardero.view.BombarderoGraphics;
+
 public class BombarderoEngine {
     
     private final static long sleepTime = 16l; // Time during which the thread sleeps, equivalent to about 60FPS
+    private GameManager gameManager;
+    private BombarderoGraphics graphics;
+
+    public BombarderoEngine(GameManager manager, BombarderoGraphics graphics) {
+        this.gameManager = manager;
+        this.graphics = graphics;
+    }
 
     public void initGame() {
         
