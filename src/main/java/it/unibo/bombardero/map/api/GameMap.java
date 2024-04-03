@@ -14,6 +14,8 @@ public interface GameMap {
     void addEnemy();
 
     void addPlayer();
+    
+    void addFlame();
 
     void addUnbreakableWall(Pair coord, Cell wall);
 
