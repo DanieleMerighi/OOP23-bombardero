@@ -1,0 +1,29 @@
+    Cosa è cambiato stamattina nell'architettura del gioco:
+
+Abbiamo creato le interfacce in core.api denominate "Controller" e "GameManager". 
+
+La prima ("Controller") fa la parte del controller nell'MVC, quindi interfaccia la view ed il model: esso fornisce i metodi 
+alla view per prendere le posizioni degli oggetti nel gioco, inoltre fornisce alla view i metodi necessari 
+per comunicare la pressione dei tasti da parte dell'utente. 
+Il controller andrà anche a startare il game quando verrà premuto il tasto, questo andrà a creare un "BombarderoEngine" che
+inizializzerà un nuovo "GameManager" che istanzierà tutti gli elementi della logica. 
+
+La seconda ("GameManager") è il capo supremo di tutti gli elementi di gioco, tutto passa da li e contiene tutti
+i riferimenti alle istanze di gioco e le rende disponibili tramite getter. In questo modo viene ridotta la dipendenza 
+tra le singole classi e c'è dipendenza solo dalla suddetta classe (che tra l'altro è una semplice getter, nulla di 
+complicato). Il suo update andrà a determinare se è finito il gioco, chiamando il controller che andrà a dire alla view
+cosa far vedere. 
+
+Per Baga:
+Dentro "BombarderoGraphics" viene tenuto un riferimento a controller, controller farà startGame, startGame inizializza
+"BombarderoEngine" che fa init e poi mainLoop.
+Dentro GameManager ci va MapManager. 
+
+Per Turchi:
+Vi sarà da creare una classe (o più) dedicate alla gestione di input da tastiera che andranno a dialogare con "Controller"
+in cui dovranno essere aggiunti i metodi per comunicare tali pressioni dei tasti al model (opportunamente interpretati
+in precedenza dalla classe di gestione dell'input: es. premo tasto bomba -> chiamo metodo Controller.placeBomb)
+
+Per Dani:
+Tutto passa dal GameManager quindi si deve andare a prendere la roba dal GameManager, non dalla mappa direttamente, se
+invece ti serve interrogare la mappa prenditi la mappa dal GameManager e la usi. 
