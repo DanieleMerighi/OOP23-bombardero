@@ -8,7 +8,7 @@ package it.unibo.bombardero.map.api;
 public interface MapManager {
 
     /** 
-     * Returns the game map
+     * Returns a copy of the game map
      * @return the game map
      */
     GameMap getMap();
