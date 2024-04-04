@@ -28,19 +28,19 @@ import it.unibo.bombardero.map.api.Pair;
 public class GameMapImpl implements GameMap {
 
     private final Map<Pair,Cell> map = new HashMap<>(); /* Using an HashMap to hold the information about the map's tiles */
-    private final MapManagerImpl mapManager;
+    private final MapManagerImpl manager;
     private final static int mapWidth = 13; /* the maps width and height expressed in tiles */
     private final static int mapHeight = 17;
 
     public GameMapImpl() {
-        this.mapManager = new MapManagerImpl(this);
-        mapManager.placeUnbreakableWalls();
-        mapManager.generateBreakableWalls();
+        this.manager = new MapManagerImpl(this);
+        manager.placeUnbreakableWalls();
+        manager.generateBreakableWalls();
     }
 
     @Override
     public void update() {
-        
+        this.manager.update();
     }
 
     @Override
