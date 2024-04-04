@@ -20,6 +20,12 @@ public class BombarderoGameManager implements GameManager{
     }
 
     @Override
+    public void startGame() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'startGame'");
+    }
+
+    @Override
     public void updateGame() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateGame'");
