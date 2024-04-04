@@ -11,7 +11,7 @@ import it.unibo.bombardero.map.api.Pair;
 
 public class BombarderoGameManager implements GameManager{
     
-    private MapManager map;
+    private GameMap map;
     private List<Character> enemies;
     private Character player;
     private Controller controller;
@@ -41,8 +41,7 @@ public class BombarderoGameManager implements GameManager{
 
     @Override
     public GameMap getMap() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMap'");
+        return this.map;
     }
 
     @Override
