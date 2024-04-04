@@ -37,7 +37,7 @@ public class Bomb extends Cell {
     void update(){}
 
     private void explode(){
-        mgr.explodeBomb(pos);
+        mgr.explodeBomb(pos, type);
     }
 
 }
