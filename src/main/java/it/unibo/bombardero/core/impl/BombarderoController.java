@@ -1,13 +1,22 @@
 package it.unibo.bombardero.core.impl;
 
+import it.unibo.bombardero.core.BombarderoEngine;
 import it.unibo.bombardero.core.api.Controller;
+import it.unibo.bombardero.view.BombarderoGraphics;
 
-public class BombarderoController implements Controller{
+public class BombarderoController implements Controller {
+
+    private BombarderoGraphics graphics;
+
+    public BombarderoController(BombarderoGraphics graphics) {
+        this.graphics = graphics;
+    }
 
     @Override
     public void startGame() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'startGame'");
+        BombarderoEngine engine = new BombarderoEngine(this, this.graphics);
+        engine.initGame();
+        engine.mainLoop();
     }
 
     @Override
