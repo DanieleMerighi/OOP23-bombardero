@@ -4,28 +4,19 @@ import java.util.List;
 
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.map.api.BombarderoTimer;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.MapManager;
-import it.unibo.bombardero.map.impl.BombarderoTimerImpl;
 
 public class BombarderoGameManager implements GameManager{
     
-    private GameMap map;
+    private MapManager map;
     private List<Character> enemies;
     private Character player;
     private Controller controller;
-    private BombarderoTimer gameTimer = new BombarderoTimerImpl();
 
     public BombarderoGameManager(Controller ctrl){
         this.controller=ctrl;
         //init game
-    }
-
-    @Override
-    public void startGame() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'startGame'");
     }
 
     @Override
