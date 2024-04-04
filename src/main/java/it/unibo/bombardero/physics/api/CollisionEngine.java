@@ -1,4 +1,4 @@
-package it.unibo.bombardero.view;
+package it.unibo.bombardero.physics.api;
 
 public interface CollisionEngine {
     
