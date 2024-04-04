@@ -14,6 +14,7 @@ import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.cell.UnbreakableWall;
 import it.unibo.bombardero.map.api.GameMap;
+import it.unibo.bombardero.map.api.MapManager;
 import it.unibo.bombardero.map.api.Pair;
 
 /* TODO:
@@ -29,12 +30,12 @@ import it.unibo.bombardero.map.api.Pair;
 public class GameMapImpl implements GameMap {
 
     private final Map<Pair,Cell> map = new HashMap<>(); /* Using an HashMap to hold the information about the map's tiles */
-    private final MapManagerImpl manager;
+    private final MapManager manager;
     private final static int mapWidth = 13; /* the maps width and height expressed in tiles */
     private final static int mapHeight = 17;
 
-    public GameMapImpl(GameManager manager) {
-        this.manager = new MapManagerImpl(this, manager);
+    public GameMapImpl(GameManager gameManager) {
+        this.manager = new MapManagerImpl(this, gameManager);
         manager.placeUnbreakableWalls();
         manager.generateBreakableWalls();
     }
