@@ -1,15 +1,18 @@
 package it.unibo.bombardero.core.api;
 
-public interface GameManager {
+import java.util.List;
 
-    void startGame();
+import it.unibo.bombardero.map.api.GameMap;
+
+public interface GameManager {
 
     void updateGame();
 
     void endGame();
 
-    void getCharacter();
+    List<Character> getCharacter();
 
-    void getMap();
+    GameMap getMap();
 
-}
+    
+}   
