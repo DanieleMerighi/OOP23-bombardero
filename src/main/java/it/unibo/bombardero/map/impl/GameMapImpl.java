@@ -47,26 +47,22 @@ public class GameMapImpl implements GameMap {
 
     @Override
     public void addBomb(final Bomb bomb, final Pair coordinate) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addBomb'");
+        this.map.put(coordinate, bomb);
     }
 
     @Override
     public void addFlame(Flame flame, Pair coordinate) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addEnemy'");
+        this.map.put(coordinate, flame);
     }
 
     @Override
-    public void addUnbreakableWall(Pair coord, Cell wall) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addUnbreakableWall'");
+    public void addUnbreakableWall(Pair coordinate, Cell wall) {
+        this.map.put(coordinate, wall);
     }
 
     @Override
-    public void addBreakableWall(Pair coord, Cell wall) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addBreakableWall'");
+    public void addBreakableWall(Pair coordinate, Cell wall) {
+        this.map.put(coordinate, wall);
     }
 
     @Override

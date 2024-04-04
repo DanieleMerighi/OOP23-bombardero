@@ -16,7 +16,7 @@ public interface GameMap {
     
     void addFlame(Flame flame, Pair coordinate);
 
-    void addUnbreakableWall(Pair coord, Cell wall);
+    void addUnbreakableWall(Pair coordinate, Cell wall);
 
     void addBreakableWall(Pair coordinate, Cell wall);
 
