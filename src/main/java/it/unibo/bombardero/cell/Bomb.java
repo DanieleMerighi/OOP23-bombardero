@@ -26,11 +26,12 @@ public class Bomb extends Cell {
     private final static int MAX_RANGE = 3; // TO-DO: decide the max bomb range
     private GameManager mgr;
     private Pair pos;
-    private 
+    private BombType type;
 
-    public Bomb(GameManager mgr, Pair pos){
+    public Bomb(GameManager mgr, Pair pos , BombType type){
         this.mgr = mgr;
         this.pos = pos;
+        this.type = type;
     }
 
     void update(){}
