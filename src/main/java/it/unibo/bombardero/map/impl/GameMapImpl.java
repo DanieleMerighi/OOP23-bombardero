@@ -50,20 +50,7 @@ public class GameMapImpl implements GameMap {
     }
 
     @Override
-    public void addEnemy() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addEnemy'");
-    }
-
-    @Override
-    public void addPlayer() {
-        
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addPlayer'");
-    }
-
-    @Override
-    public void addFlame() {
+    public void addFlame(Flame flame, Pair coordinate) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'addEnemy'");
     }
@@ -75,27 +62,9 @@ public class GameMapImpl implements GameMap {
     }
 
     @Override
-    public void addBreakableWall() {
+    public void addBreakableWall(Pair coord, Cell wall) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'addBreakableWall'");
-    }
-
-    @Override
-    public void removeEnemy() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeEnemy'");
-    }
-
-    @Override
-    public boolean isPlayer() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isPlayer'");
-    }
-
-    @Override
-    public boolean isEnemy() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isEnemy'");
     }
 
     @Override

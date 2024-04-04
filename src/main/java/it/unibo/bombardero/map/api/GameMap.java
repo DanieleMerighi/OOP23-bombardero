@@ -20,10 +20,6 @@ public interface GameMap {
 
     void addBreakableWall(Pair coordinate, Cell wall);
 
-    boolean isPlayer(Pair coordinate);
-
-    boolean isEnemy(Pair coordinate);
-
     boolean isBomb(Pair coordinate);
 
     boolean isBreakableWall(Pair coordinate);
