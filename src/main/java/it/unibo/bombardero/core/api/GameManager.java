@@ -3,6 +3,7 @@ package it.unibo.bombardero.core.api;
 import java.util.List;
 
 import it.unibo.bombardero.map.api.GameMap;
+import it.unibo.bombardero.map.api.Pair;
 
 public interface GameManager {
 
@@ -14,5 +15,5 @@ public interface GameManager {
 
     GameMap getMap();
 
-    
+    void explodeBomb(Pair coordinates);
 }   

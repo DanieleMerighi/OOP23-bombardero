@@ -6,6 +6,7 @@ import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.MapManager;
+import it.unibo.bombardero.map.api.Pair;
 
 public class BombarderoGameManager implements GameManager{
     
@@ -41,6 +42,12 @@ public class BombarderoGameManager implements GameManager{
     public GameMap getMap() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getMap'");
+    }
+
+    @Override
+    public void explodeBomb(Pair coordinates) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'explodeVoid'");
     }
     
 }
