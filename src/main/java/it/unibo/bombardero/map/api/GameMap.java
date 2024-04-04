@@ -2,6 +2,7 @@ package it.unibo.bombardero.map.api;
 
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Cell;
+import it.unibo.bombardero.cell.Flame;
 
 /**
  * The main class for managing all the aspects of the game arena
@@ -12,22 +13,16 @@ public interface GameMap {
     void update();
 
     void addBomb(final Bomb bomb, Pair coordinate);
-
-    void addEnemy();
-
-    void addPlayer();
     
-    void addFlame();
+    void addFlame(Flame flame, Pair coordinate);
 
     void addUnbreakableWall(Pair coord, Cell wall);
 
-    void addBreakableWall();
+    void addBreakableWall(Pair coordinate, Cell wall);
 
-    void removeEnemy();
+    boolean isPlayer(Pair coordinate);
 
-    boolean isPlayer();
-
-    boolean isEnemy();
+    boolean isEnemy(Pair coordinate);
 
     boolean isBomb(Pair coordinate);
 
