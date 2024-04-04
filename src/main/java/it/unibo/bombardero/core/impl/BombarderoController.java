@@ -15,7 +15,7 @@ public class BombarderoController implements Controller {
     @Override
     public void startGame() {
         BombarderoEngine engine = new BombarderoEngine(this, this.graphics);
-        engine.initGame();
+        engine.initGameManager();
         engine.mainLoop();
     }
 
