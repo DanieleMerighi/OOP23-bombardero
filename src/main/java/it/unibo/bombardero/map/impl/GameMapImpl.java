@@ -7,6 +7,7 @@ import java.util.Map;
 
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;
+import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.BreakableWall;
 import it.unibo.bombardero.cell.Cell;
@@ -32,8 +33,8 @@ public class GameMapImpl implements GameMap {
     private final static int mapWidth = 13; /* the maps width and height expressed in tiles */
     private final static int mapHeight = 17;
 
-    public GameMapImpl() {
-        this.manager = new MapManagerImpl(this);
+    public GameMapImpl(GameManager manager) {
+        this.manager = new MapManagerImpl(this, manager);
         manager.placeUnbreakableWalls();
         manager.generateBreakableWalls();
     }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import it.unibo.bombardero.cell.UnbreakableWall;
+import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.MapManager;
 import it.unibo.bombardero.map.api.Pair;
@@ -12,15 +13,17 @@ import it.unibo.bombardero.utils.Utils;
 public class MapManagerImpl implements MapManager {
 
     private final GameMap map;
+    private final GameManager manager;
     private List<Pair> nextWallToCollapse;
 
-    public MapManagerImpl(GameMap map) {
+    public MapManagerImpl(GameMap map, GameManager manager) {
         this.map = map;
+        this.manager = manager;
     }
 
     @Override
     public void update() {
-
+        
     }
 
     @Override
