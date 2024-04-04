@@ -2,12 +2,14 @@ package it.unibo.bombardero.core.impl;
 
 import java.util.List;
 
+import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.MapManager;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.physics.api.CollisionEngine;
 
 public class BombarderoGameManager implements GameManager{
     
@@ -15,6 +17,7 @@ public class BombarderoGameManager implements GameManager{
     private List<Character> enemies;
     private Character player;
     private Controller controller;
+    private CollisionEngine ce;
 
     public BombarderoGameManager(Controller ctrl){
         this.controller=ctrl;
@@ -46,7 +49,7 @@ public class BombarderoGameManager implements GameManager{
     }
 
     @Override
-    public void explodeBomb(Pair coordinates, BombType type) {
+    public void explodeBomb(Bomb bomb) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'explodeVoid'");
     }
