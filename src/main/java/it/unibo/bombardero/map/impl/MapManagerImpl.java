@@ -19,9 +19,8 @@ public class MapManagerImpl implements MapManager {
     }
 
     @Override
-    public GameMap getMap() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMap'");
+    public void update() {
+
     }
 
     @Override
@@ -74,11 +73,6 @@ public class MapManagerImpl implements MapManager {
                 left++;
             }
         }
-    }
-
-    @Override
-    public void update() {
-
     }
     
     /**

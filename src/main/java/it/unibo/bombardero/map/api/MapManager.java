@@ -7,12 +7,6 @@ package it.unibo.bombardero.map.api;
  */
 public interface MapManager {
 
-    /** 
-     * Returns a copy of the game map
-     * @return the game map
-     */
-    GameMap getMap();
-
     void generateBreakableWalls();
 
     /** 

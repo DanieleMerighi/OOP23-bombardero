@@ -34,6 +34,13 @@ public class GameMapImpl implements GameMap {
 
     public GameMapImpl() {
         this.mapManager = new MapManagerImpl(this);
+        mapManager.placeUnbreakableWalls();
+        mapManager.generateBreakableWalls();
+    }
+
+    @Override
+    public void update() {
+        
     }
 
     @Override

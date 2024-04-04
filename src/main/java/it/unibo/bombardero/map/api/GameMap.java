@@ -9,6 +9,8 @@ import it.unibo.bombardero.cell.Cell;
  */
 public interface GameMap {
 
+    void update();
+
     void addBomb(final Bomb bomb, Pair coordinate);
 
     void addEnemy();
@@ -36,4 +38,5 @@ public interface GameMap {
     boolean isFlame(Pair coordinate);
 
     boolean isEmpty(Pair coordinate);
+
 }
