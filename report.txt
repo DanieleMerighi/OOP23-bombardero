@@ -1,3 +1,4 @@
+APRIL 3rd 2024    
     Cosa è cambiato stamattina nell'architettura del gioco:
 
 Abbiamo creato le interfacce in core.api denominate "Controller" e "GameManager". 
