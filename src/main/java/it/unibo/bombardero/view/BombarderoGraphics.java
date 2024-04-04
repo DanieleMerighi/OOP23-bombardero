@@ -11,11 +11,16 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import it.unibo.bombardero.core.api.Controller;
+import it.unibo.bombardero.core.impl.BombarderoController;
+
 /** 
  * The graphics engine for the game, managing the layout and the component's update
  * @author Federico Bagattoni
  */
 public class BombarderoGraphics {
+
+    private Controller controller;
 
     private final ResourceGetter resourceGetter = new ResourceGetter();
     private final ResizingEngine resizingEngine = new ResizingEngine();
@@ -27,6 +32,7 @@ public class BombarderoGraphics {
     private CardLayout layout;
     
     public BombarderoGraphics() {
+        this.controller = new BombarderoController(this);
         this.frame = new JFrame();
         this.deck = new JPanel(new CardLayout());
         this.layout = (CardLayout)deck.getLayout();
