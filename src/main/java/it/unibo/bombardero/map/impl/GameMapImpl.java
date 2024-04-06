@@ -18,7 +18,7 @@ public class GameMapImpl implements GameMap {
     private final Map<Pair,Cell> map = new HashMap<>(); /* Using an HashMap to hold the information about the map's tiles */
     private final MapManager manager;
 
-    public GameMapImpl(GameManager gameManager) {
+    public GameMapImpl() {
         this.manager = new MapManagerImpl(this);
         manager.placeUnbreakableWalls();
         manager.generateBreakableWalls();
