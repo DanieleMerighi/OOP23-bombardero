@@ -73,7 +73,7 @@ public class GameMapImpl implements GameMap {
 
     @Override
     public boolean isEmpty(Pair coordinate) {
-        return this.map.containsKey(coordinate);
+        return !this.map.containsKey(coordinate);
     }
 
     @Override
