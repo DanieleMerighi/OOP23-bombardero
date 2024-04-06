@@ -8,7 +8,6 @@ import java.util.stream.IntStream;
 
 import it.unibo.bombardero.cell.BreakableWall;
 import it.unibo.bombardero.cell.UnbreakableWall;
-import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.MapManager;
 import it.unibo.bombardero.map.api.Pair;
@@ -20,13 +19,11 @@ public class MapManagerImpl implements MapManager {
     private final Set<Pair> MAP_CORNERS = new TreeSet<Pair>();
 
     private final GameMap map;
-    private final GameManager manager;
     private List<Pair> wallCollapseOrder;
     private boolean collapseStarted = false;
 
-    public MapManagerImpl(GameMap map, GameManager manager) {
+    public MapManagerImpl(GameMap map) {
         this.map = map;
-        this.manager = manager;
         this.computeMapCorners();
     }
 

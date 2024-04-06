@@ -19,7 +19,7 @@ public class GameMapImpl implements GameMap {
     private final MapManager manager;
 
     public GameMapImpl(GameManager gameManager) {
-        this.manager = new MapManagerImpl(this, gameManager);
+        this.manager = new MapManagerImpl(this);
         manager.placeUnbreakableWalls();
         manager.generateBreakableWalls();
     }
