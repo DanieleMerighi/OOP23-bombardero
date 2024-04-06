@@ -1,9 +1,8 @@
 package it.unibo.bombardero.map.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.IntStream;
 
 import it.unibo.bombardero.cell.BreakableWall;
@@ -16,7 +15,7 @@ import it.unibo.bombardero.utils.Utils;
 public class MapManagerImpl implements MapManager {
 
     private static final double WALL_PRESENCE_RATE = 0.8; /* This number control how much walls to generate in relation to the free space */
-    private final Set<Pair> MAP_CORNERS = new TreeSet<Pair>();
+    private final List<Pair> MAP_CORNERS = new ArrayList<Pair>();
 
     private final GameMap map;
     private List<Pair> wallCollapseOrder;
