@@ -39,7 +39,9 @@ public class MapManagerImpl implements MapManager {
 
     @Override
     public void generateBreakableWalls() {
-        int totalWallsToGenerate = (int)Math.floor(Math.floorDiv(Utils.MAP_COLS, 2) + Math.floorDiv(Utils.MAP_ROWS, 2) * 0.8);
+        int totalWallsToGenerate = (int)Math.floor(
+            Math.floorDiv(Utils.MAP_COLS, 2) + Math.floorDiv(Utils.MAP_ROWS, 2) * MapManagerImpl.WALL_PRESENCE_RATE
+        );
         Random rnd = new Random();
         Pair coordinate;
         while(totalWallsToGenerate != 0) {
