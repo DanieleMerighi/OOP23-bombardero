@@ -53,11 +53,11 @@ public class MapManagerImpl implements MapManager {
     public void placeUnbreakableWalls() {
         IntStream
             .range(0, Utils.MAP_ROWS)
-            .filter(num -> num%2 == 0)
+            .filter(num -> num%2 != 0)
             .boxed()
             .flatMap(x -> IntStream
                 .range(0, Utils.MAP_COLS)
-                .filter(num -> num%2 == 0)
+                .filter(num -> num%2 != 0)
                 .mapToObj(y -> new Pair(x, y))
             )
             .forEach(coord -> map.addUnbreakableWall(coord, new UnbreakableWall()));
