@@ -2,7 +2,7 @@ package it.unibo.bombardero.utils;
 
 public class Utils {
 
-    public static final int MAP_ROWS = 17;
+    public static final int MAP_ROWS = 13;
     public static final int MAP_COLS = 13;
 
     //valori per mappa
