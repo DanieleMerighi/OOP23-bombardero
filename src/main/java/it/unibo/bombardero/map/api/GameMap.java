@@ -1,5 +1,8 @@
 package it.unibo.bombardero.map.api;
 
+import java.util.Map;
+import java.util.Set;
+
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Flame;
@@ -29,5 +32,7 @@ public interface GameMap {
     boolean isFlame(Pair coordinate);
 
     boolean isEmpty(Pair coordinate);
+
+    Set<Map.Entry<Pair, Cell>> getMap();
 
 }

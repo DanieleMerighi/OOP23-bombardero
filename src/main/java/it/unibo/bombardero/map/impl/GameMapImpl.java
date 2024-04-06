@@ -2,6 +2,8 @@ package it.unibo.bombardero.map.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.cell.Bomb;
@@ -72,6 +74,11 @@ public class GameMapImpl implements GameMap {
     @Override
     public boolean isEmpty(Pair coordinate) {
         return this.map.containsKey(coordinate);
+    }
+
+    @Override
+    public Set<Entry<Pair, Cell>> getMap() {
+        return Map.copyOf(this.map).entrySet();
     }
     
 }
