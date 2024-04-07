@@ -23,7 +23,7 @@ public class GameMapImpl implements GameMap {
     public GameMapImpl() {
         this.manager = new MapManagerImpl(this);
         manager.placeUnbreakableWalls();
-        manager.generateBreakableWalls();
+        manager.placeBreakableWalls();
     }
 
     @Override
