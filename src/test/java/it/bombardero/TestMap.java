@@ -1,10 +1,13 @@
 package it.bombardero;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Arrays;
 import java.util.concurrent.Flow.Subscriber;
 
 import javax.annotation.processing.SupportedSourceVersion;
 
+import org.apache.http.protocol.SyncBasicHttpContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,8 +36,19 @@ public class TestMap {
         String[][] printableMap = new String[Utils.MAP_ROWS][Utils.MAP_COLS];
         this.map.getMap().stream()
             .forEach(entry -> printableMap[entry.getKey().row()][entry.getKey().col()] = fromClassToInteger(entry.getKey()));
-
+        
+        long breakableWallsGenerated = this.map.getMap().stream()
+            .filter(entry -> this.map.isBreakableWall(entry.getKey()))
+            .count();
+        long unbreakableWallsPresent = this.map.getMap().stream()
+            .filter(entry -> this.map.isUnbreakableWall(entry.getKey()))
+            .count();
+        
         print2DArray(printableMap);
+        // assertEquals(unbreakableWallsPresent, );
+        System.out.println("OK, Unbreakable walls present: " + unbreakableWallsPresent);
+
+        System.out.println("OK, Breakable walls generated: " + breakableWallsGenerated);
     }
 
     /** 
@@ -68,7 +82,7 @@ public class TestMap {
     private void print2DArray(String[][] arr) {
         for(int i = 0; i < Utils.MAP_ROWS; i++) {
             for(int j = 0; j < Utils.MAP_COLS; j++) {
-                String output = arr[i][j] == null ? "O" : arr[i][j];
+                String output = arr[i][j] == null ? "E" : arr[i][j];
                 System.out.print(output + "  ");
             }
             System.out.print("\n");
