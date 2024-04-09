@@ -5,7 +5,7 @@ public class Utils {
     public static final int MAP_ROWS = 13;
     public static final int MAP_COLS = 13;
     /* This number control how much walls to generate in relation to the free space: */
-    private static final double WALL_PRESENCE_RATE = 0.8;
+    public static final double WALL_PRESENCE_RATE = 0.8;
 
 
     //valori per mappa
