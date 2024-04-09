@@ -1,6 +1,6 @@
 package it.unibo.bombardero.character.AI;
 
-import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
@@ -8,6 +8,7 @@ import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
+import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.utils.Utils;
 import it.unibo.bombardero.character.Direction;
@@ -18,48 +19,35 @@ import java.util.Optional;
 
 public class GraphBuilder {
 
-    public static Graph<Pair,DefaultEdge> buildFromMap(int[][] map) {
-        int numRows = map.length;
-        int numCols = map[0].length;
-        
+    public static Graph<Pair,DefaultEdge> buildFromMap(GameMap map) {
         Graph<Pair, DefaultEdge> graph = new SimpleGraph<>(DefaultEdge.class);
+        Stream<Pair> validPos = map.getMap().stream()
+        .map(p -> p.getKey())
+        .filter(p -> !(map.isUnbreakableWall(p) || map.isFlame(p)));
+        validPos.forEach(p -> graph.addVertex(p));
 
-        // Add vertices (grid cells) to the graph
-        IntStream.range(0, numRows)
-                .forEach(row ->
-                        IntStream.range(0, numCols)
-                                .filter(col -> !isCellBlocked(map, row, col))
-                                .forEach(col -> graph.addVertex(new Pair(row, col))));
+        // Add edges (connections between adjacent cells) to the graph 
+        validPos.forEach(p -> connectWithNeighbors(graph, p));
 
-        // Add edges (connections between adjacent cells) to the graph
-        IntStream.range(0, numRows)
-                .forEach(row ->
-                        IntStream.range(0, numCols)
-                                .filter(col -> map[row][col] == Utils.GRASS)
-                                .forEach(col -> connectWithNeighbors(graph, map, row, col, numRows, numCols)));
 
         return graph;
     }
 
-    private static void connectWithNeighbors(Graph<Pair, DefaultEdge> graph, int[][] map, int row, int col, int numRows, int numCols) {
+    private static void connectWithNeighbors(Graph<Pair, DefaultEdge> graph, Pair p) {
         EnumSet.allOf(Direction.class).forEach(direction -> {
-            int newRow = row + direction.getDx();
-            int newCol = col + direction.getDy();
-            if (isValidCell(newRow, newCol, numRows, numCols) 
-            && graph.containsVertex(new Pair(newRow, newCol))
-            && !isCellBlocked(map, newRow, newCol)) {
-                graph.addEdge(new Pair(row, col), new Pair(newRow, newCol));
+            int newRow = p.row() + direction.getDx();
+            int newCol = p.col() + direction.getDy();
+            if (isValidCell(newRow, newCol) 
+            && graph.containsVertex(new Pair(newRow, newCol))) {
+                graph.addEdge(p, new Pair(newRow, newCol));
             }
         });
     }
 
-    private static boolean isValidCell(int row, int col, int numRows, int numCols) {
-        return row >= 0 && row < numRows && col >= 0 && col < numCols;
+    private static boolean isValidCell(int row, int col) {
+        return row >= 0 && row < Utils.MAP_ROWS && col >= 0 && col < Utils.MAP_COLS;
     }
 
-    private static boolean isCellBlocked(int[][] map, int row, int col) {
-        return map[row][col] == Utils.UNBREAKABLE_WALL || map[row][col] == Utils.EXPLOSION;
-    }
 
     public static Optional<List<Pair>> findShortestPath(Graph<Pair, DefaultEdge> graph, Pair source, Pair target) {
         DijkstraShortestPath<Pair, DefaultEdge> dijkstra = new DijkstraShortestPath<>(graph);
