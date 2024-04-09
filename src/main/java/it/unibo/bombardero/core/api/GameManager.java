@@ -16,7 +16,7 @@ public interface GameManager {
 
     Character getPlayer();
 
-    GameMap getMap();
+    GameMap getGameMap();
 
     void explodeBomb(Bomb bomb);
 }   

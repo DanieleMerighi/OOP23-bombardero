@@ -33,6 +33,6 @@ public interface GameMap {
 
     boolean isEmpty(Pair coordinate);
 
-    Set<Map.Entry<Pair, Cell>> getMap();
+    Map<Pair, Cell> getMap();
 
 }

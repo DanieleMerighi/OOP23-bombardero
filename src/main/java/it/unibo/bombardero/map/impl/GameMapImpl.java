@@ -77,8 +77,8 @@ public class GameMapImpl implements GameMap {
     }
 
     @Override
-    public Set<Entry<Pair, Cell>> getMap() {
-        return Map.copyOf(this.map).entrySet();
+    public Map<Pair, Cell> getMap() {
+        return Map.copyOf(this.map);
     }
     
 }

@@ -42,7 +42,7 @@ public class BombarderoGameManager implements GameManager{
     }
 
     @Override
-    public GameMap getMap() {
+    public GameMap getGameMap() {
         return this.map;
     }
 
