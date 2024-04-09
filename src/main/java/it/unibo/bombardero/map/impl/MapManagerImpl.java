@@ -67,6 +67,7 @@ public class MapManagerImpl implements MapManager {
     public void triggerArenaCollapse() {
         int top = 0, bottom = Utils.MAP_ROWS - 1, left = 0, right = Utils.MAP_COLS - 1;
         this.collapseStarted = true;
+        wallCollapseOrder = new ArrayList<>();
         while(top <= bottom && left <= right) {
 
             for (int i = left; i <= right; i++) {
