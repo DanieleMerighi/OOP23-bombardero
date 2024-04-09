@@ -21,11 +21,12 @@ public class Enemy extends Character {
     Optional<Pair> nextMove = Optional.empty();
     private State currentState = State.PATROL; // Initial state
     private int numBombs = Utils.ENEMY_STARTING_BOMBS; // Assuming starting number of bombs
+    private int movementTimer = 0; // Timer for movement updates
 
     private final int SAFE_CELL_DISTANCE = 2;
 
-    public Enemy(GameManager manager, Pair coord, int width, int height) {
-        super(manager, coord, width, height);
+    public Enemy(GameManager manager, float x, float y, int width, int height) {
+        super(manager, x, y, width, height);
     }
 
     private boolean isEnemyClose() {
@@ -49,7 +50,7 @@ public class Enemy extends Character {
                 .flatMap(row -> IntStream
                         .rangeClosed(enemyCoord.col() - explosionRadius, enemyCoord.col() + explosionRadius)
                         .mapToObj(col -> new Pair(row, col)))
-                .filter(c -> isValidCell(c.row(), c.col()))
+                .filter(this::isValidCell)
                 .anyMatch(cell -> this.manager.getGameMap().isFlame(cell));
     }
 
@@ -66,7 +67,7 @@ public class Enemy extends Character {
     }
 
     private void placeBomb(Pair targetCell) {
-        if (hasBombsLeft() && isValidCell(targetCell.row(), targetCell.col())
+        if (hasBombsLeft() && isValidCell(targetCell)
                 && this.manager.getGameMap().isEmpty(targetCell)) {
             // map.addBomb(null, targetCell);
             numBombs--;
@@ -84,7 +85,7 @@ public class Enemy extends Character {
             Direction randomDirection = Direction.values()[new Random().nextInt(Direction.values().length)];
             int newRow = currentCoord.row() + randomDirection.getDx();
             int newCol = currentCoord.col() + randomDirection.getDy();
-            if (isValidCell(newRow, newCol) && manager.getGameMap().isEmpty(new Pair(newRow, newCol))) {
+            if (isValidCell(new Pair(newRow, newCol)) && manager.getGameMap().isEmpty(new Pair(newRow, newCol))) {
                 nextMove = Optional.of(new Pair(newRow, newCol));
                 break;
             }
@@ -118,45 +119,60 @@ public class Enemy extends Character {
 
     }
 
-    // Helper method to find the distance to the nearest explosion
     private int findDistanceToNearestExplosion(int row, int col) {
-        int distance = Integer.MAX_VALUE; // Initialize with a large value
-        for (int i = row - SAFE_CELL_DISTANCE; i <= row + SAFE_CELL_DISTANCE; i++) {
-            for (int j = col - SAFE_CELL_DISTANCE; j <= col + SAFE_CELL_DISTANCE; j++) {
-                if (isValidCell(i, j) && this.manager.getGameMap().isFlame(new Pair(i, j))) {
-                    int currentDistance = Math.abs(i - row) + Math.abs(j - col); // Manhattan distance
-                    distance = Math.min(distance, currentDistance);
-                }
-            }
-        }
-        return distance;
+        return IntStream.rangeClosed(row - SAFE_CELL_DISTANCE, row + SAFE_CELL_DISTANCE)
+                .boxed()
+                .flatMap(i -> IntStream.rangeClosed(col - SAFE_CELL_DISTANCE, col + SAFE_CELL_DISTANCE)
+                        .mapToObj(j -> new Pair(i, j)))
+                .filter(cell -> isValidCell(cell) && this.manager.getGameMap().isFlame(cell))
+                .mapToInt(cell -> Math.abs(cell.row() - row) + Math.abs(cell.col() - col)) // Calculate Manhattan distance
+                .min()
+                .orElse(Integer.MAX_VALUE);
     }
 
-    private static boolean isValidCell(int row, int col) {
-        return row >= 0 && row < Utils.MAP_ROWS && col >= 0 && col < Utils.MAP_COLS;
+    private boolean isValidCell(Pair cell) {
+        return this.manager.getGameMap().getMap().containsKey(cell);
+    }
+
+    private void computeNextDir() {
+        GameMap map = this.manager.getGameMap();
+        currentState.execute(this); // Delegate behavior to current state
+        if(!nextMove.isPresent() || !isValidCell(nextMove.get())) {
+            moveRandomly();
+        } else if(map.isBreakableWall(nextMove.get())) {
+            placeBomb(getCoord());
+            //change the state of the enemy?
+        }
     }
 
     /* base AI Heuristics */
     @Override
     public void update() {
-        GameMap map = this.manager.getGameMap();
-        currentState.execute(this); // Delegate behavior to current state
-        if (nextMove.isPresent() && isValidCell(nextMove.get().row(), nextMove.get().col())) {
-            Pair nextCell = nextMove.get();
-
-            // Check if nextCell is a destroyable wall
-            if (map.isBreakableWall(nextCell)) {
-                // Enemy tries to destroy the wall
-                placeBomb(coord);
-            } else {
-                // Move to the next cell if it's not a wall
-                coord = nextCell;
-            }
-        } else {
-            // Handle the case where nextMove is empty or invalid
-            moveRandomly();
+        movementTimer += 1;
+        // Every 60 frames (assuming 60 fps), call computeNextDir to get the next target
+        if (movementTimer >= 60) {
+            movementTimer = 0;
+            computeNextDir();
         }
-        coord = nextMove.isPresent() ? nextMove.get() : coord;
+
+         // If a target exists, move towards it by a small increment
+         if (nextMove.isPresent()) {
+            Pair target = nextMove.get();
+            float dx = target.row() - this.x;
+            float dy = target.col() - this.y;
+
+            // Adjust movement based on enemy speed 
+            float movementSpeed = Utils.ENEMY_SPEED; 
+            float movement = Math.min(Math.abs(dx) + Math.abs(dy), movementSpeed);
+
+            this.x += (dx > 0) ? movement : -movement;
+            this.y += (dy > 0) ? movement : -movement;
+
+            // Check if reached the target cell
+            if (Math.abs(dx) < movementSpeed && Math.abs(dy) < movementSpeed) {
+                nextMove = Optional.empty(); // Clear target if reached
+            }
+        }
     }
 
     public enum State {
