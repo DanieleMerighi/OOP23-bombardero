@@ -1,5 +1,4 @@
-DOMANDA:
-Ho pensato che in Map.java non sono utili i metodi isPlayer e isEnemy, perché tanto non sono collocati nella mappa 
-quindi piuttosto delegherei la ricerca delle posizioni dei Character alle rispettive classi usando dei getter.
+TODO: 
 
-Hai pensato bene, è il Character che da le sue posizioni, e secondo me vanno nella classe astratta già implementate (in modo tale che sia Player che enemy possano avere lo stesso modo di dare Coord)
+Trovare modo e dove inserire la generazione del grafo a partire dalla mappa, il grafo chiede solo una gamemamp
+quindi devi passargli una gamemamp.
