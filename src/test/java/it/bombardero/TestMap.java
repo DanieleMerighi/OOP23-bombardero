@@ -9,8 +9,12 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.impl.GameMapImpl;
+import it.unibo.bombardero.map.api.MapManager;
+import it.unibo.bombardero.map.impl.MapManagerImpl;
 import it.unibo.bombardero.utils.Utils;
 import it.unibo.bombardero.map.api.Pair;
 
@@ -25,6 +29,7 @@ public class TestMap {
     private final static int MAP_CORNERS_QTY = 12;
 
     private final Set<Pair> MAP_CORNERS = new HashSet<>();
+    private final Set<Pair> EXPECTED_UNBREAKABLE_WALLS_COORDINATES = new HashSet<>();
 
     private GameMap map;
 
@@ -46,15 +51,14 @@ public class TestMap {
     void init() {
         map = new GameMapImpl();
         computeMapCorners();
-        String[][] printableMap = new String[Utils.MAP_ROWS][Utils.MAP_COLS];
-        this.map.getMap().entrySet().stream()
-            .forEach(entry -> printableMap[entry.getKey().row()][entry.getKey().col()] = fromClassToInteger(entry.getKey()));
-        print2DArray(printableMap);
+        computeUnbreakableWallsCoordinates();
+        print2DArray(generatePrintableMap());
     } 
 
     /** 
      * Tests wether the unbreakable walls have been correctly placed, according to the standard scheme.
      * The user running this method can visually appreciate if the placement went accordingly.
+     * TODO: check if every breakable wall is in the correct place (coordinate)
      */
     @Test
     void testUnbreakableWallsInitialization() {
@@ -63,7 +67,15 @@ public class TestMap {
             .count();
 
         assertEquals(unbreakableWallsPresent, EXPECTED_UNBREAKABLE_WALLS_NUMBER);
-        System.out.println("OK, Unbreakable walls present: " + unbreakableWallsPresent);
+        System.out.println("OK, all the unbreakable walls are present: " + unbreakableWallsPresent);
+
+        assertEquals(
+            map.getMap().entrySet().stream()
+                .filter(entry -> map.isUnbreakableWall(entry.getKey()))
+                .collect(Collectors.toSet()),
+                EXPECTED_UNBREAKABLE_WALLS_COORDINATES
+        );
+        System.out.println("OK, all the unbreakable walls are in the right position");
     }
 
     /** 
@@ -91,6 +103,13 @@ public class TestMap {
      */
     @Test
     void testMapCollapse() {
+        MapManager manager = new MapManagerImpl(this.map);
+        String[][] printableMap = generatePrintableMap();
+
+        manager.triggerArenaCollapse();
+        for(int i = 0; i < TOTAL_CELLS; i++) {
+            
+        }
 
     }
 
@@ -107,6 +126,13 @@ public class TestMap {
         return "O";
     }
 
+    private String[][] generatePrintableMap() {
+        String[][] printableMap = new String[Utils.MAP_ROWS][Utils.MAP_COLS];
+        this.map.getMap().entrySet().stream()
+            .forEach(entry -> printableMap[entry.getKey().row()][entry.getKey().col()] = fromClassToInteger(entry.getKey()));
+        return printableMap;
+    }
+
     private void print2DArray(String[][] arr) {
         for(int i = 0; i < Utils.MAP_ROWS; i++) {
             for(int j = 0; j < Utils.MAP_COLS; j++) {
@@ -114,6 +140,14 @@ public class TestMap {
                 System.out.print(output + "  ");
             }
             System.out.print("\n");
+        }
+    }
+
+    private void computeUnbreakableWallsCoordinates() {
+        for(int i = 0; i < Utils.MAP_ROWS; i += 2) {
+            for(int j = 0; j < Utils.MAP_COLS; j += 2) {
+                this.EXPECTED_UNBREAKABLE_WALLS_COORDINATES.add(new Pair(i, j));
+            }
         }
     }
 
