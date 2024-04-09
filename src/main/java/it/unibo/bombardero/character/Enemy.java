@@ -4,11 +4,14 @@ import java.util.Optional;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
 import it.unibo.bombardero.character.AI.GraphBuilder;
+import it.unibo.bombardero.core.api.GameManager;
+import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.utils.Utils;
 
@@ -16,19 +19,18 @@ public class Enemy extends Character {
 
     private List<Pair> path = new LinkedList<>();
     Optional<Pair> nextMove = Optional.empty();
-    private int[][] map = new int[Utils.MAP_ROWS][Utils.MAP_COLS];
     private State currentState = State.PATROL; // Initial state
     private int numBombs = Utils.ENEMY_STARTING_BOMBS; // Assuming starting number of bombs
 
     private final int SAFE_CELL_DISTANCE = 2;
 
-    public Enemy(Pair coord, int width, int height) {
-        super(coord, width, height);
+    public Enemy(GameManager manager, Pair coord, int width, int height) {
+        super(manager, coord, width, height);
     }
 
     private boolean isEnemyClose() {
         Pair enemyCoord = getCoord();
-        Pair playerCoord = getPlayerCoord();
+        Pair playerCoord = this.manager.getPlayer().getCoord();
         int detectionRadius = Utils.ENEMY_DETECTION_RADIUS; // Assuming detection radius is defined in Utils
 
         // Calculate Manhattan distance between enemy and player
@@ -40,49 +42,33 @@ public class Enemy extends Character {
 
     private boolean isInDangerZone() {
         Pair enemyCoord = getCoord();
-        int explosionRadius = Utils.EXPLOSION_RADIUS; // Assuming explosion radius is defined in Utils
+        int explosionRadius = Utils.EXPLOSION_RADIUS;
 
-        // Check surrounding cells for explosions
-        for (int row = enemyCoord.row() - explosionRadius; row <= enemyCoord.row() + explosionRadius; row++) {
-            for (int col = enemyCoord.col() - explosionRadius; col <= enemyCoord.col() + explosionRadius; col++) {
-                if (isValidCell(row, col) && map[row][col] == Utils.EXPLOSION) {
-                    return true; // Explosion found within blast radius
-                }
-            }
-        }
-
-        return false; // No explosions found within blast radius
+        return IntStream.rangeClosed(enemyCoord.row() - explosionRadius, enemyCoord.row() + explosionRadius)
+                .boxed()
+                .flatMap(row -> IntStream
+                        .rangeClosed(enemyCoord.col() - explosionRadius, enemyCoord.col() + explosionRadius)
+                        .mapToObj(col -> new Pair(row, col)))
+                .filter(c -> isValidCell(c.row(), c.col()))
+                .anyMatch(cell -> this.manager.getGameMap().isFlame(cell));
     }
 
     private void findShortestPathToPlayer() {
         Pair enemyCoord = getCoord(); // Get enemy's current coordinates
-        Pair playerCoord = getPlayerCoord(); // Get player's coordinates (assuming this method exists)
-        path = GraphBuilder.findShortestPath(buildMapGraph(map), enemyCoord, playerCoord).orElse(new LinkedList<>());
+        Pair playerCoord = this.manager.getPlayer().getCoord();
+        path = GraphBuilder.findShortestPath(buildMapGraph(this.manager.getGameMap()), enemyCoord, playerCoord)
+                .orElse(new LinkedList<>());
         nextMove = path.isEmpty() ? Optional.empty() : Optional.of(path.remove(0));
     }
 
-    private Graph<Pair, DefaultEdge> buildMapGraph(int[][] map) {
+    private Graph<Pair, DefaultEdge> buildMapGraph(GameMap map) {
         return GraphBuilder.buildFromMap(map);
-    }
-
-    // this is just for debug pourpose...
-    private Pair getPlayerCoord() {
-        // Iterate through all map cells
-        for (int row = 0; row < map.length; row++) {
-            for (int col = 0; col < map[row].length; col++) {
-                int cellValue = map[row][col];
-                if (cellValue == Utils.PLAYER) {
-                    return new Pair(row, col);
-                }
-            }
-        }
-        return new Pair(-1, -1);
     }
 
     private void placeBomb(Pair targetCell) {
         if (hasBombsLeft() && isValidCell(targetCell.row(), targetCell.col())
-                && map[targetCell.row()][targetCell.col()] == Utils.GRASS) {
-            map[targetCell.row()][targetCell.col()] = Utils.BOMB;
+                && this.manager.getGameMap().isEmpty(targetCell)) {
+            // map.addBomb(null, targetCell);
             numBombs--;
         }
     }
@@ -92,65 +78,44 @@ public class Enemy extends Character {
     }
 
     // when the enemy doesn't know where to move he choose randomly
-    protected void moveRandomly() {
+    private void moveRandomly() {
         Pair currentCoord = getCoord();
-
-        // Generate random direction
-        Direction randomDirection = Direction.values()[new Random().nextInt(Direction.values().length)];
-
-        int newRow = currentCoord.row() + randomDirection.getDx();
-        int newCol = currentCoord.col() + randomDirection.getDy();
-
-        // Check if the chosen direction leads to a valid and empty cell
-        if (isValidCell(newRow, newCol) && map[newRow][newCol] == Utils.GRASS) {
-            nextMove = Optional.of(new Pair(newRow, newCol));
-        } else {
-            // If the random move is invalid, try again recursively (up to a limit)
-            int retryCount = 0;
-            while (!isValidCell(newRow, newCol) || map[newRow][newCol] != Utils.GRASS) {
-                randomDirection = Direction.values()[new Random().nextInt(Direction.values().length)];
-                newRow = currentCoord.row() + randomDirection.getDx();
-                newCol = currentCoord.col() + randomDirection.getDy();
-                retryCount++;
-                if (retryCount >= 4) { // Limit retries to avoid getting stuck
-                    System.out.println("Enemy: Stuck! No valid random move found.");
-                    break;
-                }
-            }
-            if (retryCount < 4) { // Set nextMove if a valid random move was found
+        for (int retryCount = 0; retryCount < 4; retryCount++) {
+            Direction randomDirection = Direction.values()[new Random().nextInt(Direction.values().length)];
+            int newRow = currentCoord.row() + randomDirection.getDx();
+            int newCol = currentCoord.col() + randomDirection.getDy();
+            if (isValidCell(newRow, newCol) && manager.getGameMap().isEmpty(new Pair(newRow, newCol))) {
                 nextMove = Optional.of(new Pair(newRow, newCol));
+                break;
             }
+        }
+        if (nextMove.isEmpty()) {
+            System.out.println("Enemy: Stuck! No valid random move found.");
         }
     }
 
-    protected void findFarthestSafeSpace() {
+    private void findFarthestSafeSpace() {
         int farthestDistance = 0;
         Pair farthestSafeSpace = null;
 
-        // Iterate through all map cells
-        for (int row = 0; row < map.length; row++) {
-            for (int col = 0; col < map[row].length; col++) {
-                int cellValue = map[row][col];
-
-                // Check if cell is safe (grass or empty) and at least SAFE_CELL_DISTANCE away
-                // from explosions
-                if (cellValue == Utils.GRASS || cellValue == Utils.PLAYER || cellValue == Utils.ENEMY) {
-                    int distance = findDistanceToNearestExplosion(row, col);
-                    if (distance >= farthestDistance && distance >= SAFE_CELL_DISTANCE) {
-                        farthestDistance = distance;
-                        farthestSafeSpace = new Pair(row, col);
-                    }
+        for (Pair cell : manager.getGameMap().getMap().keySet()) {
+            if (manager.getGameMap().isEmpty(cell)) {
+                int distance = findDistanceToNearestExplosion(cell.row(), cell.col());
+                if (distance >= farthestDistance && distance >= SAFE_CELL_DISTANCE) {
+                    farthestDistance = distance;
+                    farthestSafeSpace = cell;
                 }
             }
         }
 
-        // If a safe space is found, set it as the next move
-        if (farthestSafeSpace != null) {
+         // If a safe space is found, set it as the next move
+         if (farthestSafeSpace != null) {
             nextMove = Optional.of(farthestSafeSpace);
         } else {
             // Handle case where no safe space is found (may need additional logic)
             moveRandomly();
         }
+
     }
 
     // Helper method to find the distance to the nearest explosion
@@ -158,7 +123,7 @@ public class Enemy extends Character {
         int distance = Integer.MAX_VALUE; // Initialize with a large value
         for (int i = row - SAFE_CELL_DISTANCE; i <= row + SAFE_CELL_DISTANCE; i++) {
             for (int j = col - SAFE_CELL_DISTANCE; j <= col + SAFE_CELL_DISTANCE; j++) {
-                if (isValidCell(i, j) && map[i][j] == Utils.EXPLOSION) {
+                if (isValidCell(i, j) && this.manager.getGameMap().isFlame(new Pair(i, j))) {
                     int currentDistance = Math.abs(i - row) + Math.abs(j - col); // Manhattan distance
                     distance = Math.min(distance, currentDistance);
                 }
@@ -174,12 +139,13 @@ public class Enemy extends Character {
     /* base AI Heuristics */
     @Override
     public void update() {
+        GameMap map = this.manager.getGameMap();
         currentState.execute(this); // Delegate behavior to current state
         if (nextMove.isPresent() && isValidCell(nextMove.get().row(), nextMove.get().col())) {
             Pair nextCell = nextMove.get();
-        
+
             // Check if nextCell is a destroyable wall
-            if (map[nextCell.row()][nextCell.col()] == Utils.WALL) {
+            if (map.isBreakableWall(nextCell)) {
                 // Enemy tries to destroy the wall
                 placeBomb(coord);
             } else {
@@ -244,13 +210,5 @@ public class Enemy extends Character {
 
     public int getNumBombs() {
         return numBombs;
-    }
-
-    public int[][] getMap() {
-        return this.map.clone();
-    }
-
-    public void setMap(int[][] map) {
-        this.map = map;
     }
 }

@@ -21,7 +21,7 @@ public class GraphBuilder {
 
     public static Graph<Pair,DefaultEdge> buildFromMap(GameMap map) {
         Graph<Pair, DefaultEdge> graph = new SimpleGraph<>(DefaultEdge.class);
-        Stream<Pair> validPos = map.getMap().stream()
+        Stream<Pair> validPos = map.getMap().entrySet().stream()
         .map(p -> p.getKey())
         .filter(p -> !(map.isUnbreakableWall(p) || map.isFlame(p)));
         validPos.forEach(p -> graph.addVertex(p));
