@@ -14,6 +14,7 @@ import it.unibo.bombardero.utils.Utils;
 
 public class MapManagerImpl implements MapManager {
 
+    private static final int MAP_CORNERS_NUMBER = 12; /* This number represent the twelve cells on which nothing can spawn except the player */
     private static final double WALL_PRESENCE_RATE = 0.8; /* This number control how much walls to generate in relation to the free space */
     private final List<Pair> MAP_CORNERS = new ArrayList<Pair>();
 
@@ -36,14 +37,14 @@ public class MapManagerImpl implements MapManager {
     @Override
     public void placeBreakableWalls() {
         int totalWallsToGenerate = (int)Math.floor(
-            Math.floorDiv(Utils.MAP_COLS, 2) + Math.floorDiv(Utils.MAP_ROWS, 2) * MapManagerImpl.WALL_PRESENCE_RATE
+            ((Utils.MAP_COLS * Utils.MAP_ROWS) - (Math.floorDiv(Utils.MAP_COLS, 2) * Math.floorDiv(Utils.MAP_ROWS, 2)) - MAP_CORNERS_NUMBER) * MapManagerImpl.WALL_PRESENCE_RATE
         );
         Random rnd = new Random();
         Pair coordinate;
         while(totalWallsToGenerate != 0) {
             do {
                 coordinate = new Pair(rnd.nextInt(Utils.MAP_COLS), rnd.nextInt(Utils.MAP_ROWS));
-            } while (!map.isEmpty(coordinate) && this.MAP_CORNERS.contains(coordinate));
+            } while (!map.isEmpty(coordinate) || this.MAP_CORNERS.contains(coordinate));
             this.map.addBreakableWall(coordinate, new BreakableWall());
             totalWallsToGenerate--;
         }
