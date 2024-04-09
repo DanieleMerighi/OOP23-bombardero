@@ -8,6 +8,7 @@ import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.physics.api.CollisionEngine;
+import it.unibo.bombardero.character.Character;
 
 public class BombarderoGameManager implements GameManager{
     
