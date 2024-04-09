@@ -15,7 +15,6 @@ import it.unibo.bombardero.utils.Utils;
 public class MapManagerImpl implements MapManager {
 
     private static final int MAP_CORNERS_NUMBER = 12; /* This number represent the twelve cells on which nothing can spawn except the player */
-    private static final double WALL_PRESENCE_RATE = 0.8; /* This number control how much walls to generate in relation to the free space */
     private final List<Pair> MAP_CORNERS = new ArrayList<Pair>();
 
     private final GameMap map;
