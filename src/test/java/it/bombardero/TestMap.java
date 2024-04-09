@@ -3,22 +3,12 @@ package it.bombardero;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.concurrent.Flow.Subscriber;
-
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.swing.text.AbstractDocument.BranchElement;
-
-import org.apache.http.protocol.SyncBasicHttpContext;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ch.qos.logback.classic.pattern.Util;
-import it.unibo.bombardero.cell.Cell;
+import java.util.HashSet;
+import java.util.Set;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.utils.Utils;
@@ -38,19 +28,24 @@ public class TestMap {
 
     private GameMap map;
 
-    /**
-     * Computes the numbers to check according to the map size reported on the Utils class.
-     */
-    @BeforeAll void init() {
-        this.map = new GameMapImpl();
+    @BeforeAll
+    static void initConstants() {
         TOTAL_CELLS = Utils.MAP_ROWS * Utils.MAP_COLS;
         EXPECTED_UNBREAKABLE_WALLS_NUMBER = (int)Math.floor(
             Math.floorDiv(Utils.MAP_ROWS, 2) * Math.floorDiv(Utils.MAP_COLS, 2)
             );
-            EXPECTED_BREAKABLE_WALLS_NUMBER = (int)Math.floor(
+        EXPECTED_BREAKABLE_WALLS_NUMBER = (int)Math.floor(
             (TOTAL_CELLS - EXPECTED_UNBREAKABLE_WALLS_NUMBER - MAP_CORNERS_QTY) * Utils.WALL_PRESENCE_RATE
             );
+    }
 
+    /**
+     * Computes the numbers to check according to the map size reported on the Utils class.
+     */
+    @BeforeEach
+    void init() {
+        map = new GameMapImpl();
+        computeMapCorners();
         String[][] printableMap = new String[Utils.MAP_ROWS][Utils.MAP_COLS];
         this.map.getMap().entrySet().stream()
             .forEach(entry -> printableMap[entry.getKey().row()][entry.getKey().col()] = fromClassToInteger(entry.getKey()));
@@ -61,7 +56,8 @@ public class TestMap {
      * Tests wether the unbreakable walls have been correctly placed, according to the standard scheme.
      * The user running this method can visually appreciate if the placement went accordingly.
      */
-    @Test void testUnbreakableWallsInitialization() {
+    @Test
+    void testUnbreakableWallsInitialization() {
         long unbreakableWallsPresent = this.map.getMap().entrySet().stream()
             .filter(entry -> this.map.isUnbreakableWall(entry.getKey()))
             .count();
@@ -74,7 +70,8 @@ public class TestMap {
      * Tests wether all the breakable walls that had to be placed were correctly placed. 
      * The user running this method can visually appreciate if the random generation creates a balanced map layout.
      */
-    @Test void testBreakableWallsPlacement() {
+    @Test
+    void testBreakableWallsPlacement() {
         long breakableWallsGenerated = this.map.getMap().entrySet().stream()
         .filter(entry -> this.map.isBreakableWall(entry.getKey()))
         .count();
@@ -92,7 +89,8 @@ public class TestMap {
     /** 
      * Begins the collapsing phase and tests if it goes as expected
      */
-    @Test void testMapCollapse() {
+    @Test
+    void testMapCollapse() {
 
     }
 
