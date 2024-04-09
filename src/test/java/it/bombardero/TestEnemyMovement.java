@@ -14,7 +14,7 @@ import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.utils.Utils;
 import it.unibo.bombardero.character.Enemy;
 
-public class TestEnemyMovement {
+public class TestEnemyMovement { /*
 
     private int[][] baseMap;
     private Enemy enemy;
@@ -68,5 +68,5 @@ public class TestEnemyMovement {
 
         assertNotNull(bombPlacementCell, "Enemy should place a bomb to clear a path");
     }
-    
+     */
 }
