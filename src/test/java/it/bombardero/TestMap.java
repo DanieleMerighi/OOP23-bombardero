@@ -58,7 +58,6 @@ public class TestMap {
     /** 
      * Tests wether the unbreakable walls have been correctly placed, according to the standard scheme.
      * The user running this method can visually appreciate if the placement went accordingly.
-     * TODO: check if every breakable wall is in the correct place (coordinate)
      */
     @Test
     void testUnbreakableWallsInitialization() {
@@ -99,18 +98,19 @@ public class TestMap {
     }
 
     /** 
-     * Begins the collapsing phase and tests if it goes as expected
+     * Begins the collapsing phase and tests if it goes as expected, one block at a time 
+     * TODO: keep coding... and print correctly map
      */
     @Test
     void testMapCollapse() {
         MapManager manager = new MapManagerImpl(this.map);
-        String[][] printableMap = generatePrintableMap();
 
         manager.triggerArenaCollapse();
         for(int i = 0; i < TOTAL_CELLS; i++) {
-            
+            manager.update();
         }
-
+        
+        print2DArray(generatePrintableMap());
     }
 
     private String fromClassToInteger(Pair coordinate) {
@@ -139,7 +139,7 @@ public class TestMap {
                 String output = arr[i][j] == null ? "E" : arr[i][j];
                 System.out.print(output + "  ");
             }
-            System.out.print("\n");
+            System.out.println();
         }
     }
 
