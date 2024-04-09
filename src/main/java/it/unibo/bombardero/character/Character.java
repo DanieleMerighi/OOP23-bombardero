@@ -5,14 +5,16 @@ import it.unibo.bombardero.map.api.Pair;
 
 public abstract class Character {
 
-    protected Pair coord;
+    protected float x;
+    protected float y;
     protected int width, height;
     protected boolean isAlive = true;
     protected GameManager manager;
 
-    public Character(GameManager manager, Pair coord, int width, int height) {
+    public Character(GameManager manager, float x, float y, int width, int height) {
         this.manager = manager;
-        this.coord = coord;
+        this.x = x;
+        this.y = y;
         this.width = width;
         this.height = height;
     }
@@ -24,7 +26,7 @@ public abstract class Character {
     }
 
     public Pair getCoord() {
-        return this.coord;
+        return new Pair(Math.round(this.x), Math.round(this.y));
     }
 
     public void kill() {
