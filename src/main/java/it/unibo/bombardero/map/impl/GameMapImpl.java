@@ -23,6 +23,13 @@ public class GameMapImpl implements GameMap {
         manager.placeBreakableWalls();
     }
 
+    /* 
+     * This constructor has been created for testing purposes and allow to skip the 
+     * obstacle generation, producing a map with only unbreakable obstacles.
+     * The breakable obstacles can be generated later anyway (untested side effects, potentially 
+     * stunning the application) by calling the manager's method.
+     * @param wallGeneration wether the walls have to be generated or not
+    */
     public GameMapImpl(boolean wallGeneration) {
         this.manager = new MapManagerImpl(this);
         manager.placeUnbreakableWalls();
