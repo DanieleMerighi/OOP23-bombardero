@@ -38,10 +38,10 @@ public class TestMap {
         TOTAL_CELLS = Utils.MAP_ROWS * Utils.MAP_COLS;
         EXPECTED_UNBREAKABLE_WALLS_NUMBER = (int)Math.floor(
             Math.floorDiv(Utils.MAP_ROWS, 2) * Math.floorDiv(Utils.MAP_COLS, 2)
-            );
+        );
         EXPECTED_BREAKABLE_WALLS_NUMBER = (int)Math.floor(
             (TOTAL_CELLS - EXPECTED_UNBREAKABLE_WALLS_NUMBER - MAP_CORNERS_QTY) * Utils.WALL_PRESENCE_RATE
-            );
+        );
     }
 
     /**
@@ -57,7 +57,6 @@ public class TestMap {
 
     /** 
      * Tests wether the unbreakable walls have been correctly placed, according to the standard scheme.
-     * The user running this method can visually appreciate if the placement went accordingly.
      */
     @Test
     void testUnbreakableWallsInitialization() {
@@ -73,29 +72,35 @@ public class TestMap {
                 .map(entry -> entry.getKey())
                 .filter(pair -> map.isUnbreakableWall(pair))
                 .collect(Collectors.toSet()),
-                EXPECTED_UNBREAKABLE_WALLS_COORDINATES
+            EXPECTED_UNBREAKABLE_WALLS_COORDINATES
         );
         System.out.println("OK, all the unbreakable walls are in the right position");
     }
 
     /** 
-     * Tests wether all the breakable walls that had to be placed were correctly placed. 
-     * The user running this method can visually appreciate if the random generation creates a balanced map layout.
+     * Tests wether all the breakable walls that had to be placed were correctly placed.
      */
     @Test
     void testBreakableWallsPlacement() {
-        long breakableWallsGenerated = this.map.getMap().entrySet().stream()
-        .filter(entry -> this.map.isBreakableWall(entry.getKey()))
-        .count();
-
-        assertEquals(breakableWallsGenerated, EXPECTED_BREAKABLE_WALLS_NUMBER);
-        System.out.println("OK, Breakable walls generated: " + breakableWallsGenerated);
-
-        assertTrue( this.map.getMap().entrySet().stream()
-            .filter(entry -> this.map.isBreakableWall(entry.getKey()))
-            .anyMatch(entry -> !this.MAP_CORNERS.contains(entry.getKey()))
+        assertEquals(
+            map.getMap().entrySet().stream()
+                .filter(entry -> this.map.isBreakableWall(entry.getKey()))
+                .count(),
+            EXPECTED_BREAKABLE_WALLS_NUMBER
         );
-        System.out.println("OK, no breakable walls have spawned in the map's corners");
+    }
+
+    /**
+     * Checks if any breakable walls has generated in the twelve cells
+     * where the player spawns in the map.
+     */
+    @Test
+    void checkBreakableWallsInCorners() {
+        assertTrue(
+            map.getMap().entrySet().stream()
+                .filter(entry -> this.map.isBreakableWall(entry.getKey()))
+                .anyMatch(entry -> !this.MAP_CORNERS.contains(entry.getKey()))
+        );
     }
 
     /** 
