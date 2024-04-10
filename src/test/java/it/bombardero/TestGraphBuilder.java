@@ -9,39 +9,25 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.impl.GameMapImpl;
+import it.unibo.bombardero.utils.Utils;
 
 import org.jgrapht.Graph;
-import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
 
+import it.unibo.bombardero.cell.UnbreakableWall;
 import it.unibo.bombardero.character.AI.*;
 
-public class TestGraphBuilder {/*
+public class TestGraphBuilder {
 
-    private Graph<Pair, DefaultEdge> graph;
+    private Graph<Pair, DefaultWeightedEdge> graph;
 
     @BeforeEach 
     void initBaseMap() {
-        int[][] map = {
-            {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-            {2, 4, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 2},
-            {2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2},
-            {2, 3, 3, 3, 1, 1, 1, 1, 1, 3, 1, 1, 2},
-            {2, 3, 2, 1, 2, 3, 2, 1, 2, 1, 2, 1, 2},
-            {2, 1, 1, 3, 1, 3, 1, 1, 1, 1, 1, 3, 2},
-            {2, 1, 2, 3, 2, 1, 2, 1, 2, 1, 2, 1, 2},
-            {2, 1, 1, 3, 1, 1, 1, 1, 1, 3, 3, 1, 2},
-            {2, 1, 2, 3, 2, 1, 2, 5, 2, 1, 2, 1, 2},
-            {2, 1, 3, 3, 3, 1, 1, 3, 1, 1, 1, 1, 2},
-            {2, 1, 2, 1, 2, 1, 2, 3, 2, 1, 2, 1, 2},
-            {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2},
-            {2, 3, 2, 1, 2, 1, 2, 3, 2, 1, 2, 1, 2},
-            {2, 3, 1, 3, 1, 1, 3, 3, 3, 1, 3, 3, 2},
-            {2, 1, 2, 1, 2, 1, 2, 3, 2, 3, 2, 3, 2},
-            {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2},
-            {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
-        };
-        this.graph = GraphBuilder.buildFromMap(map);
+        GameMap miniMap = new GameMapImpl();
+        this.graph = GraphBuilder.buildFromMap(miniMap);
     }
 
     @Test
@@ -81,5 +67,5 @@ public class TestGraphBuilder {/*
         assertEquals(false, path.isPresent());
     }
 
-    */
+    
 }
