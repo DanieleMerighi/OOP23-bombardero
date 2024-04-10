@@ -42,15 +42,7 @@ public class MapManagerImpl implements MapManager {
         int totalWallsToGenerate = (int)Math.floor(
             ((Utils.MAP_COLS * Utils.MAP_ROWS) - (Math.floorDiv(Utils.MAP_COLS, 2) * Math.floorDiv(Utils.MAP_ROWS, 2)) - MAP_CORNERS_NUMBER) * Utils.WALL_PRESENCE_RATE
         );
-        Random rnd = new Random();
-        Pair coordinate;
-        while(totalWallsToGenerate != 0) {
-            do {
-                coordinate = new Pair(rnd.nextInt(Utils.MAP_COLS), rnd.nextInt(Utils.MAP_ROWS));
-            } while (!map.isEmpty(coordinate) || this.MAP_CORNERS.contains(coordinate));
-            this.map.addBreakableWall(coordinate, new BreakableWall());
-            totalWallsToGenerate--;
-        }
+        generateBreakableWalls(totalWallsToGenerate).forEach(wall -> map.addBreakableWall(wall, new BreakableWall()));
     }
 
     @Override
@@ -83,9 +75,30 @@ public class MapManagerImpl implements MapManager {
         );
     }
 
+    /**
+     *  Generates the number of walls requested, every element satisfies the costraint of
+     * not being generated in the corners and over other obstacles placed before the generation
+     * @param totalWallsToGenerate the number of walls to be generated
+     * @return a Set containing all the generated coordinates
+     */
+    private Set<Pair> generateBreakableWalls(int totalWallsToGenerate) {
+        Random rnd = new Random();
+        Pair coordinate;
+        Set<Pair> walls = new HashSet<>();
+        while(totalWallsToGenerate != 0) {
+            do {
+                coordinate = new Pair(rnd.nextInt(Utils.MAP_COLS), rnd.nextInt(Utils.MAP_ROWS));
+            } while (!map.isEmpty(coordinate) || this.MAP_CORNERS.contains(coordinate));
+            walls.add(coordinate);
+            totalWallsToGenerate--;
+        }
+        return walls;
+    }
+
     /** 
      * Computes the order in which the arena will collapse, applying and algorithm 
      * of spiral traversal to the game map
+     * @return the list of walls in collpase-order, the first element being the first to fall 
      */
     private List<Pair> computeCollapseOrder() {
         List<Pair> order = new ArrayList<>();
