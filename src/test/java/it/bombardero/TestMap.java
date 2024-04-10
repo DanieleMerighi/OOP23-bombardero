@@ -39,9 +39,11 @@ public class TestMap {
         EXPECTED_UNBREAKABLE_WALLS_NUMBER = (int)Math.floor(
             Math.floorDiv(Utils.MAP_ROWS, 2) * Math.floorDiv(Utils.MAP_COLS, 2)
         );
+        System.out.println("Exp Unb " + EXPECTED_UNBREAKABLE_WALLS_NUMBER);
         EXPECTED_BREAKABLE_WALLS_NUMBER = (int)Math.floor(
             (TOTAL_CELLS - EXPECTED_UNBREAKABLE_WALLS_NUMBER - MAP_CORNERS_QTY) * Utils.WALL_PRESENCE_RATE
         );
+        System.out.println("Exp br " + EXPECTED_BREAKABLE_WALLS_NUMBER);
     }
 
     /**
@@ -64,15 +66,15 @@ public class TestMap {
             .filter(entry -> this.map.isUnbreakableWall(entry.getKey()))
             .count();
 
-        assertEquals(unbreakableWallsPresent, EXPECTED_UNBREAKABLE_WALLS_NUMBER);
+        assertEquals(EXPECTED_UNBREAKABLE_WALLS_NUMBER, unbreakableWallsPresent);
         System.out.println("OK, all the unbreakable walls are present: " + unbreakableWallsPresent);
 
         assertEquals(
+            EXPECTED_UNBREAKABLE_WALLS_COORDINATES,
             map.getMap().entrySet().stream()
                 .map(entry -> entry.getKey())
                 .filter(pair -> map.isUnbreakableWall(pair))
-                .collect(Collectors.toSet()),
-            EXPECTED_UNBREAKABLE_WALLS_COORDINATES
+                .collect(Collectors.toSet())
         );
         System.out.println("OK, all the unbreakable walls are in the right position");
     }
@@ -83,10 +85,10 @@ public class TestMap {
     @Test
     void testBreakableWallsNumber() {
         assertEquals(
+            EXPECTED_BREAKABLE_WALLS_NUMBER,
             map.getMap().entrySet().stream()
                 .filter(entry -> this.map.isBreakableWall(entry.getKey()))
-                .count(),
-            EXPECTED_BREAKABLE_WALLS_NUMBER
+                .count()
         );
     }
 
