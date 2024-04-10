@@ -39,11 +39,9 @@ public class TestMap {
         EXPECTED_UNBREAKABLE_WALLS_NUMBER = (int)Math.floor(
             Math.floorDiv(Utils.MAP_ROWS, 2) * Math.floorDiv(Utils.MAP_COLS, 2)
         );
-        System.out.println("Exp Unb " + EXPECTED_UNBREAKABLE_WALLS_NUMBER);
         EXPECTED_BREAKABLE_WALLS_NUMBER = (int)Math.floor(
             (TOTAL_CELLS - EXPECTED_UNBREAKABLE_WALLS_NUMBER - MAP_CORNERS_QTY) * Utils.WALL_PRESENCE_RATE
         );
-        System.out.println("Exp br " + EXPECTED_BREAKABLE_WALLS_NUMBER);
     }
 
     /**
@@ -87,7 +85,7 @@ public class TestMap {
         assertEquals(
             EXPECTED_BREAKABLE_WALLS_NUMBER,
             map.getMap().entrySet().stream()
-                .filter(entry -> this.map.isBreakableWall(entry.getKey()))
+                .filter(entry -> map.isBreakableWall(entry.getKey()))
                 .count()
         );
     }

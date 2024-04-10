@@ -88,7 +88,7 @@ public class MapManagerImpl implements MapManager {
         while(totalWallsToGenerate != 0) {
             do {
                 coordinate = new Pair(rnd.nextInt(Utils.MAP_COLS), rnd.nextInt(Utils.MAP_ROWS));
-            } while (!map.isEmpty(coordinate) || this.MAP_CORNERS.contains(coordinate));
+            } while (!map.isEmpty(coordinate) || this.MAP_CORNERS.contains(coordinate) || walls.contains(coordinate));
             walls.add(coordinate);
             totalWallsToGenerate--;
         }
