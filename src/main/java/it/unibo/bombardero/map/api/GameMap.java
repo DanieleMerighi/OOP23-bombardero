@@ -1,7 +1,6 @@
 package it.unibo.bombardero.map.api;
 
 import java.util.Map;
-import java.util.Set;
 
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Cell;
