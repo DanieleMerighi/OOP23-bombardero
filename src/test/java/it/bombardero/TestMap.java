@@ -81,7 +81,7 @@ public class TestMap {
      * Tests wether all the breakable walls that had to be placed were correctly placed.
      */
     @Test
-    void testBreakableWallsPlacement() {
+    void testBreakableWallsNumber() {
         assertEquals(
             map.getMap().entrySet().stream()
                 .filter(entry -> this.map.isBreakableWall(entry.getKey()))
