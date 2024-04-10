@@ -17,6 +17,7 @@ import it.unibo.bombardero.utils.Utils;
 public class MapManagerImpl implements MapManager {
 
     /* This number and List represent the twelve cells on which nothing can spawn except the player: */
+    /* NOTE: the number "12" does NOT depend from the arena's size, however the "MAP_CORNERS" Set does. */
     private static final int MAP_CORNERS_NUMBER = 12;
     private final Set<Pair> MAP_CORNERS = new HashSet<Pair>();
 
