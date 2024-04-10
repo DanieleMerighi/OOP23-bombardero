@@ -7,7 +7,7 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 import org.jgrapht.Graph;
-import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
 
 import it.unibo.bombardero.character.AI.GraphBuilder;
 import it.unibo.bombardero.core.api.GameManager;
@@ -62,7 +62,7 @@ public class Enemy extends Character {
         nextMove = path.isEmpty() ? Optional.empty() : Optional.of(path.remove(0));
     }
 
-    private Graph<Pair, DefaultEdge> buildMapGraph(GameMap map) {
+    private Graph<Pair, DefaultWeightedEdge> buildMapGraph(GameMap map) {
         return GraphBuilder.buildFromMap(map);
     }
 
