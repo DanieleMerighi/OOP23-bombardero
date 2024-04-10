@@ -70,7 +70,8 @@ public class TestMap {
 
         assertEquals(
             map.getMap().entrySet().stream()
-                .filter(entry -> map.isUnbreakableWall(entry.getKey()))
+                .map(entry -> entry.getKey())
+                .filter(pair -> map.isUnbreakableWall(pair))
                 .collect(Collectors.toSet()),
                 EXPECTED_UNBREAKABLE_WALLS_COORDINATES
         );
@@ -144,8 +145,8 @@ public class TestMap {
     }
 
     private void computeUnbreakableWallsCoordinates() {
-        for(int i = 0; i < Utils.MAP_ROWS; i += 2) {
-            for(int j = 0; j < Utils.MAP_COLS; j += 2) {
+        for(int i = 1; i < Utils.MAP_ROWS; i += 2) {
+            for(int j = 1; j < Utils.MAP_COLS; j += 2) {
                 this.EXPECTED_UNBREAKABLE_WALLS_COORDINATES.add(new Pair(i, j));
             }
         }
