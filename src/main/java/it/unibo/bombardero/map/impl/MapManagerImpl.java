@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
+import java.util.Set;
+import java.util.HashSet;
 
 import it.unibo.bombardero.cell.BreakableWall;
 import it.unibo.bombardero.cell.UnbreakableWall;
@@ -14,8 +16,10 @@ import it.unibo.bombardero.utils.Utils;
 
 public class MapManagerImpl implements MapManager {
 
-    private static final int MAP_CORNERS_NUMBER = 12; /* This number represent the twelve cells on which nothing can spawn except the player */
-    private final List<Pair> MAP_CORNERS = new ArrayList<Pair>();
+    /* This number and List represent the twelve cells on which nothing can spawn except the player: */
+    /* NOTE: the number "12" does NOT depend from the arena's size, however the "MAP_CORNERS" Set does. */
+    private static final int MAP_CORNERS_NUMBER = 12;
+    private final Set<Pair> MAP_CORNERS = new HashSet<Pair>();
 
     private final GameMap map;
     private List<Pair> wallCollapseOrder;
@@ -38,15 +42,7 @@ public class MapManagerImpl implements MapManager {
         int totalWallsToGenerate = (int)Math.floor(
             ((Utils.MAP_COLS * Utils.MAP_ROWS) - (Math.floorDiv(Utils.MAP_COLS, 2) * Math.floorDiv(Utils.MAP_ROWS, 2)) - MAP_CORNERS_NUMBER) * Utils.WALL_PRESENCE_RATE
         );
-        Random rnd = new Random();
-        Pair coordinate;
-        while(totalWallsToGenerate != 0) {
-            do {
-                coordinate = new Pair(rnd.nextInt(Utils.MAP_COLS), rnd.nextInt(Utils.MAP_ROWS));
-            } while (!map.isEmpty(coordinate) || this.MAP_CORNERS.contains(coordinate));
-            this.map.addBreakableWall(coordinate, new BreakableWall());
-            totalWallsToGenerate--;
-        }
+        generateBreakableWalls(totalWallsToGenerate).forEach(wall -> map.addBreakableWall(wall, new BreakableWall()));
     }
 
     @Override
@@ -65,40 +61,74 @@ public class MapManagerImpl implements MapManager {
 
     @Override
     public void triggerArenaCollapse() {
-        int top = 0, bottom = Utils.MAP_ROWS - 1, left = 0, right = Utils.MAP_COLS - 1;
         this.collapseStarted = true;
-        wallCollapseOrder = new ArrayList<>();
-        while(top <= bottom && left <= right) {
-
-            for (int i = left; i <= right; i++) {
-                this.wallCollapseOrder.add(new Pair(top, i));
-            }
-            top++;
-            for (int i = top; i <= bottom; i++) {
-                this.wallCollapseOrder.add(new Pair(i, right));
-            }
-            right--;
-            if(top <= bottom) {
-                for (int i = right; i >= left; i--) {
-                    this.wallCollapseOrder.add(new Pair(bottom, i));
-                } 
-                bottom--;
-            }
-            if (left <= right) {
-                for (int i = bottom; i >= top; i--) {
-                    this.wallCollapseOrder.add(new Pair(i, left));
-                }
-                left++;
-            }
-        }
+        this.wallCollapseOrder = computeCollapseOrder();
     }
     
     /** 
      * Places the next wall in the collapse order, removing it from the list
      */
     private void placeNextWall() {
-        this.map.addUnbreakableWall(this.wallCollapseOrder.remove(0), new UnbreakableWall());
+        this.map.addUnbreakableWall(
+            this.wallCollapseOrder.remove(0),
+            new UnbreakableWall()
+        );
     }
+
+    /**
+     *  Generates the number of walls requested, every element satisfies the costraint of
+     * not being generated in the corners and over other obstacles placed before the generation
+     * @param totalWallsToGenerate the number of walls to be generated
+     * @return a Set containing all the generated coordinates
+     */
+    private Set<Pair> generateBreakableWalls(int totalWallsToGenerate) {
+        Random rnd = new Random();
+        Pair coordinate;
+        Set<Pair> walls = new HashSet<>();
+        while(totalWallsToGenerate != 0) {
+            do {
+                coordinate = new Pair(rnd.nextInt(Utils.MAP_COLS), rnd.nextInt(Utils.MAP_ROWS));
+            } while (!map.isEmpty(coordinate) || this.MAP_CORNERS.contains(coordinate));
+            walls.add(coordinate);
+            totalWallsToGenerate--;
+        }
+        return walls;
+    }
+
+    /** 
+     * Computes the order in which the arena will collapse, applying and algorithm 
+     * of spiral traversal to the game map
+     * @return the list of walls in collpase-order, the first element being the first to fall 
+     */
+    private List<Pair> computeCollapseOrder() {
+        List<Pair> order = new ArrayList<>();
+        int top = 0, bottom = Utils.MAP_ROWS - 1, left = 0, right = Utils.MAP_COLS - 1;
+        while(top <= bottom && left <= right) {
+
+            for (int i = left; i <= right; i++) {
+                order.add(new Pair(top, i));
+            }
+            top++;
+            for (int i = top; i <= bottom; i++) {
+                order.add(new Pair(i, right));
+            }
+            right--;
+            if(top <= bottom) {
+                for (int i = right; i >= left; i--) {
+                    order.add(new Pair(bottom, i));
+                } 
+                bottom--;
+            }
+            if (left <= right) {
+                for (int i = bottom; i >= top; i--) {
+                    order.add(new Pair(i, left));
+                }
+                left++;
+            }
+        }
+        return order;
+    }
+    
 
     /** 
      * To be called during the manager's initialization, it computes the twelve cells 

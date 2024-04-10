@@ -2,10 +2,7 @@ package it.unibo.bombardero.map.impl;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
-import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.BreakableWall;
 import it.unibo.bombardero.cell.Cell;
@@ -24,6 +21,14 @@ public class GameMapImpl implements GameMap {
         this.manager = new MapManagerImpl(this);
         manager.placeUnbreakableWalls();
         manager.placeBreakableWalls();
+    }
+
+    public GameMapImpl(boolean wallGeneration) {
+        this.manager = new MapManagerImpl(this);
+        manager.placeUnbreakableWalls();
+        if(wallGeneration) {
+            manager.placeBreakableWalls();
+        }
     }
 
     @Override
