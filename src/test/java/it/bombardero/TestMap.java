@@ -52,7 +52,7 @@ public class TestMap {
         map = new GameMapImpl();
         computeMapCorners();
         computeUnbreakableWallsCoordinates();
-        print2DArray(generatePrintableMap());
+        /* print2DArray(generatePrintableMap()); */
     } 
 
     /** 
@@ -105,18 +105,28 @@ public class TestMap {
 
     /** 
      * Begins the collapsing phase and tests if it goes as expected, one block at a time 
+     * util all the map has collapsed
      * TODO: keep coding... and print correctly map
      */
     @Test
     void testMapCollapse() {
+        /* Create the manager and print the map before the collapse */
         MapManager manager = new MapManagerImpl(this.map);
+        String[][] collapsingMap = generatePrintableMap();
+        print2DArray(collapsingMap);
 
         manager.triggerArenaCollapse();
         for(int i = 0; i < TOTAL_CELLS; i++) {
             manager.update();
+
         }
-        
+
+        /* Final check if every cell is a wall (print the map to make sure) */
         print2DArray(generatePrintableMap());
+        assertTrue(
+            map.getMap().entrySet().stream()
+                .allMatch(entry -> map.isUnbreakableWall(entry.getKey()))
+        );
     }
 
     private String fromClassToInteger(Pair coordinate) {
@@ -147,6 +157,7 @@ public class TestMap {
             }
             System.out.println();
         }
+        System.out.print("\n\n");
     }
 
     private void computeUnbreakableWallsCoordinates() {
