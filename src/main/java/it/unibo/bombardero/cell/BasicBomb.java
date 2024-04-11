@@ -1,9 +1,11 @@
 package it.unibo.bombardero.cell;
 
+import java.util.Map.Entry;
+
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
 
-public class Bomb extends Cell {
+public class BasicBomb extends Cell {
     private final long TIME_TO_EXPLODE=2000L;
 
     public enum BombType{
@@ -14,7 +16,7 @@ public class Bomb extends Cell {
 
         private String type;
 
-        private BombType(String type){
+        private BombType(String type) {
             this.type=type;
         }
 
@@ -30,22 +32,23 @@ public class Bomb extends Cell {
     private final BombType type;
     private long elapsedTime=0;
 
-    public Bomb(GameManager mgr, Pair pos , BombType type, int range){
+    public BasicBomb(GameManager mgr, Pair pos , BombType type, int range) {
         this.mgr = mgr;
         this.pos = pos;
         this.type = type;
         this.range=range;
     }
 
-    void update(long time){
+    void update(long time) {
         elapsedTime += time;
-        if(elapsedTime>TIME_TO_EXPLODE){
+        if(elapsedTime>=TIME_TO_EXPLODE) {
             explode();
         }
     }
 
-    private void explode(){
+    private Entry<Pair,Flame> explode() {
         mgr.explodeBomb(this);
+        return null;
     }
 
 }
