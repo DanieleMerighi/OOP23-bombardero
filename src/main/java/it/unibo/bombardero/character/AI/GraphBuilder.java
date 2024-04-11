@@ -24,12 +24,8 @@ public class GraphBuilder {
         Stream<Pair> validPos = map.getMap().entrySet().stream()
         .map(p -> p.getKey())
         .filter(p -> !(map.isUnbreakableWall(p) || map.isFlame(p) || map.isBomb(p)));
-        validPos.forEach(p -> graph.addVertex(p));
-
+        validPos.peek(p -> graph.addVertex(p)).forEach(p -> connectWithNeighbors(graph, p, map));
         // Add edges (connections between adjacent cells) to the graph 
-        validPos.forEach(p -> connectWithNeighbors(graph, p, map));
-
-
         return graph;
     }
 
