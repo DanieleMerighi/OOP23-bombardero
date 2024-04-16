@@ -106,7 +106,7 @@ public class TestMap {
     /** 
      * Begins the collapsing phase and tests if it goes as expected, one block at a time 
      * util all the map has collapsed
-     * TODO: keep coding... and print correctly map
+     * TODO: check, step-by-step if the collpase goes well
      */
     @Test
     void testMapCollapse() {
