@@ -7,8 +7,6 @@ import java.util.stream.IntStream;
 import java.util.Set;
 import java.util.HashSet;
 
-import it.unibo.bombardero.cell.Wall;
-import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.MapManager;
 import it.unibo.bombardero.map.api.Pair;
