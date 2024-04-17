@@ -4,10 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import it.unibo.bombardero.cell.Bomb;
-import it.unibo.bombardero.cell.BreakableWall;
+import it.unibo.bombardero.cell.Wall;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Flame;
-import it.unibo.bombardero.cell.UnbreakableWall;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.MapManager;
 import it.unibo.bombardero.map.api.Pair;
@@ -23,6 +22,13 @@ public class GameMapImpl implements GameMap {
         manager.placeBreakableWalls();
     }
 
+    /* 
+     * This constructor has been created for testing purposes and allow to skip the 
+     * obstacle generation, producing a map with only unbreakable obstacles.
+     * The breakable obstacles can be generated later anyway (untested side effects, potentially 
+     * stunning the application) by calling the manager's method.
+     * @param wallGeneration wether the walls have to be generated or not
+    */
     public GameMapImpl(boolean wallGeneration) {
         this.manager = new MapManagerImpl(this);
         manager.placeUnbreakableWalls();
@@ -47,13 +53,13 @@ public class GameMapImpl implements GameMap {
     }
 
     @Override
-    public void addUnbreakableWall(Pair coordinate, Cell wall) {
-        this.map.put(coordinate, wall);
+    public void addUnbreakableWall(Pair coordinate) {
+        this.map.put(coordinate, new Wall(Cell.CellType.WALL_UNBREAKABLE));
     }
 
     @Override
-    public void addBreakableWall(Pair coordinate, Cell wall) {
-        this.map.put(coordinate, wall);
+    public void addBreakableWall(Pair coordinate) {
+        this.map.put(coordinate, new Wall(Cell.CellType.WALL_BREAKABLE));
     }
 
     @Override
@@ -63,12 +69,14 @@ public class GameMapImpl implements GameMap {
 
     @Override
     public boolean isBreakableWall(Pair coordinate) {
-        return this.map.containsKey(coordinate) && this.map.get(coordinate) instanceof BreakableWall;
+        return this.map.containsKey(coordinate) && 
+            this.map.get(coordinate).getType().equals(Cell.CellType.WALL_BREAKABLE);
     }
 
     @Override
     public boolean isUnbreakableWall(Pair coordinate) {
-        return this.map.containsKey(coordinate) && this.map.get(coordinate) instanceof UnbreakableWall;
+        return this.map.containsKey(coordinate) && 
+            this.map.get(coordinate).getType().equals(Cell.CellType.WALL_UNBREAKABLE);
     }
 
     @Override

@@ -7,8 +7,6 @@ import java.util.stream.IntStream;
 import java.util.Set;
 import java.util.HashSet;
 
-import it.unibo.bombardero.cell.BreakableWall;
-import it.unibo.bombardero.cell.UnbreakableWall;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.MapManager;
 import it.unibo.bombardero.map.api.Pair;
@@ -42,7 +40,7 @@ public class MapManagerImpl implements MapManager {
         int totalWallsToGenerate = (int)Math.floor(
             ((Utils.MAP_COLS * Utils.MAP_ROWS) - (Math.floorDiv(Utils.MAP_COLS, 2) * Math.floorDiv(Utils.MAP_ROWS, 2)) - MAP_CORNERS_NUMBER) * Utils.WALL_PRESENCE_RATE
         );
-        generateBreakableWalls(totalWallsToGenerate).forEach(wall -> map.addBreakableWall(wall, new BreakableWall()));
+        generateBreakableWalls(totalWallsToGenerate).forEach(wall -> map.addBreakableWall(wall));
     }
 
     @Override
@@ -56,7 +54,7 @@ public class MapManagerImpl implements MapManager {
                 .filter(num -> num%2 != 0)
                 .mapToObj(y -> new Pair(x, y))
             )
-            .forEach(coord -> map.addUnbreakableWall(coord, new UnbreakableWall()));
+            .forEach(coord -> map.addUnbreakableWall(coord));
     }
 
     @Override
@@ -69,10 +67,7 @@ public class MapManagerImpl implements MapManager {
      * Places the next wall in the collapse order, removing it from the list
      */
     private void placeNextWall() {
-        this.map.addUnbreakableWall(
-            this.wallCollapseOrder.remove(0),
-            new UnbreakableWall()
-        );
+        this.map.addUnbreakableWall(this.wallCollapseOrder.remove(0));
     }
 
     /**
@@ -88,7 +83,7 @@ public class MapManagerImpl implements MapManager {
         while(totalWallsToGenerate != 0) {
             do {
                 coordinate = new Pair(rnd.nextInt(Utils.MAP_COLS), rnd.nextInt(Utils.MAP_ROWS));
-            } while (!map.isEmpty(coordinate) || this.MAP_CORNERS.contains(coordinate));
+            } while (!map.isEmpty(coordinate) || this.MAP_CORNERS.contains(coordinate) || walls.contains(coordinate));
             walls.add(coordinate);
             totalWallsToGenerate--;
         }
