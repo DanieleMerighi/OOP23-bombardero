@@ -1,6 +1,9 @@
 package it.unibo.bombardero.view;
 
 import javax.swing.JFrame;
+
+import it.unibo.bombardero.utils.Utils;
+
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.GraphicsEnvironment;
@@ -17,14 +20,15 @@ import java.awt.GraphicsEnvironment;
  */
 public class ResizingEngine {
 
-    private double currentScale;
     private static double OPTIMAL_HEIGHT_SCALE = 0.5; // The optimal scale for the game is half of the height of the user's screen
+
+    private double currentScale;
 
     /**
      * Computes and saves the scale for the current display
      */
     public void computeScale() {
-        
+        currentScale = 1.5;
     }   
 
     /** 
@@ -42,10 +46,10 @@ public class ResizingEngine {
      * @param frame the frame, from which to get the insets, assuming the insets have been already generated
      * @return the total frame size accounting the panel and the insets in every direction
      */
-    public Dimension computeTotalWindowSize(Dimension panelSize, JFrame frame) {
+    public Dimension computeTotalWindowSize(JFrame frame) {
         return new Dimension(
-            frame.getInsets().left + frame.getInsets().right + (int)panelSize.getWidth(), 
-            frame.getInsets().top + frame.getInsets().bottom + (int)panelSize.getHeight()
+            frame.getInsets().left + frame.getInsets().right + Utils.MAP_WIDTH, 
+            frame.getInsets().top + frame.getInsets().bottom + Utils.MAP_HEIGHT
             );
     }
     
