@@ -40,7 +40,8 @@ public class BombarderoGraphics {
         this.frame = new JFrame();
         this.deck = new JPanel(new CardLayout());
         this.layout = (CardLayout)deck.getLayout();
-
+        
+        frame.pack(); // calling pack on the frame generates the insets 
         this.gameCard = new GameCard(frame, resizingEngine);
         this.endGameCard = new GameoverCard();
         this.menuCard = new MenuCard();
