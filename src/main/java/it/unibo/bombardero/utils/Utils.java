@@ -27,8 +27,8 @@ public class Utils {
     public static final int ENEMY_SPEED = 1;
 
     // PARAMETRI PER LA VIEW
-    public static int MAP_WIDTH = 512; // the original map image's width
-    public static int MAP_HEIGHT = 524; // the original map image's height
+    public static int MAP_WIDTH = 524; // the original map image's width
+    public static int MAP_HEIGHT = 512; // the original map image's height
     public static double GRASS_PADDING_RATION = 0.2; // the padding that has to be added to the map
     
 }
