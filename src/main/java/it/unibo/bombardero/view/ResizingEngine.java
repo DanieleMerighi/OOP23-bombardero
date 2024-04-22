@@ -48,8 +48,8 @@ public class ResizingEngine {
      */
     public Dimension computeTotalWindowSize(JFrame frame) {
         return new Dimension(
-            frame.getInsets().left + frame.getInsets().right + Utils.MAP_WIDTH, 
-            frame.getInsets().top + frame.getInsets().bottom + Utils.MAP_HEIGHT
+            frame.getInsets().left + frame.getInsets().right + Utils.MAP_WIDTH + (int)(Utils.GRASS_PADDING_RATIO*Utils.MAP_WIDTH), 
+            frame.getInsets().top + frame.getInsets().bottom + Utils.MAP_HEIGHT + (int)(Utils.GRASS_PADDING_RATIO*Utils.MAP_HEIGHT)
             );
     }
     
