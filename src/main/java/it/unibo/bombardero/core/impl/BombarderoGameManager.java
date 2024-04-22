@@ -3,7 +3,8 @@ package it.unibo.bombardero.core.impl;
 import java.util.List;
 import java.util.Set;
 
-import it.unibo.bombardero.cell.Bomb;
+import it.unibo.bombardero.cell.BasicBomb;
+import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
@@ -47,7 +48,7 @@ public class BombarderoGameManager implements GameManager{
     }
 
     @Override
-    public void explodeBomb(Bomb bomb) {
+    public void explodeBomb(BasicBomb bomb) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'explodeVoid'");
     }

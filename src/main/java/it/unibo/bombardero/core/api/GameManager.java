@@ -2,7 +2,7 @@ package it.unibo.bombardero.core.api;
 
 import java.util.Set;
 
-import it.unibo.bombardero.cell.Bomb;
+import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.character.Character;
 
@@ -18,5 +18,5 @@ public interface GameManager {
 
     GameMap getGameMap();
 
-    void explodeBomb(Bomb bomb);
+    void explodeBomb(BasicBomb bomb);
 }   

@@ -6,6 +6,7 @@ public class Utils {
     public static final int MAP_COLS = 13;
     /* This number control how much walls to generate in relation to the free space: */
     public static final double WALL_PRESENCE_RATE = 0.8;
+    public static final int MAX_RANGE_BOMB = 13;
 
 
     //valori per mappa
