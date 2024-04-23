@@ -22,14 +22,13 @@ public class ResizingEngine {
 
     private static double OPTIMAL_HEIGHT_SCALE = 0.5; // The optimal scale for the game is half of the height of the user's screen
 
-    private double currentScale;
+    private double currentScale = 1.0;
+    private final int SCALED_CELL_SIZE;
 
-    /**
-     * Computes and saves the scale for the current display
-     */
-    public void computeScale() {
+    public ResizingEngine() {
         currentScale = 1.5;
-    }   
+        SCALED_CELL_SIZE = (int)(currentScale * Utils.CELL_SIZE);
+    }
 
     /** 
      *  Updates the scale according to the frame size and returns it
@@ -37,6 +36,11 @@ public class ResizingEngine {
      */
     public double getScale() {
         return currentScale;
+    }   
+
+    /* TODO: javadoc comment */
+    public int getScaledCellSize() {
+        return SCALED_CELL_SIZE;
     }
 
     /**
@@ -50,7 +54,7 @@ public class ResizingEngine {
         return new Dimension(
             frame.getInsets().left + frame.getInsets().right + Utils.MAP_WIDTH + (int)(Utils.GRASS_PADDING_RATIO*Utils.MAP_WIDTH), 
             frame.getInsets().top + frame.getInsets().bottom + Utils.MAP_HEIGHT + (int)(Utils.GRASS_PADDING_RATIO*Utils.MAP_HEIGHT)
-            );
+        );
     }
     
 }
