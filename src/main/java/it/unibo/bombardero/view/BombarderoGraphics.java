@@ -5,11 +5,14 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.awt.GraphicsEnvironment;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import org.jgrapht.alg.spanning.EsauWilliamsCapacitatedMinimumSpanningTree;
 
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.impl.BombarderoController;
@@ -27,7 +30,6 @@ public class BombarderoGraphics {
     private final BufferedImage staticMapImage = resourceGetter.loadImage("map");
 
     private final JFrame frame; 
-    /* TODO: add component listener to update the GUI at each resize, the GUI must get the scale at each update */
     private JPanel deck;
     private CardLayout layout;
 
@@ -42,17 +44,27 @@ public class BombarderoGraphics {
         this.layout = (CardLayout)deck.getLayout();
         
         frame.pack(); // calling pack on the frame generates the insets 
-        this.gameCard = new GameCard(frame, resizingEngine);
+        this.gameCard = new GameCard(frame, resizingEngine, controller);
         this.endGameCard = new GameoverCard();
         this.menuCard = new MenuCard();
 
+        /* Adding a listener so that the Frame cannot resize less than the size of the map */
+        frame.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                Dimension d = frame.getSize();
+                Dimension minDimension = gameCard.getMinimumSize();
+                if(minDimension.getWidth() > d.getWidth()) {
+                    d.width = minDimension.width;
+                }
+                else if(minDimension.getHeight() > d.getHeight()) {
+                    d.height = minDimension.height;
+                }
+                frame.setSize(d);
+            }
+        });
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(gameCard);
         frame.setSize(resizingEngine.computeTotalWindowSize(frame));
         this.frame.setVisible(true);
     }
-
-    /* TODO: initialize main menu, game and gamover panels: one class for each that extends JPanel and in which
-     * we draw
-     */
 }
