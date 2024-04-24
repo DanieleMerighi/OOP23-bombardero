@@ -8,11 +8,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.GraphicsEnvironment;
 
-/*
- * Qui deve essere fatto il coso per calcolare la dimensione della finestra inset inclusi
- * e per calcolare la scale a cui sarà scalato tutto 
- * Dopo una certa dimensione della finestra, l'immagine rimarrà costante e ci aggiungeremo qualcosa di sfondo 
- * giusto per non lasciarla vuota 
+/* TODO: muovere tutte le classi della GameCard che servono per fare i conti delle dimensioni
+ * 
  */
 
 /** 
