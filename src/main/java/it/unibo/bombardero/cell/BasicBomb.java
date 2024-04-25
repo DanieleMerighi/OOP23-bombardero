@@ -3,8 +3,9 @@ package it.unibo.bombardero.cell;
 import java.util.Map.Entry;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.physics.api.CollisionEngine;
 
-public class BasicBomb extends Cell implements Bomb{
+public abstract class BasicBomb extends Cell implements Bomb{
     private final long TIME_TO_EXPLODE=2000L;
 
     private final int range;
@@ -12,12 +13,18 @@ public class BasicBomb extends Cell implements Bomb{
     private final GameManager mgr;
     private Pair pos;
     private long elapsedTime=0;
+    private CollisionEngine ce;
 
-    public BasicBomb(GameManager mgr, Pair pos , CellType type, int range) {
+    public BasicBomb(GameManager mgr, Pair pos , CellType type, int range, CollisionEngine ce) {
         super(type);
         this.mgr = mgr;
         this.pos = pos;
         this.range=range;
+        this.ce=ce;
+    }
+
+    public CellType getType(){
+        return super.getType();
     }
 
     @Override
@@ -29,9 +36,15 @@ public class BasicBomb extends Cell implements Bomb{
     }
 
     private Entry<Pair,Flame> explode() {
-        mgr.explodeBomb(this);
-        mgr.
+        ce.computeFlame(this);
         return null;
     }
 
+    public int getRange(){
+        return range;
+    }
+    
+    public Pair getPos(){
+        return pos;
+    }
 }
