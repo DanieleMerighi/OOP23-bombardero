@@ -12,4 +12,23 @@ public class BombFactoryImpl implements BombFactory{
         throw new UnsupportedOperationException("Unimplemented method 'CreateBomb'");
     }
     
+    private Bomb createBasicBomb(){
+        return null;
+    }
+
+    private Bomb createPircerBomb(){
+        return null;
+    }
+
+    private Bomb createPowerBomb(){
+        return null;
+    }
+
+    private Bomb createRemoteBomb(){
+        return null;
+    }
+
+    private Bomb createPunchBomb(){
+        return null;
+    }
 }

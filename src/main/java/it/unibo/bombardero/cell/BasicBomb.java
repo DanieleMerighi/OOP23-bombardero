@@ -4,7 +4,7 @@ import java.util.Map.Entry;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
 
-public class BasicBomb extends Cell {
+public class BasicBomb extends Cell implements Bomb{
     private final long TIME_TO_EXPLODE=2000L;
 
     private final int range;
@@ -20,7 +20,8 @@ public class BasicBomb extends Cell {
         this.range=range;
     }
 
-    void update(long time) {
+    @Override
+    public void update(long time) {
         elapsedTime += time;
         if(elapsedTime>=TIME_TO_EXPLODE) {
             explode();
@@ -29,6 +30,7 @@ public class BasicBomb extends Cell {
 
     private Entry<Pair,Flame> explode() {
         mgr.explodeBomb(this);
+        mgr.
         return null;
     }
 
