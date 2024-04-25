@@ -1,5 +1,7 @@
 package it.unibo.bombardero.character;
 
+import it.unibo.bombardero.map.api.Pair;
+
 public enum Direction {
     UP(-1, 0),
     DOWN(1, 0),
@@ -20,5 +22,9 @@ public enum Direction {
 
     public int getDy() {
         return dy;
+    }
+
+    public Pair getPair(){
+        return new Pair(getDx(),getDy());
     }
 }

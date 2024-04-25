@@ -31,7 +31,7 @@ public class BombarderoCollision implements CollisionEngine{
     }
 
     private void checkDirection(Direction dir , int range , Pair pos){
-        //Stream.generate(()->pos).limit(range).;
+        Stream.generate(()->pos.sum(dir.getPair())).limit(range);
     }
 
     @Override
