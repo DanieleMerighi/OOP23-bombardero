@@ -8,6 +8,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -64,7 +66,8 @@ public class BombarderoGraphics {
         });
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(gameCard);
-        frame.setSize(resizingEngine.computeTotalWindowSize(frame));
+        /* frame.setSize(resizingEngine.computeTotalWindowSize(frame)); */
+        frame.setSize(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width, GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height);
         this.frame.setVisible(true);
     }
 }
