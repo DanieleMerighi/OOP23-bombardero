@@ -36,17 +36,23 @@ public class GameCard extends JPanel {
         this.parentFrame = parentFrame;
         this.resizingEngine = resizingEngine;
         this.controller = controller;
-        this.setMinimumSize(computeMapSize()); // Sets the minimum size so that the JFrame can use it
+        this.setMinimumSize(resizingEngine.getMapSize()); // Sets the minimum size so that the JFrame can use it
 
-        /* Test map to see if placement goes well: */ cells = new GameMapImpl(true).getMap();
+        /* Test map to see if placement goes well: */ 
+        cells = new GameMapImpl(true).getMap();
     }
 
     @Override
     public void paint(Graphics g) {
         Graphics2D g2d = (Graphics2D)g;
-        Dimension actualMapSize = computeMapSize();
-        g.drawImage(grass_bg_image, 0, 0, null);
-        g2d.drawImage(map.getScaledInstance(actualMapSize.width, actualMapSize.height, Image.SCALE_SMOOTH),
+        Dimension actualMapSize = resizingEngine.getMapSize();
+        Dimension actualBgSize = resizingEngine.getBackgroundImageSize();
+        g.drawImage(
+            grass_bg_image.getScaledInstance(actualBgSize.width, actualBgSize.height, Image.SCALE_SMOOTH),
+            0, 0,
+            null);
+        g2d.drawImage(
+            map.getScaledInstance(actualMapSize.width, actualMapSize.height, Image.SCALE_SMOOTH),
             computeMapPlacingPoint().width,
             computeMapPlacingPoint().height,
             null
@@ -62,25 +68,10 @@ public class GameCard extends JPanel {
                 );
             });
     }
-
-    private Dimension computeMapSize() {
-        return new Dimension(
-            (int)(Utils.MAP_WIDTH * resizingEngine.getScale()),
-            (int)(Utils.MAP_HEIGHT * resizingEngine.getScale())
-        );
-    }
-    
-    private Dimension computeBackgroundImageSize() {
-        return new Dimension(
-            (int)(Utils.BG_WIDTH * resizingEngine.getScale()),
-            (int)(Utils.BG_HEIGHT * resizingEngine.getScale())
-        );
-    }
-
     private Dimension computeMapPlacingPoint() {
         return new Dimension(
-            parentFrame.getSize().width/2 - computeMapSize().width/2 - (parentFrame.getInsets().right + parentFrame.getInsets().left),
-            parentFrame.getSize().height/2 - computeMapSize().height/2 - (parentFrame.getInsets().top + parentFrame.getInsets().bottom)
+            parentFrame.getSize().width/2 - resizingEngine.getMapSize().width/2 - (parentFrame.getInsets().right + parentFrame.getInsets().left),
+            parentFrame.getSize().height/2 - resizingEngine.getMapSize().height/2 - (parentFrame.getInsets().top + parentFrame.getInsets().bottom)
         );
     }
 
