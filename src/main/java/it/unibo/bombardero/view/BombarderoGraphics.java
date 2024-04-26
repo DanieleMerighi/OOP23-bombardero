@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -29,7 +30,7 @@ public class BombarderoGraphics {
 
     private final ResourceGetter resourceGetter = new ResourceGetter();
     private final ResizingEngine resizingEngine = new ResizingEngine();
-    private final BufferedImage staticMapImage = resourceGetter.loadImage("map");
+    /* TODO: do and import icon: private final ImageIcon game_icon = resourceGetter.loadImage(""); */ 
 
     private final JFrame frame; 
     private JPanel deck;
@@ -45,29 +46,26 @@ public class BombarderoGraphics {
         this.deck = new JPanel(new CardLayout());
         this.layout = (CardLayout)deck.getLayout();
         
-        frame.pack(); // calling pack on the frame generates the insets 
+        frame.pack(); // calling pack on the frame generates the insets
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(resizingEngine.getInitialWindowSize(frame));
+        frame.setResizable(true);
+        frame.setLocationRelativeTo(null);
+        /* TODO: set icon once has been done, frame.setIconImage(); */ 
+        
         this.gameCard = new GameCard(frame, resizingEngine, controller);
         this.endGameCard = new GameoverCard();
         this.menuCard = new MenuCard();
 
-        /* Adding a listener so that the Frame cannot resize less than the size of the map */
+        /* This listener calls for the ResizingEngine to dinamically update the 
+        * frame's size when it is resized, see the implementation for more */
         frame.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
-                Dimension d = frame.getSize();
-                Dimension minDimension = gameCard.getMinimumSize();
-                if(minDimension.getWidth() > d.getWidth()) {
-                    d.width = minDimension.width;
-                }
-                else if(minDimension.getHeight() > d.getHeight()) {
-                    d.height = minDimension.height;
-                }
-                frame.setSize(d);
+                frame.setSize(resizingEngine.getNewWindowSize(frame));
             }
         });
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         frame.add(gameCard);
-        /* frame.setSize(resizingEngine.computeTotalWindowSize(frame)); */
-        frame.setSize(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width, GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height);
         this.frame.setVisible(true);
     }
 }
