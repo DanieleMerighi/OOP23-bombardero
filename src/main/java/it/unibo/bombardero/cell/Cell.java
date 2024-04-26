@@ -13,6 +13,8 @@ public abstract class Cell {
         WALL_UNBREAKABLE("unbreakable"),
         WALL_BREAKABLE("breakable"),
         BOMB_BASIC("basic"),
+        BOMB_POWER("power"),
+        BOMB_PUNCH("punch"),
         BOMB_PIERCING("piescing"),
         BOMB_REMOTE("remote"),
         FLAME_CROSS("cross"),

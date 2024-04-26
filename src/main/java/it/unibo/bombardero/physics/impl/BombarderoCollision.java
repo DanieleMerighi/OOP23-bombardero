@@ -29,11 +29,12 @@ public class BombarderoCollision implements CollisionEngine{
     @Override
     public void computeFlame(Bomb bomb) {
         List<Direction> allDirection = List.of(Direction.LEFT,Direction.RIGHT,Direction.UP,Direction.DOWN);
-        allDirection.stream().map(dir->checkDirection(dir, bomb.getRange(), bomb.getPos()))
+        allDirection.stream().map(dir->checkDirection(dir, bomb.getRange(), bomb.getPos() , bomb.getType()))
         .forEach((set)->set.forEach((e)->mgr.addFlame(e.getValue() , e.getKey() )));
+        mgr.addFlame(CellType.FLAME_CROSS, bomb.getPos());
     }
     
-    private Set<Entry<Pair , CellType>> checkDirection(Direction dir , int range , Pair pos){
+    private Set<Entry<Pair , CellType>> checkDirection(Direction dir , int range , Pair pos , CellType type){
         int countBreakable=0,i=range;
         Pair p=pos;
         Set<Pair> flamePos = new HashSet<>();
@@ -47,7 +48,9 @@ public class BombarderoCollision implements CollisionEngine{
                 }
                 mgr.removeWall(p);
                 flamePos.add(p);
-                countBreakable++;
+                if(type.equals(CellType.BOMB_PIERCING)) {
+                    countBreakable++;
+                }
             } else {
                 flamePos.add(p);
             }

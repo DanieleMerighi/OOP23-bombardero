@@ -8,8 +8,23 @@ public class BombFactoryImpl implements BombFactory{
 
     @Override
     public BasicBomb CreateBomb(Optional<CellType> powerUp) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'CreateBomb'");
+        switch (powerUp.get()) { //TODO: add powerup type instead bomb type
+            case BOMB_PIERCING:
+                
+                break;
+            case BOMB_REMOTE:
+                
+            break;
+            case BOMB_POWER:
+                
+            break;
+            case BOMB_PUNCH:
+                
+            break;
+            default:
+                break;
+        }
+        return null;
     }
     
     private Bomb createBasicBomb(){
