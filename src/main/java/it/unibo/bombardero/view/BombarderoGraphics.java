@@ -8,6 +8,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
@@ -30,7 +31,7 @@ public class BombarderoGraphics {
 
     private final ResourceGetter resourceGetter = new ResourceGetter();
     private final ResizingEngine resizingEngine = new ResizingEngine();
-    /* TODO: do and import icon: private final ImageIcon game_icon = resourceGetter.loadImage(""); */ 
+    private final BufferedImage game_icon = resourceGetter.loadImage("icons/icon_happy");
 
     private final JFrame frame; 
     private JPanel deck;
@@ -42,7 +43,7 @@ public class BombarderoGraphics {
     
     public BombarderoGraphics() {
         this.controller = new BombarderoController(this);
-        this.frame = new JFrame();
+        this.frame = new JFrame("Bombardero: the Bomberman remake");
         this.deck = new JPanel(new CardLayout());
         this.layout = (CardLayout)deck.getLayout();
         
@@ -51,7 +52,7 @@ public class BombarderoGraphics {
         frame.setSize(resizingEngine.getInitialWindowSize(frame));
         frame.setResizable(true);
         frame.setLocationRelativeTo(null);
-        /* TODO: set icon once has been done, frame.setIconImage(); */ 
+        frame.setIconImage(game_icon.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
         
         this.gameCard = new GameCard(frame, resizingEngine, controller);
         this.endGameCard = new GameoverCard();
