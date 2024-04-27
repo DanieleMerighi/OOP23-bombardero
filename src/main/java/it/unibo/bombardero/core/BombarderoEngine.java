@@ -17,8 +17,9 @@ public class BombarderoEngine {
         this.graphics = graphics;
     }
 
-    public void initGameManager() {
-        this.gameManager = new BombarderoGameManager(controller);
+    public GameManager initGameManager() {
+        gameManager = new BombarderoGameManager(controller);
+        return gameManager;
     }   
     
     public void mainLoop() {

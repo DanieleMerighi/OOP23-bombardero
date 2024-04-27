@@ -1,5 +1,10 @@
 package it.unibo.bombardero.core.api;
 
+import java.util.Map;
+
+import it.unibo.bombardero.cell.Cell;
+import it.unibo.bombardero.map.api.Pair;
+
 public interface Controller {
     
     //qui andrebbero inseriti i comandi imput
@@ -10,6 +15,6 @@ public interface Controller {
 
     void getEnemies();
 
-    void getMap();
+    Map<Pair, Cell> getMap();
 
 }

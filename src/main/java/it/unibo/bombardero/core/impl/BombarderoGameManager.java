@@ -10,7 +10,7 @@ import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.character.Character;
 
-public class BombarderoGameManager implements GameManager{
+public class BombarderoGameManager implements GameManager {
     
     private GameMap map;
     private List<Character> enemies;
