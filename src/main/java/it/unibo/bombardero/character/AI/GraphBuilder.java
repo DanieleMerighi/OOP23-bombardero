@@ -22,12 +22,12 @@ public class GraphBuilder {
         //         .map(p -> p.getKey())
         //         .filter(p -> !(map.isUnbreakableWall(p) || map.isFlame(p) || map.isBomb(p)));
 
-        Stream<Pair> validPos2 = IntStream.range(0, Utils.MAP_ROWS)
+        Stream<Pair> validcells = IntStream.range(0, Utils.MAP_ROWS)
                 .boxed()
                 .flatMap(r -> IntStream.range(0, Utils.MAP_COLS).mapToObj(c -> new Pair(r, c))
-                        .filter(p -> !(map.isUnbreakableWall(p) || map.isFlame(p) || map.isBomb(p))));
+                        .filter(p -> !map.isUnbreakableWall(p)));
 
-        validPos2.peek(p -> graph.addVertex(p)).forEach(p -> connectWithNeighbors(graph, p, map));
+        validcells.peek(p -> graph.addVertex(p)).forEach(p -> connectWithNeighbors(graph, p, map));
 
         return graph;
     }
