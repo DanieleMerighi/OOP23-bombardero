@@ -27,6 +27,7 @@ dependencies {
     implementation("com.omertron:API-OMDB:1.5")
     implementation("org.jooq:jool:0.9.15")
     implementation("org.jgrapht:jgrapht-core:1.5.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0") // Use the latest compatible version
 
 
     /*
