@@ -33,7 +33,7 @@ public class EnemyGraphReasoner {
                 .anyMatch(cell -> map.isBomb(cell) && !isPathBlockedByWalls(enemyCoord, cell));
     }
 
-    private boolean isPathBlockedByWalls(Pair startCell, Pair endCell) {
+    public boolean isPathBlockedByWalls(Pair startCell, Pair endCell) {
         if (startCell.row() != endCell.row() && startCell.col() != endCell.col()) {
             return false; // Diagonal paths not supported
         }
