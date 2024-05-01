@@ -10,7 +10,8 @@ package it.unibo.bombardero.cell;
 public abstract class Cell {
     
     public enum CellType {
-        WALL,
+        WALL_BREAKABLE,
+        WALL_UNBREAKABLE,
         BOMB,
         FLAME,
         POWERUP;
