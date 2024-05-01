@@ -45,9 +45,8 @@ public abstract class BasicBomb extends Cell implements Bomb{
         }
     }
 
-    private Entry<Pair,Flame> explode() {
+    private void explode() {
         computeFlame(this);
-        return null;
     }
 
     public int getRange(){

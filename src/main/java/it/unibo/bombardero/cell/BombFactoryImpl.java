@@ -23,7 +23,7 @@ public class BombFactoryImpl implements BombFactory{
         }
         switch (powerUp.get()) { //TODO: add powerup type instead bomb type
             case BOMB_PIERCING:
-                return createPircerBomb(pos , range);
+                return createPiercingBomb(pos , range);
             case BOMB_REMOTE:
                 return createRemoteBomb(pos , range);
             case BOMB_POWER:
@@ -40,7 +40,7 @@ public class BombFactoryImpl implements BombFactory{
         };
     }
 
-    private Bomb createPircerBomb(Pair pos , int range) {
+    private Bomb createPiercingBomb(Pair pos , int range) {
         return null;
     }
 
