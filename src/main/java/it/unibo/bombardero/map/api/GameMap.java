@@ -46,6 +46,12 @@ public interface GameMap {
     void addBreakableWall(Pair coordinate);
 
     /** 
+     * Removes the breakable wall at the coordinate and eventually spawns a powerup 
+     * @param coordinate the position of the wall to remove
+     */
+    void removeBreakableWall(Pair coordinate);
+
+    /** 
      * Returns true if the cell at the coordinate is a Bomb
      * @param coordinate the coordinate to check 
      * @return wether the cell at the coordinate is a Bomb
