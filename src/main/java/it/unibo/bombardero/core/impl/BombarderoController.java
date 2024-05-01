@@ -27,6 +27,8 @@ public class BombarderoController implements Controller {
         engine.mainLoop();
     }
 
+    /* TODO: endGame method */
+
     @Override
     public Character getMainPlayer() {
         return manager.getPlayer();
