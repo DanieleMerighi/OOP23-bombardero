@@ -24,7 +24,10 @@ public class Flame extends Cell {
 
     }
 
-    public Flame(CellType type) {
+    private FlameType speciFlameType;
+
+    public Flame(CellType type, FlameType specfiFlameType) {
         super(type);
+        this.speciFlameType = specfiFlameType;
     }
 }
