@@ -62,7 +62,7 @@ public class BombarderoGameManager implements GameManager {
 
     @Override
     public void removeBomb(Pair pos) {
-        //map.removeBomb(pos);
+        map.removeBomb(pos);
     }
 
     @Override

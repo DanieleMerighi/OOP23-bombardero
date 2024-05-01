@@ -72,6 +72,13 @@ public class GameMapImpl implements GameMap {
     }
 
     @Override
+    public void removeBomb(Pair coordinate) {
+        if(this.isBomb(coordinate)) {
+            this.map.remove(coordinate);
+        }
+    }
+
+    @Override
     public boolean isBomb(Pair coordinate) {
         return this.map.containsKey(coordinate) && this.map.get(coordinate) instanceof Bomb;
     }
