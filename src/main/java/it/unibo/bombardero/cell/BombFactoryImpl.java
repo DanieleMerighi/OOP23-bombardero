@@ -2,7 +2,9 @@ package it.unibo.bombardero.cell;
 
 import java.util.Optional;
 
+import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.cell.Cell.CellType;
+import it.unibo.bombardero.cell.PowerUp.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.physics.api.CollisionEngine;
@@ -17,25 +19,23 @@ public class BombFactoryImpl implements BombFactory{
     }
 
     @Override
-    public Bomb CreateBomb(Optional<CellType> powerUp , Pair pos , int range) {
+    public Bomb CreateBomb(Optional<PowerUpType> powerUp , Pair pos , int range) {
         if(powerUp.isEmpty()){
             return createBasicBomb(pos , range);
         }
         switch (powerUp.get()) { //TODO: add powerup type instead bomb type
-            case BOMB_PIERCING:
+            case PIERCING_BOMB:
                 return createPiercingBomb(pos , range);
-            case BOMB_REMOTE:
+            case HYPER_BOMB:
                 return createRemoteBomb(pos , range);
-            case BOMB_POWER:
+            case REMOTE_BOMB:
                 return createPowerBomb(pos , range);
-            case BOMB_PUNCH:
-                return createPunchBomb(pos , range);
         }
         return null;
     }
     
     private Bomb createBasicBomb(Pair pos , int range) {
-        return new BasicBomb(mgr, pos, CellType.BOMB_BASIC , range , ce) {
+        return new BasicBomb(mgr, pos, BombType.BOMB_BASIC , range , ce) {
             
         };
     }

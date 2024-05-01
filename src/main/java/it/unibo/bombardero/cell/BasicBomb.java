@@ -24,9 +24,10 @@ public abstract class BasicBomb extends Cell implements Bomb{
     private long elapsedTime=0;
     private CollisionEngine ce;
     private GameMap map;
+    private BombType bombType;
 
-    public BasicBomb(GameManager mgr, Pair pos , CellType type, int range, CollisionEngine ce) {
-        super(type);
+    public BasicBomb(GameManager mgr, Pair pos , BombType type, int range, CollisionEngine ce) {
+        super(CellType.BOMB);
         this.mgr = mgr;
         this.pos = pos;
         this.range=range;
@@ -34,8 +35,12 @@ public abstract class BasicBomb extends Cell implements Bomb{
         this.map=mgr.getGameMap();
     }
 
-    public CellType getType(){
-        return super.getType();
+    public BombType getBombType(){
+        return bombType;
+    }
+
+    public CellType getCellType(){
+        return super.getCellType();
     }
 
     @Override
@@ -61,12 +66,12 @@ public abstract class BasicBomb extends Cell implements Bomb{
     public void computeFlame(Bomb bomb) {
         List<Direction> allDirection = List.of(Direction.LEFT,Direction.RIGHT,Direction.UP,Direction.DOWN);
         allDirection.stream()
-            .map(dir->checkDirection(dir, bomb.getRange(), bomb.getPos() , bomb.getType()))
+            .map(dir->checkDirection(dir, bomb.getRange(), bomb.getPos()))
             .forEach((set)->set.forEach((e)->mgr.addFlame(e.getValue() , e.getKey() )));
         mgr.addFlame(FlameType.FLAME_CROSS, bomb.getPos());
     }
     
-    private Set<Entry<Pair , CellType>> checkDirection(Direction dir , int range , Pair pos , CellType type){
+    private Set<Entry<Pair , FlameType>> checkDirection(Direction dir , int range , Pair pos){
         int i=range;
         Pair p=pos;
         Set<Pair> flamePos = new HashSet<>();
@@ -85,24 +90,24 @@ public abstract class BasicBomb extends Cell implements Bomb{
         return chooseType(dir, flamePos);
     }
 
-    private Set<Entry<Pair , CellType>> chooseType(Direction dir , Set<Pair> flamePos){
+    private Set<Entry<Pair , FlameType>> chooseType(Direction dir , Set<Pair> flamePos){
         switch (dir) {
             case LEFT:
-                return BuidSet(CellType.FLAME_BODY_HORIZONTAL , CellType.FLAME_END_LEFT , flamePos);
+                return BuidSet(FlameType.FLAME_BODY_HORIZONTAL , FlameType.FLAME_END_LEFT , flamePos);
             case RIGHT:
-                return BuidSet(CellType.FLAME_BODY_HORIZONTAL , CellType.FLAME_END_RIGHT , flamePos);
+                return BuidSet(FlameType.FLAME_BODY_HORIZONTAL , FlameType.FLAME_END_RIGHT , flamePos);
             case UP:
-                return BuidSet(CellType.FLAME_BODY_VERTICAL , CellType.FLAME_END_TOP , flamePos);
+                return BuidSet(FlameType.FLAME_BODY_VERTICAL , FlameType.FLAME_END_TOP , flamePos);
             case DOWN:
-                return BuidSet(CellType.FLAME_BODY_VERTICAL , CellType.FLAME_END_BOTTOM , flamePos);
+                return BuidSet(FlameType.FLAME_BODY_VERTICAL , FlameType.FLAME_END_BOTTOM , flamePos);
             default:
                 return null;
         }
     }
 
-    private Set<Entry<Pair , CellType>> BuidSet(CellType bodyType, CellType endType , Set<Pair> flamePos) {
+    private Set<Entry<Pair , FlameType>> BuidSet(FlameType bodyType, FlameType endType , Set<Pair> flamePos) {
         var it = flamePos.iterator();
-        Map<Pair , CellType > map = new HashMap<>();
+        Map<Pair , FlameType > map = new HashMap<>();
         Pair p;
         while(it.hasNext()){
             p=it.next();

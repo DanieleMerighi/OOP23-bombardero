@@ -28,7 +28,7 @@ public interface Bomb {
 
     void update(long time);
 
-    BombType getType();
+    BombType getBombType();
 
     int getRange();
 
