@@ -26,5 +26,13 @@ public class Utils {
     public static final int ENEMY_DETECTION_RADIUS = 4;
     public static final int ENEMY_STARTING_BOMBS = 3;
     public static final int ENEMY_SPEED = 1;
+
+    // PARAMETRI PER LA VIEW
+    public static int MAP_WIDTH = 524; // the original map image's width
+    public static int MAP_HEIGHT = 512; // the original map image's height
+    public static double GRASS_PADDING_RATIO = 0.2; // the padding that has to be added to the map
+    public static int BG_WIDTH = 1920;
+    public static int BG_HEIGHT = 1088;
+    public final static int CELL_SIZE = 32;
     
 }

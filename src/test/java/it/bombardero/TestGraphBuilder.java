@@ -1,85 +1,89 @@
 package it.bombardero;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.impl.GameMapImpl;
 
 import org.jgrapht.Graph;
-import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
 
+import it.unibo.bombardero.cell.Bomb;
+import it.unibo.bombardero.cell.Flame;
+import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.character.AI.*;
 
-public class TestGraphBuilder {/*
+public class TestGraphBuilder {
 
-    private Graph<Pair, DefaultEdge> graph;
+    private GameMap map;
+    private Graph<Pair, DefaultWeightedEdge> graph;
 
-    @BeforeEach 
-    void initBaseMap() {
-        int[][] map = {
-            {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-            {2, 4, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 2},
-            {2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2},
-            {2, 3, 3, 3, 1, 1, 1, 1, 1, 3, 1, 1, 2},
-            {2, 3, 2, 1, 2, 3, 2, 1, 2, 1, 2, 1, 2},
-            {2, 1, 1, 3, 1, 3, 1, 1, 1, 1, 1, 3, 2},
-            {2, 1, 2, 3, 2, 1, 2, 1, 2, 1, 2, 1, 2},
-            {2, 1, 1, 3, 1, 1, 1, 1, 1, 3, 3, 1, 2},
-            {2, 1, 2, 3, 2, 1, 2, 5, 2, 1, 2, 1, 2},
-            {2, 1, 3, 3, 3, 1, 1, 3, 1, 1, 1, 1, 2},
-            {2, 1, 2, 1, 2, 1, 2, 3, 2, 1, 2, 1, 2},
-            {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2},
-            {2, 3, 2, 1, 2, 1, 2, 3, 2, 1, 2, 1, 2},
-            {2, 3, 1, 3, 1, 1, 3, 3, 3, 1, 3, 3, 2},
-            {2, 1, 2, 1, 2, 1, 2, 3, 2, 3, 2, 3, 2},
-            {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2},
-            {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
-        };
-        this.graph = GraphBuilder.buildFromMap(map);
-    }
-
-    @Test
-    public void testPlayerPositionBaseMap() {
-        // Player position in the map is (1, 1)
-        assertTrue(this.graph.containsVertex(new Pair(1, 1)), "Player position should be included in the graph");
+    @BeforeEach
+    public void setup() {
+        map = new GameMapImpl(false);
     }
 
     @Test
     public void testBaseMapSize() {
-        assertEquals(98, this.graph.vertexSet().size());
-        assertEquals(94, this.graph.edgeSet().size());
+        this.graph = GraphBuilder.buildFromMap(map);
+        // the base map (built with only unbreakable wall) have 133 vertex
+        assertEquals(133, this.graph.vertexSet().size());
+        assertEquals(168, this.graph.edgeSet().size());
+        // adding (or removing) breakable wall should not change the number of vertex or
+        // edges
+        map.addBreakableWall(new Pair(0, 2));
+        map.addBreakableWall(new Pair(0, 3));
+        map.addBreakableWall(new Pair(0, 4));
+
+        this.graph = GraphBuilder.buildFromMap(map);
+
+        assertEquals(133, this.graph.vertexSet().size());
+        assertEquals(168, this.graph.edgeSet().size());
     }
 
     @Test
-    public void testBaseMapShortestPath() {
-        // percorso più breve tra [6,7] e Player [1,1]
-        List<Pair> l = List.of(
-            new Pair(5, 7),
-            new Pair(4, 7),
-            new Pair(3, 7),
-            new Pair(3, 6),
-            new Pair(3, 5),
-            new Pair(2, 5),
-            new Pair(1, 5),
-            new Pair(1, 4),
-            new Pair(1, 3),
-            new Pair(1, 2),
-            new Pair(1, 1)
-        );
-        Optional<List<Pair>> path = GraphBuilder.findShortestPath(this.graph,new Pair(6,7),new Pair(1, 1));
-        assertEquals(11, path.get().size());
-        assertEquals(l, path.get());
-        // percorso inesistente tra due celle
-        path = GraphBuilder.findShortestPath(this.graph,new Pair(3,8),new Pair(1, 11));
-        System.out.println(path);
-        assertEquals(false, path.isPresent());
+    public void testMapSizeWithObastacles() {
+        GameMap baseMap = new GameMapImpl(true);
+        baseMap.addFlame(new Flame(CellType.FLAME_BODY_HORIZONTAL), new Pair(0, 2));
+        baseMap.addFlame(new Flame(CellType.FLAME_BODY_HORIZONTAL), new Pair(0, 3));
+        baseMap.addFlame(new Flame(CellType.FLAME_BODY_HORIZONTAL), new Pair(0, 4));
+        //baseMap.addBomb(new Bomb(null, CellType.BOMB_BASIC, 0), new Pair(5, 0));
+        this.graph = GraphBuilder.buildFromMap(baseMap);
+        assertEquals(133, this.graph.vertexSet().size());
+        assertEquals(168, this.graph.edgeSet().size());
     }
 
-    */
+    @Test
+    public void testEdgeWeights() {
+        map.addBreakableWall(new Pair(1, 2));
+        graph = GraphBuilder.buildFromMap(map);
+
+        Pair p1 = new Pair(0, 2); // grass
+        Pair p2 = new Pair(1, 2); // Breakable wall
+        Pair p3 = new Pair(2, 2); // Grass
+        Pair p4 = new Pair(3, 2); // Grass
+        Pair p5 = new Pair(1, 1); // Unbreakable wall
+
+        assertTrue(map.isEmpty(p1));
+        assertTrue(map.isBreakableWall(p2));
+        assertTrue(map.isEmpty(p3));
+        assertTrue(map.isEmpty(p4));
+        assertTrue(map.isUnbreakableWall(p5));
+
+        assertTrue(graph.containsEdge(p1, p2));
+        assertTrue(graph.containsEdge(p2, p3));
+        assertTrue(graph.containsEdge(p3, p4));
+        assertFalse(graph.containsEdge(p2, p5));
+        assertFalse(graph.containsEdge(p1, p3));
+
+        assertEquals(2.5, graph.getEdgeWeight(graph.getEdge(p1, p2)));
+        assertEquals(2.5, graph.getEdgeWeight(graph.getEdge(p2, p3)));
+        assertEquals(1.0, graph.getEdgeWeight(graph.getEdge(p3, p4)));
+    }
 }
