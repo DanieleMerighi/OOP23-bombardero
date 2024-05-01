@@ -1,6 +1,7 @@
 package it.unibo.bombardero.core.impl;
 
 import java.util.Map;
+import java.util.Set;
 
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.core.BombarderoEngine;
@@ -8,6 +9,7 @@ import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.view.BombarderoGraphics;
+import it.unibo.bombardero.character.Character;
 
 public class BombarderoController implements Controller {
 
@@ -26,15 +28,13 @@ public class BombarderoController implements Controller {
     }
 
     @Override
-    public void getMainPlayer() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMainPlayer'");
+    public Character getMainPlayer() {
+        return manager.getPlayer();
     }
 
     @Override
-    public void getEnemies() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getEnemies'");
+    public Set<Character> getEnemies() {
+        return manager.getEnemies();
     }
 
     @Override
