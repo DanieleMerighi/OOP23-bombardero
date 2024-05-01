@@ -1,6 +1,6 @@
 package it.unibo.bombardero.core.api;
 
-import java.util.Set;
+import java.util.List;
 
 import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Cell.CellType;
@@ -14,7 +14,7 @@ public interface GameManager {
 
     void endGame();
 
-    Set<Character> getEnemies();
+    List<Character> getEnemies();
 
     Character getPlayer();
 

@@ -1,7 +1,7 @@
 package it.unibo.bombardero.core.api;
 
 import java.util.Map;
-import java.util.Set;
+import java.util.List;
 
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.map.api.Pair;
@@ -15,7 +15,7 @@ public interface Controller {
 
     Character getMainPlayer();
 
-    Set<Character> getEnemies();
+    List<Character> getEnemies();
 
     Map<Pair, Cell> getMap();
 

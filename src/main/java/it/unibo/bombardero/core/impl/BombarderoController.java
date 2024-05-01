@@ -1,7 +1,7 @@
 package it.unibo.bombardero.core.impl;
 
 import java.util.Map;
-import java.util.Set;
+import java.util.List;
 
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.core.BombarderoEngine;
@@ -35,7 +35,7 @@ public class BombarderoController implements Controller {
     }
 
     @Override
-    public Set<Character> getEnemies() {
+    public List<Character> getEnemies() {
         return manager.getEnemies();
     }
 

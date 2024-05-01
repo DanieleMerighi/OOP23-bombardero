@@ -39,9 +39,8 @@ public class BombarderoGameManager implements GameManager {
     }
 
     @Override
-    public Set<Character> getEnemies() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getCharacter'");
+    public List<Character> getEnemies() {
+        return List.copyOf(enemies);
     }
 
     @Override
