@@ -24,7 +24,7 @@ public interface GameMap {
      * @param bomb the bomb to be added
      * @param coordinate where the bomb is to be placed
      */
-    void addBomb(final Cell bomb, Pair coordinate);
+    void addBomb(final BasicBomb bomb);
     
     /**
      * Adds a flame's reference to the map

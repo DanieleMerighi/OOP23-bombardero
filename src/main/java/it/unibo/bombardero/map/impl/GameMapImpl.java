@@ -44,8 +44,8 @@ public class GameMapImpl implements GameMap {
     }
 
     @Override
-    public void addBomb(final Cell bomb, final Pair coordinate) {
-        this.map.put(coordinate, bomb);
+    public void addBomb(final BasicBomb bomb) {
+        this.map.put(bomb.getPos(), bomb);
     }
 
     @Override
