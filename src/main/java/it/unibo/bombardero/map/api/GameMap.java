@@ -2,6 +2,7 @@ package it.unibo.bombardero.map.api;
 
 import java.util.Map;
 
+import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Flame;
@@ -23,7 +24,7 @@ public interface GameMap {
      * @param bomb the bomb to be added
      * @param coordinate where the bomb is to be placed
      */
-    void addBomb(final Bomb bomb, Pair coordinate);
+    void addBomb(final Cell bomb, Pair coordinate);
     
     /**
      * Adds a flame's reference to the map

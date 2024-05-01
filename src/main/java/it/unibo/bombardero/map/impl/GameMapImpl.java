@@ -3,6 +3,7 @@ package it.unibo.bombardero.map.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Wall;
 import it.unibo.bombardero.cell.Cell;
@@ -43,7 +44,7 @@ public class GameMapImpl implements GameMap {
     }
 
     @Override
-    public void addBomb(final Bomb bomb, final Pair coordinate) {
+    public void addBomb(final Cell bomb, final Pair coordinate) {
         this.map.put(coordinate, bomb);
     }
 
