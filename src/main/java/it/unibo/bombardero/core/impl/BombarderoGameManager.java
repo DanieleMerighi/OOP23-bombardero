@@ -51,8 +51,7 @@ public class BombarderoGameManager implements GameManager {
 
     @Override
     public Character getPlayer() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPlayer'");
+        return this.player;
     }
 
     @Override
