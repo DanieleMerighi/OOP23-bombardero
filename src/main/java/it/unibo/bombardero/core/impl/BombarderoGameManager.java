@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import it.unibo.bombardero.cell.BasicBomb;
+import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.core.api.Controller;
@@ -64,7 +65,7 @@ public class BombarderoGameManager implements GameManager {
     }
 
     @Override
-    public void addFlame(CellType type, Pair pos) {
+    public void addFlame(Flame.FlameType type, Pair pos) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'addFlame'");
     }
