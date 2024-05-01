@@ -17,13 +17,8 @@ public abstract class Cell {
         BOMB_PUNCH("punch"),
         BOMB_PIERCING("piescing"),
         BOMB_REMOTE("remote"),
-        FLAME_CROSS("cross"),
-        FLAME_BODY_VERTICAL("vertical"),
-        FLAME_BODY_HORIZONTAL("horizontal"),
-        FLAME_END_TOP("end_top"),
-        FLAME_END_BOTTOM("end_bottom"),
-        FLAME_END_RIGHT("end_right"),
-        FLAME_END_LEFT("end_left");
+        FLAME("flame"),
+        POWERUP("powerup");
         // add power-up types here, along with their TypeString code (used to fetch images from resources)
 
         private String typeString;
