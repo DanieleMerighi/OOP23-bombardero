@@ -12,11 +12,7 @@ public abstract class Cell {
     public enum CellType {
         WALL_UNBREAKABLE("unbreakable"),
         WALL_BREAKABLE("breakable"),
-        BOMB_BASIC("basic"),
-        BOMB_POWER("power"),
-        BOMB_PUNCH("punch"),
-        BOMB_PIERCING("piescing"),
-        BOMB_REMOTE("remote"),
+        BOMB("bomb"),
         FLAME("flame"),
         POWERUP("powerup");
         // add power-up types here, along with their TypeString code (used to fetch images from resources)
