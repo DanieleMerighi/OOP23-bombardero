@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
@@ -62,7 +63,7 @@ public abstract class BasicBomb extends Cell implements Bomb{
         allDirection.stream()
             .map(dir->checkDirection(dir, bomb.getRange(), bomb.getPos() , bomb.getType()))
             .forEach((set)->set.forEach((e)->mgr.addFlame(e.getValue() , e.getKey() )));
-        mgr.addFlame(CellType.FLAME_CROSS, bomb.getPos());
+        mgr.addFlame(FlameType.FLAME_CROSS, bomb.getPos());
     }
     
     private Set<Entry<Pair , CellType>> checkDirection(Direction dir , int range , Pair pos , CellType type){
