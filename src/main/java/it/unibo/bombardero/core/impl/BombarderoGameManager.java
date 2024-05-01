@@ -56,13 +56,13 @@ public class BombarderoGameManager implements GameManager {
     }
 
     @Override
-    public void addBomb(BasicBomb bomb, Pair pos) {
-        map.addBomb(null, null);
+    public void addBomb(BasicBomb bomb) {
+        map.addBomb(bomb);
     }
 
     @Override
     public void removeBomb(Pair pos) {
-        //map.removeBomb(pos);
+        map.removeBomb(pos);
     }
 
     @Override

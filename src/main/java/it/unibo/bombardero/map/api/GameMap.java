@@ -3,7 +3,6 @@ package it.unibo.bombardero.map.api;
 import java.util.Map;
 
 import it.unibo.bombardero.cell.BasicBomb;
-import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Flame;
 
@@ -24,7 +23,7 @@ public interface GameMap {
      * @param bomb the bomb to be added
      * @param coordinate where the bomb is to be placed
      */
-    void addBomb(final Cell bomb, Pair coordinate);
+    void addBomb(final BasicBomb bomb);
     
     /**
      * Adds a flame's reference to the map
@@ -44,6 +43,18 @@ public interface GameMap {
      * @param coordinate where the wall is to be placed
      */
     void addBreakableWall(Pair coordinate);
+
+    /** 
+     * Removes the breakable wall at the coordinate and eventually spawns a powerup 
+     * @param coordinate the position of the wall to remove
+     */
+    void removeBreakableWall(Pair coordinate);
+
+    /**
+     * Removes the bomb at the given coordinate
+     * @param coordinate the coordinate where to remove the bomb
+     */
+    void removeBomb(Pair coordinate);
 
     /** 
      * Returns true if the cell at the coordinate is a Bomb

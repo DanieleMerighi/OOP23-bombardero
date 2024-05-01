@@ -44,8 +44,8 @@ public class GameMapImpl implements GameMap {
     }
 
     @Override
-    public void addBomb(final Cell bomb, final Pair coordinate) {
-        this.map.put(coordinate, bomb);
+    public void addBomb(final BasicBomb bomb) {
+        this.map.put(bomb.getPos(), bomb);
     }
 
     @Override
@@ -61,6 +61,21 @@ public class GameMapImpl implements GameMap {
     @Override
     public void addBreakableWall(Pair coordinate) {
         this.map.put(coordinate, new Wall(Cell.CellType.WALL_BREAKABLE));
+    }
+
+    @Override
+    public void removeBreakableWall(Pair coordinate) {
+        if(this.isBreakableWall(coordinate)) {
+            this.map.remove(coordinate);
+            /* TODO: add powerup spawn mechanism */
+        }
+    }
+
+    @Override
+    public void removeBomb(Pair coordinate) {
+        if(this.isBomb(coordinate)) {
+            this.map.remove(coordinate);
+        }
     }
 
     @Override
