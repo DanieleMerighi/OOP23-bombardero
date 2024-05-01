@@ -64,6 +64,14 @@ public class GameMapImpl implements GameMap {
     }
 
     @Override
+    public void removeBreakableWall(Pair coordinate) {
+        if(this.isBreakableWall(coordinate)) {
+            this.map.remove(coordinate);
+            /* TODO: add powerup spawn mechanism */
+        }
+    }
+
+    @Override
     public boolean isBomb(Pair coordinate) {
         return this.map.containsKey(coordinate) && this.map.get(coordinate) instanceof Bomb;
     }
