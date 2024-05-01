@@ -10,8 +10,6 @@ import it.unibo.bombardero.map.api.Pair;
 
 public interface CollisionEngine {
     
-    void computeFlame(Bomb bomb);
-
     void checkFlameCollision();
 
 }
