@@ -34,7 +34,7 @@ public abstract class Cell {
         this.type = type;
     }
 
-    public CellType getType() {
+    public CellType getCellType() {
         return this.type;
     }
 }   
