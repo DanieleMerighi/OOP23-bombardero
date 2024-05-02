@@ -6,7 +6,7 @@ public class PowerUp extends Cell {
         // Bomb type-related P.U.
         REMOTE_BOMB("powerup/bomb_remote"),
         PIERCING_BOMB("powerup/bomb_piercing"),
-        HYPER_BOMB("powerup/bomb_hyper"),
+        POWER_BOMB("powerup/bomb_hyper"),
         LINE_BOMB("powerup/line"),
         // Bomb range-related P.U.
         PLUSONE_BOMBRANGE("powerup/fire_plusone"),

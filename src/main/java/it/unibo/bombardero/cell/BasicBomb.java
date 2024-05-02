@@ -39,6 +39,7 @@ public abstract class BasicBomb extends Cell implements Bomb{
         return bombType;
     }
 
+    @Override
     public CellType getCellType(){
         return super.getCellType();
     }
@@ -86,6 +87,7 @@ public abstract class BasicBomb extends Cell implements Bomb{
             } else {
                 flamePos.add(p);
             }
+            i++;
         } while(i<range);
         return chooseType(dir, flamePos);
     }

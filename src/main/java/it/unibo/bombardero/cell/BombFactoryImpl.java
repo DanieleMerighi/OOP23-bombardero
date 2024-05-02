@@ -23,15 +23,16 @@ public class BombFactoryImpl implements BombFactory{
         if(powerUp.isEmpty()){
             return createBasicBomb(pos , range);
         }
-        switch (powerUp.get()) { //TODO: add powerup type instead bomb type
+        switch (powerUp.get()) {
             case PIERCING_BOMB:
                 return createPiercingBomb(pos , range);
-            case HYPER_BOMB:
+            case POWER_BOMB:
                 return createRemoteBomb(pos , range);
             case REMOTE_BOMB:
                 return createPowerBomb(pos , range);
+            default :
+                return null;
         }
-        return null;
     }
     
     private Bomb createBasicBomb(Pair pos , int range) {
@@ -41,7 +42,9 @@ public class BombFactoryImpl implements BombFactory{
     }
 
     private Bomb createPiercingBomb(Pair pos , int range) {
-        return null;
+        return new BasicBomb(mgr , pos , BombType.BOMB_PIERCING , range , ce) {
+            
+        };
     }
 
     private Bomb createPowerBomb(Pair pos , int range) {
