@@ -77,7 +77,7 @@ public class BombarderoGameManager implements GameManager {
     }
 
     @Override
-    public void removeWall(Pair pos) {
+    public boolean removeWall(Pair pos) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'removeWall'");
     }

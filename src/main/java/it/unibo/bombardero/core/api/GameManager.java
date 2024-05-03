@@ -29,5 +29,5 @@ public interface GameManager {
     
     void removeFlame(Pair pos);
     
-    void removeWall(Pair pos);
+    boolean removeWall(Pair pos);
 }   
