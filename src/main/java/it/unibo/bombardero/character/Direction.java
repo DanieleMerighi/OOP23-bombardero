@@ -27,4 +27,5 @@ public enum Direction {
     public Pair getPair(){
         return new Pair(getDx(),getDy());
     }
+
 }
