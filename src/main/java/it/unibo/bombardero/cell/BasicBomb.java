@@ -2,9 +2,14 @@ package it.unibo.bombardero.cell;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.Set;
 
 import it.unibo.bombardero.cell.Flame.FlameType;
@@ -15,10 +20,10 @@ import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 
 public abstract class BasicBomb extends Cell implements Bomb{
-    private final long TIME_TO_EXPLODE=2000L;
+    public final static long TIME_TO_EXPLODE=2000L;
+    public final static int MAX_RANGE = 3; // TO-DO: decide the max bomb range
 
     private final int range;
-    private final static int MAX_RANGE = 3; // TO-DO: decide the max bomb range
     private final GameManager mgr;
     private Pair pos;
     private long elapsedTime=0;
@@ -72,53 +77,21 @@ public abstract class BasicBomb extends Cell implements Bomb{
         mgr.addFlame(FlameType.FLAME_CROSS, bomb.getPos());
     }
     
-    private Set<Entry<Pair , FlameType>> checkDirection(Direction dir , int range , Pair pos){
-        int i=range;
-        Pair p=pos;
-        Set<Pair> flamePos = new HashSet<>();
-        do{
-            p=p.sum(dir.getPair());
-            if(map.isBomb(p) || map.isUnbreakableWall(p)){
-                break;
-            } else if(map.isBreakableWall(p)){
-                mgr.removeWall(p);
-                flamePos.add(p);
-                break;
-            } else {
-                flamePos.add(p);
-            }
-            i++;
-        } while(i<range);
-        return chooseType(dir, flamePos);
+    private Set<Entry<Pair , FlameType>> checkDirection(Direction dir , int range , Pair pos) {
+        List<Pair> flamePos = new LinkedList<>();
+        return IntStream.iterate(0 , i->i < range , i->i+1)
+            .mapToObj(i->pos.sum(dir.getPair().multipy(i)))
+            .takeWhile(stopFlamePropagation())
+            .collect(Collectors.toMap(
+                Function.identity() ,
+                p -> p.equals(pos.sum(dir.getPair().multipy(range))) 
+                    ? FlameType.getFlameEndType(dir) 
+                    : FlameType.getFlameBodyType(dir)))
+            .entrySet();
     }
 
-    private Set<Entry<Pair , FlameType>> chooseType(Direction dir , Set<Pair> flamePos){
-        switch (dir) {
-            case LEFT:
-                return BuidSet(FlameType.FLAME_BODY_HORIZONTAL , FlameType.FLAME_END_LEFT , flamePos);
-            case RIGHT:
-                return BuidSet(FlameType.FLAME_BODY_HORIZONTAL , FlameType.FLAME_END_RIGHT , flamePos);
-            case UP:
-                return BuidSet(FlameType.FLAME_BODY_VERTICAL , FlameType.FLAME_END_TOP , flamePos);
-            case DOWN:
-                return BuidSet(FlameType.FLAME_BODY_VERTICAL , FlameType.FLAME_END_BOTTOM , flamePos);
-            default:
-                return null;
-        }
-    }
-
-    private Set<Entry<Pair , FlameType>> BuidSet(FlameType bodyType, FlameType endType , Set<Pair> flamePos) {
-        var it = flamePos.iterator();
-        Map<Pair , FlameType > map = new HashMap<>();
-        Pair p;
-        while(it.hasNext()){
-            p=it.next();
-            if (!it.hasNext()) {
-                map.put(p, endType);
-            }
-            map.put(p , bodyType); 
-        }
-        return map.entrySet();
+    protected Predicate<? super Pair> stopFlamePropagation() {
+        return p-> !map.isBomb(p) && !map.isUnbreakableWall(p) && (!map.isBreakableWall(p) && mgr.removeWall(p));
     }
 
 }
