@@ -1,6 +1,7 @@
 package it.unibo.bombardero.cell;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.cell.Cell.CellType;
@@ -43,16 +44,28 @@ public class BombFactoryImpl implements BombFactory{
 
     private Bomb createPiercingBomb(Pair pos , int range) {
         return new BasicBomb(mgr , pos , BombType.BOMB_PIERCING , range , ce) {
-            
+            @Override
+            protected Predicate<? super Pair> stopFlamePropagation() {
+            return p-> !super.map.isBomb(p) && !super.map.isUnbreakableWall(p) && (super.map.isBreakableWall(p) && mgr.removeWall(p));
+    }
         };
     }
 
     private Bomb createPowerBomb(Pair pos , int range) {
-        return null;
+        return new BasicBomb(mgr , pos , BombType.BOMB_PIERCING , BasicBomb.MAX_RANGE , ce) {
+            
+        };
     }
 
     private Bomb createRemoteBomb(Pair pos , int range) {
-        return null;
+        return new BasicBomb(mgr , pos , BombType.BOMB_PIERCING , range , ce) {
+            
+            public void update(boolean condition){
+                if(condition){
+                    super.update(BasicBomb.TIME_TO_EXPLODE); //TODO find better option
+                }
+            }
+        };
     }
 
     private Bomb createPunchBomb(Pair pos , int range) {

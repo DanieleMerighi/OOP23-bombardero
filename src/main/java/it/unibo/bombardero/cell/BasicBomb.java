@@ -28,7 +28,7 @@ public abstract class BasicBomb extends Cell implements Bomb{
     private Pair pos;
     private long elapsedTime=0;
     private CollisionEngine ce;
-    private GameMap map;
+    protected GameMap map;
     private BombType bombType;
 
     public BasicBomb(GameManager mgr, Pair pos , BombType type, int range, CollisionEngine ce) {
