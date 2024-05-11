@@ -7,12 +7,14 @@ import java.awt.Image;
  */
 public class BombermanSprite {  
 
-    private static final int FRAMES_PER_SPRITE = 3;
-    private final Image[] asset = new Image[FRAMES_PER_SPRITE];
+    private final int FRAMES_PER_SPRITE;
+    private final Image[] asset;
     private int counter = 0;
     private int currentFrame = 0;
 
-    public BombermanSprite(final String resource, final ResourceGetter rg) {
+    public BombermanSprite(final String resource, final ResourceGetter rg, final int frames) {
+        FRAMES_PER_SPRITE = frames;
+        asset = new Image[FRAMES_PER_SPRITE];
         for(int i = 0; i < FRAMES_PER_SPRITE; i++) {
             asset[i] = rg.loadImage(resource + Integer.toString(i));
         }
