@@ -18,7 +18,9 @@ public enum PowerUpType {
     // Botton-related P.U.
     PUNCH("powerup/punch"),
     LINE_BOMB("powerup/line"),
-    // Other P.U.
+    // Bomb movement-related P.U.
+    KICK("powerup/kick"),
+    // Debuff P.U.
     SKULL("powerup/skull");
 
     private String typeString;
