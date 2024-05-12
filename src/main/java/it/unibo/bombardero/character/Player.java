@@ -1,6 +1,6 @@
 package it.unibo.bombardero.character;
 
-import it.unibo.bombardero.cell.PowerUp.PowerUpType;
+import it.unibo.bombardero.cell.PowerUp.PowerUp.PowerUp.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
 
 public class Player extends Character {
