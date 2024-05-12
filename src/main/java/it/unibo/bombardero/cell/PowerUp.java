@@ -7,17 +7,18 @@ public class PowerUp extends Cell {
         REMOTE_BOMB("powerup/bomb_remote"),
         PIERCING_BOMB("powerup/bomb_piercing"),
         POWER_BOMB("powerup/bomb_hyper"),
-        LINE_BOMB("powerup/line"),
         // Bomb range-related P.U.
-        PLUSONE_BOMBRANGE("powerup/fire_plusone"),
-        MINUSONE_BOMBRANGE("powerup/fire_minusone"),
+        PLUSONE_BOMBRANGE("powerup/fire_plus_one"),
+        MINUSONE_BOMBRANGE("powerup/fire_minus_one"),
         MAX_BOMBRANGE("powerup/fire_max"),
         // Speed-related P.U.
-        PLUSONE_SKATES("powerup/skates"),
-        MINUSONE_SKATES("powerup/skates_minusone"),
+        PLUSONE_SKATES("powerup/skates_plus_one"),
+        MINUSONE_SKATES("powerup/skates_minus_one"),
+        // Botton-related P.U.
+        PUNCH("powerup/punch"),
+        LINE_BOMB("powerup/line"),
         // Other P.U.
-        SKULL("powerup/skull"),
-        PUNCH("powerup/punch");
+        SKULL("powerup/skull");
 
         private String typeString;
 
