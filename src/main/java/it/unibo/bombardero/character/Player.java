@@ -1,5 +1,6 @@
 package it.unibo.bombardero.character;
 
+import java.util.Optional;
 import it.unibo.bombardero.cell.PowerUp.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
 
@@ -9,8 +10,9 @@ public class Player extends Character {
     private int numBomb;
     private int flameRange;
     private int speed;
-    private PowerUpType bombType;
-    private PowerUpType powerUp;
+    private Optional<PowerUpType> bombType;
+    private Optional<PowerUpType> kick;
+    private Optional<PowerUpType> skull;
 
     //view attribute
     private int facingDirection;
