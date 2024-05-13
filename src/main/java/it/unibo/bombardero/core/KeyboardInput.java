@@ -8,27 +8,50 @@ import it.unibo.bombardero.character.Player;
 
 public class KeyboardInput implements KeyListener{
 
-    Direction directionMovementPair = Direction.DEFAULT;
+    private Direction directionMovementPair = Direction.DEFAULT;
 
+    /*
+     * BOMB and POWER-UPs controls
+     * 
+     * SPACE is used to place the bomb under the player
+     * L is used for the line bomb (punch?)
+     * P is used for the remote bomb to explode it
+     */
     public void keyTyped(KeyEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'keyTyped'");
+        switch (e.getKeyChar()) {
+            case ' ':
+                System.out.println("spazio");
+                break;
+            case 'l':
+                System.out.println("l");
+                break;
+            case 'p':
+                System.out.println("spazio");
+                break;
+        }
     }
 
-    // 
+    /*
+     * It's used the classic WASD configuration for the player movement:
+     * W makes the player go UP
+     * A makes the player go LEFT
+     * S makes the player go SOUTH
+     * D makes the player go RIGHT
+     */
+    // every time a key is pressed the player direction is set
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W:
-                directionMovementPair = Direction.UP;
+                this.directionMovementPair = Direction.UP;
                 break;
             case KeyEvent.VK_A:
-                directionMovementPair = Direction.LEFT;
+                this.directionMovementPair = Direction.LEFT;
                 break;
             case KeyEvent.VK_S:
-                directionMovementPair = Direction.DOWN;
+                this.directionMovementPair = Direction.DOWN;
                 break;
             case KeyEvent.VK_D:
-                directionMovementPair = Direction.RIGHT;
+                this.directionMovementPair = Direction.RIGHT;
                 break;
             default:
                 break;
@@ -42,7 +65,7 @@ public class KeyboardInput implements KeyListener{
             case KeyEvent.VK_A:
             case KeyEvent.VK_S:
             case KeyEvent.VK_D:
-                directionMovementPair = Direction.DEFAULT;
+                this.directionMovementPair = Direction.DEFAULT;
                 break;
             default:
                 break;
@@ -50,7 +73,7 @@ public class KeyboardInput implements KeyListener{
     }
     
     public Direction getDirection(){
-        return directionMovementPair;
+        return this.directionMovementPair;
     }
 
 }
