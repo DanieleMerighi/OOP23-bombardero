@@ -11,22 +11,30 @@ public class KeyboardInput implements KeyListener{
     private Direction directionMovementPair = Direction.DEFAULT;
 
     /*
-     * BOMB and POWER-UPs controls
+     * MENU, BOMB and POWER-UPs controls
      * 
+     * ESC is used to access the game menu and pause the game
      * SPACE is used to place the bomb under the player
      * L is used for the line bomb (punch?)
      * P is used for the remote bomb to explode it
      */
     public void keyTyped(KeyEvent e) {
         switch (e.getKeyChar()) {
+            //verifica
+            case KeyEvent.VK_ESCAPE:
+                //opens the menu
+                System.out.println("ESC");
+                break;
             case ' ':
+                //calls player method to place a bomb
                 System.out.println("spazio");
                 break;
             case 'l':
                 System.out.println("l");
                 break;
             case 'p':
-                System.out.println("spazio");
+                //calls powerup method? check if the player has the remote bomb
+                System.out.println("p");
                 break;
         }
     }
@@ -53,8 +61,6 @@ public class KeyboardInput implements KeyListener{
             case KeyEvent.VK_D:
                 this.directionMovementPair = Direction.RIGHT;
                 break;
-            default:
-                break;
         }
     }
 
@@ -66,8 +72,6 @@ public class KeyboardInput implements KeyListener{
             case KeyEvent.VK_S:
             case KeyEvent.VK_D:
                 this.directionMovementPair = Direction.DEFAULT;
-                break;
-            default:
                 break;
         }
     }
