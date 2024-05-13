@@ -2,9 +2,7 @@ package it.unibo.bombardero.core;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.character.Direction;
-import it.unibo.bombardero.character.Player;
 
 public class KeyboardInput implements KeyListener{
 
@@ -20,21 +18,23 @@ public class KeyboardInput implements KeyListener{
      */
     public void keyTyped(KeyEvent e) {
         switch (e.getKeyChar()) {
-            //verifica
             case KeyEvent.VK_ESCAPE:
-                //opens the menu
-                System.out.println("ESC");
+                // opens the menu
+                // System.out.println("ESC");
                 break;
-            case ' ':
-                //calls player method to place a bomb
-                System.out.println("spazio");
+            case KeyEvent.VK_SPACE:
+                // calls player method to place a bomb
+                // System.out.println("spazio");
                 break;
             case 'l':
-                System.out.println("l");
+            case 'L':
+                // calls powerup method? check if the player has the power-up
+                // System.out.println("l");
                 break;
             case 'p':
-                //calls powerup method? check if the player has the remote bomb
-                System.out.println("p");
+            case 'P':
+                // calls powerup method? check if the player has the remote bomb
+                // System.out.println("p");
                 break;
         }
     }
@@ -51,15 +51,19 @@ public class KeyboardInput implements KeyListener{
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W:
                 this.directionMovementPair = Direction.UP;
+                // System.out.println("UP");
                 break;
             case KeyEvent.VK_A:
                 this.directionMovementPair = Direction.LEFT;
+                // System.out.println("LEFT");
                 break;
             case KeyEvent.VK_S:
                 this.directionMovementPair = Direction.DOWN;
+                // System.out.println("DOWN");
                 break;
             case KeyEvent.VK_D:
                 this.directionMovementPair = Direction.RIGHT;
+                // System.out.println("RIGHT");
                 break;
         }
     }
@@ -71,6 +75,7 @@ public class KeyboardInput implements KeyListener{
             case KeyEvent.VK_A:
             case KeyEvent.VK_S:
             case KeyEvent.VK_D:
+                // System.out.println("relased");
                 this.directionMovementPair = Direction.DEFAULT;
                 break;
         }
