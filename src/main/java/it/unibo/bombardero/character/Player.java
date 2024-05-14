@@ -17,12 +17,8 @@ public class Player extends Character {
     //private int facingDirection;
 
 
-    public Player(final GameManager manager, final Coord coord, final int width, final int height) {
-        super(manager, coord, width, height);
-    }
-
-    public int getSpeed() {
-        return speed;
+    public Player(final GameManager manager, final Coord coord) {
+        super(manager, coord);
     }
 
     public void placeBomb() {
@@ -31,12 +27,6 @@ public class Player extends Character {
                 numBomb--;   */
         }
     }
-
-    public boolean hasBombsLeft() {
-        return this.numBomb > 0;
-    }
-
-
 
     public void update() {
         //based on which key get pressed, the player moves in that direction
