@@ -12,7 +12,7 @@ public class KeyboardInput implements KeyListener {
     // 
     private Direction directionMovementPair = Direction.DEFAULT;
 
-    public KeyboardInput (final Controller controller) {
+    public KeyboardInput(final Controller controller) {
         this.controller = controller;
     }
 

@@ -44,8 +44,8 @@ public abstract class Character {
     /**
      * Constructs a new Character with the specified parameters.
      * 
-     * @param manager     the game manager
-     * @param coord       the initial coordinates of the character
+     * @param manager     the game manager that controls the game state
+     * @param coord       the initial coordinates where the character is spawned
      * @param bombFactory the factory to create bombs
      */
     public Character(final GameManager manager, final Coord coord, final BombFactory bombFactory) {

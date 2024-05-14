@@ -5,9 +5,11 @@ import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.cell.BombFactory;
 
 /**
- * The class responsible for managing the player.
+ * This class represents a Player in the game.
+ * This class extends the Character class and is responsible for handling 
+ * player-specific actions and behaviors.
  * 
- * @author Jacopo Turchi
+ * Author: Jacopo Turchi
  */
 public class Player extends Character {
 
@@ -15,20 +17,22 @@ public class Player extends Character {
     // private int facingDirection;
 
     /**
-     * The Player's constructor method. It initialise the Player's parameter
+     * Constructs a new Player instance with the specified parameters.
      * 
-     * @param manager is the reference to the GameManager
-     * @param coord where the player get spawened
-     * @param bombFactory is the reference to the BombFactory
+     * @param manager the game manager that controls the game state
+     * @param coord the initial coordinates where the player is spawned
+     * @param bombFactory the factory to create bombs
      */
     public Player(final GameManager manager, final Coord coord, final BombFactory bombFactory) {
         super(manager, coord, bombFactory);
     }
 
     /**
-     * Updates the Player interaction with the map.
+     * Updates the Player's interactions with the map.
+     * This method should define how the player moves and interacts based on user input.
      */
+    @Override
     public void update() {
-        // based on which key get pressed, the player moves in that direction
+
     }
 }
