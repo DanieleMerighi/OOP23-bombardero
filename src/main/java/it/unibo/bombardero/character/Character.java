@@ -74,6 +74,10 @@ public abstract class Character {
         return coordinate;
     }
 
+    public void setCharacterPosition(final Coord c) {
+        this.coordinate = c;
+    }
+
     public int getNumBomb() {
         return numBomb;
     }
