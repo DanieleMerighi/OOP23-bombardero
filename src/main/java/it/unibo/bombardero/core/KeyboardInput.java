@@ -33,7 +33,7 @@ public class KeyboardInput implements KeyListener {
             case KeyEvent.VK_SPACE:
                 // calls player method to place a bomb
                 // System.out.println("spazio");
-                controller.getMainPlayer().placeBomb();
+                // controller.getMainPlayer().placeBomb();
                 break;
             case 'l':
             case 'L':
