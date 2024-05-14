@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 
 import org.jgrapht.alg.spanning.EsauWilliamsCapacitatedMinimumSpanningTree;
 
+import it.unibo.bombardero.core.KeyboardInput;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.impl.BombarderoController;
 
@@ -28,6 +29,8 @@ import it.unibo.bombardero.core.impl.BombarderoController;
 public class BombarderoGraphics {
 
     private Controller controller;
+    // adding the keyboard input
+    private final KeyboardInput keyInput = new KeyboardInput();
 
     private final ResourceGetter resourceGetter = new ResourceGetter();
     private final ResizingEngine resizingEngine = new ResizingEngine();
@@ -65,6 +68,10 @@ public class BombarderoGraphics {
                 frame.setSize(resizingEngine.getNewWindowSize(frame));
             }
         });
+
+        // Recives keyboard input
+        frame.addKeyListener(keyInput);
+        //controller.getMainPlayer().; //da togliere
 
         frame.add(gameCard);
         this.frame.setVisible(true);
