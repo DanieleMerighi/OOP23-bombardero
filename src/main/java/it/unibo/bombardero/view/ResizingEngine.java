@@ -16,6 +16,7 @@ public class ResizingEngine {
 
     private double currentScale = 1.125; /* default scale size for every device */
     private final int SCALED_CELL_SIZE;
+    private final static double initialMenuScale = 0.75;
     private static final double minimumScale = 0.25; 
     private static final double maximumScale = 1.75; 
     private Dimension minimumFrameSize;
@@ -36,7 +37,14 @@ public class ResizingEngine {
         }
         return frame.getSize();
     }
-
+    
+    public Dimension getInitialMenuSize() {
+        return new Dimension(
+            (int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth() * initialMenuScale), 
+            (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight() * initialMenuScale)
+        );
+    }
+    
     /* The initial windows size is calculated scaling the map and adding some grass on the sides, other than the insets */
     public Dimension getInitialWindowSize(JFrame frame) {       
         minimumFrameSize = new Dimension(
