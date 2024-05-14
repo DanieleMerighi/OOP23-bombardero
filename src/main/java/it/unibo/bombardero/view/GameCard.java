@@ -26,7 +26,8 @@ public class GameCard extends JPanel {
     private final ResourceGetter resourceGetter = new ResourceGetter();
     private final BufferedImage grass_bg_image = resourceGetter.loadImage("grass_background");
     private final BufferedImage map = resourceGetter.loadImage("map_square");
-    private final BufferedImage obstacle = resourceGetter.loadImage("powerup/skull");
+    private final BufferedImage obstacle = resourceGetter.loadImage("other_textures/great_crate");
+    /* private final BufferedImage player = resourceGetter.loadImage("character/main/walking/left/left1"); */
     private final JFrame parentFrame;
     private final ResizingEngine resizingEngine;
     private final Map<Pair, Cell> cells;
@@ -47,7 +48,7 @@ public class GameCard extends JPanel {
         Graphics2D g2d = (Graphics2D)g;
         Dimension actualMapSize = resizingEngine.getMapSize();
         Dimension actualBgSize = resizingEngine.getBackgroundImageSize();
-        g.drawImage(
+        g2d.drawImage(
             grass_bg_image.getScaledInstance(actualBgSize.width, actualBgSize.height, Image.SCALE_SMOOTH),
             0, 0,
             null);
@@ -67,6 +68,9 @@ public class GameCard extends JPanel {
                     null
                 );
             });
+        /* g2d.drawImage(player.getScaledInstance(35, 55, Image.SCALE_SMOOTH), 
+            computeCellPlacingPoint(new Pair(10, 10)).width - 10, computeCellPlacingPoint(new Pair(10, 10)).height - 21,
+            null); */
     }
     private Dimension computeMapPlacingPoint() {
         return new Dimension(
