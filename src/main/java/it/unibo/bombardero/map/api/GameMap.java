@@ -25,7 +25,7 @@ public interface GameMap {
      * @param coordinate where the bomb is to be placed
      * @return true if the bomb is placed correctly
      */
-    boolean addBomb(final Bomb bomb, Pair coordinate);
+    boolean addBomb(final BasicBomb bomb, Pair coordinate);
     
     /**
      * Adds a flame's reference to the map
