@@ -2,6 +2,7 @@ package it.unibo.bombardero.character;
 
 import java.util.Optional;
 
+import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.PowerUp.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
@@ -10,7 +11,7 @@ import it.unibo.bombardero.map.api.Pair;
 public abstract class Character {
 
     // constant for default setting
-    private static final int STARTING_SPEED = 2;
+    private static final float STARTING_SPEED = 2;
     private static final int STARTING_FLAME_RANGE = 1;
     private static final int STARTING_BOMBS = 1;
     private static final int WIDTH = 22;
@@ -19,6 +20,9 @@ public abstract class Character {
     // game manager reference
     private final GameManager manager;
 
+    // Bomb Factory reference
+    private final BombFactory bombFactory;
+
     // position related
     private final Coord coordinate;
 
@@ -26,14 +30,15 @@ public abstract class Character {
     private boolean isAlive = true;
     private int numBomb = STARTING_BOMBS;
     private int flameRange = STARTING_FLAME_RANGE;
-    private int speed = STARTING_SPEED;
+    private float speed = STARTING_SPEED;
     private Optional<PowerUpType> bombType = Optional.empty();
     private boolean kick = false;
     private boolean lineBomb = false;
 
-    public Character(GameManager manager, Coord coord) {
+    public Character(GameManager manager, Coord coord, BombFactory bombFactory) {
         this.manager = manager;
         this.coordinate = coord;
+        this.bombFactory = bombFactory;
     }
 
     public abstract void update();
@@ -61,6 +66,10 @@ public abstract class Character {
         return manager;
     }
 
+    public BombFactory getFactory() {
+        return bombFactory;
+    }
+
     public Coord getCharacterPosition() {
         return coordinate;
     }
@@ -81,11 +90,11 @@ public abstract class Character {
         this.flameRange = flameRange;
     }
 
-    public int getSpeed() {
+    public float getSpeed() {
         return speed;
     }
 
-    public void setSpeed(int speed) {
+    public void setSpeed(float speed) {
         this.speed = speed;
     }
 
