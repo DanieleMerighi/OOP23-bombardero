@@ -17,30 +17,28 @@ public class Player extends Character {
     //private int facingDirection;
 
 
-    public Player(GameManager manager, Coord coord, int width, int height) {
+    public Player(final GameManager manager, final Coord coord, final int width, final int height) {
         super(manager, coord, width, height);
     }
 
-    public int getSpeed(){
+    public int getSpeed() {
         return speed;
     }
 
-    public void placeBomb(){
+    public void placeBomb() {
         if (hasBombsLeft()) {
             /*if(manager.addBomb(BombFactory.CreateBomb(bombType, getCoord(), flameRange))
                 numBomb--;   */
         }
     }
 
-    public boolean hasBombsLeft(){
-        return this.numBomb>0;
+    public boolean hasBombsLeft() {
+        return this.numBomb > 0;
     }
 
 
 
     public void update() {
         //based on which key get pressed, the player moves in that direction
-        
     }
-    
 }

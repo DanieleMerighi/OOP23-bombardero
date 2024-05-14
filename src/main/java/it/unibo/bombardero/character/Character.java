@@ -15,12 +15,12 @@ public abstract class Character {
     private static final int STARTING_BOMBS = 1;
 
     // game manager reference
-    protected GameManager manager;
+    protected final GameManager manager;
 
     // position related
-    protected Coord coordinate;
-    protected int width, height;
-    
+    protected final Coord coordinate;
+    protected final int width, height;
+
     // game attribute related
     protected boolean isAlive = true;
     protected int numBomb = STARTING_BOMBS;
@@ -43,13 +43,13 @@ public abstract class Character {
         return isAlive;
     }
 
-    public Pair getIntCoordinate() {
-        return new Pair((int) Math.floor(this.coordinate.row() + this.height/2), 
-                            (int) Math.floor(this.coordinate.col() + this.width/2));
+    public Pair getIntCoordinate() { 
+        return new Pair((int) Math.floor(this.coordinate.row() + this.height / 2),
+            (int) Math.floor(this.coordinate.col() + this.width / 2));
     }
 
     public void kill() {
         isAlive = false;
     }
-    
+
 }

@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import it.unibo.bombardero.character.Direction;
 
-public class KeyboardInput implements KeyListener{
+public class KeyboardInput implements KeyListener {
 
     private Direction directionMovementPair = Direction.DEFAULT;
 
@@ -16,7 +16,7 @@ public class KeyboardInput implements KeyListener{
      * L is used for the line bomb (punch?)
      * P is used for the remote bomb to explode it
      */
-    public void keyTyped(KeyEvent e) {
+    public void keyTyped(final KeyEvent e) {
         switch (e.getKeyChar()) {
             case KeyEvent.VK_ESCAPE:
                 // opens the menu
@@ -36,6 +36,8 @@ public class KeyboardInput implements KeyListener{
                 // calls powerup method? check if the player has the remote bomb
                 // System.out.println("p");
                 break;
+            default:
+                break;
         }
     }
 
@@ -47,7 +49,7 @@ public class KeyboardInput implements KeyListener{
      * D makes the player go RIGHT
      */
     // every time a key is pressed the player direction is set
-    public void keyPressed(KeyEvent e) {
+    public void keyPressed(final KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W:
                 this.directionMovementPair = Direction.UP;
@@ -65,11 +67,13 @@ public class KeyboardInput implements KeyListener{
                 this.directionMovementPair = Direction.RIGHT;
                 // System.out.println("RIGHT");
                 break;
+            default:
+                break;
         }
     }
 
     //If all the movement key get relased the player stops moving
-    public void keyReleased(KeyEvent e) {
+    public void keyReleased(final KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W:
             case KeyEvent.VK_A:
@@ -78,10 +82,12 @@ public class KeyboardInput implements KeyListener{
                 // System.out.println("relased");
                 this.directionMovementPair = Direction.DEFAULT;
                 break;
+            default:
+                break;
         }
     }
-    
-    public Direction getDirection(){
+
+    public Direction getDirection() {
         return this.directionMovementPair;
     }
 
