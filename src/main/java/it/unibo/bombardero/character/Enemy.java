@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Random;
 
+import it.unibo.bombardero.cell.Bomb;
+import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.character.AI.EnemyGraphReasoner;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
@@ -21,8 +23,8 @@ public class Enemy extends Character {
     private EnemyGraphReasoner graph;
 
 
-    public Enemy(GameManager manager, float x, float y, int width, int height) {
-        super(manager, x, y, width, height);
+    public Enemy(GameManager manager, float x, float y) {
+        super(manager, x, y);
         graph = new EnemyGraphReasoner(manager.getGameMap());
     }
 
@@ -41,7 +43,7 @@ public class Enemy extends Character {
     private void placeBomb(Pair targetCell) {
         if (hasBombsLeft() && isValidCell(targetCell)
                 && this.manager.getGameMap().isEmpty(targetCell)) {
-            // map.addBomb(null, targetCell);
+            this.manager.getGameMap().addBomb(new Bomb(manager, targetCell, CellType.BOMB_BASIC, 2), targetCell);
             numBombs--;
         }
     }
@@ -68,18 +70,18 @@ public class Enemy extends Character {
     }
 
     private boolean isValidCell(Pair cell) {
-        return this.manager.getGameMap().getMap().containsKey(cell);
+        return cell.row() >= 0 && cell.row() < Utils.MAP_ROWS && cell.col() >= 0 && cell.col() < Utils.MAP_COLS;
     }
 
     private void computeNextDir() {
         GameMap map = this.manager.getGameMap();
         graph = new EnemyGraphReasoner(map);
         currentState.execute(this); // Delegate behavior to current state
-        if(!nextMove.isPresent() || !isValidCell(nextMove.get())) {
-            moveRandomly();
-        } else if(map.isBreakableWall(nextMove.get())) {
+
+        if(nextMove.isPresent() && isValidCell(nextMove.get()) && map.isBreakableWall(nextMove.get())) {
             placeBomb(getCoord());
-            //change the state of the enemy?
+            nextMove = Optional.empty();
+            this.currentState = State.ESCAPE;
         }
     }
 
@@ -104,13 +106,15 @@ public class Enemy extends Character {
             float movementSpeed = Utils.ENEMY_SPEED; 
             float movement = Math.min(Math.abs(dx) + Math.abs(dy), movementSpeed);
 
-            this.x += (dx > 0) ? movement : -movement;
-            this.y += (dy > 0) ? movement : -movement;
+            this.x += (dx >= 0) ? movement : -movement;
+            this.y += (dy >= 0) ? movement : -movement;
 
             // Check if reached the target cell
             if (Math.abs(dx) < movementSpeed && Math.abs(dy) < movementSpeed) {
                 nextMove = Optional.empty(); // Clear target if reached
             }
+        } else {
+            computeNextDir();
         }
     }
 

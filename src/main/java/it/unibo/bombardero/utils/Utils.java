@@ -21,10 +21,10 @@ public class Utils {
     public final static long GAME_TIME = 120000l;
 
     // Valori per l'esplosione
-    public static final int EXPLOSION_RADIUS = 4;
+    public static final int EXPLOSION_RADIUS = 2;
     public static final int ENEMY_DETECTION_RADIUS = 4;
     public static final int ENEMY_STARTING_BOMBS = 3;
-    public static final int ENEMY_SPEED = 1;
+    public static final float ENEMY_SPEED = 0.01f;
 
     // PARAMETRI PER LA VIEW
     public static int MAP_WIDTH = 524; // the original map image's width
