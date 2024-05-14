@@ -48,7 +48,7 @@ public abstract class Character {
      * @param coord       the initial coordinates of the character
      * @param bombFactory the factory to create bombs
      */
-    public Character(GameManager manager, Coord coord, BombFactory bombFactory) {
+    public Character(final GameManager manager, final Coord coord, final BombFactory bombFactory) {
         this.manager = manager;
         this.coordinate = coord;
         this.bombFactory = bombFactory;
