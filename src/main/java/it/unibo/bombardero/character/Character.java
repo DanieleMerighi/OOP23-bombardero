@@ -43,8 +43,8 @@ public abstract class Character {
     }
 
     public Pair getIntCoordinate() {
-        return new Pair((int) Math.floor(this.coordinate.row() + this.HEIGHT / 2),
-                (int) Math.floor(this.coordinate.col() + this.WIDTH / 2));
+        return new Pair((int) Math.floor(this.coordinate.row() + HEIGHT / 2),
+                (int) Math.floor(this.coordinate.col() + WIDTH / 2));
     }
 
     public abstract void placeBomb();
@@ -69,7 +69,7 @@ public abstract class Character {
         return numBomb;
     }
 
-    public void setNumBomb(int numBomb) {
+    public void setNumBomb(final int numBomb) {
         this.numBomb = numBomb;
     }
 
@@ -77,7 +77,7 @@ public abstract class Character {
         return flameRange;
     }
 
-    public void setFlameRange(int flameRange) {
+    public void setFlameRange(final int flameRange) {
         this.flameRange = flameRange;
     }
 
@@ -85,7 +85,7 @@ public abstract class Character {
         return speed;
     }
 
-    public void setSpeed(int speed) {
+    public void setSpeed(final float speed) {
         this.speed = speed;
     }
 
@@ -93,7 +93,7 @@ public abstract class Character {
         return bombType;
     }
 
-    public void setBombType(Optional<PowerUpType> bombType) {
+    public void setBombType(final Optional<PowerUpType> bombType) {
         this.bombType = bombType;
     }
 
@@ -101,7 +101,7 @@ public abstract class Character {
         return kick;
     }
 
-    public void setKick(boolean kick) {
+    public void setKick(final boolean kick) {
         this.kick = kick;
     }
 
@@ -109,7 +109,7 @@ public abstract class Character {
         return lineBomb;
     }
 
-    public void setLineBomb(boolean lineBomb) {
+    public void setLineBomb(final boolean lineBomb) {
         this.lineBomb = lineBomb;
     }
 

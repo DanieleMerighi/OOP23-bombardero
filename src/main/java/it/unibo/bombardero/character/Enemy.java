@@ -19,7 +19,6 @@ public class Enemy extends Character {
     private List<Pair> path = new LinkedList<>();
     Optional<Pair> nextMove = Optional.empty();
     private State currentState = State.PATROL; // Initial state
-    private int numBombs = getNumBomb(); // Assuming starting number of bombs
     private int movementTimer = 0; // Timer for movement updates
     private EnemyGraphReasoner graph;
 
@@ -97,6 +96,7 @@ public class Enemy extends Character {
             //this.y += (dir.col() >= 0) ? movement : -movement;
 
             
+            
 
             // Check if reached the target cell
             if (Math.abs(dir.row()) < getSpeed() && Math.abs(dir.col()) < getSpeed()) {
@@ -155,5 +155,11 @@ public class Enemy extends Character {
 
     public State getState() {
         return currentState;
+    }
+
+    @Override
+    public void placeBomb() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'placeBomb'");
     }
 }
