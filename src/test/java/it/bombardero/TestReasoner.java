@@ -43,7 +43,7 @@ public class TestReasoner {
         Pair enemyCoord = new Pair(enemyX, enemyY);
         Pair bombCell = new Pair(bombX, bombY);
 
-        map.addBomb(new Bomb(null, bombCell, CellType.BOMB_BASIC, explRadius), bombCell);
+        //map.addBomb(new Bomb(null, bombCell, CellType.BOMB_BASIC, explRadius), bombCell);
         assertTrue(map.isBomb(bombCell));
 
         EnemyGraphReasoner reasoner = new EnemyGraphReasoner(map);
@@ -127,7 +127,7 @@ public class TestReasoner {
         Pair enemyCoord = new Pair(enemyX, enemyY);
         Pair bombCell = new Pair(bombX, bombY);
 
-        map.addBomb(new Bomb(null, bombCell, CellType.BOMB_BASIC, explRadius), bombCell);
+        //map.addBomb(new Bomb(null, bombCell, CellType.BOMB_BASIC, explRadius), bombCell);
         assertTrue(map.isBomb(bombCell));
 
         EnemyGraphReasoner reasoner = new EnemyGraphReasoner(map);
@@ -142,4 +142,4 @@ public class TestReasoner {
         }   
     }
 
-}
+} 

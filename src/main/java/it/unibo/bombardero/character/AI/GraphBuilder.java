@@ -19,8 +19,8 @@ public class GraphBuilder {
     public static Graph<Pair, DefaultWeightedEdge> buildFromMap(GameMap map) {
         Graph<Pair, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
         // Stream<Pair> validPos = map.getMap().entrySet().stream()
-        //         .map(p -> p.getKey())
-        //         .filter(p -> !(map.isUnbreakableWall(p) || map.isFlame(p) || map.isBomb(p)));
+        // .map(p -> p.getKey())
+        // .filter(p -> !(map.isUnbreakableWall(p) || map.isFlame(p) || map.isBomb(p)));
 
         Stream<Pair> validcells = IntStream.range(0, Utils.MAP_ROWS)
                 .boxed()
@@ -33,18 +33,21 @@ public class GraphBuilder {
     }
 
     private static void connectWithNeighbors(Graph<Pair, DefaultWeightedEdge> graph, Pair p, GameMap map) {
-        EnumSet.allOf(Direction.class).forEach(direction -> {
-            Pair newCoord = new Pair(p.row() + direction.getDx(), p.col() + direction.getDy());
-            if (isValidCell(newCoord.row(), newCoord.col())
-                    && graph.containsVertex(newCoord)) {
-                DefaultWeightedEdge e = graph.addEdge(p, newCoord);
-                if (map.isBreakableWall(newCoord) || map.isBreakableWall(p)) {
-                    graph.setEdgeWeight(e, 2.5);
-                } else {
-                    graph.setEdgeWeight(e, 1);
-                }
-            }
-        });
+        EnumSet.allOf(Direction.class)
+                .stream()
+                .filter(d -> d != Direction.DEFAULT)
+                .forEach(direction -> {
+                    Pair newCoord = new Pair(p.row() + direction.getDx(), p.col() + direction.getDy());
+                    if (isValidCell(newCoord.row(), newCoord.col())
+                            && graph.containsVertex(newCoord)) {
+                        DefaultWeightedEdge e = graph.addEdge(p, newCoord);
+                        if (map.isBreakableWall(newCoord) || map.isBreakableWall(p)) {
+                            graph.setEdgeWeight(e, 2.5);
+                        } else {
+                            graph.setEdgeWeight(e, 1);
+                        }
+                    }
+                });
     }
 
     private static boolean isValidCell(int row, int col) {

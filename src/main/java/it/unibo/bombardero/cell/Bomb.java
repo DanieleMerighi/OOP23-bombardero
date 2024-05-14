@@ -1,33 +1,36 @@
 package it.unibo.bombardero.cell;
 
-import it.unibo.bombardero.core.api.GameManager;
+import java.util.Map.Entry;
+
+import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.map.api.Pair;
 
-public class Bomb extends Cell {
-    private final long TIME_TO_EXPLODE = 2000L;
+public interface Bomb { 
 
-    private final int range;
-    private final static int MAX_RANGE = 3; // TO-DO: decide the max bomb range
-    private final GameManager mgr;
-    private Pair pos;
-    private long elapsedTime=0;
+    public enum BombType {
 
-    public Bomb(GameManager mgr, Pair pos, CellType type, int range) {
-        super(type);
-        this.mgr = mgr;
-        this.pos = pos;
-        this.range=range;
-    }
+        BOMB_BASIC("bomb/basic"),
+        BOMB_POWER("bomb/power"),
+        BOMB_PUNCH("bomb/punch"),
+        BOMB_PIERCING("bomb/piercing"),
+        BOMB_REMOTE("bomb/remote");
 
-    void update(long time){
-        elapsedTime += time;
-        if(elapsedTime>TIME_TO_EXPLODE){
-            explode();
+        private String typeString;
+
+        private BombType(final String typeString) {
+            this.typeString = typeString;
+        }
+
+        public String getTypeString() {
+            return this.typeString;
         }
     }
 
-    private void explode(){
-        mgr.explodeBomb(this);
-    }
+    void update(long time);
 
+    BombType getBombType();
+
+    int getRange();
+
+    Pair getPos();
 }

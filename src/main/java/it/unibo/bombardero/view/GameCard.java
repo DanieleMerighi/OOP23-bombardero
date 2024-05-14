@@ -59,7 +59,7 @@ public class GameCard extends JPanel {
             null
         );
         cells.entrySet().stream()
-            .filter(entry -> entry.getValue().getType().equals(CellType.WALL_BREAKABLE))
+            .filter(entry -> entry.getValue().getCellType().equals(CellType.WALL_BREAKABLE))
             .forEach(entry -> {
                 g2d.drawImage(
                     obstacle.getScaledInstance((int)(resizingEngine.getScaledCellSize()), (int)(resizingEngine.getScaledCellSize()), Image.SCALE_SMOOTH),

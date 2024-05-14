@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 
 import org.jgrapht.alg.spanning.EsauWilliamsCapacitatedMinimumSpanningTree;
 
+import it.unibo.bombardero.core.KeyboardInput;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.impl.BombarderoController;
 
@@ -28,6 +29,8 @@ import it.unibo.bombardero.core.impl.BombarderoController;
 public class BombarderoGraphics {
 
     private Controller controller;
+    // adding the keyboard input
+    private final KeyboardInput keyInput;
 
     private final ResourceGetter resourceGetter = new ResourceGetter();
     private final ResizingEngine resizingEngine = new ResizingEngine();
@@ -43,6 +46,7 @@ public class BombarderoGraphics {
     
     public BombarderoGraphics() {
         this.controller = new BombarderoController(this);
+        this.keyInput = new KeyboardInput(this.controller); // passing the controller reference to the keyboard input
         this.frame = new JFrame("Bombardero: the Bomberman remake");
         this.deck = new JPanel(new CardLayout());
         this.layout = (CardLayout)deck.getLayout();
@@ -65,6 +69,9 @@ public class BombarderoGraphics {
                 frame.setSize(resizingEngine.getNewWindowSize(frame));
             }
         });
+
+        // Recives keyboard input
+        frame.addKeyListener(keyInput);
 
         frame.add(gameCard);
         this.frame.setVisible(true);

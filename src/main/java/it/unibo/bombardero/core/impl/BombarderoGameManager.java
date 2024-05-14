@@ -3,10 +3,14 @@ package it.unibo.bombardero.core.impl;
 import java.util.List;
 import java.util.Set;
 
-import it.unibo.bombardero.cell.Bomb;
+import it.unibo.bombardero.cell.BasicBomb;
+import it.unibo.bombardero.cell.Flame;
+import it.unibo.bombardero.cell.Cell.CellType;
+import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
+import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.character.Character;
 
@@ -36,9 +40,8 @@ public class BombarderoGameManager implements GameManager {
     }
 
     @Override
-    public Set<Character> getEnemies() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getCharacter'");
+    public List<Character> getEnemies() {
+        return List.copyOf(enemies);
     }
 
     @Override
@@ -47,15 +50,36 @@ public class BombarderoGameManager implements GameManager {
     }
 
     @Override
-    public void explodeBomb(Bomb bomb) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'explodeVoid'");
+    public Character getPlayer() {
+        return this.player;
     }
 
     @Override
-    public Character getPlayer() {
+    public void addBomb(BasicBomb bomb) {
+        map.addBomb(bomb);
+    }
+
+    @Override
+    public void removeBomb(Pair pos) {
+        map.removeBomb(pos);
+    }
+
+    @Override
+    public void addFlame(Flame.FlameType type, Pair pos) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPlayer'");
+        throw new UnsupportedOperationException("Unimplemented method 'addFlame'");
+    }
+
+    @Override
+    public void removeFlame(Pair pos) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'removeFlame'");
+    }
+
+    @Override
+    public boolean removeWall(Pair pos) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'removeWall'");
     }
     
 }
