@@ -6,8 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Cell.CellType;
+import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;
@@ -169,6 +171,36 @@ public class TestEnemy {
         public void explodeBomb(Bomb bomb) {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'explodeBomb'");
+        }
+
+        @Override
+        public void addBomb(BasicBomb bomb) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'addBomb'");
+        }
+
+        @Override
+        public void removeBomb(Pair pos) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'removeBomb'");
+        }
+
+        @Override
+        public void addFlame(FlameType type, Pair pos) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'addFlame'");
+        }
+
+        @Override
+        public void removeFlame(Pair pos) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'removeFlame'");
+        }
+
+        @Override
+        public boolean removeWall(Pair pos) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'removeWall'");
         }
     }
 
