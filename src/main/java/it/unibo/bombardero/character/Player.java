@@ -13,14 +13,6 @@ public class Player extends Character {
         super(manager, coord, bombFactory);
     }
 
-    public void placeBomb() {
-        if (hasBombsLeft()) {
-            //if(getManager().addBomb(super.getFactory().CreateBomb(getBombType(), getIntCoordinate(), getFlameRange()))){
-                //numBomb--;
-            //}
-        }
-    }
-
     public void update() {
         // based on which key get pressed, the player moves in that direction
     }

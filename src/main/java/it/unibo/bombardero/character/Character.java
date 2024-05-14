@@ -52,7 +52,14 @@ public abstract class Character {
                 (int) Math.floor(this.coordinate.col() + WIDTH / 2));
     }
 
-    public abstract void placeBomb();
+    public void placeBomb(){
+        if (hasBombsLeft()) {
+            System.out.println("bombPlaced");
+            //if(getManager().addBomb(getFactory().CreateBomb(getBombType(), getIntCoordinate(), getFlameRange()))){
+                //numBomb--;
+            }
+        }
+    }
 
     public boolean hasBombsLeft() {
         return this.numBomb > 0;
