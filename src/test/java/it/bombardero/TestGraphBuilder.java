@@ -50,9 +50,9 @@ public class TestGraphBuilder {
     @Test
     public void testMapSizeWithObastacles() {
         GameMap baseMap = new GameMapImpl(true);
-        baseMap.addFlame(new Flame(CellType.FLAME_BODY_HORIZONTAL), new Pair(0, 2));
-        baseMap.addFlame(new Flame(CellType.FLAME_BODY_HORIZONTAL), new Pair(0, 3));
-        baseMap.addFlame(new Flame(CellType.FLAME_BODY_HORIZONTAL), new Pair(0, 4));
+        baseMap.addFlame(new Flame(CellType.FLAME, Flame.FlameType.FLAME_BODY_HORIZONTAL), new Pair(0, 2));
+        baseMap.addFlame(new Flame(CellType.FLAME, Flame.FlameType.FLAME_BODY_HORIZONTAL), new Pair(0, 3));
+        baseMap.addFlame(new Flame(CellType.FLAME, Flame.FlameType.FLAME_BODY_HORIZONTAL), new Pair(0, 4));
         //baseMap.addBomb(new Bomb(null, CellType.BOMB_BASIC, 0), new Pair(5, 0));
         this.graph = GraphBuilder.buildFromMap(baseMap);
         assertEquals(133, this.graph.vertexSet().size());

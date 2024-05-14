@@ -1,0 +1,74 @@
+package it.unibo.bombardero.cell;
+
+import java.util.Optional;
+import java.util.function.Predicate;
+
+import it.unibo.bombardero.cell.Bomb.BombType;
+import it.unibo.bombardero.cell.Cell.CellType;
+import it.unibo.bombardero.cell.PowerUp.PowerUpType;
+import it.unibo.bombardero.core.api.GameManager;
+import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.physics.api.CollisionEngine;
+
+public class BombFactoryImpl implements BombFactory{
+    private GameManager mgr;
+    private CollisionEngine ce;
+
+    public BombFactoryImpl(GameManager mgr , CollisionEngine ce) {
+        this.mgr=mgr;
+        this.ce=ce;
+    }
+
+    @Override
+    public Bomb CreateBomb(Optional<PowerUpType> powerUp , Pair pos , int range) {
+        if(powerUp.isEmpty()){
+            return createBasicBomb(pos , range);
+        }
+        switch (powerUp.get()) {
+            case PIERCING_BOMB:
+                return createPiercingBomb(pos , range);
+            case POWER_BOMB:
+                return createRemoteBomb(pos , range);
+            case REMOTE_BOMB:
+                return createPowerBomb(pos , range);
+            default :
+                return null;
+        }
+    }
+    
+    private Bomb createBasicBomb(Pair pos , int range) {
+        return new BasicBomb(mgr, pos, BombType.BOMB_BASIC , range , ce) {
+            
+        };
+    }
+
+    private Bomb createPiercingBomb(Pair pos , int range) {
+        return new BasicBomb(mgr , pos , BombType.BOMB_PIERCING , range , ce) {
+            @Override
+            protected Predicate<? super Pair> stopFlamePropagation() {
+            return p-> !super.map.isBomb(p) && !super.map.isUnbreakableWall(p) && (super.map.isBreakableWall(p) && mgr.removeWall(p));
+    }
+        };
+    }
+
+    private Bomb createPowerBomb(Pair pos , int range) {
+        return new BasicBomb(mgr , pos , BombType.BOMB_PIERCING , BasicBomb.MAX_RANGE , ce) {
+            
+        };
+    }
+
+    private Bomb createRemoteBomb(Pair pos , int range) {
+        return new BasicBomb(mgr , pos , BombType.BOMB_PIERCING , range , ce) {
+            
+            public void update(boolean condition){
+                if(condition){
+                    super.update(BasicBomb.TIME_TO_EXPLODE); //TODO find better option
+                }
+            }
+        };
+    }
+
+    private Bomb createPunchBomb(Pair pos , int range) {
+        return null;
+    }
+}

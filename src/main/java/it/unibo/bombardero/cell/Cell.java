@@ -10,29 +10,11 @@ package it.unibo.bombardero.cell;
 public abstract class Cell {
     
     public enum CellType {
-        WALL_UNBREAKABLE("unbreakable"),
-        WALL_BREAKABLE("breakable"),
-        BOMB_BASIC("basic"),
-        BOMB_PIERCING("piescing"),
-        BOMB_REMOTE("remote"),
-        FLAME_CROSS("cross"),
-        FLAME_BODY_VERTICAL("vertical"),
-        FLAME_BODY_HORIZONTAL("horizontal"),
-        FLAME_END_TOP("end_top"),
-        FLAME_END_BOTTOM("end_bottom"),
-        FLAME_END_RIGHT("end_right"),
-        FLAME_END_LEFT("end_left");
-        // add power-up types here, along with their TypeString code (used to fetch images from resources)
-
-        private String typeString;
-
-        private CellType(final String typeString) {
-            this.typeString = typeString;
-        }
-
-        public String getTypeString() {
-            return this.typeString;
-        }
+        WALL_BREAKABLE,
+        WALL_UNBREAKABLE,
+        BOMB,
+        FLAME,
+        POWERUP;
     }
 
     private final CellType type;
@@ -41,7 +23,7 @@ public abstract class Cell {
         this.type = type;
     }
 
-    public CellType getType() {
+    public CellType getCellType() {
         return this.type;
     }
 }   

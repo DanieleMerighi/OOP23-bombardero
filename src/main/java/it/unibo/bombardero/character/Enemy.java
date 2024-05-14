@@ -9,6 +9,7 @@ import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.character.AI.EnemyGraphReasoner;
 import it.unibo.bombardero.core.api.GameManager;
+import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.utils.Utils;
@@ -18,19 +19,19 @@ public class Enemy extends Character {
     private List<Pair> path = new LinkedList<>();
     Optional<Pair> nextMove = Optional.empty();
     private State currentState = State.PATROL; // Initial state
-    private int numBombs = Utils.ENEMY_STARTING_BOMBS; // Assuming starting number of bombs
+    private int numBombs = getNumBomb(); // Assuming starting number of bombs
     private int movementTimer = 0; // Timer for movement updates
     private EnemyGraphReasoner graph;
 
 
-    public Enemy(GameManager manager, float x, float y) {
-        super(manager, x, y);
+    public Enemy(GameManager manager, Coord coord) {
+        super(manager, coord);
         graph = new EnemyGraphReasoner(manager.getGameMap());
     }
 
     private boolean isEnemyClose() {
-        Pair enemyCoord = getCoord();
-        Pair playerCoord = this.manager.getPlayer().getCoord();
+        Pair enemyCoord = getIntCoordinate();
+        Pair playerCoord = this.getManager().getPlayer().getIntCoordinate();
         int detectionRadius = Utils.ENEMY_DETECTION_RADIUS; // Assuming detection radius is defined in Utils
 
         // Calculate Manhattan distance between enemy and player
@@ -39,27 +40,15 @@ public class Enemy extends Character {
 
         return distance <= detectionRadius; // Check if player is within detection radius
     }
-
-    private void placeBomb(Pair targetCell) {
-        if (hasBombsLeft() && isValidCell(targetCell)
-                && this.manager.getGameMap().isEmpty(targetCell)) {
-            this.manager.getGameMap().addBomb(new Bomb(manager, targetCell, CellType.BOMB_BASIC, 2), targetCell);
-            numBombs--;
-        }
-    }
-
-    private boolean hasBombsLeft() {
-        return numBombs > 0;
-    }
-
+    
     // when the enemy doesn't know where to move he choose randomly
     private void moveRandomly() {
-        Pair currentCoord = getCoord();
+        Pair currentCoord = getIntCoordinate();
         for (int retryCount = 0; retryCount < 4; retryCount++) {
             Direction randomDirection = Direction.values()[new Random().nextInt(Direction.values().length)];
             int newRow = currentCoord.row() + randomDirection.getDx();
             int newCol = currentCoord.col() + randomDirection.getDy();
-            if (isValidCell(new Pair(newRow, newCol)) && manager.getGameMap().isEmpty(new Pair(newRow, newCol))) {
+            if (isValidCell(new Pair(newRow, newCol)) && getManager().getGameMap().isEmpty(new Pair(newRow, newCol))) {
                 nextMove = Optional.of(new Pair(newRow, newCol));
                 break;
             }
@@ -74,12 +63,12 @@ public class Enemy extends Character {
     }
 
     private void computeNextDir() {
-        GameMap map = this.manager.getGameMap();
+        GameMap map = this.getManager().getGameMap();
         graph = new EnemyGraphReasoner(map);
         currentState.execute(this); // Delegate behavior to current state
 
         if(nextMove.isPresent() && isValidCell(nextMove.get()) && map.isBreakableWall(nextMove.get())) {
-            placeBomb(getCoord());
+            placeBomb();
             nextMove = Optional.empty();
             this.currentState = State.ESCAPE;
         }
@@ -99,18 +88,18 @@ public class Enemy extends Character {
          // If a target exists, move towards it by a small increment
          if (nextMove.isPresent()) {
             Pair target = nextMove.get();
-            float dx = target.row() - this.x;
-            float dy = target.col() - this.y;
+            Coord dir = new Coord(target.row() - getCharacterPosition().row(), target.col() - getCharacterPosition().col());
 
             // Adjust movement based on enemy speed 
-            float movementSpeed = Utils.ENEMY_SPEED; 
-            float movement = Math.min(Math.abs(dx) + Math.abs(dy), movementSpeed);
+            float movement = Math.min(Math.abs(dir.row()) + Math.abs(dir.col()), getSpeed());
 
-            this.x += (dx >= 0) ? movement : -movement;
-            this.y += (dy >= 0) ? movement : -movement;
+            //this.x += (dir.row() >= 0) ? movement : -movement;
+            //this.y += (dir.col() >= 0) ? movement : -movement;
+
+            
 
             // Check if reached the target cell
-            if (Math.abs(dx) < movementSpeed && Math.abs(dy) < movementSpeed) {
+            if (Math.abs(dir.row()) < getSpeed() && Math.abs(dir.col()) < getSpeed()) {
                 nextMove = Optional.empty(); // Clear target if reached
             }
         } else {
@@ -122,7 +111,7 @@ public class Enemy extends Character {
         PATROL {
             @Override
             void execute(Enemy enemy) {
-                if (enemy.graph.isInDangerZone(enemy.getCoord(), Utils.EXPLOSION_RADIUS)) { // Detected player
+                if (enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) { // Detected player
                     enemy.currentState = State.ESCAPE;
                 } else if (enemy.isEnemyClose()) { // Detected bomb
                     enemy.currentState = State.CHASE;
@@ -137,7 +126,7 @@ public class Enemy extends Character {
                 if (!enemy.isEnemyClose()) { // Lost sight of player
                     enemy.currentState = State.PATROL;
                 } else {
-                    enemy.path = enemy.graph.findShortestPathToPlayer(enemy.getCoord(), enemy.manager.getPlayer().getCoord());
+                    enemy.path = enemy.graph.findShortestPathToPlayer(enemy.getIntCoordinate(), enemy.getManager().getPlayer().getIntCoordinate());
                     enemy.nextMove = Optional.of(enemy.path.get(0));
                 }
             }
@@ -145,10 +134,10 @@ public class Enemy extends Character {
         ESCAPE {
             @Override
             void execute(Enemy enemy) {
-                if (!enemy.graph.isInDangerZone(enemy.getCoord(), Utils.EXPLOSION_RADIUS)) { // Safe now
+                if (!enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) { // Safe now
                     enemy.currentState = State.PATROL;
                 } else {
-                    enemy.nextMove = enemy.graph.findNearestSafeSpace(enemy.getCoord(), Utils.EXPLOSION_RADIUS);
+                    enemy.nextMove = enemy.graph.findNearestSafeSpace(enemy.getIntCoordinate(), enemy.getFlameRange());
                 }
             }
         };
@@ -166,9 +155,5 @@ public class Enemy extends Character {
 
     public State getState() {
         return currentState;
-    }
-
-    public int getNumBombs() {
-        return numBombs;
     }
 }
