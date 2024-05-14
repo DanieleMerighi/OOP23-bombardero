@@ -1,17 +1,10 @@
 package it.unibo.bombardero.character;
 
-import java.util.Optional;
-import it.unibo.bombardero.cell.PowerUp.PowerUpType;
-import it.unibo.bombardero.core.KeyboardInput;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
-import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.BombFactory;
-import it.unibo.bombardero.cell.Bomb.BombType;
 
 public class Player extends Character {
-
-    // private Optional<PowerUpType> skull;
 
     // view attribute
     // private int facingDirection;

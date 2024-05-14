@@ -100,4 +100,9 @@ public class KeyboardInput implements KeyListener {
         return this.directionMovementPair;
     }
 
+    /* 
+     * al posto di direction e get direction quando viene premuto un tasto 
+     * faccio direttamente il set della player direction così sa dove andare
+    */
+
 }
