@@ -11,11 +11,10 @@ import it.unibo.bombardero.cell.Bomb.BombType;
 
 public class Player extends Character {
 
-    //private Optional<PowerUpType> skull;
+    // private Optional<PowerUpType> skull;
 
-    //view attribute
-    //private int facingDirection;
-
+    // view attribute
+    // private int facingDirection;
 
     public Player(final GameManager manager, final Coord coord) {
         super(manager, coord);
@@ -23,12 +22,14 @@ public class Player extends Character {
 
     public void placeBomb() {
         if (hasBombsLeft()) {
-            /*if(manager.addBomb(BombFactory.CreateBomb(bombType, getCoord(), flameRange))
-                numBomb--;   */
+            /*
+             * if(manager.addBomb(BombFactory.CreateBomb(bombType, getCoord(), flameRange))
+             * numBomb--;
+             */
         }
     }
 
     public void update() {
-        //based on which key get pressed, the player moves in that direction
+        // based on which key get pressed, the player moves in that direction
     }
 }
