@@ -55,9 +55,9 @@ public abstract class Character {
     public void placeBomb(){
         if (hasBombsLeft()) {
             System.out.println("bombPlaced");
-            /*if(getManager().addBomb(getFactory().CreateBomb(getBombType(), getIntCoordinate(), getFlameRange()))){
-                //numBomb--;
-            }*/
+            if(this.manager.addBomb(this.bombFactory.CreateBomb(this.bombType, getIntCoordinate(), this.flameRange))){
+                numBomb--;
+            }
         }
     }
 
