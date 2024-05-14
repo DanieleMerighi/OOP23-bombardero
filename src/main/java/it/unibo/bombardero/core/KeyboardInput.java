@@ -72,7 +72,7 @@ public class KeyboardInput implements KeyListener {
         }
     }
 
-    //If all the movement key get relased the player stops moving
+    // If all the movement key get relased the player stops moving
     public void keyReleased(final KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W:

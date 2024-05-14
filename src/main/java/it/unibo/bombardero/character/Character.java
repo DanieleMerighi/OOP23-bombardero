@@ -42,9 +42,9 @@ public abstract class Character {
         return isAlive;
     }
 
-    public Pair getIntCoordinate() { 
+    public Pair getIntCoordinate() {
         return new Pair((int) Math.floor(this.coordinate.row() + this.HEIGHT / 2),
-            (int) Math.floor(this.coordinate.col() + this.WIDTH / 2));
+                (int) Math.floor(this.coordinate.col() + this.WIDTH / 2));
     }
 
     public abstract void placeBomb();
