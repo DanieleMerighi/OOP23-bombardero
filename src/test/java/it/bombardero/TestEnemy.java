@@ -14,12 +14,13 @@ import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;
 import it.unibo.bombardero.core.api.GameManager;
+import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.utils.Utils;
 
-import java.util.Set;
+import java.util.List;
 
 public class TestEnemy {
 
@@ -72,7 +73,7 @@ public class TestEnemy {
 
         // Verify enemy state is CHASE
         assertEquals(Enemy.State.CHASE, this.manager.enemy.getState());
-        assertEquals(new Pair(0, 1), this.manager.enemy.getCoord());
+        assertEquals(new Pair(0, 1), this.manager.enemy.getIntCoordinate());
 
         // Set player moving away after initial detection
         this.manager.setPlayerCoord(0, 12);
@@ -86,14 +87,14 @@ public class TestEnemy {
     public void testEnemyEscape_ChangesToPatrolState() {
         // Set enemy position inside a danger zone
         this.manager.setEnemyCoord(0, 0);
-        this.manager.getGameMap().addBomb(new Bomb(manager, new Pair(0, 2), CellType.BOMB_BASIC, 2), new Pair(0, 2));
+        //this.manager.getGameMap().addBomb(new Bomb(manager, new Pair(0, 2), CellType.BOMB_BASIC, 2), new Pair(0, 2));
         this.manager.enemy.update();
-        System.out.println(this.manager.enemy.getX() + " " + this.manager.enemy.getY());
+        //System.out.println(this.manager.enemy.getX() + " " + this.manager.enemy.getY());
         assertEquals(Enemy.State.ESCAPE, this.manager.enemy.getState());
         this.manager.updateGame();
         // Verify enemy state is PATROL
         assertEquals(Enemy.State.PATROL, this.manager.enemy.getState());
-        assertEquals(new Pair(1, 0), this.manager.enemy.getCoord());
+        assertEquals(new Pair(1, 0), this.manager.enemy.getIntCoordinate());
     }
 
     @Test
@@ -108,10 +109,10 @@ public class TestEnemy {
         this.manager.updateGame();
         // Verify bomb is placed on the enemy's position
         assertTrue(this.manager.getGameMap().isBomb(new Pair(0, 0))); //ToDo
-        assertEquals(Utils.ENEMY_STARTING_BOMBS-1, this.manager.enemy.getNumBombs());
+        assertEquals(Utils.ENEMY_STARTING_BOMBS-1, this.manager.enemy.getNumBomb());
         this.manager.updateGame();
         //this.manager.updateGame();
-        assertEquals(new Pair(2, 1), this.manager.enemy.getCoord());
+        assertEquals(new Pair(2, 1), this.manager.enemy.getIntCoordinate());
 
     }
 
@@ -124,16 +125,16 @@ public class TestEnemy {
 
         public TestGameManager() {
             this.map = new GameMapImpl(false);
-            this.enemy = new Enemy(this, 0, 0);
-            this.player = new Player(this, 0, 12);
+            this.enemy = new Enemy(this, new Coord(0, 0), null);
+            this.player = new Player(this, new Coord(0, 12), null);
         }
 
         public void setPlayerCoord(int row, int col) {
-            this.player = new Player(this, row, col);
+            this.player = new Player(this, new Coord(row, col), null);
         }
 
         public void setEnemyCoord(int row, int col) {
-            this.enemy = new Enemy(this, row, col);
+            this.enemy = new Enemy(this, new Coord(row, col), null);
         }
 
         @Override
@@ -157,7 +158,7 @@ public class TestEnemy {
         }
 
         @Override
-        public Set<Character> getEnemies() {
+        public List<Character> getEnemies() {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'getEnemies'");
         }
@@ -165,12 +166,6 @@ public class TestEnemy {
         @Override
         public GameMap getGameMap() {
             return this.map;
-        }
-
-        @Override
-        public void explodeBomb(Bomb bomb) {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'explodeBomb'");
         }
 
         @Override

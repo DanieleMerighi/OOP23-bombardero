@@ -11,11 +11,7 @@ import it.unibo.bombardero.map.api.Pair;
 public abstract class Character {
 
     // constant for default setting
-<<<<<<< HEAD
-    private static final float STARTING_SPEED = 2;
-=======
     private static final float STARTING_SPEED = 0.01f;
->>>>>>> 7d5b6e5f5bdfaa99f29d984e165471f53b9f711b
     private static final int STARTING_FLAME_RANGE = 1;
     private static final int STARTING_BOMBS = 1;
     private static final int WIDTH = 22;
@@ -39,11 +35,7 @@ public abstract class Character {
     private boolean kick = false;
     private boolean lineBomb = false;
 
-<<<<<<< HEAD
     public Character(GameManager manager, Coord coord, BombFactory bombFactory) {
-=======
-    public Character(final GameManager manager, final Coord coord) {
->>>>>>> 7d5b6e5f5bdfaa99f29d984e165471f53b9f711b
         this.manager = manager;
         this.coordinate = coord;
         this.bombFactory = bombFactory;
@@ -82,6 +74,10 @@ public abstract class Character {
         return coordinate;
     }
 
+    public void setCharacterPosition(final Coord c) {
+        this.coordinate = c;
+    }
+
     public int getNumBomb() {
         return numBomb;
     }
@@ -102,11 +98,7 @@ public abstract class Character {
         return speed;
     }
 
-<<<<<<< HEAD
-    public void setSpeed(float speed) {
-=======
     public void setSpeed(final float speed) {
->>>>>>> 7d5b6e5f5bdfaa99f29d984e165471f53b9f711b
         this.speed = speed;
     }
 

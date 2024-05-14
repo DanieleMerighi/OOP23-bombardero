@@ -86,13 +86,13 @@ public class GameMapImpl implements GameMap {
     @Override
     public boolean isBreakableWall(Pair coordinate) {
         return this.map.containsKey(coordinate) && 
-            this.map.get(coordinate).getCellType().equals(Cell.CellType.WALL_UNBREAKABLE);
+            this.map.get(coordinate).getCellType().equals(Cell.CellType.WALL_BREAKABLE);
     }
 
     @Override
     public boolean isUnbreakableWall(Pair coordinate) {
         return this.map.containsKey(coordinate) && 
-            this.map.get(coordinate).getCellType().equals(Cell.CellType.WALL_BREAKABLE);
+            this.map.get(coordinate).getCellType().equals(Cell.CellType.WALL_UNBREAKABLE);
     }
 
     @Override
