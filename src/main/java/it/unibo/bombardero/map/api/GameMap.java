@@ -19,11 +19,12 @@ public interface GameMap {
     void update();
 
     /**
-     * Adds a bomb's reference to the map
+     * Checks if the coordinate is free, if so adds the bomb to the cell 
      * @param bomb the bomb to be added
      * @param coordinate where the bomb is to be placed
+     * @return true if the bomb is placed correctly
      */
-    void addBomb(final Bomb bomb, Pair coordinate);
+    boolean addBomb(final Bomb bomb, Pair coordinate);
     
     /**
      * Adds a flame's reference to the map
