@@ -30,7 +30,7 @@ public class BombarderoGraphics {
 
     private Controller controller;
     // adding the keyboard input
-    private final KeyboardInput keyInput = new KeyboardInput();
+    private final KeyboardInput keyInput;
 
     private final ResourceGetter resourceGetter = new ResourceGetter();
     private final ResizingEngine resizingEngine = new ResizingEngine();
@@ -46,6 +46,7 @@ public class BombarderoGraphics {
     
     public BombarderoGraphics() {
         this.controller = new BombarderoController(this);
+        this.keyInput = new KeyboardInput(this.controller); // passing the controller reference to the keyboard input
         this.frame = new JFrame("Bombardero: the Bomberman remake");
         this.deck = new JPanel(new CardLayout());
         this.layout = (CardLayout)deck.getLayout();
@@ -71,7 +72,6 @@ public class BombarderoGraphics {
 
         // Recives keyboard input
         frame.addKeyListener(keyInput);
-        //controller.getMainPlayer().; //da togliere
 
         frame.add(gameCard);
         this.frame.setVisible(true);
