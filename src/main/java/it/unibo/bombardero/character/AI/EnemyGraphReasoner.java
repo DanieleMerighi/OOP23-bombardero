@@ -29,9 +29,8 @@ public class EnemyGraphReasoner {
                 enemyCoord);
         return StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(bfsIterator, Spliterator.ORDERED), false)
-                .filter(cell -> bfsIterator.getDepth(cell) <= explRadius) // Limit traversal to explosion radius
-                .anyMatch(cell -> map.isBomb(cell) && (enemyCoord.row() == cell.row() || enemyCoord.col() == cell.col())
-                        && !isPathBlockedByWalls(enemyCoord, cell));
+                .takeWhile(cell -> bfsIterator.getDepth(cell) <= explRadius) // Limit traversal to explosion radius
+                .anyMatch(cell -> map.isBomb(cell) && !isPathBlockedByWalls(enemyCoord, cell));
     }
 
     public boolean isPathBlockedByWalls(Pair startCell, Pair endCell) {
@@ -58,53 +57,43 @@ public class EnemyGraphReasoner {
         return path == null ? Collections.emptyList() : path.getVertexList().subList(1, path.getVertexList().size());
     }
 
-    // public Optional<Pair> findNearestSafeSpace(Pair enemyCoord, int explRad) {
-    //     Optional<Pair> nearestBomb = findNearestBomb(enemyCoord);
-    //     if (nearestBomb.isEmpty()) {
-    //         return Optional.empty();
-    //     }
-
-    //     return Arrays.stream(Direction.values())
-    //             .filter(direction -> !direction.equals(getDirectionToCell(enemyCoord, nearestBomb.get())))
-    //             .map(direction -> new Pair(enemyCoord.row() + direction.getDx(), enemyCoord.col() + direction.getDy()))
-    //             .filter(potentialSafeCell -> isValidCell(potentialSafeCell)
-    //                     && !isInDangerZone(potentialSafeCell, explRad) && map.isEmpty(potentialSafeCell))
-    //             .findFirst();
-    // }
-
     public Optional<Pair> findNearestSafeSpace(Pair enemyCoord, int explRad) {
-        final BreadthFirstIterator<Pair, DefaultWeightedEdge> bfsIterator = new BreadthFirstIterator<>(graph,
-                enemyCoord);
+        Optional<Pair> nearestBomb = findNearestBomb(enemyCoord);
+        if (nearestBomb.isEmpty()) {
+            return Optional.empty();
+        }
 
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(bfsIterator, Spliterator.ORDERED), false)
-                .filter(cell -> map.isEmpty(cell) && !isInDangerZone(cell, explRad))
-                .min((cell1, cell2) -> {
-                    int depth1 = bfsIterator.getDepth(cell1);
-                    int depth2 = bfsIterator.getDepth(cell2);
-                    return Integer.compare(depth1, depth2);
-                });
+        return Arrays.stream(Direction.values())
+                .filter(direction -> !direction.equals(getDirectionToCell(enemyCoord, nearestBomb.get())))
+                .map(direction -> new Pair(enemyCoord.row() + direction.getDx(), enemyCoord.col() + direction.getDy()))
+                .filter(potentialSafeCell -> isValidCell(potentialSafeCell)
+                        && !isInDangerZone(potentialSafeCell, explRad))
+                .findFirst();
     }
 
     public Optional<Pair> findNearestBomb(Pair enemyCoord) {
-        final BreadthFirstIterator<Pair, DefaultWeightedEdge> bfsIterator = new BreadthFirstIterator<>(graph,
-                enemyCoord);
-
+        final BreadthFirstIterator<Pair, DefaultWeightedEdge> bfsIterator = new BreadthFirstIterator<>(graph, enemyCoord);
+    
         return StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(bfsIterator, Spliterator.ORDERED), false)
                 .filter(cell -> map.isBomb(cell) && !isPathBlockedByWalls(enemyCoord, cell)) // Find reachable bombs
                 .findFirst();
     }
 
-    // private Direction getDirectionToCell(Pair fromCell, Pair toCell) {
-    //     int dRow = toCell.row() - fromCell.row();
-    //     int dCol = toCell.col() - fromCell.col();
-    //     // Check for horizontal or vertical movement
-    //     if (dRow != 0 && dCol == 0) {
-    //         return dRow > 0 ? Direction.DOWN : Direction.UP;
-    //     } else if (dRow == 0 && dCol != 0) {
-    //         return dCol > 0 ? Direction.RIGHT : Direction.LEFT;
-    //     }
+    private Direction getDirectionToCell(Pair fromCell, Pair toCell) {
+        int dRow = toCell.row() - fromCell.row();
+        int dCol = toCell.col() - fromCell.col();
+        // Check for horizontal or vertical movement
+        if (dRow != 0 && dCol == 0) {
+            return dRow > 0 ? Direction.DOWN : Direction.UP;
+        } else if (dRow == 0 && dCol != 0) {
+            return dCol > 0 ? Direction.RIGHT : Direction.LEFT;
+        }
 
-    //     return null;
-    // }
+        return null;
+    }
+
+    private boolean isValidCell(Pair cell) {
+        return cell.row() >= 0 && cell.row() < Utils.MAP_ROWS && cell.col() >= 0 && cell.col() < Utils.MAP_COLS;
+    }
 }

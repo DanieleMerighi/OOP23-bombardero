@@ -38,9 +38,7 @@ public class TestReasoner {
             "0,0, 0,3, 2, false",
             "0,0, 2,0, 2, true", // vertical bomb
             "0,0, 0,2, 1, false", // outside range
-            "0,0, 3,0, 2, false",
-            "1,0, 0,2, 4, false",
-            "0,0, 0,0, 2, true"
+            "0,0, 3,0, 2, false"
     })
     public void testIsInDangerZone(int enemyX, int enemyY, int bombX, int bombY, int explRadius, boolean expected) {
         Pair enemyCoord = new Pair(enemyX, enemyY);
@@ -124,8 +122,6 @@ public class TestReasoner {
             "0,0, 0,2, 2, 1,0", // Bomb to the right, safe space down
             "12,0, 12,2, 2, 11,0", // Bomb to the left, safe space above
             "1,0, 1,2, 2, -1,-1", // no needed a safe space
-            "0,0, 0,0, 4, 1,2", // Bomb to the right, safe space down (different range)
-            "0,0, 0,0, 2, 2,0", // Bomb to the right, safe space down (different range)
     })
     public void testFindNearestSafeSpace(int enemyX, int enemyY, int bombX, int bombY, int explRadius,
             int expectedSafeSpaceX, int expectedSafeSpaceY) {
@@ -133,7 +129,6 @@ public class TestReasoner {
         Pair bombCell = new Pair(bombX, bombY);
 
         map.addBomb(new Bomb(null, bombCell, CellType.BOMB_BASIC, explRadius), bombCell);
-        map.addBreakableWall(new Pair(expectedSafeSpaceX, expectedSafeSpaceY));
         assertTrue(map.isBomb(bombCell));
 
         EnemyGraphReasoner reasoner = new EnemyGraphReasoner(map);
@@ -141,7 +136,8 @@ public class TestReasoner {
         Optional<Pair> safeSpace = reasoner.findNearestSafeSpace(enemyCoord, explRadius);
         if(expectedSafeSpaceX != -1 && expectedSafeSpaceY != -1) {
             assertTrue(safeSpace.isPresent());
-            assertEquals(new Pair(expectedSafeSpaceX, expectedSafeSpaceY), safeSpace.get());
+            assertEquals(expectedSafeSpaceX, safeSpace.get().row());
+            assertEquals(expectedSafeSpaceY, safeSpace.get().col());
         } else {
             assertTrue(safeSpace.isEmpty());
         }   

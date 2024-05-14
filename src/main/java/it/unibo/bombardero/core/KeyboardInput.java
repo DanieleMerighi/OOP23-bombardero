@@ -3,10 +3,18 @@ package it.unibo.bombardero.core;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import it.unibo.bombardero.character.Direction;
+import it.unibo.bombardero.core.api.Controller;
 
 public class KeyboardInput implements KeyListener {
 
+    // controller
+    private final Controller controller;
+    // 
     private Direction directionMovementPair = Direction.DEFAULT;
+
+    public KeyboardInput (final Controller controller) {
+        this.controller = controller;
+    }
 
     /*
      * MENU, BOMB and POWER-UPs controls
@@ -25,6 +33,7 @@ public class KeyboardInput implements KeyListener {
             case KeyEvent.VK_SPACE:
                 // calls player method to place a bomb
                 // System.out.println("spazio");
+                controller.getMainPlayer().placeBomb();
                 break;
             case 'l':
             case 'L':

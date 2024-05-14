@@ -16,16 +16,15 @@ public class Player extends Character {
     // view attribute
     // private int facingDirection;
 
-    public Player(final GameManager manager, final Coord coord) {
-        super(manager, coord);
+    public Player(final GameManager manager, final Coord coord, final BombFactory bombFactory) {
+        super(manager, coord, bombFactory);
     }
 
     public void placeBomb() {
         if (hasBombsLeft()) {
-            /*
-             * if(manager.addBomb(BombFactory.CreateBomb(bombType, getCoord(), flameRange))
-             * numBomb--;
-             */
+            //if(getManager().addBomb(super.getFactory().CreateBomb(getBombType(), getIntCoordinate(), getFlameRange()))){
+                //numBomb--;
+            //}
         }
     }
 
