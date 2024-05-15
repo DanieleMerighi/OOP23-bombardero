@@ -14,7 +14,7 @@ import it.unibo.bombardero.utils.Utils;
 
 /**
  * This class implements the Map Manager concept, a class that manages 
- * the dynamic aspects of a specific instance of Game Map
+ * the dynamic aspects of a specific instance of Game Map.
  * @author Federico Bagattoni
  */
 public class MapManagerImpl implements MapManager {
@@ -29,7 +29,7 @@ public class MapManagerImpl implements MapManager {
     private boolean collapseStarted = false;
 
     /** 
-     * Creates a new Map Manager managing a the map passed as argument
+     * Creates a new Map Manager managing a the map passed as argument.
      * @param map the map to manage
      */
     public MapManagerImpl(final GameMap map) {
@@ -151,11 +151,11 @@ public class MapManagerImpl implements MapManager {
         this.map_corners.add(new Pair(Utils.MAP_ROWS - 1, Utils.MAP_COLS - 1));
         this.map_corners.add(new Pair(Utils.MAP_ROWS - 1, Utils.MAP_COLS - 2));
         this.map_corners.add(new Pair(Utils.MAP_ROWS - 2, Utils.MAP_COLS - 1));
-      
+
         this.map_corners.add(new Pair(Utils.MAP_ROWS - 1, 0));
         this.map_corners.add(new Pair(Utils.MAP_ROWS - 1, 1));
         this.map_corners.add(new Pair(Utils.MAP_ROWS - 2, 0));
-   
+
         this.map_corners.add(new Pair(0, Utils.MAP_COLS - 1));
         this.map_corners.add(new Pair(1, Utils.MAP_COLS - 1));
         this.map_corners.add(new Pair(0, Utils.MAP_COLS - 2));
