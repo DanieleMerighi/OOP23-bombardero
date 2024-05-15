@@ -12,25 +12,36 @@ import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.MapManager;
 import it.unibo.bombardero.map.api.Pair;
 
-public class GameMapImpl implements GameMap {
+/**
+ * This class implements the Game Map of the Bombardero game.
+ * @author Federico Bagattoni
+ */
+public final class GameMapImpl implements GameMap {
 
-    private final Map<Pair,Cell> map = new HashMap<>(); /* Using an HashMap to hold the information about the map's tiles */
+    /* Using an HashMap to hold the information about the map's tiles: */
+    private final Map<Pair, Cell> map = new HashMap<>();
     private final MapManager manager;
 
+    /** 
+     * Constructs a new Game Map generating unbreakable walls, to skip the wall generation use {@#GameMapImpl(boolean)}.
+     */
     public GameMapImpl() {
         this.manager = new MapManagerImpl(this);
         manager.placeUnbreakableWalls();
         manager.placeBreakableWalls();
     }
 
-    /* 
-     * This constructor has been created for testing purposes and allow to skip the 
+    /**
+     * Creates a new Game Map with the option to opt out of the walls generation.
+     * <p>
+     * NOTE: This constructor has been created for testing purposes and allow to skip the 
      * obstacle generation, producing a map with only unbreakable obstacles.
-     * The breakable obstacles can be generated later anyway (untested side effects, potentially 
-     * stunning the application) by calling the manager's method.
+     * The breakable obstacles can be generated later anyway (potential untested side effects)
+     * by calling the manager's method.
+     * </p>
      * @param wallGeneration wether the walls have to be generated or not
     */
-    public GameMapImpl(boolean wallGeneration) {
+    public GameMapImpl(final boolean wallGeneration) {
         this.manager = new MapManagerImpl(this);
         manager.placeUnbreakableWalls();
         if(wallGeneration) {
@@ -56,59 +67,59 @@ public class GameMapImpl implements GameMap {
     }
 
     @Override
-    public void addFlame(Flame flame, Pair coordinate) {
+    public void addFlame(final Flame flame, final Pair coordinate) {
         this.map.put(coordinate, flame);
     }
 
     @Override
-    public void addUnbreakableWall(Pair coordinate) {
+    public void addUnbreakableWall(final Pair coordinate) {
         this.map.put(coordinate, new Wall(Cell.CellType.WALL_UNBREAKABLE));
     }
 
     @Override
-    public void addBreakableWall(Pair coordinate) {
+    public void addBreakableWall(final Pair coordinate) {
         this.map.put(coordinate, new Wall(Cell.CellType.WALL_BREAKABLE));
     }
 
     @Override
-    public void removeBreakableWall(Pair coordinate) {
-        if(this.isBreakableWall(coordinate)) {
+    public void removeBreakableWall(final Pair coordinate) {
+        if (this.isBreakableWall(coordinate)) {
             this.map.remove(coordinate);
             /* TODO: add powerup spawn mechanism */
         }
     }
 
     @Override
-    public void removeBomb(Pair coordinate) {
-        if(this.isBomb(coordinate)) {
+    public void removeBomb(final Pair coordinate) {
+        if (this.isBomb(coordinate)) {
             this.map.remove(coordinate);
         }
     }
 
     @Override
-    public boolean isBomb(Pair coordinate) {
+    public boolean isBomb(final Pair coordinate) {
         return this.map.containsKey(coordinate) && this.map.get(coordinate) instanceof Bomb;
     }
 
     @Override
-    public boolean isBreakableWall(Pair coordinate) {
-        return this.map.containsKey(coordinate) && 
-            this.map.get(coordinate).getCellType().equals(Cell.CellType.WALL_BREAKABLE);
+    public boolean isBreakableWall(final Pair coordinate) {
+        return this.map.containsKey(coordinate) 
+            && this.map.get(coordinate).getCellType().equals(Cell.CellType.WALL_BREAKABLE);
     }
 
     @Override
-    public boolean isUnbreakableWall(Pair coordinate) {
-        return this.map.containsKey(coordinate) && 
-            this.map.get(coordinate).getCellType().equals(Cell.CellType.WALL_UNBREAKABLE);
+    public boolean isUnbreakableWall(final Pair coordinate) {
+        return this.map.containsKey(coordinate)
+            && this.map.get(coordinate).getCellType().equals(Cell.CellType.WALL_UNBREAKABLE);
     }
 
     @Override
-    public boolean isFlame(Pair coordinate) {
+    public boolean isFlame(final Pair coordinate) {
         return this.map.containsKey(coordinate) && this.map.get(coordinate) instanceof Flame;
     }
 
     @Override
-    public boolean isEmpty(Pair coordinate) {
+    public boolean isEmpty(final Pair coordinate) {
         return !this.map.containsKey(coordinate);
     }
 
@@ -116,5 +127,5 @@ public class GameMapImpl implements GameMap {
     public Map<Pair, Cell> getMap() {
         return Map.copyOf(this.map);
     }
-    
+ 
 }
