@@ -4,8 +4,9 @@ import java.awt.Image;
 
 import it.unibo.bombardero.character.Direction;
 
-/* This class represents a single instance of a animated cell, that updates itself 
- * and returns an image when requested
+/** This class represents a single instance of a animated cell, that requires being updated
+ * and returns a frame when requested
+ * @author Federico Bagattoni
  */
 public class BombarderoSprite {  
 
@@ -22,6 +23,9 @@ public class BombarderoSprite {
         }
     }
 
+    /**
+     * Updates the sprite tick, eventually advancing to the next frame
+     */
     public void update() {
         counter++;
         if(counter > 10) {
@@ -29,6 +33,10 @@ public class BombarderoSprite {
         }
     }
 
+    /**
+     * Returns the current frame of the sprite
+     * @return the current frame of the sprite
+     */
     public Image getImage() {
         /* QUANDO ANDRA' LA VERSIONE NAIVE, PROVARE: (int)Math.ceil(counter / FRAMES_PER_SPRITE) */
         return asset[currentFrame];

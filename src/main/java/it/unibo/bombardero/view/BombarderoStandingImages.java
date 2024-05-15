@@ -6,7 +6,7 @@ import java.util.Map;
 
 import it.unibo.bombardero.character.Direction;
 
-/* Holds the reference of an asset in multiple direction so it can be retrieved
+/** Holds the reference of an asset in multiple direction so it can be retrieved
  * by asking the direction
  * @author Federico Bagattoni
  */
@@ -20,7 +20,7 @@ public class BombarderoStandingImages {
         }
     }
 
-    /* Returns the image asset facing the requested direction
+    /** Returns the image asset facing the requested direction
      * @param facingDirection the direction the returned asset should be facing
      * @return the asset facing the requested direction
      */
