@@ -1,5 +1,8 @@
 package it.unibo.bombardero.cell.PowerUp;
 
+/**
+ * Enumeration representing different types of power-ups in the game.
+ */
 public enum PowerUpType {
     // Bomb type-related P.U.
     REMOTE_BOMB("powerup/bomb_remote"),
@@ -25,10 +28,20 @@ public enum PowerUpType {
 
     private String typeString;
 
+    /**
+     * Constructor for PowerUpType.
+     * 
+     * @param typeString The string representation of the power-up type.
+     */
     private PowerUpType(final String typeString) {
         this.typeString = typeString;
     }
 
+    /**
+     * Get the string representation of the power-up type.
+     * 
+     * @return The string representation of the power-up type.
+     */
     public String getTypeString() {
         return this.typeString;
     }
