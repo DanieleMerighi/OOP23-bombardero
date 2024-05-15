@@ -5,14 +5,14 @@ import java.awt.Image;
 /* This class represents a single instance of a animated cell, that updates itself 
  * and returns an image when requested
  */
-public class BombermanSprite {  
+public class BombarderoSprite {  
 
     private final int FRAMES_PER_SPRITE;
     private final Image[] asset;
     private int counter = 0;
     private int currentFrame = 0;
 
-    public BombermanSprite(final String resource, final ResourceGetter rg, final int frames) {
+    public BombarderoSprite(final String resource, final ResourceGetter rg, final int frames) {
         FRAMES_PER_SPRITE = frames;
         asset = new Image[FRAMES_PER_SPRITE];
         for(int i = 0; i < FRAMES_PER_SPRITE; i++) {
