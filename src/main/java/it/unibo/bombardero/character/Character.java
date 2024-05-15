@@ -30,7 +30,8 @@ public abstract class Character {
     private final BombFactory bombFactory;
 
     // Position related
-    private Coord coordinate;
+    private Coord coordinate; // Starting character coordinate
+    private Direction facingDirection = Direction.DOWN; // Starting character facingDirection
 
     // Game attribute related
     private boolean isAlive = true;
@@ -71,7 +72,8 @@ public abstract class Character {
     }
 
     /**
-     * Gets the integer coordinates of the character, adjusted by the character's width and height.
+     * Gets the integer coordinates of the character, adjusted by the character's
+     * width and height.
      * 
      * @return the map's corrisponding integer coordinates of the character
      */
@@ -86,9 +88,12 @@ public abstract class Character {
     public void placeBomb() {
         if (hasBombsLeft()) {
             System.out.println("bombPlaced");
-            /*if (this.manager.addBomb(this.bombFactory.CreateBomb(this.bombType, getIntCoordinate(), this.flameRange))) {
-                numBomb--;
-            }*/
+            /*
+             * if (this.manager.addBomb(this.bombFactory.CreateBomb(this.bombType,
+             * getIntCoordinate(), this.flameRange))) {
+             * numBomb--;
+             * }
+             */
         }
     }
 
@@ -142,6 +147,24 @@ public abstract class Character {
      */
     public void setCharacterPosition(final Coord c) {
         this.coordinate = c;
+    }
+
+    /**
+     * Gets the current looking direction of the character.
+     * 
+     * @return the character's looking direction
+     */
+    public Direction getFacingDirection() {
+        return this.facingDirection;
+    }
+
+    /**
+     * Sets the current looking direction of the character.
+     * 
+     * @param direction the new looking direction of the character
+     */
+    public void setFacingDirection(final Direction direction) {
+        this.facingDirection = direction;
     }
 
     /**
@@ -237,7 +260,8 @@ public abstract class Character {
     /**
      * Checks if the character can use the power-up "line bomb".
      * 
-     * @return true if the character can use the power-up "line bomb", false otherwise
+     * @return true if the character can use the power-up "line bomb", false
+     *         otherwise
      */
     public boolean isLineBomb() {
         return lineBomb;
