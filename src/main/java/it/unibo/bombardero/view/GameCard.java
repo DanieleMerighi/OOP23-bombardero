@@ -26,7 +26,7 @@ public class GameCard extends JPanel {
     private final ResourceGetter resourceGetter = new ResourceGetter();
     private final BufferedImage grass_bg_image = resourceGetter.loadImage("grass_background");
     private final BufferedImage map = resourceGetter.loadImage("map_square");
-    private final BufferedImage obstacle = resourceGetter.loadImage("other_textures/great_crate");
+    private final BufferedImage obstacle = resourceGetter.loadImage("other_textures/crate");
     /* private final BufferedImage player = resourceGetter.loadImage("character/main/walking/left/left1"); */
     private final JFrame parentFrame;
     private final ResizingEngine resizingEngine;
