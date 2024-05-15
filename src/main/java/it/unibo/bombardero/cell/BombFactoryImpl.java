@@ -36,13 +36,13 @@ public class BombFactoryImpl implements BombFactory{
     }
     
     private BasicBomb createBasicBomb(Pair pos , int range) {
-        return new BasicBomb(mgr, pos, BombType.BOMB_BASIC , range , ce) {
+        return new BasicBomb(mgr, pos, BombType.BOMB_BASIC , range) {
             
         };
     }
 
     private BasicBomb createPiercingBomb(Pair pos , int range) {
-        return new BasicBomb(mgr , pos , BombType.BOMB_PIERCING , range , ce) {
+        return new BasicBomb(mgr , pos , BombType.BOMB_PIERCING , range) {
             @Override
             protected Predicate<? super Pair> stopFlamePropagation() {
             return p-> !super.map.isBomb(p) && !super.map.isUnbreakableWall(p) && (super.map.isBreakableWall(p) && mgr.removeWall(p));
@@ -51,13 +51,13 @@ public class BombFactoryImpl implements BombFactory{
     }
 
     private BasicBomb createPowerBomb(Pair pos , int range) {
-        return new BasicBomb(mgr , pos , BombType.BOMB_POWER , BasicBomb.MAX_RANGE , ce) {
+        return new BasicBomb(mgr , pos , BombType.BOMB_POWER , BasicBomb.MAX_RANGE) {
             
         };
     }
 
     private BasicBomb createRemoteBomb(Pair pos , int range) {
-        return new BasicBomb(mgr , pos , BombType.BOMB_REMOTE , range , ce) {
+        return new BasicBomb(mgr , pos , BombType.BOMB_REMOTE , range ) {
             
             public void update(){
                 if(true){
