@@ -67,7 +67,4 @@ public class BombFactoryImpl implements BombFactory{
         };
     }
 
-    private BasicBomb createPunchBomb(Pair pos , int range) {
-        return null;
-    }*///probabilmente inutile
 }
