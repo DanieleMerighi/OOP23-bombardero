@@ -51,13 +51,13 @@ public class BombFactoryImpl implements BombFactory{
     }
 
     private BasicBomb createPowerBomb(Pair pos , int range) {
-        return new BasicBomb(mgr , pos , BombType.BOMB_PIERCING , BasicBomb.MAX_RANGE , ce) {
+        return new BasicBomb(mgr , pos , BombType.BOMB_POWER , BasicBomb.MAX_RANGE , ce) {
             
         };
     }
 
     private BasicBomb createRemoteBomb(Pair pos , int range) {
-        return new BasicBomb(mgr , pos , BombType.BOMB_PIERCING , range , ce) {
+        return new BasicBomb(mgr , pos , BombType.BOMB_REMOTE , range , ce) {
             
             public void update(){
                 if(true){
