@@ -60,7 +60,7 @@ public class BombarderoGraphics {
         
         this.gameCard = new GameCard(frame, resizingEngine, controller);
         this.endGameCard = new GameoverCard();
-        this.menuCard = new MenuCard();
+        this.menuCard = new MenuCard(resourceGetter);
 
         /* This listener calls for the ResizingEngine to dinamically update the 
         * frame's size when it is resized, see the implementation for more */
@@ -73,7 +73,7 @@ public class BombarderoGraphics {
         // Recives keyboard input
         frame.addKeyListener(keyInput);
 
-        frame.add(gameCard);
+        frame.add(menuCard);
         this.frame.setVisible(true);
     }
 }
