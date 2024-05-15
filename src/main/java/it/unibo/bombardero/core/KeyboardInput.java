@@ -7,9 +7,10 @@ import it.unibo.bombardero.core.api.Controller;
 
 /**
  * This class implements KeyListener to handle keyboard input for the game.
- * It processes key events to control the player's movements and actions 
+ * It processes key events to control the player's movements and actions
  * such as placing bombs and using power-ups.
- * This class interacts with the Controller to update the game state based on which keys get pressed.
+ * This class interacts with the Controller to update the game state based on
+ * which keys get pressed.
  * 
  * @author Jacopo Turchi
  */
@@ -17,9 +18,6 @@ public class KeyboardInput implements KeyListener {
 
     // Controller instance to handle player actions
     private final Controller controller;
-
-    // Current direction of player movement
-    private Direction directionMovementPair = Direction.DEFAULT;
 
     /**
      * Constructs a new KeyboardInput istance.
@@ -29,7 +27,7 @@ public class KeyboardInput implements KeyListener {
     public KeyboardInput(final Controller controller) {
         this.controller = controller;
     }
- 
+
     /*
      * MENU, BOMB and POWER-UPs controls
      * 
@@ -40,33 +38,26 @@ public class KeyboardInput implements KeyListener {
      */
     /**
      * Invoked when a key has been typed.
-     * This method handles non-movement related key presses, like menu access, bomb placement, or power-up activation.
+     * This method handles non-movement related key presses, like menu access, bomb
+     * placement, or power-up activation.
      * 
      * @param e The KeyEvent representing the key typed event.
      */
     public void keyTyped(final KeyEvent e) {
         switch (e.getKeyChar()) {
-            case KeyEvent.VK_ESCAPE:
-                // opens the menu
-                // System.out.println("ESC");
-                break;
-            case KeyEvent.VK_SPACE:
-                // calls player method to place a bomb
-                // System.out.println("spazio");
-                // controller.getMainPlayer().placeBomb();
-                break;
-            case 'l':
-            case 'L':
-                // calls powerup method? check if the player has the power-up
-                // System.out.println("l");
-                break;
-            case 'p':
-            case 'P':
-                // calls powerup method? check if the player has the remote bomb
-                // System.out.println("p");
-                break;
-            default:
-                break;
+            // Opens the menu
+            case KeyEvent.VK_ESCAPE -> // calls menu method
+                System.out.println("ESC");
+            // calls player method to place a bomb
+            case KeyEvent.VK_SPACE -> // controller.getMainPlayer().placeBomb();
+                System.out.println("spazio");
+            // calls powerup method to use line bomb powerup
+            case 'l', 'L' -> // calls powerup method? check if the player has the power-up
+                System.out.println("l");
+            // calls powerup method to explode remote bomb powerup
+            case 'p', 'P' -> // calls powerup method? check if the player has the remote bomb
+                System.out.println("p");
+            default -> {}
         }
     }
 
@@ -77,8 +68,8 @@ public class KeyboardInput implements KeyListener {
      * S makes the player go SOUTH
      * D makes the player go RIGHT
      */
-    // every time a key is pressed the player direction is set
-     /**
+    // every time one of the WASD key is pressed the player facing direction is set
+    /**
      * Invoked when a key has been pressed.
      * This method handles movement-related key presses (WASD configuration).
      * 
@@ -86,29 +77,20 @@ public class KeyboardInput implements KeyListener {
      */
     public void keyPressed(final KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_W:
-                this.directionMovementPair = Direction.UP;
-                // System.out.println("UP");
-                break;
-            case KeyEvent.VK_A:
-                this.directionMovementPair = Direction.LEFT;
-                // System.out.println("LEFT");
-                break;
-            case KeyEvent.VK_S:
-                this.directionMovementPair = Direction.DOWN;
-                // System.out.println("DOWN");
-                break;
-            case KeyEvent.VK_D:
-                this.directionMovementPair = Direction.RIGHT;
-                // System.out.println("RIGHT");
-                break;
-            default:
-                break;
+            case KeyEvent.VK_W -> // controller.getMainPlayer().setFacingDirection(Direction.UP);
+                System.out.println("UP");
+            case KeyEvent.VK_A -> // controller.getMainPlayer().setFacingDirection(Direction.LEFT);
+                System.out.println("LEFT");
+            case KeyEvent.VK_S -> // controller.getMainPlayer().setFacingDirection(Direction.DOWN);
+                System.out.println("DOWN");
+            case KeyEvent.VK_D -> // controller.getMainPlayer().setFacingDirection(Direction.RIGHT);
+                System.out.println("RIGHT");
+            default -> {}
         }
     }
 
     // If all the movement key get relased the player stops moving
-     /**
+    /**
      * Invoked when a key has been released.
      * Resets the movement direction when movement keys are released.
      * 
@@ -116,30 +98,10 @@ public class KeyboardInput implements KeyListener {
      */
     public void keyReleased(final KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_W:
-            case KeyEvent.VK_A:
-            case KeyEvent.VK_S:
-            case KeyEvent.VK_D:
-                // System.out.println("relased");
-                this.directionMovementPair = Direction.DEFAULT;
-                break;
-            default:
-                break;
+            case KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D ->
+                // controller.getMainPlayer().setFacingDirection(Direction.DEFAULT);
+                System.out.println("relased WASD");
+            default -> {}
         }
     }
-
-    /**
-     * Gets the current direction of movement.
-     * 
-     * @return The current direction of movement.
-     */
-    public Direction getDirection() {
-        return this.directionMovementPair;
-    }
-
-    /* 
-     * al posto di direction e get direction quando viene premuto un tasto 
-     * faccio direttamente il set della player direction così sa dove andare
-    */
-
 }
