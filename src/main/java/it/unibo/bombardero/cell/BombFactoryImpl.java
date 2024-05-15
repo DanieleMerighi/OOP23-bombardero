@@ -7,15 +7,12 @@ import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.cell.PowerUp.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
-import it.unibo.bombardero.physics.api.CollisionEngine;
 
 public class BombFactoryImpl implements BombFactory{
     private GameManager mgr;
-    private CollisionEngine ce;
 
-    public BombFactoryImpl(GameManager mgr , CollisionEngine ce) {
+    public BombFactoryImpl(GameManager mgr) {
         this.mgr=mgr;
-        this.ce=ce;
     }
 
     @Override
