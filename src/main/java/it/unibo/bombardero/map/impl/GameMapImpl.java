@@ -44,8 +44,15 @@ public class GameMapImpl implements GameMap {
     }
 
     @Override
-    public void addBomb(final BasicBomb bomb) {
-        this.map.put(bomb.getPos(), bomb);
+    public boolean addBomb(final BasicBomb bomb, final Pair coordinate) {
+        /* NOTA: sarebbe una ridondanza controllare anche se è vuota perché se le collisioni
+         *  sono fatte bene allora l'unica cosa per cui si deve controllare è la presenza della 
+         * bomba */
+        if(!isBomb(coordinate) || isEmpty(coordinate)) {
+            map.put(coordinate, bomb);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -86,13 +93,13 @@ public class GameMapImpl implements GameMap {
     @Override
     public boolean isBreakableWall(Pair coordinate) {
         return this.map.containsKey(coordinate) && 
-            this.map.get(coordinate).getCellType().equals(Cell.CellType.WALL_UNBREAKABLE);
+            this.map.get(coordinate).getCellType().equals(Cell.CellType.WALL_BREAKABLE);
     }
 
     @Override
     public boolean isUnbreakableWall(Pair coordinate) {
         return this.map.containsKey(coordinate) && 
-            this.map.get(coordinate).getCellType().equals(Cell.CellType.WALL_BREAKABLE);
+            this.map.get(coordinate).getCellType().equals(Cell.CellType.WALL_UNBREAKABLE);
     }
 
     @Override
