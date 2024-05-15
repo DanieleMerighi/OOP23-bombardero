@@ -4,7 +4,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import it.unibo.bombardero.cell.Bomb.BombType;
-import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.PowerUp.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
@@ -52,23 +51,23 @@ public class BombFactoryImpl implements BombFactory{
     }
 
     private Bomb createPowerBomb(Pair pos , int range) {
-        return new BasicBomb(mgr , pos , BombType.BOMB_PIERCING , BasicBomb.MAX_RANGE , ce) {
+        return new BasicBomb(mgr , pos , BombType.BOMB_POWER , BasicBomb.MAX_RANGE , ce) {
             
         };
     }
 
     private Bomb createRemoteBomb(Pair pos , int range) {
-        return new BasicBomb(mgr , pos , BombType.BOMB_PIERCING , range , ce) {
+        return new BasicBomb(mgr , pos , BombType.BOMB_REMOTE , range , ce) {
             
-            public void update(boolean condition){
-                if(condition){
-                    super.update(BasicBomb.TIME_TO_EXPLODE); //TODO find better option
+            public void update(){
+                if(true){
+                    super.update(BasicBomb.TIME_TO_EXPLODE); //TODO find better option cosi non funziona
                 }
             }
         };
     }
 
-    private Bomb createPunchBomb(Pair pos , int range) {
+    /*private Bomb createPunchBomb(Pair pos , int range) {
         return null;
-    }
+    }*///probabilmente inutile
 }
