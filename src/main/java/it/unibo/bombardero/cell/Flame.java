@@ -1,7 +1,6 @@
 package it.unibo.bombardero.cell;
 
 import java.util.Map;
-import java.util.Set;
 
 import it.unibo.bombardero.character.Direction;
 
