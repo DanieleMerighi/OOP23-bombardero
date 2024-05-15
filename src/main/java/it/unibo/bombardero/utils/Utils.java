@@ -33,6 +33,9 @@ public class Utils {
     public static double GRASS_PADDING_RATIO = 0.2; // the padding that has to be added to the map
     public static int BG_WIDTH = 1920;
     public static int BG_HEIGHT = 1088;
-    public final static int CELL_SIZE = 32;
+    public final static int CELL_SIZE = 32; // A single cell's size in game-pixels
+    public final static int PLAYER_WIDTH = 20; 
+    public final static int PLAYER_HEIGHT = 30; 
+    public final static int NUM_OF_ENEMIES = 3;
     
 }
