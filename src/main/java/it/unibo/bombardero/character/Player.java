@@ -38,7 +38,7 @@ public class Player extends Character {
     /**
      * Sums the current Player position with the direction recived in imput
      * Uses getSpeed to determine how much the Player needs to move in the facing
-     * direction
+     * direction.
      * 
      * @return the new updated Player position
      */

@@ -57,7 +57,8 @@ public class KeyboardInput implements KeyListener {
             // calls powerup method to explode remote bomb powerup
             case 'p', 'P' -> // calls powerup method? check if the player has the remote bomb
                 System.out.println("p");
-            default -> {}
+            default -> {
+            }
         }
     }
 
@@ -85,7 +86,8 @@ public class KeyboardInput implements KeyListener {
                 System.out.println("DOWN");
             case KeyEvent.VK_D -> // controller.getMainPlayer().setFacingDirection(Direction.RIGHT);
                 System.out.println("RIGHT");
-            default -> {}
+            default -> {
+            }
         }
     }
 
@@ -101,7 +103,8 @@ public class KeyboardInput implements KeyListener {
             case KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D ->
                 // controller.getMainPlayer().setFacingDirection(Direction.DEFAULT);
                 System.out.println("relased WASD");
-            default -> {}
+            default -> {
+            }
         }
     }
 }
