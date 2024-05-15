@@ -1,10 +1,5 @@
 package it.unibo.bombardero.cell;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -17,7 +12,7 @@ import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
-import it.unibo.bombardero.physics.api.CollisionEngine;
+
 
 public abstract class BasicBomb extends Cell implements Bomb{
     public final static long TIME_TO_EXPLODE=2000L;
@@ -27,16 +22,14 @@ public abstract class BasicBomb extends Cell implements Bomb{
     private final GameManager mgr;
     private Pair pos;
     private long elapsedTime=0;
-    private CollisionEngine ce;
     protected GameMap map;
     private BombType bombType;
 
-    public BasicBomb(GameManager mgr, Pair pos , BombType type, int range, CollisionEngine ce) {
+    public BasicBomb(GameManager mgr, Pair pos , BombType type, int range) {
         super(CellType.BOMB);
         this.mgr = mgr;
         this.pos = pos;
         this.range=range;
-        this.ce=ce;
         this.map=mgr.getGameMap();
     }
 
@@ -78,7 +71,6 @@ public abstract class BasicBomb extends Cell implements Bomb{
     }
     
     private Set<Entry<Pair , FlameType>> checkDirection(Direction dir , int range , Pair pos) {
-        List<Pair> flamePos = new LinkedList<>();
         return IntStream.iterate(0 , i->i < range , i->i+1)
             .mapToObj(i->pos.sum(dir.getPair().multipy(i)))
             .takeWhile(stopFlamePropagation())
