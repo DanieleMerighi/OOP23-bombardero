@@ -42,7 +42,7 @@ public class GameCard extends JPanel {
     private final Character player;
     private final List<Character> enemies;
     
-    private final BombarderoSprite playerSprite;
+    // private final BombarderoSprite playerSprite;
     private final List<BombarderoSprite> enemySprite;
 
     public GameCard(final JFrame parentFrame, final ResizingEngine resizingEngine, final Controller controller) {
@@ -56,7 +56,6 @@ public class GameCard extends JPanel {
         player = controller.getMainPlayer();
         enemies = controller.getEnemies();
 
-        playerSprite = new BombarderoSprite(, , );
         enemySprite = new ArrayList<>();
     }
 
@@ -94,10 +93,11 @@ public class GameCard extends JPanel {
             playerPosition.width, playerPosition.height,
             null
         );
+        /*
         for(int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
             Dimension enemyPos = controller.getEnemies().get(i).getCharacterPosition();
             g2d.drawImage(, enemyPos.width, enemyPos.height, null);
-        }
+        } */
         
     }
 
