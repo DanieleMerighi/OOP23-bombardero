@@ -17,13 +17,12 @@ public class BombarderoSprite {
 
     /** 
      * Creates a new BombarderSprite object, assigning it a ResourceGetter to use to fetch assets, a facing direction
-     * for the assets to get and the name of the resource to get
+     * for the assets to get and the name of the resource to get.
      * @param resource the path of the resource to get (e.g. <code>"character/main/walking"</code>).
      * The root where the asset will be fetched from is resources/it/unibo/bombardero
      * @param rg the ResourceGetter object to be used for loading the assets
      * @param facingDirection the direction that the assets will face (e.g. <code>Direction.UP</code> tells the constructor
      * to load the sprite facing the <code>UP</code> direction)
-     *
      */
     public BombarderoSprite(final String resource, final ResourceGetter rg, final Direction facingDirection) {
         frames_per_sprite = getFramesFromPosition(facingDirection);
