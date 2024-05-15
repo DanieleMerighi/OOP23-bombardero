@@ -7,6 +7,7 @@ import it.unibo.bombardero.cell.PowerUp.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.utils.Utils;
 
 public abstract class Character {
 
@@ -48,8 +49,8 @@ public abstract class Character {
     }
 
     public Pair getIntCoordinate() {
-        return new Pair((int) Math.floor(this.coordinate.row() + HEIGHT / 2),
-                (int) Math.floor(this.coordinate.col() + WIDTH / 2));
+        return new Pair((int)(this.coordinate.row() + HEIGHT / 2.0f / Utils.CELL_SIZE),
+        (int)(this.coordinate.col() + WIDTH / 2.0f / Utils.CELL_SIZE));
     }
 
     public abstract void placeBomb();
