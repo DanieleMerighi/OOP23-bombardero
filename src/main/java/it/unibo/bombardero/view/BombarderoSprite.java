@@ -12,12 +12,14 @@ public class BombarderoSprite {
 
     private final int frames_per_sprite;
     private final Image[] asset;
+    private final Image standingAsset;
     private int counter = 0;
     private int currentFrame = 0;
 
     /** 
      * Creates a new BombarderSprite object, assigning it a ResourceGetter to use to fetch assets, a facing direction
-     * for the assets to get and the name of the resource to get.
+     * for the assets to get and the name of the resource to get. The class will fetch the sprite animation in the
+     * direction requested and the corresponding standing image.
      * @param resource the path of the resource to get (e.g. <code>"character/main/walking"</code>).
      * The root where the asset will be fetched from is resources/it/unibo/bombardero
      * @param rg the ResourceGetter object to be used for loading the assets
@@ -30,6 +32,7 @@ public class BombarderoSprite {
         for (int i = 0; i < frames_per_sprite; i++) {
             asset[i] = rg.loadImage(resource + Integer.toString(i));
         }
+        standingAsset = rg.loadImage(resource + "/" + getStringFromDirection(facingDirection) + "_standing");
     }
 
     /**
@@ -51,11 +54,29 @@ public class BombarderoSprite {
         return asset[currentFrame];
     }
 
+    /** 
+     * Returns the standing frame of the sprite.
+     * @return the standing frame of the sprite
+     */
+    public Image getStandingImage() {
+        return standingAsset;
+    }
+
     private int getFramesFromPosition(final Direction facingDirection) {
         if (facingDirection.equals(Direction.UP) || facingDirection.equals(Direction.DOWN)) {
             return 2;
         }
         return 4;
+    }
+
+    private String getStringFromDirection(final Direction dir) {
+        return switch (dir) {
+            case UP -> "up";
+            case DOWN -> "down";
+            case LEFT -> "left";
+            case RIGHT -> "right";
+            default -> throw new IllegalArgumentException();
+        };
     }
 
 }
