@@ -2,9 +2,10 @@ package it.unibo.bombardero.view;
 
 import java.awt.Image;
 
+import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;
 import it.unibo.bombardero.character.Direction;
 
-/** This class represents a single instance of a animated cell, that requires being updated
+/** This class represents an immutable single instance of a animated cell, that requires being updated
  * and returns a frame when requested.
  * @author Federico Bagattoni
  */
@@ -13,6 +14,8 @@ public class BombarderoSprite {
     private final int frames_per_sprite;
     private final Image[] asset;
     private final Image standingAsset;
+    private final String resource;
+    private final ResourceGetter rg;
     private int counter = 0;
     private int currentFrame = 0;
 
@@ -27,10 +30,12 @@ public class BombarderoSprite {
      * to load the sprite facing the <code>UP</code> direction)
      */
     public BombarderoSprite(final String resource, final ResourceGetter rg, final Direction facingDirection) {
+        this.resource = resource;
+        this.rg = rg;
         frames_per_sprite = getFramesFromPosition(facingDirection);
         asset = new Image[frames_per_sprite];
         for (int i = 0; i < frames_per_sprite; i++) {
-            asset[i] = rg.loadImage(resource + Integer.toString(i));
+            asset[i] = rg.loadImage(getStringFromDirection(facingDirection) + "/" + resource + Integer.toString(i));
         }
         standingAsset = rg.loadImage(resource + "/" + getStringFromDirection(facingDirection) + "_standing");
     }
@@ -60,6 +65,15 @@ public class BombarderoSprite {
      */
     public Image getStandingImage() {
         return standingAsset;
+    }
+
+    /** 
+     * Returns a new Sprite for the same asset, but facing a different direction
+     * @param dir the direction that the new asset will face 
+     * @return the new sprite, facing the new direction
+     */
+    public BombarderoSprite getNewSprite(final Direction dir) {
+        return new BombarderoSprite(resource, rg, dir);
     }
 
     private int getFramesFromPosition(final Direction facingDirection) {
