@@ -169,7 +169,7 @@ public class TestEnemy {
         }
 
         @Override
-        public void addBomb(BasicBomb bomb) {
+        public boolean addBomb(BasicBomb bomb) {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'addBomb'");
         }

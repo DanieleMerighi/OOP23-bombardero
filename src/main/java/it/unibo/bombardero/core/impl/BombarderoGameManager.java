@@ -1,12 +1,9 @@
 package it.unibo.bombardero.core.impl;
 
 import java.util.List;
-import java.util.Set;
 
 import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Flame;
-import it.unibo.bombardero.cell.Cell.CellType;
-import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
