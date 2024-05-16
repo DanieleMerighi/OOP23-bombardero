@@ -20,8 +20,6 @@ public abstract class Character {
     private static final float STARTING_SPEED = 0.01f;
     private static final int STARTING_FLAME_RANGE = 1;
     private static final int STARTING_BOMBS = 1;
-    private static final int WIDTH = 22;
-    private static final int HEIGHT = 30;
 
     // Game manager reference
     private final GameManager manager;
