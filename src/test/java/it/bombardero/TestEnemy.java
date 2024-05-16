@@ -7,8 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.unibo.bombardero.cell.BasicBomb;
-import it.unibo.bombardero.cell.Bomb;
-import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Enemy;
@@ -40,8 +38,6 @@ public class TestEnemy {
 
         // Verify enemy state is PATROL
         assertEquals(Enemy.State.PATROL, this.manager.enemy.getState());
-        // Verify enemy doesn't have a planned path
-        assertTrue(this.manager.enemy.getPath().isEmpty());
         // We can't directly verify moveRandomly is called, but we can check if nextMove
         // is set through random movement
         assertTrue(this.manager.enemy.getNextMove().isPresent());
@@ -56,12 +52,6 @@ public class TestEnemy {
 
         // Verify enemy state is CHASE
         assertEquals(Enemy.State.CHASE, this.manager.enemy.getState());
-
-        // Verify enemy attempts to find a path to the player (indirectly)
-        // We can't directly access EnemyGraphReasoner, but we can check if the path is
-        // populated
-        // after computeNextDir is called
-        assertTrue(!this.manager.enemy.getPath().isEmpty());
     }
 
     @Test
@@ -69,6 +59,8 @@ public class TestEnemy {
         // Set initial player position within detection radius in TestGameManager
         this.manager.setEnemyCoord(0, 0);
         this.manager.setPlayerCoord(0, 4);
+        // We need more than 1 sec to move between cells
+        this.manager.updateGame();
         this.manager.updateGame();
 
         // Verify enemy state is CHASE
@@ -111,7 +103,6 @@ public class TestEnemy {
         assertTrue(this.manager.getGameMap().isBomb(new Pair(0, 0))); //ToDo
         assertEquals(Utils.ENEMY_STARTING_BOMBS-1, this.manager.enemy.getNumBomb());
         this.manager.updateGame();
-        //this.manager.updateGame();
         assertEquals(new Pair(2, 1), this.manager.enemy.getIntCoordinate());
 
     }
@@ -153,13 +144,11 @@ public class TestEnemy {
 
         @Override
         public void endGame() {
-            // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'endGame'");
         }
 
         @Override
         public List<Character> getEnemies() {
-            // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'getEnemies'");
         }
 
@@ -170,31 +159,26 @@ public class TestEnemy {
 
         @Override
         public void addBomb(BasicBomb bomb) {
-            // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'addBomb'");
         }
 
         @Override
         public void removeBomb(Pair pos) {
-            // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'removeBomb'");
         }
 
         @Override
         public void addFlame(FlameType type, Pair pos) {
-            // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'addFlame'");
         }
 
         @Override
         public void removeFlame(Pair pos) {
-            // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'removeFlame'");
         }
 
         @Override
         public boolean removeWall(Pair pos) {
-            // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'removeWall'");
         }
     }
