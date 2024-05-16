@@ -78,8 +78,8 @@ public abstract class Character {
      * @return the map's corrisponding integer coordinates of the character
      */
     public Pair getIntCoordinate() {
-        return new Pair((int) Math.floor(this.coordinate.row() + HEIGHT / 2),
-                (int) Math.floor(this.coordinate.col() + WIDTH / 2));
+        return new Pair((int) Math.floor(this.coordinate.row()),
+                (int) Math.floor(this.coordinate.col()));
     }
 
     /**
