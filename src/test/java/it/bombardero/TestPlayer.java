@@ -37,23 +37,29 @@ public class TestPlayer {
         for (Direction dir : Direction.values()) {
             this.manager.getPlayer().setFacingDirection(dir);
             this.manager.getPlayer().update();
-            assertEquals(manager.getPlayer().getFacingDirection(), dir);
+            assertEquals(dir, manager.getPlayer().getFacingDirection());
         }
     }
 
     @Test
     public void TestPlayerMovingDirections() {
-        int coord = 0;
-        Coord floatCoord = new Coord(0.0f, 0.0f);
-        this.manager.getPlayer().setCharacterPosition(floatCoord);
+        // Setting player spown
+        float spawnRow = 10.0f;
+        float spawnCol = 10.0f;
+        Coord spawnCoord = new Coord(spawnRow, spawnCol);
+        this.manager.getPlayer().setCharacterPosition(spawnCoord);
 
+        // Setting player direction
         this.manager.getPlayer().setFacingDirection(Direction.RIGHT);
-
-        int max=1; // 60 mosse
-        this.manager.getPlayer().setSpeed(0.01f);
-        IntStream.range(0, max).forEach(n -> this.manager.getPlayer().update());
         
-        assertEquals(manager.getPlayer().getCharacterPosition(), new Coord(0.0f, Float.sum(0.01f, 0.04f)));
+        // Setting player speed
+        this.manager.getPlayer().setSpeed(0.02f);
+
+        // Setting the number of update and calling them
+        int updateNumeber=60; // Number of updates done
+        IntStream.range(0, updateNumeber).forEach(n -> this.manager.getPlayer().update());
+        
+        assertEquals(spawnCoord.sum(new Coord(this.manager.getPlayer().getSpeed() * this.manager.getPlayer().getFacingDirection().getDx() * updateNumeber, this.manager.getPlayer().getSpeed() * this.manager.getPlayer().getFacingDirection().getDy() * updateNumeber)), manager.getPlayer().getCharacterPosition());
     }
 
     private static class TestGameManager implements GameManager {
@@ -77,11 +83,6 @@ public class TestPlayer {
 
         @Override
         public void updateGame() {
-            // 60 fps
-            for (int i = 0; i < 59; i++) {
-                this.player.update();
-            }
-            this.player.update();
         }
 
         @Override
