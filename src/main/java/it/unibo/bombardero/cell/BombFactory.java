@@ -8,5 +8,5 @@ import it.unibo.bombardero.map.api.Pair;
 
 public interface BombFactory {
     
-    Bomb CreateBomb(Optional<PowerUpType> powerUp , Pair pos , int range);
+    BasicBomb CreateBomb(Optional<PowerUpType> powerUp , Pair pos , int range);
 }

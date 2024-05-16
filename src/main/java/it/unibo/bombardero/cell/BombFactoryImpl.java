@@ -20,7 +20,7 @@ public class BombFactoryImpl implements BombFactory{
     }
 
     @Override
-    public Bomb CreateBomb(Optional<PowerUpType> powerUp , Pair pos , int range) {
+    public BasicBomb CreateBomb(Optional<PowerUpType> powerUp , Pair pos , int range) {
         if(powerUp.isEmpty()){
             return createBasicBomb(pos , range);
         }
@@ -36,13 +36,13 @@ public class BombFactoryImpl implements BombFactory{
         }
     }
     
-    private Bomb createBasicBomb(Pair pos , int range) {
+    private BasicBomb createBasicBomb(Pair pos , int range) {
         return new BasicBomb(mgr, pos, BombType.BOMB_BASIC , range , ce) {
             
         };
     }
 
-    private Bomb createPiercingBomb(Pair pos , int range) {
+    private BasicBomb createPiercingBomb(Pair pos , int range) {
         return new BasicBomb(mgr , pos , BombType.BOMB_PIERCING , range , ce) {
             @Override
             protected Predicate<? super Pair> stopFlamePropagation() {
@@ -51,13 +51,13 @@ public class BombFactoryImpl implements BombFactory{
         };
     }
 
-    private Bomb createPowerBomb(Pair pos , int range) {
+    private BasicBomb createPowerBomb(Pair pos , int range) {
         return new BasicBomb(mgr , pos , BombType.BOMB_PIERCING , BasicBomb.MAX_RANGE , ce) {
             
         };
     }
 
-    private Bomb createRemoteBomb(Pair pos , int range) {
+    private BasicBomb createRemoteBomb(Pair pos , int range) {
         return new BasicBomb(mgr , pos , BombType.BOMB_PIERCING , range , ce) {
             
             public void update(boolean condition){
@@ -68,7 +68,7 @@ public class BombFactoryImpl implements BombFactory{
         };
     }
 
-    private Bomb createPunchBomb(Pair pos , int range) {
+    private BasicBomb createPunchBomb(Pair pos , int range) {
         return null;
     }
 }

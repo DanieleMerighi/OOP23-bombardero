@@ -158,7 +158,7 @@ public class TestEnemy {
         }
 
         @Override
-        public void addBomb(BasicBomb bomb) {
+        public boolean addBomb(BasicBomb bomb) {
             throw new UnsupportedOperationException("Unimplemented method 'addBomb'");
         }
 
