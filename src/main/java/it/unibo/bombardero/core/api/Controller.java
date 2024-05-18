@@ -11,7 +11,14 @@ public interface Controller {
     
     //qui andrebbero inseriti i comandi imput
 
+    /**
+     * Starts the game, entering the game loop and starting the game timer
+     */
     void startGame();
+
+    void pauseGame();
+
+    void endGame();
 
     Character getMainPlayer();
 

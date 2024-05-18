@@ -1,5 +1,9 @@
 package it.unibo.bombardero.utils;
 
+import it.unibo.bombardero.map.api.Coord;
+
+import java.util.List;
+
 public class Utils {
 
     public static final int MAP_ROWS = 13;
@@ -18,6 +22,12 @@ public class Utils {
     public static final int BOMB = 6;
     public static final int EXPLOSION = 7;
 
+    public static final Coord PLAYER_SPAWNPOINT = new Coord(0.5f, 0.5f);
+    public static final List<Coord> ENEMIES_SPAWNPOINT = List.of(
+        new Coord(12.5f, 12.5f),
+        new Coord(0.5f, 12.5f)
+        ,new Coord(12.5f, 0.5f)
+        );
     // Valori per il timer
     public final static long GAME_TIME = 120000l;
 

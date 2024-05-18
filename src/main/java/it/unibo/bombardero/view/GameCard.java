@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.PageAttributes;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import javax.swing.JPanel;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.character.Player;
+import it.unibo.bombardero.core.KeyboardInput;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.utils.Utils;
 import it.unibo.bombardero.map.api.Coord;
@@ -38,6 +40,7 @@ public class GameCard extends JPanel {
     private final ResizingEngine resizingEngine;
     private final Map<Pair, Cell> cells;
     private final Controller controller;
+    private final KeyboardInput keyInput;
 
     private final Character player;
     private final List<Character> enemies;
@@ -51,10 +54,12 @@ public class GameCard extends JPanel {
         this.parentFrame = parentFrame;
         this.resizingEngine = resizingEngine;
         this.controller = controller;
+        keyInput = new KeyboardInput(controller);
+        parentFrame.addKeyListener(keyInput);
+
         this.setMinimumSize(resizingEngine.getMapSize());
 
-        /* Test map to see if placement goes well: */ 
-        cells = new GameMapImpl(true).getMap();
+        cells = controller.getMap(); 
         player = controller.getMainPlayer();
         enemies = controller.getEnemies();
 
@@ -82,8 +87,8 @@ public class GameCard extends JPanel {
             computeMapPlacingPoint().height,
             null
         );
-        /* Drawing the breakable obstacles, the bombs and the power ups */
-        cells.entrySet().stream()
+        /* Drawing the breakable obstacles, the bombs and the power ups (not done yet)*/
+        /* cells.entrySet().stream()
             .filter(entry -> entry.getValue().getCellType().equals(CellType.WALL_BREAKABLE))
             .forEach(entry -> {
                 g2d.drawImage(
@@ -92,7 +97,7 @@ public class GameCard extends JPanel {
                     computeCellPlacingPoint(entry.getKey()).height,
                     null
                 );
-            });
+            }); */
         /* Drawing the player and the enemies */
         updateSprites();
         /* TODO: FARE UNA SCALE PER CUI MOLTIPLICARE L'IMMAGINE DEL PLAYER PIANO PIANO CHE LA MAPPA DIVENTA GRANDE */
@@ -101,11 +106,11 @@ public class GameCard extends JPanel {
             playerPosition.width, playerPosition.height,
             null
         );
+        
         for(int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
             Dimension enemyPos = computeCharacterPlacingPoint(controller.getEnemies().get(i).getCharacterPosition());
             g2d.drawImage(enemiesImages[i], enemyPos.width, enemyPos.height, null);
         }
-        
     }
 
     private void updateSprites() {
@@ -126,7 +131,7 @@ public class GameCard extends JPanel {
                 enemySprite[i] = enemySprite[i].getNewSprite(enemies.get(i).getFacingDirection());
                 enemiesImages[i] = enemySprite[i].getStandingImage();
             }
-        }
+        } 
     }
 
     private Dimension computeMapPlacingPoint() {
@@ -148,8 +153,8 @@ public class GameCard extends JPanel {
      */
     private Dimension computeCharacterPlacingPoint(final Coord playerPosition) {
         return new Dimension(
-            (int)(Math.floor(playerPosition.row() * Utils.CELL_SIZE * resizingEngine.getScaledCellSize()) - Math.floorDiv(Utils.PLAYER_WIDTH, 2)),
-            (int)(Math.floor(playerPosition.col() * Utils.CELL_SIZE * resizingEngine.getScaledCellSize()) - Math.floorDiv(Utils.PLAYER_HEIGHT, 2))
+            (int)(Math.floor(playerPosition.row() * resizingEngine.getScaledCellSize()) - Math.floorDiv(Utils.PLAYER_WIDTH, 2)),
+            (int)(Math.floor(playerPosition.col() * resizingEngine.getScaledCellSize()) - Math.floorDiv(Utils.PLAYER_HEIGHT, 2))
         );
     }
 }

@@ -34,10 +34,23 @@ public class BombarderoSprite {
         this.rg = rg;
         frames_per_sprite = getFramesFromPosition(facingDirection);
         asset = new Image[frames_per_sprite];
-        for (int i = 0; i < frames_per_sprite; i++) {
-            asset[i] = rg.loadImage(getStringFromDirection(facingDirection) + "/" + resource + Integer.toString(i));
+        for (int i = 1; i <= frames_per_sprite; i++) {
+            asset[i - 1] = rg.loadImage(
+                resource
+                + "/"
+                + getStringFromDirection(facingDirection)
+                + "/"
+                + getStringFromDirection(facingDirection)
+                + Integer.toString(i)
+            );
         }
-        standingAsset = rg.loadImage(resource + "/" + getStringFromDirection(facingDirection) + "_standing");
+        standingAsset = rg.loadImage(
+            resource
+            + "/"
+            + getStringFromDirection(facingDirection)
+            + "/"
+            + getStringFromDirection(facingDirection)
+            + "_standing");
     }
 
     /**
