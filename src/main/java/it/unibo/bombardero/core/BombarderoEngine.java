@@ -1,13 +1,15 @@
 package it.unibo.bombardero.core;
 
 import it.unibo.bombardero.core.api.Controller;
+import it.unibo.bombardero.core.api.Engine;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.core.impl.BombarderoGameManager;
 import it.unibo.bombardero.view.BombarderoGraphics;
 
-public class BombarderoEngine {
+public class BombarderoEngine extends Thread implements Engine {
+
+    private final static long sleepTime = 16L; // Time during which the thread sleeps, equivalent to about 60FPS
     
-    private final static long sleepTime = 16l; // Time during which the thread sleeps, equivalent to about 60FPS
     private GameManager gameManager;
     private BombarderoGraphics graphics;
     private Controller controller;
@@ -17,13 +19,51 @@ public class BombarderoEngine {
         this.graphics = graphics;
     }
 
+    @Override
     public GameManager initGameManager() {
         gameManager = new BombarderoGameManager(controller);
         return gameManager;
-    }   
+    }
     
-    public void mainLoop() {
-        
+    public void run() {
+        long previousCycleStartTime = System.currentTimeMillis();
+        while (true) {
+            long currentCycleStartTime = System.currentTimeMillis();
+            long elapsed = currentCycleStartTime - previousCycleStartTime;
+            gameManager.updateGame();
+            graphics.update();
+            waitForNextFrame(currentCycleStartTime);
+            previousCycleStartTime = currentCycleStartTime;
+            System.out.println("looping...");
+        }
+    }
+
+    @Override
+    public void startGameLoop() {
+        this.start();
+    }
+
+    @Override
+    public void pauseGameLoop() {
+        try {
+            this.wait();
+        } catch (InterruptedException e) {
+            System.err.println("Exception thrown in main loop: interrupted exception calling Thread.wait()");
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void resumeGameLoop() {
+        if (this.isInterrupted()) {
+            this.notify();
+        }
+    }
+
+    @Override
+    public void endGameLoop() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'endGameLoop'");
     }
 
     private void waitForNextFrame(long currentCycleStartTime) {
