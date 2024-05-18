@@ -84,6 +84,6 @@ public class BombarderoGraphics {
 
     public void update() {
         gameCard.updateSprites();
-        gameCard.repaint(1);
+        gameCard.repaint(0);
     }
 }
