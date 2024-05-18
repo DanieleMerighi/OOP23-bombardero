@@ -49,8 +49,8 @@ public class KeyboardInput implements KeyListener {
             case KeyEvent.VK_ESCAPE -> // calls menu method
                 System.out.println("ESC");
             // calls player method to place a bomb
-            case KeyEvent.VK_SPACE -> // controller.getMainPlayer().placeBomb();
-                System.out.println("spazio");
+            case KeyEvent.VK_SPACE -> controller.getMainPlayer().placeBomb();
+                // System.out.println("spazio");
             // calls powerup method to use line bomb powerup
             case 'l', 'L' -> // calls powerup method? check if the player has the power-up
                 System.out.println("l");
@@ -78,14 +78,14 @@ public class KeyboardInput implements KeyListener {
      */
     public void keyPressed(final KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_W -> // controller.getMainPlayer().setFacingDirection(Direction.UP);
-                System.out.println("UP");
-            case KeyEvent.VK_A -> // controller.getMainPlayer().setFacingDirection(Direction.LEFT);
-                System.out.println("LEFT");
-            case KeyEvent.VK_S -> // controller.getMainPlayer().setFacingDirection(Direction.DOWN);
-                System.out.println("DOWN");
-            case KeyEvent.VK_D -> // controller.getMainPlayer().setFacingDirection(Direction.RIGHT);
-                System.out.println("RIGHT");
+            case KeyEvent.VK_W -> controller.getMainPlayer().setFacingDirection(Direction.UP);
+                // System.out.println("UP");
+            case KeyEvent.VK_A -> controller.getMainPlayer().setFacingDirection(Direction.LEFT);
+                // System.out.println("LEFT");
+            case KeyEvent.VK_S -> controller.getMainPlayer().setFacingDirection(Direction.DOWN);
+                // System.out.println("DOWN");
+            case KeyEvent.VK_D -> controller.getMainPlayer().setFacingDirection(Direction.RIGHT);
+                // System.out.println("RIGHT");
             default -> {
             }
         }
@@ -101,8 +101,8 @@ public class KeyboardInput implements KeyListener {
     public void keyReleased(final KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D ->
-                // controller.getMainPlayer().setFacingDirection(Direction.DEFAULT);
-                System.out.println("relased WASD");
+                controller.getMainPlayer().setFacingDirection(Direction.DEFAULT);
+                //System.out.println("relased WASD");
             default -> {
             }
         }
