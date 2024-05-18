@@ -84,7 +84,7 @@ public class Enemy extends Character {
     /* base AI Heuristics */
     @Override
     public void update() {
-
+        /* 
         movementTimer += 1;
         // Every 60 frames (assuming 60 fps), call computeNextDir to get the next target
         if (movementTimer >= 60) {
@@ -109,7 +109,7 @@ public class Enemy extends Character {
             if (Math.abs(dx) < getSpeed() && Math.abs(dy) < getSpeed()) {
                 nextMove = Optional.empty(); // Clear target if reached
             }
-        }
+        } */
     }
 
     public enum State {
