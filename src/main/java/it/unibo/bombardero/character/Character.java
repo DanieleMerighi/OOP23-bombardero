@@ -17,9 +17,15 @@ import it.unibo.bombardero.map.api.Pair;
 public abstract class Character {
 
     // Constants for default settings
-    private static final float STARTING_SPEED = 0.01f;
+    private static final float STARTING_SPEED = 0.05f;
+    private static final float INCREASE_SPEED = 0.005f;
     private static final int STARTING_FLAME_RANGE = 1;
     private static final int STARTING_BOMBS = 1;
+
+    // Constants for controls
+    private static final float MAX_SPEED = 0.09f;
+    public static final int MAX_FLAME_RANGE = 8;
+    private static final int MAX_BOMBS = 8;
 
     // Game manager reference
     private final GameManager manager;
@@ -184,6 +190,26 @@ public abstract class Character {
     }
 
     /**
+     * Increse the number of bombs the character has left.
+     * 
+     */
+    public void increaseNumBomb() {
+        if (this.numBomb < MAX_BOMBS) {
+            this.numBomb++;
+        }
+    }
+
+    /**
+     * Decrease the number of bombs the character has left.
+     * 
+     */
+    public void decreaseNumBomb() {
+        if (this.numBomb > STARTING_BOMBS) {
+            this.numBomb--;
+        }
+    }
+
+    /**
      * Gets the flame range of the bombs placed by the character.
      * 
      * @return the flame range
@@ -202,6 +228,26 @@ public abstract class Character {
     }
 
     /**
+     * Increse the flame range of the bombs placed by the character.
+     * 
+     */
+    public void increaseFlameRange() {
+        if (this.flameRange < MAX_FLAME_RANGE) {
+            this.flameRange++;
+        }
+    }
+
+    /**
+     * Decrease the flame range of the bombs placed by the character.
+     * 
+     */
+    public void decreaseFlameRange() {
+        if (this.flameRange > STARTING_FLAME_RANGE) {
+            this.flameRange--;
+        }
+    }
+
+    /**
      * Gets the speed of the character.
      * 
      * @return the speed
@@ -217,6 +263,26 @@ public abstract class Character {
      */
     public void setSpeed(final float speed) {
         this.speed = speed;
+    }
+
+    /**
+     * Increse the speed of the character.
+     * 
+     */
+    public void increaseSpeed() {
+        if (this.speed < MAX_SPEED) {
+            this.speed += INCREASE_SPEED;
+        }
+    }
+
+    /**
+     * Decrease the speed of the character.
+     * 
+     */
+    public void decreaseSpeed() {
+        if (this.speed > STARTING_SPEED) {
+            this.speed -= 0.005f;
+        }
     }
 
     /**
