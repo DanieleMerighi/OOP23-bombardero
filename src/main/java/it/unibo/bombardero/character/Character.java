@@ -31,7 +31,7 @@ public abstract class Character {
 
     // Position related
     private Coord coordinate; // Starting character coordinate
-    private Direction facingDirection = Direction.DOWN; // Starting character facingDirection
+    private Direction facingDirection = Direction.DEFAULT; // Starting character facingDirection
 
     // Game attribute related
     private boolean isAlive = true;
