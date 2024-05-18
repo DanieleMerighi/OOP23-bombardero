@@ -49,5 +49,7 @@ public class MenuCard extends JPanel {
             }
             
         });
+
+        /* TODO: guide event listener */
     }
 }
