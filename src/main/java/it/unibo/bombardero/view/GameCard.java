@@ -1,29 +1,22 @@
 package it.unibo.bombardero.view;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.PageAttributes;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import it.unibo.bombardero.cell.Cell;
-import it.unibo.bombardero.cell.Cell.CellType;
-import it.unibo.bombardero.character.Player;
 import it.unibo.bombardero.core.KeyboardInput;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.utils.Utils;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;
-import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
 
@@ -56,7 +49,7 @@ public class GameCard extends JPanel {
         this.controller = controller;
         keyInput = new KeyboardInput(controller);
         parentFrame.addKeyListener(keyInput);
-
+        
         this.setMinimumSize(resizingEngine.getMapSize());
 
         cells = controller.getMap(); 
