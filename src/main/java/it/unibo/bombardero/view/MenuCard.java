@@ -35,7 +35,7 @@ public class MenuCard extends JPanel {
         this.add(new JLabel(new ImageIcon(rg.loadImage("menu/logo"))));
         play = new JButton(new ImageIcon(rg.loadImage("menu/play")));
         guide = new JButton(new ImageIcon(rg.loadImage("menu/guide")));
-        play.setBorder(null);
+        play.setBorder(null); /* TODO: better style JButtons, in windows you can stil see the buttons highlight, in MacOS however no...  */
         guide.setBorder(null);
 
         this.add(play);
@@ -49,5 +49,7 @@ public class MenuCard extends JPanel {
             }
             
         });
+
+        /* TODO: guide event listener */
     }
 }
