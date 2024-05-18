@@ -33,7 +33,6 @@ public class GameCard extends JPanel {
     private final ResizingEngine resizingEngine;
     private final Map<Pair, Cell> cells;
     private final Controller controller;
-    private final KeyboardInput keyInput;
 
     private final Character player;
     private final List<Character> enemies;
@@ -47,8 +46,6 @@ public class GameCard extends JPanel {
         this.parentFrame = parentFrame;
         this.resizingEngine = resizingEngine;
         this.controller = controller;
-        keyInput = new KeyboardInput(controller);
-        parentFrame.addKeyListener(keyInput);
         
         this.setMinimumSize(resizingEngine.getMapSize());
 
