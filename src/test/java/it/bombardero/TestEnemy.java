@@ -197,6 +197,12 @@ public class TestEnemy {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'removeWall'");
         }
+
+        @Override
+        public void startTimer() {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'startTimer'");
+        }
     }
 
 }
