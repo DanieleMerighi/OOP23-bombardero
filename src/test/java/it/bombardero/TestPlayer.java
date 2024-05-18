@@ -59,7 +59,7 @@ public class TestPlayer {
         int updateNumeber=60; // Number of updates done
         IntStream.range(0, updateNumeber).forEach(n -> this.manager.getPlayer().update());
         
-        assertEquals(spawnCoord.sum(new Coord(this.manager.getPlayer().getSpeed() * this.manager.getPlayer().getFacingDirection().getDx() * updateNumeber, this.manager.getPlayer().getSpeed() * this.manager.getPlayer().getFacingDirection().getDy() * updateNumeber)), manager.getPlayer().getCharacterPosition());
+        assertEquals(spawnCoord.sum(new Coord(this.manager.getPlayer().getSpeed() * this.manager.getPlayer().getFacingDirection().getDy() * updateNumeber, this.manager.getPlayer().getSpeed() * this.manager.getPlayer().getFacingDirection().getDx() * updateNumeber)), manager.getPlayer().getCharacterPosition());
     }
 
     private static class TestGameManager implements GameManager {
