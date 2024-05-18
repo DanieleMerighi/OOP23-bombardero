@@ -99,7 +99,6 @@ public class GameCard extends JPanel {
                 );
             }); */
         /* Drawing the player and the enemies */
-        updateSprites();
         /* TODO: FARE UNA SCALE PER CUI MOLTIPLICARE L'IMMAGINE DEL PLAYER PIANO PIANO CHE LA MAPPA DIVENTA GRANDE */
         Dimension playerPosition = computeCharacterPlacingPoint(controller.getMainPlayer().getCharacterPosition());
         g2d.drawImage(player_image.getScaledInstance(35, 55, Image.SCALE_SMOOTH),
@@ -113,10 +112,13 @@ public class GameCard extends JPanel {
         }
     }
 
-    private void updateSprites() {
+    public void updateSprites() {
         playerSprite.update();
         if (player.getFacingDirection().equals(Direction.DEFAULT)) {
             player_image = playerSprite.getStandingImage();
+        }
+        else if (playerSprite.getCurrentFacingDirection().equals(player.getFacingDirection())) {
+            player_image = playerSprite.getImage();
         }
         else {
             playerSprite = playerSprite.getNewSprite(player.getFacingDirection());

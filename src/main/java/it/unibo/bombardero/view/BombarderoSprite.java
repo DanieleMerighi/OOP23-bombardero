@@ -11,11 +11,14 @@ import it.unibo.bombardero.character.Direction;
  */
 public class BombarderoSprite {  
 
+    private final static int TICKS_TO_NEXT_FRAME = 20;
+
     private final int frames_per_sprite;
     private final Image[] asset;
     private final Image standingAsset;
     private final String resource;
     private final ResourceGetter rg;
+    private final Direction currentFacingDirection;
     private int counter = 0;
     private int currentFrame = 0;
 
@@ -32,6 +35,8 @@ public class BombarderoSprite {
     public BombarderoSprite(final String resource, final ResourceGetter rg, final Direction facingDirection) {
         this.resource = resource;
         this.rg = rg;
+        this.currentFacingDirection = facingDirection;
+
         frames_per_sprite = getFramesFromPosition(facingDirection);
         asset = new Image[frames_per_sprite];
         for (int i = 1; i <= frames_per_sprite; i++) {
@@ -58,7 +63,7 @@ public class BombarderoSprite {
      */
     public void update() {
         counter++;
-        if (counter > 10) {
+        if (counter > TICKS_TO_NEXT_FRAME) {
             currentFrame = (currentFrame + 1) % frames_per_sprite;
         }
     }
@@ -87,6 +92,14 @@ public class BombarderoSprite {
      */
     public BombarderoSprite getNewSprite(final Direction dir) {
         return new BombarderoSprite(resource, rg, dir);
+    }
+
+    /**
+     * Returns the direction that the asset is pointing towards
+     * @return the direction the asset is pointing to
+     */
+    public Direction getCurrentFacingDirection() {
+        return currentFacingDirection;
     }
 
     private int getFramesFromPosition(final Direction facingDirection) {

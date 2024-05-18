@@ -34,7 +34,6 @@ public class BombarderoEngine extends Thread implements Engine {
             graphics.update();
             waitForNextFrame(currentCycleStartTime);
             previousCycleStartTime = currentCycleStartTime;
-            System.out.println("looping...");
         }
     }
 
