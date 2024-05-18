@@ -12,6 +12,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import it.unibo.bombardero.cell.Cell;
+import it.unibo.bombardero.cell.Cell.CellType;
+import it.unibo.bombardero.cell.PowerUp.PowerUp;
 import it.unibo.bombardero.core.KeyboardInput;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.utils.Utils;
@@ -25,9 +27,11 @@ public class GameCard extends JPanel {
     private final static int MISCHIEVOUS_PADDING = 23;
 
     private final ResourceGetter resourceGetter = new ResourceGetter();
-    private final BufferedImage grass_bg_image = resourceGetter.loadImage("grass_background");
-    private final BufferedImage map = resourceGetter.loadImage("map_square");
-    private final BufferedImage obstacle = resourceGetter.loadImage("other_textures/crate");
+    private final Image grass_bg_image = resourceGetter.loadImage("grass_background");
+    private final Image map = resourceGetter.loadImage("map_square");
+    private Image obstacle = resourceGetter.loadImage("other_textures/crate");
+    private Image unbreakable = resourceGetter.loadImage("powerup/skull");
+    /* TODO: import the rest of the static resources (first convert them to PNG) */
 
     private final JFrame parentFrame;
     private final ResizingEngine resizingEngine;
@@ -46,8 +50,9 @@ public class GameCard extends JPanel {
         this.parentFrame = parentFrame;
         this.resizingEngine = resizingEngine;
         this.controller = controller;
-        
         this.setMinimumSize(resizingEngine.getMapSize());
+
+        obstacle = obstacle.getScaledInstance(resizingEngine.getScaledCellSize(), resizingEngine.getScaledCellSize(), Image.SCALE_SMOOTH);
 
         cells = controller.getMap(); 
         player = controller.getMainPlayer();
@@ -77,19 +82,39 @@ public class GameCard extends JPanel {
             computeMapPlacingPoint().height,
             null
         );
-        /* Drawing the breakable obstacles, the bombs and the power ups (not done yet)*/
-        /* cells.entrySet().stream()
+        /* If the scale changes, then scale again the images */
+        if(resizingEngine.hasScaleChanged()) {
+            obstacle = obstacle.getScaledInstance((int)(resizingEngine.getScaledCellSize()), (int)(resizingEngine.getScaledCellSize()), Image.SCALE_SMOOTH);
+            /* TODO: scale the rest of the resources */
+        }
+        /* Drawing the breakable obstacles, the bombs and the power ups (TODO: not done yet) */
+        cells.entrySet().stream()
             .filter(entry -> entry.getValue().getCellType().equals(CellType.WALL_BREAKABLE))
             .forEach(entry -> {
+                Image img = obstacle;
+                if (entry.getValue().getCellType().equals(CellType.WALL_BREAKABLE)) {
+                    img = obstacle;
+                }
+                else if (entry.getValue().getCellType().equals(CellType.BOMB)) {
+                    img = unbreakable;
+                }
+                else if (entry.getValue().getCellType().equals(CellType.POWERUP)) {
+                    /* TODO: determine wich powerup and choose image */
+                }
+                else if (entry.getValue().getCellType().equals(CellType.FLAME)) {
+                    /* TODO: determine which direction and choose image */
+                }
+                else if (entry.getValue().getCellType().equals(CellType.WALL_UNBREAKABLE)) {
+                    /* TODO: choose image */
+                }
                 g2d.drawImage(
-                    obstacle.getScaledInstance((int)(resizingEngine.getScaledCellSize()), (int)(resizingEngine.getScaledCellSize()), Image.SCALE_SMOOTH),
+                    img,
                     computeCellPlacingPoint(entry.getKey()).width,
                     computeCellPlacingPoint(entry.getKey()).height,
                     null
                 );
-            }); */
+            });
         /* Drawing the player and the enemies */
-        /* TODO: FARE UNA SCALE PER CUI MOLTIPLICARE L'IMMAGINE DEL PLAYER PIANO PIANO CHE LA MAPPA DIVENTA GRANDE */
         Dimension playerPosition = computeCharacterPlacingPoint(controller.getMainPlayer().getCharacterPosition());
         g2d.drawImage(player_image.getScaledInstance(35, 55, Image.SCALE_SMOOTH),
             playerPosition.width, playerPosition.height,
@@ -123,7 +148,7 @@ public class GameCard extends JPanel {
                 enemySprite[i] = enemySprite[i].getNewSprite(enemies.get(i).getFacingDirection());
                 enemiesImages[i] = enemySprite[i].getStandingImage();
             }
-        } 
+        }
     }
 
     private Dimension computeMapPlacingPoint() {
