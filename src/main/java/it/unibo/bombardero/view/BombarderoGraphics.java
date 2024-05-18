@@ -87,7 +87,10 @@ public class BombarderoGraphics {
     }
 
     public void update() {
+        long time = System.nanoTime();
         gameCard.updateSprites();
         gameCard.repaint(0);
+        time = System.nanoTime() - time;
+        System.out.println("Render time: " + time);
     }
 }
