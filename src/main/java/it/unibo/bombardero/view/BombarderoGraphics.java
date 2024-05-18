@@ -32,6 +32,7 @@ public class BombarderoGraphics {
     private final JFrame frame; 
     private final JPanel deck;
     private final CardLayout layout = new CardLayout();
+    private final KeyboardInput keyInput;
 
     private GameCard gameCard;
     private GameoverCard endGameCard;
@@ -41,6 +42,9 @@ public class BombarderoGraphics {
         this.controller = new BombarderoController(this);
         this.frame = new JFrame("Bombardero: the Bomberman remake");
         this.deck = new JPanel(layout);
+
+        keyInput = new KeyboardInput(controller);
+        frame.addKeyListener(keyInput);
         
         frame.pack(); // calling pack on the frame generates the insets
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
