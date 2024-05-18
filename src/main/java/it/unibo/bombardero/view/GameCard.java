@@ -23,6 +23,7 @@ import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.character.Character;
+import it.unibo.bombardero.character.Direction;
 
 public class GameCard extends JPanel {
 
@@ -33,7 +34,6 @@ public class GameCard extends JPanel {
     private final BufferedImage map = resourceGetter.loadImage("map_square");
     private final BufferedImage obstacle = resourceGetter.loadImage("other_textures/crate");
 
-    private final BufferedImage player_image = resourceGetter.loadImage("character/main/walking/left/left1");
     private final JFrame parentFrame;
     private final ResizingEngine resizingEngine;
     private final Map<Pair, Cell> cells;
@@ -42,8 +42,10 @@ public class GameCard extends JPanel {
     private final Character player;
     private final List<Character> enemies;
     
-    // private final BombarderoSprite playerSprite;
-    private final List<BombarderoSprite> enemySprite;
+    private BombarderoSprite playerSprite;
+    private final BombarderoSprite[] enemySprite = new BombarderoSprite[Utils.NUM_OF_ENEMIES];
+    private Image player_image;
+    private final Image[] enemiesImages = new Image[Utils.NUM_OF_ENEMIES];
 
     public GameCard(final JFrame parentFrame, final ResizingEngine resizingEngine, final Controller controller) {
         this.parentFrame = parentFrame;
@@ -56,7 +58,12 @@ public class GameCard extends JPanel {
         player = controller.getMainPlayer();
         enemies = controller.getEnemies();
 
-        enemySprite = new ArrayList<>();
+        playerSprite = new BombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN);
+        player_image = playerSprite.getStandingImage();
+        for (int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
+            enemySprite[i] = new BombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN);
+            enemiesImages[i] = enemySprite[i].getStandingImage();
+        }
     }
 
     @Override
@@ -87,22 +94,39 @@ public class GameCard extends JPanel {
                 );
             });
         /* Drawing the player and the enemies */
+        updateSprites();
         /* TODO: FARE UNA SCALE PER CUI MOLTIPLICARE L'IMMAGINE DEL PLAYER PIANO PIANO CHE LA MAPPA DIVENTA GRANDE */
         Dimension playerPosition = computeCharacterPlacingPoint(controller.getMainPlayer().getCharacterPosition());
-        g2d.drawImage(player_image.getScaledInstance(35, 55, Image.SCALE_SMOOTH), /* TODO: get the frame from the sprite */
+        g2d.drawImage(player_image.getScaledInstance(35, 55, Image.SCALE_SMOOTH),
             playerPosition.width, playerPosition.height,
             null
         );
-        /*
         for(int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
-            Dimension enemyPos = controller.getEnemies().get(i).getCharacterPosition();
-            g2d.drawImage(, enemyPos.width, enemyPos.height, null);
-        } */
+            Dimension enemyPos = computeCharacterPlacingPoint(controller.getEnemies().get(i).getCharacterPosition());
+            g2d.drawImage(enemiesImages[i], enemyPos.width, enemyPos.height, null);
+        }
         
     }
 
     private void updateSprites() {
-
+        playerSprite.update();
+        if (player.getFacingDirection().equals(Direction.DEFAULT)) {
+            player_image = playerSprite.getStandingImage();
+        }
+        else {
+            playerSprite = playerSprite.getNewSprite(player.getFacingDirection());
+            player_image = playerSprite.getImage();
+        }
+        for (int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
+            enemySprite[i].update();
+            if(enemies.get(i).getFacingDirection().equals(Direction.DEFAULT)) {
+                enemiesImages[i] = enemySprite[i].getStandingImage();
+            }
+            else {
+                enemySprite[i] = enemySprite[i].getNewSprite(enemies.get(i).getFacingDirection());
+                enemiesImages[i] = enemySprite[i].getStandingImage();
+            }
+        }
     }
 
     private Dimension computeMapPlacingPoint() {
