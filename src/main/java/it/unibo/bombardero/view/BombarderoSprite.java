@@ -11,7 +11,7 @@ import it.unibo.bombardero.character.Direction;
  */
 public class BombarderoSprite {  
 
-    private final static int TICKS_TO_NEXT_FRAME = 20;
+    private final static int TICKS_TO_NEXT_FRAME = 15;
 
     private final int frames_per_sprite;
     private final Image[] asset;
