@@ -53,7 +53,6 @@ public class BombarderoGraphics {
         deck.add(MENU_CARD, menuCard);
         layout.addLayoutComponent(menuCard, MENU_CARD);
         deck.validate();
-        System.out.println("Menu card initialized");
 
         /* This listener calls for the ResizingEngine to dinamically update the 
         * frame's size when it is resized, see the implementation for more */
@@ -81,11 +80,10 @@ public class BombarderoGraphics {
         layout.addLayoutComponent(gameCard, GAME_CARD);
         layout.addLayoutComponent(endGameCard, END_CARD);
         deck.validate();
-        System.out.println("Game card initialized");
     }
 
     public void update() {
+        gameCard.updateSprites();
         gameCard.repaint(1);
-        System.out.println("Graphics updated");
     }
 }
