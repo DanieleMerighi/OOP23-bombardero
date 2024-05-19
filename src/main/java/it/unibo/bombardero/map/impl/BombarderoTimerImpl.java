@@ -2,12 +2,19 @@ package it.unibo.bombardero.map.impl;
 
 import it.unibo.bombardero.map.api.BombarderoTimer;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/** 
+ * This class is a simple timer that keeps track of the time left
+ * and returns it in both milliseconds and formatted {@code mm:ss}
+ * format.
+ * <p> The game time is hard-coded into the class and is equal to two minutes.
+ */
 public final class BombarderoTimerImpl implements BombarderoTimer {
 
-    /* Magic number for formatting the time properly */
-    private final static int SECONDS_TO_MILLIS = 1000;
-    private final static int MINUTES_TO_SECONDS = 60;
-    private final static String TIME_SEPARATOR = ":";
+    private final static long GAME_TIME = 120000L;
+    private final static SimpleDateFormat format = new SimpleDateFormat("mm:ss");
 
     private long startTime = 0L;
     private long timeLeft = 0L;
@@ -17,12 +24,12 @@ public final class BombarderoTimerImpl implements BombarderoTimer {
         this.startTime = System.currentTimeMillis();
     }
 
-    /* TODO: adjust logic in game timer, time left is NOT calculated like this */
     @Override
     public void updateTimer() {
-        this.timeLeft = System.currentTimeMillis() - startTime;
+        this.timeLeft = GAME_TIME - (System.currentTimeMillis() - startTime);
     }
 
+    @Override
     public long getTimeLeft() {
         this.updateTimer();
         return this.timeLeft;
@@ -30,10 +37,8 @@ public final class BombarderoTimerImpl implements BombarderoTimer {
 
     @Override
     public String getFormattedTimeLeft() {
-        double secondsLeft = (System.currentTimeMillis() - this.startTime) / SECONDS_TO_MILLIS;
-        return Integer.toString((int) Math.ceil(secondsLeft / BombarderoTimerImpl.MINUTES_TO_SECONDS))
-            + BombarderoTimerImpl.TIME_SEPARATOR
-            + Integer.toString((int) secondsLeft % BombarderoTimerImpl.MINUTES_TO_SECONDS);
+        Date date = new Date(timeLeft);
+        return format.format(date);
     }
     
 }
