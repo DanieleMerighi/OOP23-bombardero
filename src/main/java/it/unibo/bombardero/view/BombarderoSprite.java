@@ -2,7 +2,6 @@ package it.unibo.bombardero.view;
 
 import java.awt.Image;
 
-import edu.umd.cs.findbugs.annotations.ReturnValuesAreNonnullByDefault;
 import it.unibo.bombardero.character.Direction;
 
 /** This class represents an immutable single instance of a animated cell, that requires being updated
@@ -11,9 +10,8 @@ import it.unibo.bombardero.character.Direction;
  */
 public class BombarderoSprite {  
 
-    private final static int TICKS_TO_NEXT_FRAME = 15;
-
-    private final int frames_per_sprite;
+    private final int ticksPerFrame;
+    private final int framesPerSprite;
     private final Image[] asset;
     private final Image standingAsset;
     private final String resource;
@@ -36,10 +34,11 @@ public class BombarderoSprite {
         this.resource = resource;
         this.rg = rg;
         this.currentFacingDirection = facingDirection;
+        framesPerSprite = getFramesFromPosition(facingDirection);
+        ticksPerFrame = (framesPerSprite == 2 ? 16 : 7);
 
-        frames_per_sprite = getFramesFromPosition(facingDirection);
-        asset = new Image[frames_per_sprite];
-        for (int i = 1; i <= frames_per_sprite; i++) {
+        asset = new Image[framesPerSprite];
+        for (int i = 1; i <= framesPerSprite; i++) {
             asset[i - 1] = rg.loadImage(
                 resource
                 + "/"
@@ -63,8 +62,9 @@ public class BombarderoSprite {
      */
     public void update() {
         counter++;
-        if (counter > TICKS_TO_NEXT_FRAME) {
-            currentFrame = (currentFrame + 1) % frames_per_sprite;
+        if (counter >= ticksPerFrame) {
+            currentFrame = (currentFrame + 1) % framesPerSprite;
+            counter = 0;
         }
     }
 
@@ -73,7 +73,7 @@ public class BombarderoSprite {
      * @return the current frame of the sprite
      */
     public Image getImage() {
-        /* QUANDO ANDRA' LA VERSIONE NAIVE, PROVARE: (int)Math.ceil(counter / frames_per_sprite) */
+        /* QUANDO ANDRA' LA VERSIONE NAIVE, PROVARE: (int)Math.ceil(counter / framesPerSprite_sprite) */
         return asset[currentFrame];
     }
 
