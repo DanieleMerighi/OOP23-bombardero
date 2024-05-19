@@ -4,6 +4,7 @@ import java.util.List;
 
 import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Flame.FlameType;
+import it.unibo.bombardero.map.api.BombarderoTimer;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.character.Character;
@@ -16,7 +17,7 @@ public interface GameManager {
 
     void startTimer();
 
-    String getTimeLeftAsString();
+    BombarderoTimer getTimer();
 
     List<Character> getEnemies();
 

@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +29,7 @@ public class GameCard extends JPanel {
 
     /* A mischevious padding no one knows its reason to exist: */
     private final static int MISCHIEVOUS_PADDING = 23;
+    private final static SimpleDateFormat format = new SimpleDateFormat("mm:ss");
 
     /* Game resources: */
     private final ResourceGetter resourceGetter = new ResourceGetter();
@@ -106,7 +109,7 @@ public class GameCard extends JPanel {
             null
         );
         /* Load the game overlay, including: the clock logo, the time left and the players icons with the "alive" status */
-        g2d.drawString(controller.getTimeLeftAsString(), 100, overlayLevel);
+        g2d.drawString(getFormattedTime(), 100, overlayLevel);
         /* Drawing the breakable obstacles, the bombs and the power ups (TODO: not done yet) */
         for (int i = 0; i < Utils.MAP_ROWS; i++) {
             for (int j = 0; j < Utils.MAP_COLS; j++) {
@@ -198,4 +201,8 @@ public class GameCard extends JPanel {
     private int computeOverlayLevel() {
         return computeMapPlacingPoint().height;
     }
+
+    private String getFormattedTime() {
+        return format.format(new Date(controller.getTimeLeft()));
+    }   
 }

@@ -58,8 +58,8 @@ public class BombarderoController implements Controller {
     }
 
     @Override
-    public String getTimeLeftAsString() {
-        return manager.getTimeLeftAsString();
+    public long getTimeLeft() {
+        return manager.getTimer().getTimeLeft();
     }
     
 }

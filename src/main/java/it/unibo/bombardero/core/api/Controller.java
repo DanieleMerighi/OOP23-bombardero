@@ -24,6 +24,6 @@ public interface Controller {
 
     Map<Pair, Cell> getMap();
 
-    String getTimeLeftAsString();
+    long getTimeLeft();
 
 }
