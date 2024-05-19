@@ -17,6 +17,7 @@ public final class BombarderoTimerImpl implements BombarderoTimer {
         this.startTime = System.currentTimeMillis();
     }
 
+    /* TODO: adjust logic in game timer, time left is NOT calculated like this */
     @Override
     public void updateTimer() {
         this.timeLeft = System.currentTimeMillis() - startTime;
