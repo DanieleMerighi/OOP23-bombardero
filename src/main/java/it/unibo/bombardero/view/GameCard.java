@@ -1,6 +1,7 @@
 package it.unibo.bombardero.view;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -24,36 +25,48 @@ import it.unibo.bombardero.character.Direction;
 
 public class GameCard extends JPanel {
 
+    /* A mischevious padding no one knows its reason to exist: */
     private final static int MISCHIEVOUS_PADDING = 23;
 
+    /* Game resources: */
     private final ResourceGetter resourceGetter = new ResourceGetter();
     private final Image grass_bg_image = resourceGetter.loadImage("grass_background");
     private final Image map = resourceGetter.loadImage("map_square_nowalls");
     private Image obstacle = resourceGetter.loadImage("obstacles/cassa_prosp2");
     private Image unbreakable = resourceGetter.loadImage("obstacles/wall_prosp");
+    private Image clock = resourceGetter.loadImage("overlay/clock");
+    private final Font font = resourceGetter.loadFont("clock_font");
     /* TODO: import the rest of the static resources (first convert them to PNG) */
 
+    /* References to model components: */
     private final JFrame parentFrame;
     private final ResizingEngine resizingEngine;
     private final Map<Pair, Cell> cells;
     private final Controller controller;
-
     private final Character player;
     private final List<Character> enemies;
     
+    /* Sprites: */
     private BombarderoSprite playerSprite;
     private final BombarderoSprite[] enemySprite = new BombarderoSprite[Utils.NUM_OF_ENEMIES];
     private Image player_image;
     private final Image[] enemiesImages = new Image[Utils.NUM_OF_ENEMIES];
+
+    /* Static positions for quick access: */
+    private Dimension mapPlacingPoint;
+    private int overlayLevel;
 
     public GameCard(final JFrame parentFrame, final ResizingEngine resizingEngine, final Controller controller) {
         this.parentFrame = parentFrame;
         this.resizingEngine = resizingEngine;
         this.controller = controller;
         this.setMinimumSize(resizingEngine.getMapSize());
+        mapPlacingPoint = computeMapPlacingPoint();
+        overlayLevel = computeOverlayLevel();
 
         obstacle = obstacle.getScaledInstance((int)(resizingEngine.getScale() * 32), (int)(resizingEngine.getScale() * 39), Image.SCALE_SMOOTH);
         unbreakable = unbreakable.getScaledInstance((int)(resizingEngine.getScale() * 32), (int)(resizingEngine.getScale() * 39), Image.SCALE_SMOOTH);
+        clock = clock.getScaledInstance(resizingEngine.getScaledCellSize(), resizingEngine.getScaledCellSize(), Image.SCALE_SMOOTH);
 
         cells = controller.getMap(); 
         player = controller.getMainPlayer();
@@ -65,11 +78,20 @@ public class GameCard extends JPanel {
             enemySprite[i] = new BombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN);
             enemiesImages[i] = enemySprite[i].getStandingImage();
         }
+
+        this.setFont(font);
     }
 
     @Override
     public void paint(Graphics g) {
         Graphics2D g2d = (Graphics2D)g;
+        /* If the scale changes, then scale again the images */
+        if(resizingEngine.hasScaleChanged()) {
+            obstacle = obstacle.getScaledInstance((int)(resizingEngine.getScale() * 32), (int)(resizingEngine.getScale() * 39), Image.SCALE_SMOOTH);
+            mapPlacingPoint = computeMapPlacingPoint();
+            overlayLevel = computeOverlayLevel();
+            /* TODO: scale the rest of the resources */
+        }
         /* Drawing the Map and the Background */
         Dimension actualMapSize = resizingEngine.getMapSize();
         Dimension actualBgSize = resizingEngine.getBackgroundImageSize();
@@ -83,11 +105,8 @@ public class GameCard extends JPanel {
             computeMapPlacingPoint().height,
             null
         );
-        /* If the scale changes, then scale again the images */
-        if(resizingEngine.hasScaleChanged()) {
-            obstacle = obstacle.getScaledInstance((int)(resizingEngine.getScale() * 32), (int)(resizingEngine.getScale() * 39), Image.SCALE_SMOOTH);
-            /* TODO: scale the rest of the resources */
-        }
+        /* Load the game overlay, including: the clock logo, the time left and the players icons with the "alive" status */
+        g2d.drawString(controller.getTimeLeftAsString(), 100, overlayLevel);
         /* Drawing the breakable obstacles, the bombs and the power ups (TODO: not done yet) */
         for (int i = 0; i < Utils.MAP_ROWS; i++) {
             for (int j = 0; j < Utils.MAP_COLS; j++) {
@@ -161,8 +180,8 @@ public class GameCard extends JPanel {
 
     private Dimension computeCellPlacingPoint(Pair coordinate) {
         return new Dimension(
-            computeMapPlacingPoint().width + (int)(resizingEngine.getScaledCellSize() * coordinate.row()) + resizingEngine.getScaledCellSize() + (int)(resizingEngine.getScale() * MISCHIEVOUS_PADDING),
-            computeMapPlacingPoint().height + (int)(resizingEngine.getScaledCellSize() * coordinate.col()) + 2*resizingEngine.getScaledCellSize() - (int)(7 * resizingEngine.getScale())
+            mapPlacingPoint.width + (int)(resizingEngine.getScaledCellSize() * coordinate.row()) + resizingEngine.getScaledCellSize() + (int)(resizingEngine.getScale() * MISCHIEVOUS_PADDING),
+            mapPlacingPoint.height + (int)(resizingEngine.getScaledCellSize() * coordinate.col()) + 2*resizingEngine.getScaledCellSize() - (int)(7 * resizingEngine.getScale())
         );
     }
 
@@ -174,5 +193,9 @@ public class GameCard extends JPanel {
             (int)(Math.floor(playerPosition.row() * resizingEngine.getScaledCellSize()) - Math.floorDiv(Utils.PLAYER_WIDTH, 2)),
             (int)(Math.floor(playerPosition.col() * resizingEngine.getScaledCellSize()) - Math.floorDiv(Utils.PLAYER_HEIGHT, 2))
         );
+    }
+
+    private int computeOverlayLevel() {
+        return computeMapPlacingPoint().height;
     }
 }
