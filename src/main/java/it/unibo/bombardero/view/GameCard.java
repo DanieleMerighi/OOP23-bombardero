@@ -114,28 +114,7 @@ public class GameCard extends JPanel {
                 }
             
             }
-        } /*
-        cells.entrySet().stream()
-            .forEach(entry -> {
-                Image img = obstacle;
-                switch (entry.getValue().getCellType()) {
-                    case WALL_BREAKABLE:
-                        img = obstacle;
-                        break;
-                    case WALL_UNBREAKABLE:
-                        img = unbreakable;
-                        break;
-                    default:
-                        img = obstacle;
-                        break;
-                }
-                g2d.drawImage(
-                    img,
-                    computeCellPlacingPoint(entry.getKey()).width,
-                    computeCellPlacingPoint(entry.getKey()).height,
-                    null
-                );
-            }); */
+        }
         /* Drawing the player and the enemies */
         Dimension playerPosition = computeCharacterPlacingPoint(controller.getMainPlayer().getCharacterPosition());
         g2d.drawImage(player_image.getScaledInstance(35, 55, Image.SCALE_SMOOTH),
