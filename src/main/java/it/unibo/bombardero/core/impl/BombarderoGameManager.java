@@ -67,6 +67,10 @@ public class BombarderoGameManager implements GameManager {
         gameTimer.startTimer();
     }
 
+    public String getTimeLeftAsString() {
+        return gameTimer.getFormattedTimeLeft();
+    }
+
     @Override
     public List<Character> getEnemies() {
         return List.copyOf(enemies);

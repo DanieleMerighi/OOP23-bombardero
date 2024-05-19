@@ -56,5 +56,10 @@ public class BombarderoController implements Controller {
     public Map<Pair, Cell> getMap() {
         return manager.getGameMap().getMap();
     }
+
+    @Override
+    public String getTimeLeftAsString() {
+        return manager.getTimeLeftAsString();
+    }
     
 }

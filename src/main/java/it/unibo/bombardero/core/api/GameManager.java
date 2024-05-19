@@ -16,6 +16,8 @@ public interface GameManager {
 
     void startTimer();
 
+    String getTimeLeftAsString();
+
     List<Character> getEnemies();
 
     Character getPlayer();
