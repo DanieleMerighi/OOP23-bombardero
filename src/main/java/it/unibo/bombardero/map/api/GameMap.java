@@ -13,10 +13,16 @@ import it.unibo.bombardero.cell.Flame;
 public interface GameMap {
 
     /**
-     * Updates the dynamic aspect of the map, calling the {@link void#update()} method of
-     * MapManager.
+     * Updates the dynamic aspect of the map, calling the {@code update()} method of
+     * {@link MapManager}.
      */
     void update();
+ 
+    /** 
+     * Starts collapsing the map adding one wall at a time,
+     * in a spiral way, every 60 ticks.
+     */
+    void triggerCollapse();
 
     /**
      * Checks if the coordinate is free, if so adds the bomb to the cell.

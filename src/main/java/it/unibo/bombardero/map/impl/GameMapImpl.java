@@ -6,6 +6,7 @@ import java.util.Map;
 import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Wall;
+import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.map.api.GameMap;
@@ -20,21 +21,21 @@ public final class GameMapImpl implements GameMap {
 
     /* Using an HashMap to hold the information about the map's tiles: */
     private final Map<Pair, Cell> map = new HashMap<>();
-    private final MapManager manager;
+    private final MapManager mapManager;
 
     /** 
      * Constructs a new Game Map generating unbreakable walls, to skip the wall generation use {@#GameMapImpl(boolean)}.
      */
     public GameMapImpl() {
-        this.manager = new MapManagerImpl(this);
-        manager.placeUnbreakableWalls();
-        manager.placeBreakableWalls();
+        this.mapManager = new MapManagerImpl(this);
+        mapManager.placeUnbreakableWalls();
+        mapManager.placeBreakableWalls();
     }
 
     /**
      * Creates a new Game Map with the option to opt out of the walls generation.
      * <p>
-     * NOTE: This constructor has been created for testing purposes and allow to skip the 
+     * NOTE: This constructor has been created for testing purposes and allows to skip the 
      * obstacle generation, producing a map with only unbreakable obstacles.
      * The breakable obstacles can be generated later anyway (potential untested side effects)
      * by calling the manager's method.
@@ -42,16 +43,21 @@ public final class GameMapImpl implements GameMap {
      * @param wallGeneration wether the walls have to be generated or not
     */
     public GameMapImpl(final boolean wallGeneration) {
-        this.manager = new MapManagerImpl(this);
-        manager.placeUnbreakableWalls();
+        this.mapManager = new MapManagerImpl(this);
+        mapManager.placeUnbreakableWalls();
         if (wallGeneration) {
-            manager.placeBreakableWalls();
+            mapManager.placeBreakableWalls();
         }
     }
 
     @Override
     public void update() {
-        this.manager.update();
+        mapManager.update();
+    }
+
+    @Override
+    public void triggerCollapse() {
+        mapManager.triggerCollapse();
     }
 
     @Override

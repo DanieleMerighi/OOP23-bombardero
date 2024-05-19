@@ -26,7 +26,7 @@ public interface MapManager {
      * (e.g. collapse in spiral form, or from left to right), it has been estabilished that the 
      * walls may collapse in a spiral form.
      */
-    void triggerArenaCollapse();
+    void triggerCollapse();
 
     /** 
      * Updates the dynamic aspect of the mapManager, if the manager is in collapse mode then it
