@@ -28,9 +28,9 @@ public class GameCard extends JPanel {
 
     private final ResourceGetter resourceGetter = new ResourceGetter();
     private final Image grass_bg_image = resourceGetter.loadImage("grass_background");
-    private final Image map = resourceGetter.loadImage("map_square");
-    private Image obstacle = resourceGetter.loadImage("other_textures/crate");
-    private Image unbreakable = resourceGetter.loadImage("powerup/skull");
+    private final Image map = resourceGetter.loadImage("map_square_nowalls");
+    private Image obstacle = resourceGetter.loadImage("obstacles/cassa_prosp2");
+    private Image unbreakable = resourceGetter.loadImage("obstacles/wall_prosp");
     /* TODO: import the rest of the static resources (first convert them to PNG) */
 
     private final JFrame parentFrame;
@@ -52,7 +52,8 @@ public class GameCard extends JPanel {
         this.controller = controller;
         this.setMinimumSize(resizingEngine.getMapSize());
 
-        obstacle = obstacle.getScaledInstance(resizingEngine.getScaledCellSize(), resizingEngine.getScaledCellSize(), Image.SCALE_SMOOTH);
+        obstacle = obstacle.getScaledInstance((int)(resizingEngine.getScale() * 32), (int)(resizingEngine.getScale() * 39), Image.SCALE_SMOOTH);
+        unbreakable = unbreakable.getScaledInstance((int)(resizingEngine.getScale() * 32), (int)(resizingEngine.getScale() * 39), Image.SCALE_SMOOTH);
 
         cells = controller.getMap(); 
         player = controller.getMainPlayer();
@@ -84,28 +85,49 @@ public class GameCard extends JPanel {
         );
         /* If the scale changes, then scale again the images */
         if(resizingEngine.hasScaleChanged()) {
-            obstacle = obstacle.getScaledInstance((int)(resizingEngine.getScaledCellSize()), (int)(resizingEngine.getScaledCellSize()), Image.SCALE_SMOOTH);
+            obstacle = obstacle.getScaledInstance((int)(resizingEngine.getScale() * 32), (int)(resizingEngine.getScale() * 39), Image.SCALE_SMOOTH);
             /* TODO: scale the rest of the resources */
         }
         /* Drawing the breakable obstacles, the bombs and the power ups (TODO: not done yet) */
+        for (int i = 0; i < Utils.MAP_ROWS; i++) {
+            for (int j = 0; j < Utils.MAP_COLS; j++) {
+                if (cells.containsKey(new Pair(i, j))) {
+                    Cell entry = cells.get(new Pair(i ,j));
+                    Image img = unbreakable;
+                    switch (entry.getCellType()) {
+                        case WALL_BREAKABLE:
+                            img = obstacle;
+                            break;
+                        case WALL_UNBREAKABLE:
+                            img = unbreakable;
+                            break;
+                        default:
+                            img = unbreakable;
+                            break;
+                    }
+                    g2d.drawImage(
+                        img,
+                        computeCellPlacingPoint(new Pair(i, j)).width,
+                        computeCellPlacingPoint(new Pair(i, j)).height,
+                        null
+                    );
+                }
+            
+            }
+        } /*
         cells.entrySet().stream()
-            .filter(entry -> entry.getValue().getCellType().equals(CellType.WALL_BREAKABLE))
             .forEach(entry -> {
                 Image img = obstacle;
-                if (entry.getValue().getCellType().equals(CellType.WALL_BREAKABLE)) {
-                    img = obstacle;
-                }
-                else if (entry.getValue().getCellType().equals(CellType.BOMB)) {
-                    img = unbreakable;
-                }
-                else if (entry.getValue().getCellType().equals(CellType.POWERUP)) {
-                    /* TODO: determine wich powerup and choose image */
-                }
-                else if (entry.getValue().getCellType().equals(CellType.FLAME)) {
-                    /* TODO: determine which direction and choose image */
-                }
-                else if (entry.getValue().getCellType().equals(CellType.WALL_UNBREAKABLE)) {
-                    /* TODO: choose image */
+                switch (entry.getValue().getCellType()) {
+                    case WALL_BREAKABLE:
+                        img = obstacle;
+                        break;
+                    case WALL_UNBREAKABLE:
+                        img = unbreakable;
+                        break;
+                    default:
+                        img = obstacle;
+                        break;
                 }
                 g2d.drawImage(
                     img,
@@ -113,7 +135,7 @@ public class GameCard extends JPanel {
                     computeCellPlacingPoint(entry.getKey()).height,
                     null
                 );
-            });
+            }); */
         /* Drawing the player and the enemies */
         Dimension playerPosition = computeCharacterPlacingPoint(controller.getMainPlayer().getCharacterPosition());
         g2d.drawImage(player_image.getScaledInstance(35, 55, Image.SCALE_SMOOTH),
@@ -161,7 +183,7 @@ public class GameCard extends JPanel {
     private Dimension computeCellPlacingPoint(Pair coordinate) {
         return new Dimension(
             computeMapPlacingPoint().width + (int)(resizingEngine.getScaledCellSize() * coordinate.row()) + resizingEngine.getScaledCellSize() + (int)(resizingEngine.getScale() * MISCHIEVOUS_PADDING),
-            computeMapPlacingPoint().height + (int)(resizingEngine.getScaledCellSize() * coordinate.col()) + 2*resizingEngine.getScaledCellSize()
+            computeMapPlacingPoint().height + (int)(resizingEngine.getScaledCellSize() * coordinate.col()) + 2*resizingEngine.getScaledCellSize() - (int)(7 * resizingEngine.getScale())
         );
     }
 
