@@ -45,6 +45,10 @@ public class BombarderoGameManager implements GameManager {
 
     @Override
     public void updateGame() {
+        gameTimer.updateTimer();
+        if (gameTimer.isOver()) {
+            map.triggerCollapse();
+        }
         map.update();
         if (player.isAlive()) {
             player.update();
@@ -54,7 +58,6 @@ public class BombarderoGameManager implements GameManager {
                 enemy.update();
             }
         });
-        gameTimer.updateTimer();
     }
 
     @Override
@@ -67,8 +70,8 @@ public class BombarderoGameManager implements GameManager {
         gameTimer.startTimer();
     }
 
-    public String getTimeLeftAsString() {
-        return gameTimer.getFormattedTimeLeft();
+    public BombarderoTimer getTimer() {
+        return gameTimer;
     }
 
     @Override
