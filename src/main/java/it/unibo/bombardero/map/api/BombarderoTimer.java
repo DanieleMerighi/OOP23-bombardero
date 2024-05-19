@@ -27,10 +27,9 @@ public interface BombarderoTimer {
     long getTimeLeft();
 
     /**
-     * Formats the time properly for displaying as such: "mm:ss" and 
-     * returns a String type.
-     * @return the properly formatted time.
+     * Wether the time is over.
+     * @return wether the time is over or not.
      */
-    String getFormattedTimeLeft();
+    boolean isOver();
 
 }
