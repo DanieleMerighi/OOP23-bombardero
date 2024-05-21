@@ -9,10 +9,10 @@ public class PowerUpImpl extends Cell implements PowerUp{
     private PowerUpType type;
     private Consumer<Character> effect;
 
-    public PowerUpImpl(final PowerUpType type, final Consumer<Character> effect) {
+    public PowerUpImpl(final PowerUpType type, final PowerUpEffectStrategy strategy) {
         super(CellType.POWERUP);
         this.type = type;
-        this.effect = effect;
+        this.effect = strategy.getEffect();
     }
 
     @Override
