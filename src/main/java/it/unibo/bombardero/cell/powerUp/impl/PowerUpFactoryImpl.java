@@ -1,4 +1,4 @@
-package it.unibo.bombardero.cell.powerUp;
+package it.unibo.bombardero.cell.powerUp.impl;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,6 +9,10 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.math3.distribution.EnumeratedDistribution;
 import org.apache.commons.math3.util.Pair;
+
+import it.unibo.bombardero.cell.powerUp.api.PowerUp;
+import it.unibo.bombardero.cell.powerUp.api.PowerUpFactory;
+import it.unibo.bombardero.cell.powerUp.api.PowerUpType;
 
 
 public class PowerUpFactoryImpl implements PowerUpFactory {

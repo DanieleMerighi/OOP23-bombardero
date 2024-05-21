@@ -1,4 +1,4 @@
-package it.unibo.bombardero.cell.powerUp;
+package it.unibo.bombardero.cell.powerUp.api;
 
 public interface PowerUpFactory {
     

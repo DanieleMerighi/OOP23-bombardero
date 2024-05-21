@@ -1,9 +1,12 @@
-package it.unibo.bombardero.cell.powerUp;
+package it.unibo.bombardero.cell.powerUp.impl;
 
 import java.util.function.Consumer;
 
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.cell.Cell;
+import it.unibo.bombardero.cell.powerUp.api.PowerUp;
+import it.unibo.bombardero.cell.powerUp.api.PowerUpEffectStrategy;
+import it.unibo.bombardero.cell.powerUp.api.PowerUpType;
 
 public class PowerUpImpl extends Cell implements PowerUp{
     private PowerUpType type;

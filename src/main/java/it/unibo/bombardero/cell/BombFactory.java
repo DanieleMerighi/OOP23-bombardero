@@ -3,7 +3,7 @@ package it.unibo.bombardero.cell;
 import java.util.Optional;
 
 import it.unibo.bombardero.cell.Cell.CellType;
-import it.unibo.bombardero.cell.powerUp.PowerUpType;
+import it.unibo.bombardero.cell.powerUp.api.PowerUpType;
 import it.unibo.bombardero.map.api.Pair;
 
 public interface BombFactory {
