@@ -1,27 +1,10 @@
-package it.unibo.bombardero.cell.PowerUp;
-
-import java.util.function.Consumer;
+package it.unibo.bombardero.cell.powerUp;
 
 import it.unibo.bombardero.character.Character;
-import it.unibo.bombardero.cell.Cell;
 
-public class PowerUp extends Cell {
-    private PowerUpType type;
-    private Consumer<Character> effect;
+public interface PowerUp {
 
-    public PowerUp(final PowerUpType type, final Consumer<Character> effect) {
-        super(CellType.POWERUP);
-        this.type = type;
-        this.effect = effect;
-    }
+    public PowerUpType getType();
 
-    public PowerUpType getType() {
-        return type;
-    }
-
-    public void applyEffect(Character character) {
-        effect.accept(character);
-    }
-
-    
+    public void applyEffect(Character character);
 }

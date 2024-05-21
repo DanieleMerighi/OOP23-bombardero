@@ -1,4 +1,4 @@
-package it.unibo.bombardero.cell.PowerUp;
+package it.unibo.bombardero.cell.powerUp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +18,7 @@ public class PowerUpFactoryImpl implements PowerUpFactory {
     public PowerUp createPowerUp() {
         PowerUpType powerUpType = extractPowerUp();
         Consumer<Character> effect = createEffect(powerUpType);
-        return new PowerUp(powerUpType, effect);
+        return new PowerUpImpl(powerUpType, effect);
 
     }
 
