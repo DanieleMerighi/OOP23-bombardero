@@ -8,7 +8,7 @@ public class MinusOneBombEffectStrategy implements PowerUpEffectStrategy{
 
     @Override
     public Consumer<Character> getEffect() {
-        return character -> character.increaseNumBomb();
+        return character -> character.decreaseNumBomb();
     }
     
 }
