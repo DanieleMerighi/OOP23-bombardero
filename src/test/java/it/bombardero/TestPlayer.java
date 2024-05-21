@@ -7,10 +7,14 @@ import org.junit.jupiter.api.Test;
 
 import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Flame.FlameType;
+import it.unibo.bombardero.cell.powerUp.api.PowerUp;
+import it.unibo.bombardero.cell.powerUp.api.PowerUpFactory;
+import it.unibo.bombardero.cell.powerUp.impl.PowerUpFactoryImpl;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.character.Player;
 import it.unibo.bombardero.core.api.GameManager;
+import it.unibo.bombardero.map.api.BombarderoTimer;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
@@ -51,15 +55,20 @@ public class TestPlayer {
 
         // Setting player direction
         this.manager.getPlayer().setFacingDirection(Direction.RIGHT);
-        
+
         // Setting player speed
         this.manager.getPlayer().setSpeed(0.02f);
 
         // Setting the number of update and calling them
-        int updateNumeber=60; // Number of updates done
+        int updateNumeber = 60; // Number of updates done
         IntStream.range(0, updateNumeber).forEach(n -> this.manager.getPlayer().update());
-        
-        assertEquals(spawnCoord.sum(new Coord(this.manager.getPlayer().getSpeed() * this.manager.getPlayer().getFacingDirection().getDy() * updateNumeber, this.manager.getPlayer().getSpeed() * this.manager.getPlayer().getFacingDirection().getDx() * updateNumeber)), manager.getPlayer().getCharacterPosition());
+
+        assertEquals(spawnCoord.sum(new Coord(
+                this.manager.getPlayer().getSpeed() * this.manager.getPlayer().getFacingDirection().getDy()
+                        * updateNumeber,
+                this.manager.getPlayer().getSpeed() * this.manager.getPlayer().getFacingDirection().getDx()
+                        * updateNumeber)),
+                manager.getPlayer().getCharacterPosition());
     }
 
     private static class TestGameManager implements GameManager {
@@ -136,6 +145,12 @@ public class TestPlayer {
         public void startTimer() {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'startTimer'");
+        }
+
+        @Override
+        public BombarderoTimer getTimer() {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'getTimer'");
         }
     }
 
