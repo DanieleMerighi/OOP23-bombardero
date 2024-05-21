@@ -12,5 +12,4 @@ public class PiercingBombEffectStrategy implements PowerUpEffectStrategy {
     public Consumer<Character> getEffect() {
         return character -> character.setBombType(Optional.of(PowerUpType.PIERCING_BOMB));
     }
-
 }

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 
-public class SkullEffectStrategy implements PowerUpEffectStrategy{
+public class SkullEffectStrategy implements PowerUpEffectStrategy {
 
     @Override
     public Consumer<Character> getEffect() {
@@ -23,5 +23,4 @@ public class SkullEffectStrategy implements PowerUpEffectStrategy{
                 skull.add(character -> character.setNumBomb(0));
                 return skull.get(0);
     }
-    
 }
