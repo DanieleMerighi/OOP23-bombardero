@@ -54,4 +54,10 @@ public interface Engine extends Runnable {
      */
     void endGameLoop();
 
+    /**
+     * Wether the game loop is interrupted or not (and its waiting
+     * got a notification).
+     * @return wether the game loop thread is interrupted or not
+     */
+    boolean isInterrupted();
 }
