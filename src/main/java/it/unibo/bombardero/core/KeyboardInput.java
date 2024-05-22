@@ -19,6 +19,12 @@ public class KeyboardInput implements KeyListener {
     // Controller instance to handle player actions
     private final Controller controller;
 
+    // Directions for checks
+    private boolean UP;
+    private boolean LEFT;
+    private boolean DOWN;
+    private boolean RIGHT;
+
     /**
      * Constructs a new KeyboardInput istance.
      *
@@ -50,7 +56,7 @@ public class KeyboardInput implements KeyListener {
                 // System.out.println("ESC");
             // calls player method to place a bomb
             case KeyEvent.VK_SPACE -> controller.getMainPlayer().placeBomb();
-                // System.out.println("spazio");
+            // System.out.println("spazio");
             // calls powerup method to use line bomb powerup
             case 'l', 'L' -> // calls powerup method? check if the player has the power-up
                 System.out.println("l");
@@ -68,8 +74,9 @@ public class KeyboardInput implements KeyListener {
      * A makes the player go LEFT
      * S makes the player go SOUTH
      * D makes the player go RIGHT
+     * 
+     * every time one of the WASD key is pressed the player facing direction is set
      */
-    // every time one of the WASD key is pressed the player facing direction is set
     /**
      * Invoked when a key has been pressed.
      * This method handles movement-related key presses (WASD configuration).
@@ -78,20 +85,35 @@ public class KeyboardInput implements KeyListener {
      */
     public void keyPressed(final KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_W -> controller.getMainPlayer().setFacingDirection(Direction.UP);
+            case KeyEvent.VK_W -> {
+                UP = true;
+                controller.getMainPlayer().setFacingDirection(Direction.UP);
                 // System.out.println("UP");
-            case KeyEvent.VK_A -> controller.getMainPlayer().setFacingDirection(Direction.LEFT);
+            }
+            case KeyEvent.VK_A -> {
+                LEFT = true;
+                controller.getMainPlayer().setFacingDirection(Direction.LEFT);
                 // System.out.println("LEFT");
-            case KeyEvent.VK_S -> controller.getMainPlayer().setFacingDirection(Direction.DOWN);
+            }
+            case KeyEvent.VK_S -> {
+                DOWN = true;
+                controller.getMainPlayer().setFacingDirection(Direction.DOWN);
                 // System.out.println("DOWN");
-            case KeyEvent.VK_D -> controller.getMainPlayer().setFacingDirection(Direction.RIGHT);
+            }
+            case KeyEvent.VK_D -> {
+                RIGHT = true;
+                controller.getMainPlayer().setFacingDirection(Direction.RIGHT);
                 // System.out.println("RIGHT");
+            }
             default -> {
             }
         }
     }
 
-    // If all the movement key get relased the player stops moving
+    /*
+     * If all the movement key get relased the direcion is set to default
+     * and the player stops moving
+     */
     /**
      * Invoked when a key has been released.
      * Resets the movement direction when movement keys are released.
@@ -100,11 +122,18 @@ public class KeyboardInput implements KeyListener {
      */
     public void keyReleased(final KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D ->
-                controller.getMainPlayer().setFacingDirection(Direction.DEFAULT);
-                //System.out.println("relased WASD");
+            case KeyEvent.VK_W ->
+                UP = false;
+            case KeyEvent.VK_A ->
+                LEFT = false;
+            case KeyEvent.VK_S ->
+                DOWN = false;
+            case KeyEvent.VK_D ->
+                RIGHT = false;
             default -> {
             }
         }
+        if (UP == false && LEFT == false && DOWN == false && RIGHT == false)
+            controller.getMainPlayer().setFacingDirection(Direction.DEFAULT);
     }
 }

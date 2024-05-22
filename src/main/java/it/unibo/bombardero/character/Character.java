@@ -3,7 +3,7 @@ package it.unibo.bombardero.character;
 import java.util.Optional;
 
 import it.unibo.bombardero.cell.BombFactory;
-import it.unibo.bombardero.cell.PowerUp.PowerUpType;
+import it.unibo.bombardero.cell.powerUp.api.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;
