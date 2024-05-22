@@ -16,7 +16,6 @@ import javax.swing.JPanel;
 
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Cell.CellType;
-import it.unibo.bombardero.cell.powerUp.api.PowerUp;
 import it.unibo.bombardero.core.KeyboardInput;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.utils.Utils;
