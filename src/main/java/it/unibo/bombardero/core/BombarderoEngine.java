@@ -43,9 +43,9 @@ public class BombarderoEngine extends Thread implements Engine {
     }
 
     @Override
-    public void pauseGameLoop() {
+    public synchronized void pauseGameLoop() {
         try {
-            this.wait();
+            BombarderoEngine.this.wait();
         } catch (InterruptedException e) {
             System.err.println("Exception thrown in main loop: interrupted exception calling Thread.wait()");
             e.printStackTrace();
@@ -53,7 +53,7 @@ public class BombarderoEngine extends Thread implements Engine {
     }
 
     @Override
-    public void resumeGameLoop() {
+    public synchronized void resumeGameLoop() {
         if (this.isInterrupted()) {
             this.notify();
         }
