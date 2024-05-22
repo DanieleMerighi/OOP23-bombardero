@@ -44,7 +44,7 @@ public class GameCard extends JPanel {
     /* References to model components: */
     private final JFrame parentFrame;
     private final ResizingEngine resizingEngine;
-    private final Map<Pair, Cell> cells;
+    private Map<Pair, Cell> cells;
     private final Controller controller;
     private final Character player;
     private final List<Character> enemies;
@@ -148,6 +148,11 @@ public class GameCard extends JPanel {
             Dimension enemyPos = computeCharacterPlacingPoint(controller.getEnemies().get(i).getCharacterPosition());
             g2d.drawImage(enemiesImages[i], enemyPos.width, enemyPos.height, null);
         }
+    }
+
+    public void updateMap() {
+        cells = controller.getMap();
+        updateSprites();
     }
 
     public void updateSprites() {
