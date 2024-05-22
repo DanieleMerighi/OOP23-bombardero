@@ -46,8 +46,8 @@ public class KeyboardInput implements KeyListener {
     public void keyTyped(final KeyEvent e) {
         switch (e.getKeyChar()) {
             // Opens the menu
-            case KeyEvent.VK_ESCAPE -> // calls menu method
-                System.out.println("ESC");
+            case KeyEvent.VK_ESCAPE -> controller.escape();
+                // System.out.println("ESC");
             // calls player method to place a bomb
             case KeyEvent.VK_SPACE -> controller.getMainPlayer().placeBomb();
                 // System.out.println("spazio");
