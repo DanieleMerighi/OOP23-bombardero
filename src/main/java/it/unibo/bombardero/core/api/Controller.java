@@ -14,9 +14,9 @@ public interface Controller {
      */
     void startGame();
 
-    void pauseGame();
-
     void endGame();
+    
+    void escape();
 
     Character getMainPlayer();
 
