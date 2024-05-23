@@ -2,6 +2,8 @@ package it.unibo.bombardero.core;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
+import it.unibo.bombardero.cell.powerUp.impl.*;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.Controller;
 
@@ -58,8 +60,9 @@ public class KeyboardInput implements KeyListener {
             case KeyEvent.VK_SPACE -> controller.getMainPlayer().placeBomb();
             // System.out.println("spazio");
             // calls powerup method to use line bomb powerup
-            case 'l', 'L' -> // calls powerup method? check if the player has the power-up
-                System.out.println("l");
+            case 'l', 'L' -> {// calls powerup method? check if the player has the power-up
+                PowerUpImpl.placeLineBomb(controller.getMainPlayer(), controller.getMap());
+                System.out.println("l");}
             // calls powerup method to explode remote bomb powerup
             case 'p', 'P' -> // calls powerup method? check if the player has the remote bomb
                 System.out.println("p");
