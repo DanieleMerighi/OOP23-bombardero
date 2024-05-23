@@ -1,5 +1,6 @@
 package it.unibo.bombardero.core;
 
+import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.Engine;
 import it.unibo.bombardero.core.api.GameManager;
@@ -13,7 +14,8 @@ public class BombarderoEngine extends Thread implements Engine {
     private GameManager gameManager;
     private BombarderoGraphics graphics;
     private Controller controller;
-    private Boolean isGameInterrupted = false;
+    private boolean isGameInterrupted = false;
+    private boolean isGameOver = false;
 
     public BombarderoEngine(Controller controller, BombarderoGraphics graphics) {
         this.controller = controller;
@@ -28,16 +30,17 @@ public class BombarderoEngine extends Thread implements Engine {
     
     public void run() {
         long previousCycleStartTime = System.currentTimeMillis();
-        while (true) {
-                long currentCycleStartTime = System.currentTimeMillis();
-                long elapsed = currentCycleStartTime - previousCycleStartTime;
-                if(!isGameInterrupted) {
-                    gameManager.updateGame();
-                    graphics.update();
-                }
-                waitForNextFrame(currentCycleStartTime);
-                previousCycleStartTime = currentCycleStartTime;
+        while (isGameOver) {
+            long currentCycleStartTime = System.currentTimeMillis();
+            long elapsed = currentCycleStartTime - previousCycleStartTime;
+            if(!isGameInterrupted) {
+                gameManager.updateGame();
+                graphics.update();
+            }
+            waitForNextFrame(currentCycleStartTime);
+            previousCycleStartTime = currentCycleStartTime;
         }
+        graphics.showCard(BombarderoGraphics.END_CARD);
     }
 
     @Override
@@ -54,7 +57,6 @@ public class BombarderoEngine extends Thread implements Engine {
             e.printStackTrace();
         } */
         isGameInterrupted = true;
-        System.out.println("Game interrupted");
     }
 
     @Override
@@ -63,13 +65,11 @@ public class BombarderoEngine extends Thread implements Engine {
             this.notify();
         } */
         isGameInterrupted = false;
-        System.out.println("Game resumed");
     }
 
     @Override
     public void endGameLoop() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'endGameLoop'");
+        isGameOver = true;
     }
 
     @Override
