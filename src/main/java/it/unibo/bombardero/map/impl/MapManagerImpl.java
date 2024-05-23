@@ -5,12 +5,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-import javax.swing.text.AttributeSet.ColorAttribute;
-
 import java.util.Set;
 import java.util.HashSet;
-
-import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.MapManager;
 import it.unibo.bombardero.map.api.Pair;
@@ -28,7 +24,7 @@ public class MapManagerImpl implements MapManager {
     /* NOTE: the number "12" does NOT depend from the arena's size, however the "MAP_CORNERS" Set does. */
     private static final int MAP_CORNERS_NUMBER = 12;
     private final Set<Pair> map_corners = new HashSet<Pair>();
-    private static final int COLLAPSE_RATE = 60;
+    private static final int COLLAPSE_RATE = 5;
 
     private final GameMap map;
     private List<Pair> wallCollapseOrder;
@@ -46,7 +42,7 @@ public class MapManagerImpl implements MapManager {
 
     @Override
     public void update() {
-        if (collapseStarted) {
+        if (collapseStarted && !wallCollapseOrder.isEmpty()) {
             counter++;
             if (counter >= COLLAPSE_RATE) {
                 placeNextWall();
@@ -83,8 +79,10 @@ public class MapManagerImpl implements MapManager {
 
     @Override
     public void triggerCollapse() {
-        this.collapseStarted = true;
-        this.wallCollapseOrder = computeCollapseOrder();
+        if (!collapseStarted) {
+            this.collapseStarted = true;
+            this.wallCollapseOrder = computeCollapseOrder();
+        }
     }
 
     /** 
