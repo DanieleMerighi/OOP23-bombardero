@@ -55,14 +55,15 @@ public class KeyboardInput implements KeyListener {
         switch (e.getKeyChar()) {
             // Opens the menu
             case KeyEvent.VK_ESCAPE -> controller.escape();
-                // System.out.println("ESC");
+            // System.out.println("ESC");
             // calls player method to place a bomb
             case KeyEvent.VK_SPACE -> controller.getMainPlayer().placeBomb();
             // System.out.println("spazio");
             // calls powerup method to use line bomb powerup
             case 'l', 'L' -> {// calls powerup method? check if the player has the power-up
                 PowerUpImpl.placeLineBomb(controller.getMainPlayer(), controller.getMap());
-                System.out.println("l");}
+                System.out.println("l");
+            }
             // calls powerup method to explode remote bomb powerup
             case 'p', 'P' -> // calls powerup method? check if the player has the remote bomb
                 System.out.println("p");
@@ -136,7 +137,25 @@ public class KeyboardInput implements KeyListener {
             default -> {
             }
         }
-        if (!UP && !LEFT && !DOWN && !RIGHT)
+        // If all the movement key get released, the direction is set to default
+        if (!UP && !LEFT && !DOWN && !RIGHT) {
             controller.getMainPlayer().setFacingDirection(Direction.DEFAULT);
+        }
+        /*
+         * When a key get released, it checks if a key was being pressed before
+         * sets the facing to that direction
+         */
+        if (UP) {
+            controller.getMainPlayer().setFacingDirection(Direction.UP);
+        }
+        if (LEFT) {
+            controller.getMainPlayer().setFacingDirection(Direction.LEFT);
+        }
+        if (DOWN) {
+            controller.getMainPlayer().setFacingDirection(Direction.DOWN);
+        }
+        if (RIGHT) {
+            controller.getMainPlayer().setFacingDirection(Direction.RIGHT);
+        }
     }
 }
