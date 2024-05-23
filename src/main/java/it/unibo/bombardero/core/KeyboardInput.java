@@ -3,7 +3,7 @@ package it.unibo.bombardero.core;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import it.unibo.bombardero.cell.powerUp.impl.*;
+import it.unibo.bombardero.cell.powerup.impl.*;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.Controller;
 
@@ -22,10 +22,10 @@ public class KeyboardInput implements KeyListener {
     private final Controller controller;
 
     // Directions for checks
-    private boolean UP;
-    private boolean LEFT;
-    private boolean DOWN;
-    private boolean RIGHT;
+    private boolean up;
+    private boolean left;
+    private boolean down;
+    private boolean right;
 
     /**
      * Constructs a new KeyboardInput istance.
@@ -51,6 +51,7 @@ public class KeyboardInput implements KeyListener {
      * 
      * @param e The KeyEvent representing the key typed event.
      */
+    @Override
     public void keyTyped(final KeyEvent e) {
         switch (e.getKeyChar()) {
             // Opens the menu
@@ -87,25 +88,26 @@ public class KeyboardInput implements KeyListener {
      * 
      * @param e The KeyEvent representing the key pressed event.
      */
+    @Override
     public void keyPressed(final KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W -> {
-                UP = true;
+                up = true;
                 controller.getMainPlayer().setFacingDirection(Direction.UP);
                 // System.out.println("UP");
             }
             case KeyEvent.VK_A -> {
-                LEFT = true;
+                left = true;
                 controller.getMainPlayer().setFacingDirection(Direction.LEFT);
                 // System.out.println("LEFT");
             }
             case KeyEvent.VK_S -> {
-                DOWN = true;
+                down = true;
                 controller.getMainPlayer().setFacingDirection(Direction.DOWN);
                 // System.out.println("DOWN");
             }
             case KeyEvent.VK_D -> {
-                RIGHT = true;
+                right = true;
                 controller.getMainPlayer().setFacingDirection(Direction.RIGHT);
                 // System.out.println("RIGHT");
             }
@@ -124,37 +126,38 @@ public class KeyboardInput implements KeyListener {
      * 
      * @param e The KeyEvent representing the key released event.
      */
+    @Override
     public void keyReleased(final KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W ->
-                UP = false;
+                up = false;
             case KeyEvent.VK_A ->
-                LEFT = false;
+                left = false;
             case KeyEvent.VK_S ->
-                DOWN = false;
+                down = false;
             case KeyEvent.VK_D ->
-                RIGHT = false;
+                right = false;
             default -> {
             }
         }
         // If all the movement key get released, the direction is set to default
-        if (!UP && !LEFT && !DOWN && !RIGHT) {
+        if (!up && !left && !down && !right) {
             controller.getMainPlayer().setFacingDirection(Direction.DEFAULT);
         }
         /*
          * When a key get released, it checks if a key was being pressed before
          * sets the facing to that direction
          */
-        if (UP) {
+        if (up) {
             controller.getMainPlayer().setFacingDirection(Direction.UP);
         }
-        if (LEFT) {
+        if (left) {
             controller.getMainPlayer().setFacingDirection(Direction.LEFT);
         }
-        if (DOWN) {
+        if (down) {
             controller.getMainPlayer().setFacingDirection(Direction.DOWN);
         }
-        if (RIGHT) {
+        if (right) {
             controller.getMainPlayer().setFacingDirection(Direction.RIGHT);
         }
     }
