@@ -136,7 +136,7 @@ public class KeyboardInput implements KeyListener {
             default -> {
             }
         }
-        if (UP == false && LEFT == false && DOWN == false && RIGHT == false)
+        if (!UP && !LEFT && !DOWN && !RIGHT)
             controller.getMainPlayer().setFacingDirection(Direction.DEFAULT);
     }
 }
