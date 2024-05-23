@@ -1,4 +1,4 @@
-package it.unibo.bombardero.cell.powerUp.api;
+package it.unibo.bombardero.cell.powerup.api;
 
 import it.unibo.bombardero.character.Character;
 
