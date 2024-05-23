@@ -5,5 +5,5 @@ import java.util.function.Consumer;
 
 public interface PowerUpEffectStrategy {
 
-    public Consumer<Character> getEffect();
+    Consumer<Character> getEffect();
 }
