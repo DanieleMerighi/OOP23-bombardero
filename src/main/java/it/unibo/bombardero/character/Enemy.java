@@ -39,6 +39,7 @@ public class Enemy extends Character {
         return distance <= detectionRadius; // Check if player is within detection radius
     }
 
+    /*
     private void placeBomb(Pair targetCell) {
         if (hasBombsLeft() && isValidCell(targetCell)
                 && this.getManager().getGameMap().isEmpty(targetCell)) {
@@ -46,7 +47,7 @@ public class Enemy extends Character {
             //numBombs--;
         }
     }
-
+    */ 
 
     // when the enemy doesn't know where to move he choose randomly
     private void moveRandomly() {
