@@ -6,6 +6,7 @@ import java.util.Map;
 
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.character.Character;
+import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.cell.powerup.api.PowerUpEffectStrategy;
@@ -34,7 +35,7 @@ public class PowerUpImpl extends Cell implements PowerUp {
     }
 
     //how to stop the forEach from placing bomb after placebomb returns flase?
-    public static void placeLineBomb(final Character character, final Map<Pair,Cell> map) {
+    public static void placeLineBomb(final Character character, final Map<Pair,Cell> map, final Direction lastFacedDirection) {
         if (character.hasLineBomb()) {
             // lo stream continua finché non ha piazzato tutte le bombe o finché incontra un ostacolo
             IntStream
@@ -44,8 +45,8 @@ public class PowerUpImpl extends Cell implements PowerUp {
                         .containsKey(character
                         .getIntCoordinate()
                         .sum(new Pair(
-                            character.getFacingDirection().getDy() * offset,
-                            character.getFacingDirection().getDx() * offset)
+                            lastFacedDirection.getDy() * offset,
+                            lastFacedDirection.getDx() * offset)
                         )
                     )
                 ) // Piazzo le bombe nelle celle vuoto
@@ -53,8 +54,8 @@ public class PowerUpImpl extends Cell implements PowerUp {
                     .placeBomb(character
                         .getIntCoordinate()
                         .sum(new Pair(
-                            character.getFacingDirection().getDy() * offset,
-                            character.getFacingDirection().getDx() * offset)
+                            lastFacedDirection.getDy() * offset,
+                            lastFacedDirection.getDx() * offset)
                         )
                     )
                 );

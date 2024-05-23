@@ -26,6 +26,7 @@ public class KeyboardInput implements KeyListener {
     private boolean left;
     private boolean down;
     private boolean right;
+    private Direction lastFacedDirection = Direction.DEFAULT;
 
     /**
      * Constructs a new KeyboardInput istance.
@@ -62,7 +63,7 @@ public class KeyboardInput implements KeyListener {
             // System.out.println("spazio");
             // calls powerup method to use line bomb powerup
             case 'l', 'L' -> {// calls powerup method? check if the player has the power-up
-                PowerUpImpl.placeLineBomb(controller.getMainPlayer(), controller.getMap());
+                PowerUpImpl.placeLineBomb(controller.getMainPlayer(), controller.getMap(), lastFacedDirection);
                 System.out.println("l");
             }
             // calls powerup method to explode remote bomb powerup
@@ -93,21 +94,25 @@ public class KeyboardInput implements KeyListener {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W -> {
                 up = true;
+                lastFacedDirection = Direction.UP;
                 controller.getMainPlayer().setFacingDirection(Direction.UP);
                 // System.out.println("UP");
             }
             case KeyEvent.VK_A -> {
                 left = true;
+                lastFacedDirection = Direction.LEFT;
                 controller.getMainPlayer().setFacingDirection(Direction.LEFT);
                 // System.out.println("LEFT");
             }
             case KeyEvent.VK_S -> {
                 down = true;
+                lastFacedDirection = Direction.DOWN;
                 controller.getMainPlayer().setFacingDirection(Direction.DOWN);
                 // System.out.println("DOWN");
             }
             case KeyEvent.VK_D -> {
                 right = true;
+                lastFacedDirection = Direction.RIGHT;
                 controller.getMainPlayer().setFacingDirection(Direction.RIGHT);
                 // System.out.println("RIGHT");
             }
