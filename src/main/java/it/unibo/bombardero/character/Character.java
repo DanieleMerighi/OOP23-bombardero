@@ -87,18 +87,35 @@ public abstract class Character {
     }
 
     /**
-     * Places a bomb at the character's current location if they have bombs left.
+     * Places a bomb at the character's current location if he has bombs left.
      */
     public void placeBomb() {
         if (hasBombsLeft()) {
-            System.out.println("bombPlaced");
-            /*
-             * if (this.manager.addBomb(this.bombFactory.CreateBomb(this.bombType,
-             * getIntCoordinate(), this.flameRange))) {
-             * numBomb--;
-             * }
-             */
+            //System.out.println("bombPlaced");
+            if (this.manager.addBomb(this.bombFactory
+                                    .CreateBomb(this.bombType, getIntCoordinate(), this.flameRange))) {
+                this.numBomb--;
+            }
         }
+    }
+
+    /**
+     * Places a bomb at the given coordinates if the character has bombs left.
+     * 
+     * @param coordinate    the bomb's coordinate
+     * 
+     * @return true if the character has placed the bomb, false otherwise
+     */
+    public boolean placeBomb(final Pair coordinate) {
+        if (hasBombsLeft()) {
+            //System.out.println("bombPlaced");
+            if (this.manager.addBomb(this.bombFactory
+                                    .CreateBomb(this.bombType, coordinate, this.flameRange))) {
+                this.numBomb--;
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -308,7 +325,7 @@ public abstract class Character {
      * 
      * @return true if the character can kick bombs, false otherwise
      */
-    public boolean isKick() {
+    public boolean hasKick() {
         return kick;
     }
 
@@ -327,7 +344,7 @@ public abstract class Character {
      * @return true if the character can use the power-up "line bomb", false
      *         otherwise
      */
-    public boolean isLineBomb() {
+    public boolean hasLineBomb() {
         return lineBomb;
     }
 
