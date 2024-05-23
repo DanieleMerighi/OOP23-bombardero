@@ -43,8 +43,8 @@ public abstract class Character {
     private int flameRange = STARTING_FLAME_RANGE;
     private float speed = STARTING_SPEED;
     private Optional<PowerUpType> bombType = Optional.empty();
-    private boolean kick = false;
-    private boolean lineBomb = false;
+    private boolean kick; // False by default
+    private boolean lineBomb;
 
     /**
      * Constructs a new Character with the specified parameters.
@@ -90,30 +90,26 @@ public abstract class Character {
      * Places a bomb at the character's current location if he has bombs left.
      */
     public void placeBomb() {
-        if (hasBombsLeft()) {
-            //System.out.println("bombPlaced");
-            if (this.manager.addBomb(this.bombFactory
-                                    .CreateBomb(this.bombType, getIntCoordinate(), this.flameRange))) {
-                this.numBomb--;
-            }
+        if (hasBombsLeft() && this.manager
+                .addBomb(this.bombFactory.CreateBomb(this.bombType, getIntCoordinate(), this.flameRange))) {
+            this.numBomb--;
+            System.out.println("bomb placed");
         }
     }
 
     /**
      * Places a bomb at the given coordinates if the character has bombs left.
      * 
-     * @param coordinate    the bomb's coordinate
+     * @param coordinate the bomb's coordinate
      * 
      * @return true if the character has placed the bomb, false otherwise
      */
     public boolean placeBomb(final Pair coordinate) {
-        if (hasBombsLeft()) {
-            //System.out.println("bombPlaced");
-            if (this.manager.addBomb(this.bombFactory
-                                    .CreateBomb(this.bombType, coordinate, this.flameRange))) {
-                this.numBomb--;
-                return true;
-            }
+        if (hasBombsLeft() && this.manager
+                .addBomb(this.bombFactory.CreateBomb(this.bombType, coordinate, this.flameRange))) {
+            this.numBomb--;
+            System.out.println("line bomb placed");
+            return true;
         }
         return false;
     }

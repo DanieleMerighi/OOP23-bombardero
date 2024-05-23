@@ -23,11 +23,11 @@ public class PowerUpFactoryImpl implements PowerUpFactory {
      * Generate a list of power-ups with their weights
      * (the probability mass function enumeration, pmf)
      */
-    static private final List<Pair<PowerUpType, Double>> weightedPowerUpList = Arrays.stream(PowerUpType.values())
+    private static final List<Pair<PowerUpType, Double>> WEIGHTED_POWERUP_LIST = Arrays.stream(PowerUpType.values())
             .map(type -> new Pair<>(type, type.getWeight()))
             .collect(Collectors.toList());
     // Create an enumerated distribution using the given pmf
-    static private final EnumeratedDistribution<PowerUpType> weightedPowerUpDistribution = new EnumeratedDistribution<>(weightedPowerUpList);
+    private static final EnumeratedDistribution<PowerUpType> WEIGHTED_POWERUP_DISTRIBUTION = new EnumeratedDistribution<>(WEIGHTED_POWERUP_LIST);
 
     public PowerUpFactoryImpl() {
         this.powerUpMap = new HashMap<>();
@@ -66,8 +66,8 @@ public class PowerUpFactoryImpl implements PowerUpFactory {
 
     @Override
     public PowerUp createPowerUp() {
-        PowerUpType powerUpType = weightedPowerUpDistribution.sample(); // Extract a random weighted PowerUp
-        Supplier<PowerUp> supplier = powerUpMap.get(powerUpType);
+        final PowerUpType powerUpType = WEIGHTED_POWERUP_DISTRIBUTION.sample(); // Extract a random weighted PowerUp
+        final Supplier<PowerUp> supplier = powerUpMap.get(powerUpType);
         if (supplier == null) { // Checks the powerUp is not null
             throw new IllegalArgumentException("Unknown power-up type: " + powerUpType);
         }

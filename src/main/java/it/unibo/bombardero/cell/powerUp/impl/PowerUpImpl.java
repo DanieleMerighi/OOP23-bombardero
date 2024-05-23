@@ -4,18 +4,16 @@ import java.util.function.Consumer;
 import java.util.stream.IntStream;
 import java.util.Map;
 
-import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.character.Character;
-import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.powerUp.api.PowerUp;
 import it.unibo.bombardero.cell.powerUp.api.PowerUpEffectStrategy;
 import it.unibo.bombardero.cell.powerUp.api.PowerUpType;
 
 public class PowerUpImpl extends Cell implements PowerUp {
-    private PowerUpType type;
-    private Consumer<Character> effect;
+    final private PowerUpType type;
+    final private Consumer<Character> effect;
     // private float kickBombSpeed;
     // private List<Pair<Direction, Bomb>> kickBombList = new ArrayList<>();
 
