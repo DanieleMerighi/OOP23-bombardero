@@ -7,9 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Flame.FlameType;
-import it.unibo.bombardero.cell.powerUp.api.PowerUp;
-import it.unibo.bombardero.cell.powerUp.api.PowerUpFactory;
-import it.unibo.bombardero.cell.powerUp.impl.PowerUpFactoryImpl;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.character.Player;

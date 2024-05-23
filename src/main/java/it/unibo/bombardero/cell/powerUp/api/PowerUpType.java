@@ -1,4 +1,4 @@
-package it.unibo.bombardero.cell.powerUp.api;
+package it.unibo.bombardero.cell.powerup.api;
 
 /**
  * Enumeration representing different types of power-ups in the game.
@@ -35,7 +35,7 @@ public enum PowerUpType {
      * @param typeString The string representation of the power-up type.
      * @param weight
      */
-    private PowerUpType(final String typeString, final int weight) {
+    PowerUpType(final String typeString, final int weight) {
         this.typeString = typeString;
         this.weight = weight;
     }

@@ -1,6 +1,6 @@
-package it.unibo.bombardero.cell.powerUp.impl;
+package it.unibo.bombardero.cell.powerup.impl;
 
-import it.unibo.bombardero.cell.powerUp.api.PowerUpEffectStrategy;
+import it.unibo.bombardero.cell.powerup.api.PowerUpEffectStrategy;
 import it.unibo.bombardero.character.Character;
 import java.util.ArrayList;
 import java.util.List;

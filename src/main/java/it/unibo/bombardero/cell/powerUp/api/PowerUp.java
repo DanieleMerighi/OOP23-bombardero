@@ -1,10 +1,10 @@
-package it.unibo.bombardero.cell.powerUp.api;
+package it.unibo.bombardero.cell.powerup.api;
 
 import it.unibo.bombardero.character.Character;
 
 public interface PowerUp {
 
-    public PowerUpType getType();
+    PowerUpType getType();
 
-    public void applyEffect(Character character);
+    void applyEffect(Character character);
 }

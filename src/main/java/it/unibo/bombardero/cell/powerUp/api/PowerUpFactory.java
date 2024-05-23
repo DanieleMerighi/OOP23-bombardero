@@ -1,6 +1,6 @@
-package it.unibo.bombardero.cell.powerUp.api;
+package it.unibo.bombardero.cell.powerup.api;
 
 public interface PowerUpFactory {
     
-    public PowerUp createPowerUp();
+    PowerUp createPowerUp();
 }
