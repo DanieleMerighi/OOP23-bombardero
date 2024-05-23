@@ -117,7 +117,7 @@ public class TestMap {
         String[][] collapsingMap = generatePrintableMap();
         print2DArray(collapsingMap);
 
-        manager.triggerArenaCollapse();
+        manager.triggerCollapse();
         for(int i = 0; i < TOTAL_CELLS; i++) {
             manager.update();
 
