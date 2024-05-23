@@ -13,6 +13,7 @@ public class BombarderoEngine extends Thread implements Engine {
     private GameManager gameManager;
     private BombarderoGraphics graphics;
     private Controller controller;
+    private Boolean isGameInterrupted = false;
 
     public BombarderoEngine(Controller controller, BombarderoGraphics graphics) {
         this.controller = controller;
@@ -28,12 +29,14 @@ public class BombarderoEngine extends Thread implements Engine {
     public void run() {
         long previousCycleStartTime = System.currentTimeMillis();
         while (true) {
-            long currentCycleStartTime = System.currentTimeMillis();
-            long elapsed = currentCycleStartTime - previousCycleStartTime;
-            gameManager.updateGame();
-            graphics.update();
-            waitForNextFrame(currentCycleStartTime);
-            previousCycleStartTime = currentCycleStartTime;
+                long currentCycleStartTime = System.currentTimeMillis();
+                long elapsed = currentCycleStartTime - previousCycleStartTime;
+                if(!isGameInterrupted) {
+                    gameManager.updateGame();
+                    graphics.update();
+                }
+                waitForNextFrame(currentCycleStartTime);
+                previousCycleStartTime = currentCycleStartTime;
         }
     }
 
@@ -44,25 +47,34 @@ public class BombarderoEngine extends Thread implements Engine {
 
     @Override
     public synchronized void pauseGameLoop() {
-        try {
+        /*try {
             BombarderoEngine.this.wait();
         } catch (InterruptedException e) {
             System.err.println("Exception thrown in main loop: interrupted exception calling Thread.wait()");
             e.printStackTrace();
-        }
+        } */
+        isGameInterrupted = true;
+        System.out.println("Game interrupted");
     }
 
     @Override
     public synchronized void resumeGameLoop() {
-        if (this.isInterrupted()) {
+        /* if (this.isInterrupted()) {
             this.notify();
-        }
+        } */
+        isGameInterrupted = false;
+        System.out.println("Game resumed");
     }
 
     @Override
     public void endGameLoop() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'endGameLoop'");
+    }
+
+    @Override
+    public synchronized boolean isInterrupted() {
+        return this.isGameInterrupted;
     }
 
     private void waitForNextFrame(long currentCycleStartTime) {
