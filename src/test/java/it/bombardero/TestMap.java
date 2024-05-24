@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.List;
+import java.util.ArrayList;
 
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.impl.GameMapImpl;
@@ -115,11 +117,13 @@ public class TestMap {
         String[][] collapsingMap = generatePrintableMap();
         print2DArray(collapsingMap);
 
-        manager.triggerArenaCollapse();
+        manager.triggerCollapse();
         for(int i = 0; i < TOTAL_CELLS; i++) {
             manager.update();
 
         }
+
+        computeMatrixTraversal();
 
         /* Final check if every cell is a wall (print the map to make sure) */
         print2DArray(generatePrintableMap());
@@ -160,6 +164,16 @@ public class TestMap {
         System.out.print("\n\n");
     }
 
+    private void printPlain2DArray(String[][] arr) {
+        for(int i = 0; i < Utils.MAP_ROWS; i++) {
+            for(int j = 0; j < Utils.MAP_COLS; j++) {
+                System.out.print(arr[i][j] + "  ");
+            }
+            System.out.println();
+        }
+        System.out.print("\n\n");
+    }
+
     private void computeUnbreakableWallsCoordinates() {
         for(int i = 1; i < Utils.MAP_ROWS; i += 2) {
             for(int j = 1; j < Utils.MAP_COLS; j += 2) {
@@ -185,5 +199,37 @@ public class TestMap {
         this.MAP_CORNERS.add(new Pair(1, Utils.MAP_COLS - 1));
         this.MAP_CORNERS.add(new Pair(0, Utils.MAP_COLS - 2));
     }
+
+    private void computeMatrixTraversal() { /*
+        String[][] matrixTraversal = new String[Utils.MAP_ROWS][Utils.MAP_COLS];
+        int top = 0, left = 0, bottom = Utils.MAP_COLS - 1, right = Utils.MAP_ROWS - 1, count = 0;
+        while (top <= bottom && left <= right) {
+            for (int i = left; i <= right; i++) {
+                matrixTraversal[top][i] = Integer.toString(count);
+                count++;
+            }
+            top++;
+            for (int i = top; i <= bottom; i++) {
+                matrixTraversal[i][right] = Integer.toString(count);
+                count++;
+            }
+            right--;
+            if(top <= bottom) {
+                for(int i = bottom; i >= top; i--) {
+                    matrixTraversal[i][left] = Integer.toString(count);
+                    count++;
+                }
+                left++;
+            }
+            
+            if (left <= right) {
+                for (int i = bottom; i >= top; i--)
+                    ans.add(mat[i][left]);
+
+                left++;
+            }
+        }
+        printPlain2DArray(matrixTraversal); */
+    } 
 
 }

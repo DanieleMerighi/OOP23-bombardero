@@ -1,29 +1,80 @@
 package it.unibo.bombardero.core;
 
+import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.core.api.Controller;
+import it.unibo.bombardero.core.api.Engine;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.core.impl.BombarderoGameManager;
 import it.unibo.bombardero.view.BombarderoGraphics;
 
-public class BombarderoEngine {
+public class BombarderoEngine extends Thread implements Engine {
+
+    private final static long sleepTime = 16L; // Time during which the thread sleeps, equivalent to about 60FPS
     
-    private final static long sleepTime = 16l; // Time during which the thread sleeps, equivalent to about 60FPS
     private GameManager gameManager;
     private BombarderoGraphics graphics;
     private Controller controller;
+    private boolean isGameInterrupted = false;
+    private boolean isGameOver = false;
 
     public BombarderoEngine(Controller controller, BombarderoGraphics graphics) {
         this.controller = controller;
         this.graphics = graphics;
     }
 
+    @Override
     public GameManager initGameManager() {
         gameManager = new BombarderoGameManager(controller);
         return gameManager;
-    }   
+    }
     
-    public void mainLoop() {
-        
+    public void run() {
+        long previousCycleStartTime = System.currentTimeMillis();
+        while (!isGameOver) {
+            long currentCycleStartTime = System.currentTimeMillis();
+            long elapsed = currentCycleStartTime - previousCycleStartTime;
+            if(!isGameInterrupted) {
+                gameManager.updateGame();
+                graphics.update();
+            }
+            waitForNextFrame(currentCycleStartTime);
+            previousCycleStartTime = currentCycleStartTime;
+        }
+        graphics.showCard(BombarderoGraphics.END_CARD);
+    }
+
+    @Override
+    public void startGameLoop() {
+        this.start();
+    }
+
+    @Override
+    public synchronized void pauseGameLoop() {
+        /*try {
+            BombarderoEngine.this.wait();
+        } catch (InterruptedException e) {
+            System.err.println("Exception thrown in main loop: interrupted exception calling Thread.wait()");
+            e.printStackTrace();
+        } */
+        isGameInterrupted = true;
+    }
+
+    @Override
+    public synchronized void resumeGameLoop() {
+        /* if (this.isInterrupted()) {
+            this.notify();
+        } */
+        isGameInterrupted = false;
+    }
+
+    @Override
+    public void endGameLoop() {
+        isGameOver = true;
+    }
+
+    @Override
+    public synchronized boolean isInterrupted() {
+        return this.isGameInterrupted;
     }
 
     private void waitForNextFrame(long currentCycleStartTime) {
