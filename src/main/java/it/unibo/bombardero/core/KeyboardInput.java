@@ -3,7 +3,7 @@ package it.unibo.bombardero.core;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import it.unibo.bombardero.cell.powerup.impl.*;
+import it.unibo.bombardero.cell.PowerUp.impl.*;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.Controller;
 

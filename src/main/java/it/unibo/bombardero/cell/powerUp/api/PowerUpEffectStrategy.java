@@ -1,4 +1,4 @@
-package it.unibo.bombardero.cell.powerup.api;
+package it.unibo.bombardero.cell.PowerUp.api;
 
 import it.unibo.bombardero.character.Character;
 import java.util.function.Consumer;

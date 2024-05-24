@@ -1,4 +1,4 @@
-package it.unibo.bombardero.cell.powerup.api;
+package it.unibo.bombardero.cell.PowerUp.api;
 
 /**
  * Enumeration representing different types of power-ups in the game.
