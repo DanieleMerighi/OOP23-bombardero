@@ -1,5 +1,8 @@
 package it.unibo.bombardero.character;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import it.unibo.bombardero.map.api.Pair;
 
 public enum Direction {
@@ -27,6 +30,23 @@ public enum Direction {
 
     public Pair getPair() {
         return new Pair(getDx(), getDy());
+    }
+
+    public List<Pair> getDiagonals(Direction dir) {
+        Pair pd= dir.getPair();
+        switch (dir) {
+            case UP:
+                return List.of(new Pair(pd.col()-1, pd.row()-1) , new Pair(pd.col()+1, pd.row()-1) );
+            case DOWN:
+                return List.of(new Pair(pd.col()-1, pd.row()+1) , new Pair(pd.col()+1, pd.row()+1) );
+            case LEFT:
+                return List.of(new Pair(pd.col()-1, pd.row()-1) , new Pair(pd.col()-1, pd.row()+1) );
+            case RIGHT:
+                return List.of(new Pair(pd.col()+1, pd.row()-1) , new Pair(pd.col()+1, pd.row()+1) );
+            default:
+                return null;
+        }
+        
     }
 
 }
