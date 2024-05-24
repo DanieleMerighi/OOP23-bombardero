@@ -28,6 +28,8 @@ dependencies {
     implementation("org.jooq:jool:0.9.15")
     implementation("org.jgrapht:jgrapht-core:1.5.2")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0") // Use the latest compatible version
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-math3
+    implementation("org.apache.commons:commons-math3:3.6.1") // For the PowerUpFactoryImpl
 
 
     /*

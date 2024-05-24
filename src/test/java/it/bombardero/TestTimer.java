@@ -27,13 +27,4 @@ public class TestTimer {
         assertEquals(this.timer.getTimeLeft(), System.currentTimeMillis() - this.startTimeForTest);
     }
 
-    /**
-     * This method prints out the formatted result for visual verification:
-     * the string has to be something on the line of "4:36"
-     */
-    @Test void testGetTimeLeftAsString() {
-        this.timer.updateTimer();
-        System.out.println(this.timer.getFormattedTimeLeft());
-    }
-
 }

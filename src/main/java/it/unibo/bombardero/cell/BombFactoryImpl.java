@@ -4,7 +4,8 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import it.unibo.bombardero.cell.Bomb.BombType;
-import it.unibo.bombardero.cell.PowerUp.PowerUpType;
+import it.unibo.bombardero.cell.Cell.CellType;
+import it.unibo.bombardero.cell.PowerUp.api.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
 
