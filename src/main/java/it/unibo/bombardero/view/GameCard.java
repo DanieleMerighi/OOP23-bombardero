@@ -243,7 +243,7 @@ public class GameCard extends JPanel {
                 + resizingEngine.getScale() * MISCHIEVOUS_PADDING),
             mapPlacingPoint.height 
             + (int)(Math.floor(playerPosition.col() * resizingEngine.getScaledCellSize())
-                - Math.floorDiv(Utils.PLAYER_HEIGHT, 2)
+                - Utils.PLAYER_HEIGHT * 0.85
                 + 2 * resizingEngine.getScaledCellSize())
         );
     }
