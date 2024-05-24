@@ -38,7 +38,7 @@ public class BombarderoGameManager implements GameManager {
         this.controller = ctrl;
         map = new GameMapImpl();
         ce = new BombarderoCollision(this);
-        bombFactory = new BombFactoryImpl(this, ce);
+        bombFactory = new BombFactoryImpl(this);
         this.player = new Player(this, Utils.PLAYER_SPAWNPOINT, bombFactory);
         Utils.ENEMIES_SPAWNPOINT.forEach(enemyCoord -> enemies.add(new Enemy(this, enemyCoord, bombFactory)));
     }

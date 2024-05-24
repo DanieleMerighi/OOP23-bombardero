@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.jgrapht.alg.drawing.model.Point2D;
 
 import it.unibo.bombardero.cell.BombFactory;
-import it.unibo.bombardero.cell.PowerUp.PowerUpType;
+import it.unibo.bombardero.cell.PowerUp.api.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;

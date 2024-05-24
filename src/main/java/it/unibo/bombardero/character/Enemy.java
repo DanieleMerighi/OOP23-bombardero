@@ -77,7 +77,7 @@ public class Enemy extends Character {
         if(!nextMove.isPresent() || !isValidCell(nextMove.get())) {
             moveRandomly();
         } else if(map.isBreakableWall(nextMove.get())) {
-            placeBomb(getIntCoordinate());
+            placeBomb();
             //change the state of the enemy?
         }
     }
