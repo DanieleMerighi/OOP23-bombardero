@@ -20,11 +20,10 @@ import it.unibo.bombardero.physics.api.CollisionEngine;
 
 public class BombarderoCollision implements CollisionEngine{
     private GameManager mgr;
-    private GameMap map;
+    private GameMap map=mgr.getGameMap();
 
     public BombarderoCollision(GameManager mgr){
-        this.mgr = mgr;
-        this.map = mgr.getGameMap();
+        this.mgr=mgr;
     }
 
     @Override

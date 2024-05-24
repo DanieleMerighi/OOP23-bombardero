@@ -2,11 +2,15 @@ package it.unibo.bombardero.character;
 
 import java.util.Optional;
 
+import org.jgrapht.alg.drawing.model.Point2D;
+
 import it.unibo.bombardero.cell.BombFactory;
-import it.unibo.bombardero.cell.powerup.api.PowerUpType;
+import it.unibo.bombardero.cell.PowerUp.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.physics.BoundingBox;
+import it.unibo.bombardero.physics.RectangleBoundingBox;
 
 /**
  * Abstract class representing a character in the game.
@@ -17,15 +21,11 @@ import it.unibo.bombardero.map.api.Pair;
 public abstract class Character {
 
     // Constants for default settings
-    private static final float STARTING_SPEED = 0.05f;
-    private static final float INCREASE_SPEED = 0.005f;
+    private static final float STARTING_SPEED = 0.01f;
     private static final int STARTING_FLAME_RANGE = 1;
     private static final int STARTING_BOMBS = 1;
-
-    // Constants for controls
-    private static final float MAX_SPEED = 0.09f;
-    public static final int MAX_FLAME_RANGE = 8;
-    private static final int MAX_BOMBS = 8;
+    private static final int WIDTH = 22;
+    private static final int HEIGHT = 30;
 
     // Game manager reference
     private final GameManager manager;
@@ -35,7 +35,10 @@ public abstract class Character {
 
     // Position related
     private Coord coordinate; // Starting character coordinate
-    private Direction facingDirection = Direction.DEFAULT; // Starting character facingDirection
+    private Direction facingDirection = Direction.DOWN; // Starting character facingDirection
+
+    // Physics part of character
+    //private BoundingBox bBox; //TODO change with point 2D
 
     // Game attribute related
     private boolean isAlive = true;
@@ -43,8 +46,8 @@ public abstract class Character {
     private int flameRange = STARTING_FLAME_RANGE;
     private float speed = STARTING_SPEED;
     private Optional<PowerUpType> bombType = Optional.empty();
-    private boolean kick; // False by default
-    private boolean lineBomb;
+    private boolean kick = false;
+    private boolean lineBomb = false;
 
     /**
      * Constructs a new Character with the specified parameters.
@@ -57,8 +60,8 @@ public abstract class Character {
         this.manager = manager;
         this.coordinate = coord;
         this.bombFactory = bombFactory;
+        //this.bBox = new RectangleBoundingBox(null, STARTING_BOMBS, HEIGHT);
     }
-
     /**
      * Updates the character's state.
      * This method should be implemented by subclasses to define character-specific
@@ -82,36 +85,23 @@ public abstract class Character {
      * @return the map's corrisponding integer coordinates of the character
      */
     public Pair getIntCoordinate() {
-        return new Pair((int) Math.floor(this.coordinate.row()),
-                (int) Math.floor(this.coordinate.col()));
+        return new Pair((int) Math.floor(this.coordinate.row() + HEIGHT / 2),
+                (int) Math.floor(this.coordinate.col() + WIDTH / 2));
     }
 
     /**
-     * Places a bomb at the character's current location if he has bombs left.
+     * Places a bomb at the character's current location if they have bombs left.
      */
     public void placeBomb() {
-        if (hasBombsLeft() && this.manager
-                .addBomb(this.bombFactory.CreateBomb(this.bombType, getIntCoordinate(), this.flameRange))) {
-            this.numBomb--;
-            System.out.println("bomb placed");
+        if (hasBombsLeft()) {
+            System.out.println("bombPlaced");
+            /*
+             * if (this.manager.addBomb(this.bombFactory.CreateBomb(this.bombType,
+             * getIntCoordinate(), this.flameRange))) {
+             * numBomb--;
+             * }
+             */
         }
-    }
-
-    /**
-     * Places a bomb at the given coordinates if the character has bombs left.
-     * 
-     * @param coordinate the bomb's coordinate
-     * 
-     * @return true if the character has placed the bomb, false otherwise
-     */
-    public boolean placeBomb(final Pair coordinate) {
-        if (hasBombsLeft() && this.manager
-                .addBomb(this.bombFactory.CreateBomb(this.bombType, coordinate, this.flameRange))) {
-            this.numBomb--;
-            System.out.println("line bomb placed");
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -203,26 +193,6 @@ public abstract class Character {
     }
 
     /**
-     * Increse the number of bombs the character has left.
-     * 
-     */
-    public void increaseNumBomb() {
-        if (this.numBomb < MAX_BOMBS) {
-            this.numBomb++;
-        }
-    }
-
-    /**
-     * Decrease the number of bombs the character has left.
-     * 
-     */
-    public void decreaseNumBomb() {
-        if (this.numBomb > STARTING_BOMBS) {
-            this.numBomb--;
-        }
-    }
-
-    /**
      * Gets the flame range of the bombs placed by the character.
      * 
      * @return the flame range
@@ -241,26 +211,6 @@ public abstract class Character {
     }
 
     /**
-     * Increse the flame range of the bombs placed by the character.
-     * 
-     */
-    public void increaseFlameRange() {
-        if (this.flameRange < MAX_FLAME_RANGE) {
-            this.flameRange++;
-        }
-    }
-
-    /**
-     * Decrease the flame range of the bombs placed by the character.
-     * 
-     */
-    public void decreaseFlameRange() {
-        if (this.flameRange > STARTING_FLAME_RANGE) {
-            this.flameRange--;
-        }
-    }
-
-    /**
      * Gets the speed of the character.
      * 
      * @return the speed
@@ -276,26 +226,6 @@ public abstract class Character {
      */
     public void setSpeed(final float speed) {
         this.speed = speed;
-    }
-
-    /**
-     * Increse the speed of the character.
-     * 
-     */
-    public void increaseSpeed() {
-        if (this.speed < MAX_SPEED) {
-            this.speed += INCREASE_SPEED;
-        }
-    }
-
-    /**
-     * Decrease the speed of the character.
-     * 
-     */
-    public void decreaseSpeed() {
-        if (this.speed > STARTING_SPEED) {
-            this.speed -= 0.005f;
-        }
     }
 
     /**
@@ -321,7 +251,7 @@ public abstract class Character {
      * 
      * @return true if the character can kick bombs, false otherwise
      */
-    public boolean hasKick() {
+    public boolean isKick() {
         return kick;
     }
 
@@ -340,7 +270,7 @@ public abstract class Character {
      * @return true if the character can use the power-up "line bomb", false
      *         otherwise
      */
-    public boolean hasLineBomb() {
+    public boolean isLineBomb() {
         return lineBomb;
     }
 
