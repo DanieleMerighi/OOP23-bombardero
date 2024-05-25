@@ -8,9 +8,11 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import org.junit.jupiter.api.BeforeEach;
 
-import it.unibo.bombardero.cell.Bomb;
-import it.unibo.bombardero.cell.Cell.CellType;
-import it.unibo.bombardero.character.AI.EnemyGraphReasoner;
+import it.unibo.bombardero.cell.BombFactory;
+import it.unibo.bombardero.cell.BombFactoryImpl;
+import it.unibo.bombardero.character.AI.*;
+import it.unibo.bombardero.character.AI.api.EnemyGraphReasoner;
+import it.unibo.bombardero.core.impl.BombarderoGameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
@@ -22,10 +24,12 @@ import java.util.Optional;
 public class TestReasoner {
 
     private GameMap map;
+    private BombFactory b;
 
     @BeforeEach
     public void setup() {
         map = new GameMapImpl(false);
+        b = new BombFactoryImpl(new BombarderoGameManager(null), null);
     }
 
     // this way I can test different scenarios by passing the right
@@ -37,16 +41,17 @@ public class TestReasoner {
             "0,0, 0,3, 2, false",
             "0,0, 2,0, 2, true", // vertical bomb
             "0,0, 0,2, 1, false", // outside range
-            "0,0, 3,0, 2, false"
+            "0,0, 3,0, 2, false",
+            "1,0, 0,1, 4, false"
     })
     public void testIsInDangerZone(int enemyX, int enemyY, int bombX, int bombY, int explRadius, boolean expected) {
         Pair enemyCoord = new Pair(enemyX, enemyY);
         Pair bombCell = new Pair(bombX, bombY);
 
-        //map.addBomb(new Bomb(null, bombCell, CellType.BOMB_BASIC, explRadius), bombCell);
+        map.addBomb(b.CreateBomb(Optional.empty(), bombCell, explRadius), bombCell);
         assertTrue(map.isBomb(bombCell));
 
-        EnemyGraphReasoner reasoner = new EnemyGraphReasoner(map);
+        EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
         assertFalse(reasoner.isPathBlockedByWalls(enemyCoord, bombCell));
 
         assertEquals(expected, reasoner.isInDangerZone(enemyCoord, explRadius));
@@ -65,7 +70,7 @@ public class TestReasoner {
         Pair enemyCoord = new Pair(enemyX, enemyY);
         Pair endCell = new Pair(endCellX, endCellY);
 
-        EnemyGraphReasoner reasoner = new EnemyGraphReasoner(map);
+        EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
 
         boolean isBlocked = reasoner.isPathBlockedByWalls(enemyCoord, endCell);
         assertEquals(expectedBlocked, isBlocked);
@@ -91,7 +96,7 @@ public class TestReasoner {
 
         map.addBreakableWall(new Pair(4, 1));
 
-        EnemyGraphReasoner reasoner = new EnemyGraphReasoner(map);
+        EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
 
         List<Pair> actualPath = reasoner.findShortestPathToPlayer(enemyCoord, playerCoord);
         assertEquals(expectedPathLength, actualPath.size());
@@ -127,10 +132,10 @@ public class TestReasoner {
         Pair enemyCoord = new Pair(enemyX, enemyY);
         Pair bombCell = new Pair(bombX, bombY);
 
-        //map.addBomb(new Bomb(null, bombCell, CellType.BOMB_BASIC, explRadius), bombCell);
+        map.addBomb(b.CreateBomb(Optional.empty(), bombCell, explRadius), bombCell);
         assertTrue(map.isBomb(bombCell));
 
-        EnemyGraphReasoner reasoner = new EnemyGraphReasoner(map);
+        EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
 
         Optional<Pair> safeSpace = reasoner.findNearestSafeSpace(enemyCoord, explRadius);
         if(expectedSafeSpaceX != -1 && expectedSafeSpaceY != -1) {

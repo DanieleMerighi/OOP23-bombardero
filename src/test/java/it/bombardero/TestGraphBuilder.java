@@ -14,7 +14,6 @@ import it.unibo.bombardero.map.impl.GameMapImpl;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
-import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.character.AI.*;
@@ -31,7 +30,7 @@ public class TestGraphBuilder {
 
     @Test
     public void testBaseMapSize() {
-        this.graph = GraphBuilder.buildFromMap(map);
+        this.graph = GraphBuilderImpl.buildFromMap(map);
         // the base map (built with only unbreakable wall) have 133 vertex
         assertEquals(133, this.graph.vertexSet().size());
         assertEquals(168, this.graph.edgeSet().size());
@@ -41,7 +40,7 @@ public class TestGraphBuilder {
         map.addBreakableWall(new Pair(0, 3));
         map.addBreakableWall(new Pair(0, 4));
 
-        this.graph = GraphBuilder.buildFromMap(map);
+        this.graph = GraphBuilderImpl.buildFromMap(map);
 
         assertEquals(133, this.graph.vertexSet().size());
         assertEquals(168, this.graph.edgeSet().size());
@@ -54,7 +53,7 @@ public class TestGraphBuilder {
         baseMap.addFlame(new Flame(CellType.FLAME, Flame.FlameType.FLAME_BODY_HORIZONTAL), new Pair(0, 3));
         baseMap.addFlame(new Flame(CellType.FLAME, Flame.FlameType.FLAME_BODY_HORIZONTAL), new Pair(0, 4));
         //baseMap.addBomb(new Bomb(null, CellType.BOMB_BASIC, 0), new Pair(5, 0));
-        this.graph = GraphBuilder.buildFromMap(baseMap);
+        this.graph = GraphBuilderImpl.buildFromMap(baseMap);
         assertEquals(133, this.graph.vertexSet().size());
         assertEquals(168, this.graph.edgeSet().size());
     }
@@ -62,7 +61,7 @@ public class TestGraphBuilder {
     @Test
     public void testEdgeWeights() {
         map.addBreakableWall(new Pair(1, 2));
-        graph = GraphBuilder.buildFromMap(map);
+        graph = GraphBuilderImpl.buildFromMap(map);
 
         Pair p1 = new Pair(0, 2); // grass
         Pair p2 = new Pair(1, 2); // Breakable wall
