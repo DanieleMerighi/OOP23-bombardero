@@ -1,9 +1,10 @@
-package it.unibo.bombardero.physics;
+package it.unibo.bombardero.physics.impl;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import it.unibo.bombardero.character.Direction;
+import it.unibo.bombardero.physics.api.BoundingBox;
 
 
 public class RectangleBoundingBox implements BoundingBox{
@@ -19,7 +20,7 @@ public class RectangleBoundingBox implements BoundingBox{
     }
 
     @Override
-    public boolean isColliding(Rectangle2D cellBox) {
+    public boolean isColliding(Rectangle2D cellBox) { //TODO e da cambiare in unonpiu generico
         return fisicsBox.intersects(cellBox);
     }
 
