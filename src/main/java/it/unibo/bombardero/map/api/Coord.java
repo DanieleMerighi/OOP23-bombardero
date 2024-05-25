@@ -6,4 +6,11 @@ public record Coord(float row, float col) {
                 Math.round((p1.col + col) * 1000.0f) / 1000.0f);
     }
 
+    public Coord subtract(Pair p1) {
+        return new Coord(p1.row() - row, p1.col() - col);
+    }
+
+    public Coord multiply(float scale) {
+        return new Coord(row * scale, col * scale);
+    }
 }

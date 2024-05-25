@@ -14,13 +14,28 @@ import it.unibo.bombardero.character.Direction;
 
 import java.util.EnumSet;
 
-public class GraphBuilder {
+/**
+ * This utility class provides a static method to build a JGraphT graph
+ * representation
+ * from a game map.
+ */
+public class GraphBuilderImpl {
 
+    /**
+     * Constructs a weighted graph representing the game map.
+     * This method takes a GameMap object as input and creates a SimpleWeightedGraph
+     * using JGraphT library. Vertices in the graph represent walkable cells (Pairs
+     * of row
+     * and column coordinates), and edges represent valid connections (movement
+     * paths)
+     * between walkable cells.
+     *
+     * @param map the game map object used to identify walkable and unbreakable
+     *            cells
+     * @return a weighted graph representing the game map
+     */
     public static Graph<Pair, DefaultWeightedEdge> buildFromMap(GameMap map) {
         Graph<Pair, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
-        // Stream<Pair> validPos = map.getMap().entrySet().stream()
-        // .map(p -> p.getKey())
-        // .filter(p -> !(map.isUnbreakableWall(p) || map.isFlame(p) || map.isBomb(p)));
 
         Stream<Pair> validcells = IntStream.range(0, Utils.MAP_ROWS)
                 .boxed()
@@ -32,6 +47,15 @@ public class GraphBuilder {
         return graph;
     }
 
+    /**
+     * Connects a cell with its valid walkable neighbors in the game map graph.
+     * This method iterates through all cardinal directions (up, down, left, right)
+     * and checks if a neighbor exists at that location.
+     *
+     * @param graph the graph representing the game map
+     * @param p     the current cell to connect with neighbors
+     * @param map   the game map object used to identify walkable cells and walls
+     */
     private static void connectWithNeighbors(Graph<Pair, DefaultWeightedEdge> graph, Pair p, GameMap map) {
         EnumSet.allOf(Direction.class)
                 .stream()
