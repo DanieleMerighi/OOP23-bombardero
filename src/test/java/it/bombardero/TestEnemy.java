@@ -32,7 +32,7 @@ public class TestEnemy {
     @BeforeEach
     void setUp() {
         this.manager = new TestGameManager();
-        this.b = new BombFactoryImpl(manager, null);
+        this.b = new BombFactoryImpl(manager);
         this.manager.setEnemyCoord(0, 0);
         this.manager.enemy.setSpeed(0.01f);
     }

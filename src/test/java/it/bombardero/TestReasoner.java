@@ -29,7 +29,7 @@ public class TestReasoner {
     @BeforeEach
     public void setup() {
         map = new GameMapImpl(false);
-        b = new BombFactoryImpl(new BombarderoGameManager(null), null);
+        b = new BombFactoryImpl(new BombarderoGameManager(null));
     }
 
     // this way I can test different scenarios by passing the right
