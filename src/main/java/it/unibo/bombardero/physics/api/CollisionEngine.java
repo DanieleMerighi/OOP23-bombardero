@@ -7,9 +7,16 @@ import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.character.Character;
 
 public interface CollisionEngine {
     
     void checkFlameCollision();
+
+    void checkCharacterCollision(Character character);
+
+    
+
+
 
 }
