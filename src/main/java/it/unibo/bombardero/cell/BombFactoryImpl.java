@@ -5,7 +5,7 @@ import java.util.function.Predicate;
 
 import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.cell.Cell.CellType;
-import it.unibo.bombardero.cell.PowerUp.PowerUpType;
+import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.physics.api.CollisionEngine;
@@ -60,15 +60,12 @@ public class BombFactoryImpl implements BombFactory{
     private BasicBomb createRemoteBomb(Pair pos , int range) {
         return new BasicBomb(mgr , pos , BombType.BOMB_PIERCING , range , ce) {
             
-            public void update(boolean condition){
-                if(condition){
-                    super.update(BasicBomb.TIME_TO_EXPLODE); //TODO find better option
+            public void update(){
+                if(true){
+                    super.update(BasicBomb.TIME_TO_EXPLODE); //TODO find better option cosi non funziona
                 }
             }
         };
     }
 
-    private BasicBomb createPunchBomb(Pair pos , int range) {
-        return null;
-    }
 }

@@ -56,10 +56,17 @@ public class Enemy extends Character {
         return distance <= detectionRadius; // Check if player is within detection radius
     }
 
-    /**
-     * Chooses a random valid and empty cell as the next move target when the enemy
-     * doesn't have a specific direction to go.
-     */
+    /*
+    private void placeBomb(Pair targetCell) {
+        if (hasBombsLeft() && isValidCell(targetCell)
+                && this.getManager().getGameMap().isEmpty(targetCell)) {
+            // map.addBomb(null, targetCell);
+            //numBombs--;
+        }
+    }
+    */ 
+
+    // when the enemy doesn't know where to move he choose randomly
     private void moveRandomly() {
         Pair currentCoord = getIntCoordinate();
         List<Direction> dirs = EnumSet.allOf(Direction.class)

@@ -14,6 +14,7 @@ import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;
 import it.unibo.bombardero.core.api.GameManager;
+import it.unibo.bombardero.map.api.BombarderoTimer;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
@@ -183,6 +184,18 @@ public class TestEnemy {
         @Override
         public boolean removeWall(Pair pos) {
             throw new UnsupportedOperationException("Unimplemented method 'removeWall'");
+        }
+
+        @Override
+        public void startTimer() {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'startTimer'");
+        }
+
+        @Override
+        public BombarderoTimer getTimer() {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'getTimer'");
         }
     }
 

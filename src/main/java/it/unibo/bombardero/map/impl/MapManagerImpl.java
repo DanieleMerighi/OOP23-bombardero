@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
+
 import java.util.Set;
 import java.util.HashSet;
-
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.MapManager;
 import it.unibo.bombardero.map.api.Pair;
@@ -14,7 +14,8 @@ import it.unibo.bombardero.utils.Utils;
 
 /**
  * This class implements the Map Manager concept, a class that manages 
- * the dynamic aspects of a specific instance of Game Map.
+ * the dynamic aspects of a specific instance of Game Map passed to the 
+ * constructor.
  * @author Federico Bagattoni
  */
 public class MapManagerImpl implements MapManager {
@@ -23,10 +24,12 @@ public class MapManagerImpl implements MapManager {
     /* NOTE: the number "12" does NOT depend from the arena's size, however the "MAP_CORNERS" Set does. */
     private static final int MAP_CORNERS_NUMBER = 12;
     private final Set<Pair> map_corners = new HashSet<Pair>();
+    private static final int COLLAPSE_RATE = 5;
 
     private final GameMap map;
     private List<Pair> wallCollapseOrder;
     private boolean collapseStarted = false;
+    private int counter = 0;
 
     /** 
      * Creates a new Map Manager managing a the map passed as argument.
@@ -39,8 +42,12 @@ public class MapManagerImpl implements MapManager {
 
     @Override
     public void update() {
-        if (collapseStarted) {
-            placeNextWall();
+        if (collapseStarted && !wallCollapseOrder.isEmpty()) {
+            counter++;
+            if (counter >= COLLAPSE_RATE) {
+                placeNextWall();
+                counter = 0;
+            }
         }
     }
 
@@ -71,9 +78,11 @@ public class MapManagerImpl implements MapManager {
     }
 
     @Override
-    public void triggerArenaCollapse() {
-        this.collapseStarted = true;
-        this.wallCollapseOrder = computeCollapseOrder();
+    public void triggerCollapse() {
+        if (!collapseStarted) {
+            this.collapseStarted = true;
+            this.wallCollapseOrder = computeCollapseOrder();
+        }
     }
 
     /** 

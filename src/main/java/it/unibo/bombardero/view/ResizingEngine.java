@@ -79,4 +79,8 @@ public class ResizingEngine {
         return SCALED_CELL_SIZE;
     }
     
+    public boolean hasScaleChanged() {
+        return false;
+    }
+    
 }

@@ -2,11 +2,15 @@ package it.unibo.bombardero.character;
 
 import java.util.Optional;
 
+import org.jgrapht.alg.drawing.model.Point2D;
+
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.PowerUp.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.physics.BoundingBox;
+import it.unibo.bombardero.physics.RectangleBoundingBox;
 
 /**
  * Abstract class representing a character in the game.
@@ -33,6 +37,9 @@ public abstract class Character {
     private Coord coordinate; // Starting character coordinate
     private Direction facingDirection = Direction.DOWN; // Starting character facingDirection
 
+    // Physics part of character
+    //private BoundingBox bBox; //TODO change with point 2D
+
     // Game attribute related
     private boolean isAlive = true;
     private int numBomb = STARTING_BOMBS;
@@ -53,8 +60,8 @@ public abstract class Character {
         this.manager = manager;
         this.coordinate = coord;
         this.bombFactory = bombFactory;
+        //this.bBox = new RectangleBoundingBox(null, STARTING_BOMBS, HEIGHT);
     }
-
     /**
      * Updates the character's state.
      * This method should be implemented by subclasses to define character-specific
@@ -78,8 +85,8 @@ public abstract class Character {
      * @return the map's corrisponding integer coordinates of the character
      */
     public Pair getIntCoordinate() {
-        return new Pair((int) Math.floor(this.coordinate.row()),
-                (int) Math.floor(this.coordinate.col()));
+        return new Pair((int) Math.floor(this.coordinate.row() + HEIGHT / 2),
+                (int) Math.floor(this.coordinate.col() + WIDTH / 2));
     }
 
     /**

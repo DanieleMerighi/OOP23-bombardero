@@ -14,23 +14,22 @@ public interface BombarderoTimer {
     void startTimer();
 
     /**
-     * Updates the timer
-     * This method is assumed to be called peiodically and after the @startTimer method
+     * Updates the timer.
+     * This method is assumed to be called peiodically and after the {#@startTimer()} method
      * has been called at least once. 
      */
     void updateTimer();
 
     /** 
-     * Returns the time left for the logic to check, no formatting is done.
+     * Returns the time left in milliseoconds.
      * @return the time left.
     */
     long getTimeLeft();
 
     /**
-     * Formats the time properly for displaying as such: "MM:SS" and 
-     * returns a String type.
-     * @return the properly formatted time.
+     * Wether the time is over.
+     * @return wether the time is over or not.
      */
-    String getFormattedTimeLeft();
+    boolean isOver();
 
 }
