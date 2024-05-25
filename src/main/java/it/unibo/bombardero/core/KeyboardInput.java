@@ -26,6 +26,10 @@ public class KeyboardInput implements KeyListener {
     private boolean left;
     private boolean down;
     private boolean right;
+    /*
+     * TO-DO:
+     * Add lastFacedDirection to Character for the enemy
+     */
     private Direction lastFacedDirection = Direction.DEFAULT;
 
     /**

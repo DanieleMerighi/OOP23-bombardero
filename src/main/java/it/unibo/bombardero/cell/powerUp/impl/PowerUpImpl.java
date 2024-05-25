@@ -37,10 +37,10 @@ public class PowerUpImpl extends Cell implements PowerUp {
     //how to stop the forEach from placing bomb after placebomb returns flase?
     public static void placeLineBomb(final Character character, final Map<Pair,Cell> map, final Direction lastFacedDirection) {
         if (character.hasLineBomb()) {
-            // lo stream continua finché non ha piazzato tutte le bombe o finché incontra un ostacolo
+            // Lo stream continua finché non ha piazzato tutte le bombe o finché incontra un ostacolo
             IntStream
                 .range(0, character.getNumBomb())
-                // Lo stream continua finché trova celle vuote (celle che non contengono keys)
+                // Lo stream continua finché trova celle vuote (celle non salvate in keys)
                 .takeWhile(offset -> !map
                         .containsKey(character
                         .getIntCoordinate()
@@ -49,7 +49,8 @@ public class PowerUpImpl extends Cell implements PowerUp {
                             lastFacedDirection.getDx() * offset)
                         )
                     )
-                ) // Piazzo le bombe nelle celle vuoto
+                )
+                // Piazzo le bombe nelle celle vuote
                 .forEach(offset -> character
                     .placeBomb(character
                         .getIntCoordinate()
