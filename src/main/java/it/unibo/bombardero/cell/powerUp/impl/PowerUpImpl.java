@@ -6,6 +6,7 @@ import java.util.Map;
 
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.character.Character;
+import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.cell.powerup.api.PowerUpEffectStrategy;
@@ -34,27 +35,28 @@ public class PowerUpImpl extends Cell implements PowerUp {
     }
 
     //how to stop the forEach from placing bomb after placebomb returns flase?
-    public static void placeLineBomb(final Character character, final Map<Pair,Cell> map) {
+    public static void placeLineBomb(final Character character, final Map<Pair,Cell> map, final Direction lastFacedDirection) {
         if (character.hasLineBomb()) {
-            // lo stream continua finché non ha piazzato tutte le bombe o finché incontra un ostacolo
+            // Lo stream continua finché non ha piazzato tutte le bombe o finché incontra un ostacolo
             IntStream
                 .range(0, character.getNumBomb())
-                // Lo stream continua finché trova celle vuote (celle che non contengono keys)
+                // Lo stream continua finché trova celle vuote (celle non salvate in keys)
                 .takeWhile(offset -> !map
                         .containsKey(character
                         .getIntCoordinate()
                         .sum(new Pair(
-                            character.getFacingDirection().getDy() * offset,
-                            character.getFacingDirection().getDx() * offset)
+                            lastFacedDirection.getDy() * offset,
+                            lastFacedDirection.getDx() * offset)
                         )
                     )
-                ) // Piazzo le bombe nelle celle vuoto
+                )
+                // Piazzo le bombe nelle celle vuote
                 .forEach(offset -> character
                     .placeBomb(character
                         .getIntCoordinate()
                         .sum(new Pair(
-                            character.getFacingDirection().getDy() * offset,
-                            character.getFacingDirection().getDx() * offset)
+                            lastFacedDirection.getDy() * offset,
+                            lastFacedDirection.getDx() * offset)
                         )
                     )
                 );
