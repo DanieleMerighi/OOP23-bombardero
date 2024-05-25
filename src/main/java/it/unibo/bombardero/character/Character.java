@@ -9,8 +9,8 @@ import it.unibo.bombardero.cell.PowerUp.api.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;
-import it.unibo.bombardero.physics.BoundingBox;
-import it.unibo.bombardero.physics.RectangleBoundingBox;
+import it.unibo.bombardero.physics.api.BoundingBox;
+import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 
 /**
  * Abstract class representing a character in the game.
@@ -36,6 +36,7 @@ public abstract class Character {
     // Position related
     private Coord coordinate; // Starting character coordinate
     private Direction facingDirection = Direction.DOWN; // Starting character facingDirection
+    private BoundingBox bBox; // Solid area of the character
 
     // Physics part of character
     //private BoundingBox bBox; //TODO change with point 2D
@@ -60,7 +61,7 @@ public abstract class Character {
         this.manager = manager;
         this.coordinate = coord;
         this.bombFactory = bombFactory;
-        //this.bBox = new RectangleBoundingBox(null, STARTING_BOMBS, HEIGHT);
+        this.bBox = new RectangleBoundingBox(null , (float) STARTING_BOMBS, (float) HEIGHT);
     }
     /**
      * Updates the character's state.
@@ -89,6 +90,12 @@ public abstract class Character {
                 (int) Math.floor(this.coordinate.col() + WIDTH / 2));
     }
 
+    /**
+     * @return bounding box of the charachters
+     */
+    public BoundingBox getBoundingBox() {
+        return bBox;
+    }
     /**
      * Places a bomb at the character's current location if they have bombs left.
      */
