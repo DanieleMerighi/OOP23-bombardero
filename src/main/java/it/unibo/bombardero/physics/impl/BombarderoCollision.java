@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
 import java.util.Set;
@@ -18,6 +19,7 @@ import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.physics.api.BoundingBox;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.character.Character;
 
@@ -47,8 +49,16 @@ public class BombarderoCollision implements CollisionEngine{
 
     @Override
     public void checkCharacterCollision(Character character) {
-        List<Pair> cellList = getDirectionCell(character.getFacingDirection());
-        cellList.stream().map( p -> map.get(p).getBoundingBox() ).filter(b->b.isColliding(character.getBoundingBox())).findFirst();
+        Optional<BoundingBox> collidigBox = getDirectionCell(character.getFacingDirection()).
+            stream().map( p -> map.get(p).getBoundingBox() )
+            .filter(b->b.isColliding(character.getBoundingBox()))
+            .findFirst();
+        if(collidigBox.isPresent()){
+            character.setCharacterPosition(character.getCharacterPosition()
+                .sum(character.getBoundingBox()
+                .distanceOfCollision(collidigBox.get().getPhysicsBox(), character.getFacingDirection())));
+        }
+
     }
 
 
