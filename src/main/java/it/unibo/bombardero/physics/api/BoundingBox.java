@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import it.unibo.bombardero.character.Direction;
+import it.unibo.bombardero.map.api.Coord;
 
 public interface BoundingBox {
 
@@ -25,7 +26,7 @@ public interface BoundingBox {
      * @param dir
      * @return the distance of the collision
      */
-    float distanceOfCollision(Rectangle2D bBox, Direction dir);
+    Coord distanceOfCollision(Rectangle2D bBox, Direction dir);
 
     /**
      * @return the rectangle that rappresent the bounding box

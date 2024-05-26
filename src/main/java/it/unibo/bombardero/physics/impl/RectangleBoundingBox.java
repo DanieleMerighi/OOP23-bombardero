@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import it.unibo.bombardero.character.Direction;
+import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.physics.api.BoundingBox;
 
 
@@ -20,23 +21,29 @@ public class RectangleBoundingBox implements BoundingBox{
     }
 
     @Override
-    public boolean isColliding(Rectangle2D cellBox) { //TODO e da cambiare in unonpiu generico
-        return fisicsBox.intersects(cellBox);
+    public boolean isColliding(BoundingBox bBox) {
+        return fisicsBox.intersects(bBox.getPhysicsBox());
+        
     }
 
     @Override
-    public float distanceOfCollision(Rectangle2D cellBox ,Direction dir) {
+    public Coord distanceOfCollision(Rectangle2D cellBox ,Direction dir) {
         switch (dir) {
             case UP:
-                return -(float)fisicsBox.createIntersection(cellBox).getHeight();
+                return new Coord((float)fisicsBox.createIntersection(cellBox).getHeight(),0);
             case DOWN:
-                return (float)fisicsBox.createIntersection(cellBox).getHeight();
+                return new Coord(-(float)fisicsBox.createIntersection(cellBox).getHeight() , 0);
             case LEFT:
-                return -(float)fisicsBox.createIntersection(cellBox).getWidth();
+                return new Coord(0 , (float)fisicsBox.createIntersection(cellBox).getWidth());
             case RIGHT:
-                return (float)fisicsBox.createIntersection(cellBox).getWidth();
+                return new Coord(0, -(float)fisicsBox.createIntersection(cellBox).getWidth());
             default:
-                return 0;//TODO not sure about that
+                return new Coord(0, 0);//TODO not sure about that
         }
+    }
+
+    @Override
+    public Rectangle2D getPhysicsBox() {
+        return fisicsBox;
     }
 }
