@@ -40,24 +40,24 @@ public class BombarderoGameManager implements GameManager {
         ce = new BombarderoCollision(this);
         bombFactory = new BombFactoryImpl(this, ce);
         this.player = new Player(this, Utils.PLAYER_SPAWNPOINT, bombFactory);
-        Utils.ENEMIES_SPAWNPOINT.forEach(enemyCoord -> enemies.add(new Enemy(this, enemyCoord, bombFactory)));
+        /* Utils.ENEMIES_SPAWNPOINT.forEach(enemyCoord -> enemies.add(new Enemy(this, enemyCoord, bombFactory))); */
     }
 
     @Override
     public void updateGame() {
-        if (player.isAlive()) { //TODO: elapsedTime needs to be added
-            player.update(100);
-        }
-        enemies.forEach(enemy -> {
-            if (enemy.isAlive()) {
-                enemy.update(100);
-            }
-        });
         gameTimer.updateTimer();
         if (gameTimer.isOver()) {
             map.triggerCollapse();
         }
         map.update();
+        if (player.isAlive()) {
+            player.update();
+        }
+        enemies.forEach(enemy -> {
+            if (enemy.isAlive()) {
+                enemy.update();
+            }
+        });
     }
 
     @Override
