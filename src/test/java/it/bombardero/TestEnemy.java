@@ -26,6 +26,8 @@ import java.util.Optional;
 
 public class TestEnemy {
 
+    private static final int STANDARD_ELAPSED_TIME = 100;
+
     private TestGameManager manager;
     private BombFactory b;
 
@@ -41,7 +43,7 @@ public class TestEnemy {
     public void testEnemyPatrol_PlayerNotInDetectionRadius_MovesRandomly() {
         // outside ENEMY_DETECTION_RADIUS
         this.manager.setPlayerCoord(0, 5);
-        this.manager.enemy.update();
+        this.manager.enemy.update(STANDARD_ELAPSED_TIME);
 
         // Verify enemy state is PATROL
         assertEquals(Enemy.State.PATROL, this.manager.enemy.getState());
@@ -84,7 +86,7 @@ public class TestEnemy {
     public void testEnemyEscape_ChangesToPatrolState() {
         // Set enemy position inside a danger zone
         this.manager.getGameMap().addBomb(b.CreateBomb(Optional.empty(), new Pair(0, 1), 1), new Pair(0, 1));
-        this.manager.enemy.update();
+        this.manager.enemy.update(STANDARD_ELAPSED_TIME);
 
         assertEquals(Enemy.State.ESCAPE, this.manager.enemy.getState());
         this.manager.updateGame();
@@ -99,7 +101,7 @@ public class TestEnemy {
         // Set enemy next to a breakable wall
         this.manager.setPlayerCoord(0, 2);
         this.manager.getGameMap().addBreakableWall(new Pair(0, 1));
-        this.manager.enemy.update();
+        this.manager.enemy.update(STANDARD_ELAPSED_TIME);
 
         assertEquals(Enemy.State.CHASE, this.manager.enemy.getState());
         //this.manager.updateGame();
@@ -141,9 +143,9 @@ public class TestEnemy {
         public void updateGame() {
             // 60 fps
             for (int i = 0; i < 59; i++) {
-                this.enemy.update();
+                this.enemy.update(STANDARD_ELAPSED_TIME);
             }
-            this.enemy.update();
+            this.enemy.update(STANDARD_ELAPSED_TIME);
         }
 
         @Override

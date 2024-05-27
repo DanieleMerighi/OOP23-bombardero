@@ -20,13 +20,13 @@ import it.unibo.bombardero.physics.impl.*;
 public abstract class Character {
 
     // Constants for default settings
-    private static final float STARTING_SPEED = 0.05f;
+    public static final float STARTING_SPEED = 0.05f;
     private static final float INCREASE_SPEED = 0.005f;
-    private static final int STARTING_FLAME_RANGE = 1;
+    public static final int STARTING_FLAME_RANGE = 1;
     private static final int STARTING_BOMBS = 1;
 
     // Constants for controls
-    private static final float MAX_SPEED = 0.09f;
+    public static final float MAX_SPEED = 0.09f;
     public static final int MAX_FLAME_RANGE = 8;
     private static final int MAX_BOMBS = 8;
 
@@ -52,6 +52,14 @@ public abstract class Character {
     private boolean kick; // False by default
     private boolean lineBomb;
 
+    // Skull effects
+    private boolean constipation; // The character is unable to lay down bombs
+    private boolean butterfingers; // The character's hand becomes slippery. The character rapidly lay down bombs
+
+    // Skull manager
+    private long effectDuration; // Indicates the duration of the skeleton effect
+    private Optional<Runnable> resetTask = Optional.empty(); // Resets the current skeleton task once it ended
+
     /**
      * Constructs a new Character with the specified parameters.
      * 
@@ -71,7 +79,18 @@ public abstract class Character {
      * This method should be implemented by subclasses to define character-specific
      * behavior.
      */
-    public abstract void update();
+    public abstract void update(final long elapsedTime);
+
+    // time elapsed since the last update
+    public void updateSkeleton(final long elapsedTime) {
+        if (this.effectDuration > 0) { // Continues until the duration reaches zero
+            this.effectDuration -= elapsedTime;
+            if (this.effectDuration <= 0) { // When the effect ends the stats get resetted
+                this.resetTask.ifPresent(Runnable::run); // If there's a task to reset, it runs the reset task
+                this.resetTask = Optional.empty(); // Clear the reset task after it has run
+            }
+        }
+    }
 
     /**
      * Checks if the character is alive.
@@ -97,7 +116,7 @@ public abstract class Character {
      * Places a bomb at the character's current location if he has bombs left.
      */
     public void placeBomb() {
-        if (hasBombsLeft() && this.manager
+        if (hasBombsLeft() && !this.constipation && this.manager
                 .addBomb(this.bombFactory.CreateBomb(this.bombType, getIntCoordinate(), this.flameRange))) {
             this.numBomb--;
             System.out.println("bomb placed");
@@ -112,7 +131,7 @@ public abstract class Character {
      * @return true if the character has placed the bomb, false otherwise
      */
     public boolean placeBomb(final Pair coordinate) {
-        if (hasBombsLeft() && this.manager
+        if (hasBombsLeft() && !this.constipation && this.manager
                 .addBomb(this.bombFactory.CreateBomb(this.bombType, coordinate, this.flameRange))) {
             this.numBomb--;
             System.out.println("line bomb placed");
@@ -301,7 +320,7 @@ public abstract class Character {
      */
     public void decreaseSpeed() {
         if (this.speed > STARTING_SPEED) {
-            this.speed -= 0.005f;
+            this.speed -= INCREASE_SPEED;
         }
     }
 
@@ -360,4 +379,31 @@ public abstract class Character {
         this.lineBomb = lineBomb;
     }
 
+    public boolean hasConstipation() {
+        return constipation;
+    }
+
+    public void setConstipation(boolean constipation) {
+        this.constipation = constipation;
+    }
+
+    public boolean hasButterfingers() {
+        return butterfingers;
+    }
+
+    public void setButterfingers(boolean butterfingers) {
+        this.butterfingers = butterfingers;
+    }
+
+    public void setEffectDuration(long duration) {
+        this.effectDuration = duration;
+    }
+
+    public Optional<Runnable> getResetTask() {
+        return resetTask;
+    }
+    
+    public void setResetTask(Runnable resetTask) {
+        this.resetTask = Optional.of(resetTask);
+    }
 }

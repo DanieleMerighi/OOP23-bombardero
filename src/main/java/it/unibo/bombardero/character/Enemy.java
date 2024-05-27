@@ -121,7 +121,7 @@ public class Enemy extends Character {
      * This method is called every frame to handle enemy movement and actions.
      */
     @Override
-    public void update() {
+    public void update(final long elapsedTime) {
         movementTimer += 1;
         // Every 60 frames (assuming 60 fps), call computeNextDir to get the next target
         if (movementTimer >= 60 || nextMove.isEmpty()) {

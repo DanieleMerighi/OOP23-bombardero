@@ -28,9 +28,13 @@ public class Player extends Character {
      * input.
      */
     @Override
-    public void update() {
+    public void update(final long elapsedTime) {
         // Player movement:
         setCharacterPosition(computeNewPlayerPosition());
+        // Skeleton effect:
+        if (getResetTask().isPresent()) { // If there's a Task to reset
+            updateSkeleton(elapsedTime);
+        }
     }
 
     /**
