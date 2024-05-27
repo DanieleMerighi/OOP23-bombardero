@@ -13,8 +13,6 @@ import it.unibo.bombardero.core.api.Controller;
  * such as placing bombs and using power-ups.
  * This class interacts with the Controller to update the game state based on
  * which keys get pressed.
- * 
- * @author Jacopo Turchi
  */
 public class KeyboardInput implements KeyListener {
 

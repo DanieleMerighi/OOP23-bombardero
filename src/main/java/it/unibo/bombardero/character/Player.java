@@ -8,8 +8,6 @@ import it.unibo.bombardero.cell.BombFactory;
  * This class represents a Player in the game.
  * This class extends the Character class and is responsible for handling
  * player-specific actions and behaviors.
- * 
- * @Author: Jacopo Turchi
  */
 public class Player extends Character {
 

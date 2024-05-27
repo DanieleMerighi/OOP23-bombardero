@@ -16,8 +16,6 @@ import it.unibo.bombardero.physics.impl.*;
 /**
  * Abstract class representing a character in the game.
  * Contains common properties and methods for characters.
- * 
- * @author Jacopo Turchi
  */
 public abstract class Character {
 
