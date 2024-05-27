@@ -44,18 +44,18 @@ public class BombarderoGameManager implements GameManager {
     }
 
     @Override
-    public void updateGame() {
+    public void updateGame() { //TODO: fix elapsed time
         gameTimer.updateTimer();
         if (gameTimer.isOver()) {
             map.triggerCollapse();
         }
         map.update();
         if (player.isAlive()) {
-            player.update();
+            player.update(100);
         }
         enemies.forEach(enemy -> {
             if (enemy.isAlive()) {
-                enemy.update();
+                enemy.update(100);
             }
         });
     }
