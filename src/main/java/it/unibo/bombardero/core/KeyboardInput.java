@@ -3,9 +3,11 @@ package it.unibo.bombardero.core;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import it.unibo.bombardero.cell.powerup.impl.*;
+import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.Controller;
+
+import java.util.Optional;
 
 /**
  * This class implements KeyListener to handle keyboard input for the game.
@@ -24,11 +26,7 @@ public class KeyboardInput implements KeyListener {
     private boolean left;
     private boolean down;
     private boolean right;
-    /*
-     * TO-DO:
-     * Add lastFacedDirection to Character for the enemy
-     */
-    private Direction lastFacedDirection = Direction.DEFAULT;
+    //TODO: Risolvere le troppe direzioni. Usare una direzione e una variabile che dice se sei fermo?
 
     /**
      * Constructs a new KeyboardInput istance.
@@ -61,16 +59,20 @@ public class KeyboardInput implements KeyListener {
             case KeyEvent.VK_ESCAPE -> controller.escape();
             // System.out.println("ESC");
             // calls player method to place a bomb
-            case KeyEvent.VK_SPACE -> controller.getMainPlayer().placeBomb();
+            case KeyEvent.VK_SPACE -> controller.getMainPlayer().setHasToPlaceBomb(true);
             // System.out.println("spazio");
             // calls powerup method to use line bomb powerup
-            case 'l', 'L' -> {// calls powerup method? check if the player has the power-up
-                PowerUpImpl.placeLineBomb(controller.getMainPlayer(), controller.getMap(), lastFacedDirection);
+            case 'l', 'L' -> {
+                controller.getMainPlayer().setHasToPlaceLineBomb(true);
                 System.out.println("l");
             }
-            // calls powerup method to explode remote bomb powerup
-            case 'p', 'P' -> // calls powerup method? check if the player has the remote bomb
+            // calls player method to explode remote bomb powerup
+            case 'p', 'P' -> {
+                if (controller.getMainPlayer().getBombType().equals(Optional.of(PowerUpType.REMOTE_BOMB))) {
+                    controller.getMainPlayer().setHasToExplodeRemoteBomb(true);
+                }
                 System.out.println("p");
+            }
             default -> {
             }
         }
@@ -96,25 +98,25 @@ public class KeyboardInput implements KeyListener {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W -> {
                 up = true;
-                lastFacedDirection = Direction.UP;
+                controller.getMainPlayer().setStationary(false);
                 controller.getMainPlayer().setFacingDirection(Direction.UP);
                 // System.out.println("UP");
             }
             case KeyEvent.VK_A -> {
                 left = true;
-                lastFacedDirection = Direction.LEFT;
+                controller.getMainPlayer().setStationary(false);
                 controller.getMainPlayer().setFacingDirection(Direction.LEFT);
                 // System.out.println("LEFT");
             }
             case KeyEvent.VK_S -> {
                 down = true;
-                lastFacedDirection = Direction.DOWN;
+                controller.getMainPlayer().setStationary(false);
                 controller.getMainPlayer().setFacingDirection(Direction.DOWN);
                 // System.out.println("DOWN");
             }
             case KeyEvent.VK_D -> {
                 right = true;
-                lastFacedDirection = Direction.RIGHT;
+                controller.getMainPlayer().setStationary(false);
                 controller.getMainPlayer().setFacingDirection(Direction.RIGHT);
                 // System.out.println("RIGHT");
             }
@@ -147,9 +149,9 @@ public class KeyboardInput implements KeyListener {
             default -> {
             }
         }
-        // If all the movement key get released, the direction is set to default
+        // If all the movement key get released, stationary is set to true
         if (!up && !left && !down && !right) {
-            controller.getMainPlayer().setFacingDirection(Direction.DEFAULT);
+            controller.getMainPlayer().setStationary(true);
         }
         /*
          * When a key get released, it checks if a key was being pressed before
