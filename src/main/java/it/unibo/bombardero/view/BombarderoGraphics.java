@@ -23,6 +23,7 @@ public class BombarderoGraphics {
     public final static String MENU_CARD = "menu";
     public final static String END_CARD = "end";
     public final static String GAME_CARD = "game";
+    public final static String GUIDE_CARD = "guide";
 
     private Controller controller;
 
@@ -38,6 +39,7 @@ public class BombarderoGraphics {
     private GameCard gameCard;
     private GameoverCard endGameCard;
     private final MenuCard menuCard;
+    private final GuideCard guideCard;
     
     public BombarderoGraphics() {
         this.controller = new BombarderoController(this);
@@ -55,8 +57,11 @@ public class BombarderoGraphics {
         frame.setIconImage(game_icon.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
 
         this.menuCard = new MenuCard(controller, this, resourceGetter);
+        this.guideCard = new GuideCard(controller, this, resourceGetter);
         deck.add(MENU_CARD, menuCard);
         layout.addLayoutComponent(menuCard, MENU_CARD);
+        deck.add(GUIDE_CARD, guideCard);
+        layout.addLayoutComponent(guideCard, GUIDE_CARD);
         deck.validate();
 
         /* This listener calls for the ResizingEngine to dinamically update the 
