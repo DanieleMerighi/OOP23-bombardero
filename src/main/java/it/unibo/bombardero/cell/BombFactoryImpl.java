@@ -7,6 +7,7 @@ import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
+import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.map.api.Pair;
 
 public class BombFactoryImpl implements BombFactory{
@@ -17,30 +18,30 @@ public class BombFactoryImpl implements BombFactory{
     }
 
     @Override
-    public BasicBomb CreateBomb(Optional<PowerUpType> powerUp , Pair pos , int range) {
-        if(powerUp.isEmpty()){
-            return createBasicBomb(pos , range);
+    public BasicBomb CreateBomb(Character character) {
+        if(!character.getBombType().isPresent()){
+            createBasicBomb(character);
         }
-        switch (powerUp.get()) {
+        switch (character.getBombType().get()) {
             case PIERCING_BOMB:
-                return createPiercingBomb(pos , range);
+                return createPiercingBomb(character);
             case POWER_BOMB:
-                return createRemoteBomb(pos , range);
+                return createRemoteBomb(character);
             case REMOTE_BOMB:
-                return createPowerBomb(pos , range);
+                return createPowerBomb(character);
             default :
                 return null;
         }
     }
     
-    private BasicBomb createBasicBomb(Pair pos , int range) {
-        return new BasicBomb(mgr, pos, BombType.BOMB_BASIC , range) {
+    private BasicBomb createBasicBomb(Character character) {
+        return new BasicBomb(mgr,character) {
             
         };
     }
 
-    private BasicBomb createPiercingBomb(Pair pos , int range) {
-        return new BasicBomb(mgr , pos , BombType.BOMB_PIERCING , range) {
+    private BasicBomb createPiercingBomb(Character character) {
+        return new BasicBomb(mgr , character) {
             @Override
             protected Predicate<? super Pair> stopFlamePropagation() {
             return p-> !super.map.isBomb(p) && !super.map.isUnbreakableWall(p) && (super.map.isBreakableWall(p) && mgr.removeWall(p));
@@ -48,14 +49,14 @@ public class BombFactoryImpl implements BombFactory{
         };
     }
 
-    private BasicBomb createPowerBomb(Pair pos , int range) {
-        return new BasicBomb(mgr , pos , BombType.BOMB_POWER , BasicBomb.MAX_RANGE) {
+    private BasicBomb createPowerBomb(Character character) {
+        return new BasicBomb(mgr , character) {
             
         };
     }
 
-    private BasicBomb createRemoteBomb(Pair pos , int range) {
-        return new BasicBomb(mgr , pos , BombType.BOMB_REMOTE , range ) {
+    private BasicBomb createRemoteBomb(Character character) {
+        return new BasicBomb(mgr , character ) {
             
             public void update(){
                 if(true){

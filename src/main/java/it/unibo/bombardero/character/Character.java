@@ -108,7 +108,7 @@ public abstract class Character {
      */
     public void placeBomb() {
         if (hasBombsLeft() && this.manager
-                .addBomb(this.bombFactory.CreateBomb(this.bombType, getIntCoordinate(), this.flameRange))) {
+                .addBomb(this.bombFactory.CreateBomb(this))) {
             this.numBomb--;
             System.out.println("bomb placed");
         }
@@ -123,7 +123,7 @@ public abstract class Character {
      */
     public boolean placeBomb(final Pair coordinate) {
         if (hasBombsLeft() && this.manager
-                .addBomb(this.bombFactory.CreateBomb(this.bombType, coordinate, this.flameRange))) {
+                .addBomb(this.bombFactory.CreateBomb(this))) {
             this.numBomb--;
             System.out.println("line bomb placed");
             return true;

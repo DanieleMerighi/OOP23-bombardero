@@ -1,5 +1,8 @@
 package it.unibo.bombardero.cell;
 
+import java.util.Map;
+
+import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.map.api.Pair;
 
 public interface Bomb { 
@@ -21,6 +24,7 @@ public interface Bomb {
         public String getTypeString() {
             return this.typeString;
         }
+
     }
 
     void update(long time);
