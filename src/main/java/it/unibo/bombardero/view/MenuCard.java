@@ -23,7 +23,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-public class MenuCard extends JPanel {
+public final class MenuCard extends JPanel {
 
     private final ResourceGetter rg;
     private final BombarderoGraphics graphicsEngine;
