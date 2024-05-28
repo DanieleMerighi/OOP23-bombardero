@@ -89,6 +89,9 @@ public abstract class Character {
                 this.resetTask.ifPresent(Runnable::run); // If there's a task to reset, it runs the reset task
                 this.resetTask = Optional.empty(); // Clear the reset task after it has run
             }
+            if (this.butterfingers) { // If the character has butterfingers, he places a bomb
+                placeBomb();
+            }
         }
     }
 
