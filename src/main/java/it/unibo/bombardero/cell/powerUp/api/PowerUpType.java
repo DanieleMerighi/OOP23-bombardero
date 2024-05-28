@@ -1,5 +1,9 @@
 package it.unibo.bombardero.cell.powerup.api;
 
+import java.util.Map;
+
+import it.unibo.bombardero.cell.Bomb.BombType;
+
 /**
  * Enumeration representing different types of power-ups in the game.
  */
@@ -27,6 +31,11 @@ public enum PowerUpType {
 
     private String typeString;
     private double weight;
+    private static final Map <PowerUpType, BombType> TO_BOMB_TYPE = Map.of (
+        PowerUpType.REMOTE_BOMB, BombType.BOMB_REMOTE,
+        PowerUpType.PIERCING_BOMB, BombType.BOMB_PIERCING,
+        PowerUpType.POWER_BOMB,  BombType.BOMB_POWER
+    );
 
 
     /**
@@ -56,5 +65,18 @@ public enum PowerUpType {
      */
     public double getWeight() {
         return this.weight;
+    }
+
+    /**
+     * 
+     * @return the corresponding BombType ,if no rapresent any type of bomb return BOMB_BASIC
+     */
+    public BombType toBombType() {
+        if(TO_BOMB_TYPE.containsKey(this)) {
+            return TO_BOMB_TYPE.get(this);
+        } else {
+            return BombType.BOMB_BASIC;
+        }
+
     }
 }
