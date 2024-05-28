@@ -1,9 +1,12 @@
 package it.unibo.bombardero.character;
 
 import java.util.Optional;
+import java.util.Deque;
+import java.util.ArrayDeque;
 
 import org.jgrapht.alg.drawing.model.Point2D;
 
+import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
@@ -38,7 +41,8 @@ public abstract class Character {
 
     // Position related
     private Coord coordinate; // Starting character coordinate
-    private Direction facingDirection = Direction.DEFAULT; // Starting character facingDirection
+    private Direction facingDirection = Direction.DOWN; // Starting character facingDirection
+    private boolean stationary = true;
 
     // Physics part of character
     // private BoundingBox bBox; //TODO change with point 2D
@@ -51,6 +55,18 @@ public abstract class Character {
     private Optional<PowerUpType> bombType = Optional.empty();
     private boolean kick; // False by default
     private boolean lineBomb;
+    private Deque<BasicBomb> remoteBombQueue = new ArrayDeque<>();
+    /*
+     * TODO: Gestire la rimozione di una bomba se è esplosa per concatenazione con
+     * un'altra
+     * usare character.removeRemoteBomb(BasicBomb bomb); ogni volta che si sta per
+     * far esplodere una remote bomb
+     */
+
+    // Update related
+    private boolean hasToPlaceBomb;
+    private boolean hasToPlaceLineBomb;
+    private boolean hasToExplodeRemoteBomb;
 
     // Skull effects
     private boolean constipation; // The character is unable to lay down bombs
@@ -105,6 +121,13 @@ public abstract class Character {
     }
 
     /**
+     * Kills the character, setting its alive status to false.
+     */
+    public void kill() {
+        isAlive = false;
+    }
+
+    /**
      * Gets the integer coordinates of the character, adjusted by the character's
      * width and height.
      * 
@@ -117,13 +140,11 @@ public abstract class Character {
 
     /**
      * Places a bomb at the character's current location if he has bombs left.
+     * 
+     * @return true if the character has placed the bomb, false otherwise
      */
-    public void placeBomb() {
-        if (hasBombsLeft() && !this.constipation && this.manager
-                .addBomb(this.bombFactory.CreateBomb(this.bombType, getIntCoordinate(), this.flameRange))) {
-            this.numBomb--;
-            System.out.println("bomb placed");
-        }
+    public boolean placeBomb() {
+        return placeBombImpl(this.bombFactory.CreateBomb(this.bombType, getIntCoordinate(), this.flameRange));
     }
 
     /**
@@ -134,13 +155,53 @@ public abstract class Character {
      * @return true if the character has placed the bomb, false otherwise
      */
     public boolean placeBomb(final Pair coordinate) {
+        return placeBombImpl(this.bombFactory.CreateBomb(this.bombType, coordinate, this.flameRange));
+    }
+
+    private boolean placeBombImpl(final BasicBomb bomb) {
         if (hasBombsLeft() && !this.constipation && this.manager
-                .addBomb(this.bombFactory.CreateBomb(this.bombType, coordinate, this.flameRange))) {
+                .addBomb(bomb)) {
             this.numBomb--;
-            System.out.println("line bomb placed");
+            if (bombType.equals(Optional.of(PowerUpType.REMOTE_BOMB))) { // If character has the remote bomb
+                remoteBombQueue.addLast(bomb);
+            }
             return true;
         }
         return false;
+    }
+
+    public boolean getHasToPlaceBomb() {
+        return hasToPlaceBomb;
+    }
+
+    public void setHasToPlaceBomb(boolean hasToPlaceBomb) {
+        this.hasToPlaceBomb = hasToPlaceBomb;
+    }
+
+    // fa esplodere la prima remote piazzata della coda
+    public void explodeRemoteBomb() {
+        if (!remoteBombQueue.isEmpty()) {
+            BasicBomb bomb = remoteBombQueue.removeFirst();
+            System.out.println("exploded remote bomb\n\n");
+            bomb.computeFlame(bomb);
+        }
+    }
+
+    // Quando si sta per far esplodere una bomba remote per concatenazione viene
+    // chiamato questo metodo
+    public void removeRemoteBomb(final BasicBomb remoteBomb) {
+        if (!remoteBombQueue.isEmpty()) {
+            System.out.println("removed remote bomb\n\n");
+            remoteBombQueue.removeFirstOccurrence(remoteBomb);
+        }
+    }
+
+    public boolean getHasToExplodeRemoteBomb() {
+        return hasToExplodeRemoteBomb;
+    }
+
+    public void setHasToExplodeRemoteBomb(boolean hasToExplodeRemoteBomb) {
+        this.hasToExplodeRemoteBomb = hasToExplodeRemoteBomb;
     }
 
     /**
@@ -150,13 +211,6 @@ public abstract class Character {
      */
     public boolean hasBombsLeft() {
         return this.numBomb > 0;
-    }
-
-    /**
-     * Kills the character, setting its alive status to false.
-     */
-    public void kill() {
-        isAlive = false;
     }
 
     /**
@@ -211,6 +265,14 @@ public abstract class Character {
      */
     public void setFacingDirection(final Direction direction) {
         this.facingDirection = direction;
+    }
+
+    public boolean isStationary() {
+        return stationary;
+    }
+
+    public void setStationary(boolean stationary) {
+        this.stationary = stationary;
     }
 
     /**
@@ -382,6 +444,14 @@ public abstract class Character {
         this.lineBomb = lineBomb;
     }
 
+    public boolean getHasToPlaceLineBomb() {
+        return hasToPlaceLineBomb;
+    }
+
+    public void setHasToPlaceLineBomb(boolean hasToPlaceLineBomb) {
+        this.hasToPlaceLineBomb = hasToPlaceLineBomb;
+    }
+
     public boolean hasConstipation() {
         return constipation;
     }
@@ -405,7 +475,7 @@ public abstract class Character {
     public Optional<Runnable> getResetTask() {
         return resetTask;
     }
-    
+
     public void setResetTask(Runnable resetTask) {
         this.resetTask = Optional.of(resetTask);
     }

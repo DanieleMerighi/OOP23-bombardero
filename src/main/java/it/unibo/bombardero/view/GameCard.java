@@ -212,7 +212,7 @@ public class GameCard extends JPanel {
     public void updateSprites() {
         /* Update player sprites: */
         playerSprite.update();
-        if (player.getFacingDirection().equals(Direction.DEFAULT)) {
+        if (player.isStationary()) {
             player_image = playerSprite.getStandingImage();
         }
         else if (playerSprite.getCurrentFacingDirection().equals(player.getFacingDirection())) {
