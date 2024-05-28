@@ -1,6 +1,7 @@
 package it.unibo.bombardero.view;
 
 import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
@@ -89,5 +90,13 @@ public class BombarderoGraphics {
     public void update() {
         gameCard.updateMap();
         gameCard.repaint(0);
+    }
+
+    public Dimension getFrameSize() {
+        Dimension dim = frame.getSize();
+        return new Dimension(
+            dim.width - frame.getInsets().right - frame.getInsets().left,
+            dim.height - frame.getInsets().top - frame.getInsets().bottom
+        );
     }
 }
