@@ -17,15 +17,10 @@ public class BombarderoEngine extends Thread implements Engine {
     private boolean isGameInterrupted = false;
     private boolean isGameOver = false;
 
-    public BombarderoEngine(Controller controller, BombarderoGraphics graphics) {
+    public BombarderoEngine(Controller controller, BombarderoGraphics graphics, GameManager manager) {
         this.controller = controller;
         this.graphics = graphics;
-    }
-
-    @Override
-    public GameManager initGameManager() {
-        gameManager = new BombarderoGameManager(controller);
-        return gameManager;
+        this.gameManager = manager;
     }
     
     public void run() {
@@ -34,7 +29,7 @@ public class BombarderoEngine extends Thread implements Engine {
             long currentCycleStartTime = System.currentTimeMillis();
             long elapsed = currentCycleStartTime - previousCycleStartTime;
             if(!isGameInterrupted) {
-                gameManager.updateGame();
+                gameManager.updateGame(elapsed);
                 graphics.update();
             }
             waitForNextFrame(currentCycleStartTime);
