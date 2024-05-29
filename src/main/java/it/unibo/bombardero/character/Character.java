@@ -35,7 +35,8 @@ public abstract class Character {
 
     // Game manager reference
     protected final GameManager manager;
-    //TODO: Remove getManager method and make manager protected. Use it with super.manager
+    // TODO: Remove getManager method and make manager protected. Use it with
+    // super.manager
 
     // Bomb Factory reference
     private final BombFactory bombFactory;
@@ -74,8 +75,8 @@ public abstract class Character {
     private boolean butterfingers; // The character's hand becomes slippery. The character rapidly lay down bombs
 
     // Skull manager
-    private long effectDuration; // Indicates the duration of the skeleton effect
-    private Optional<Runnable> resetTask = Optional.empty(); // Resets the current skeleton task once it ended
+    private long effectDuration; // Indicates the duration of the skull effect
+    private Optional<Runnable> resetEffect = Optional.empty(); // Restores all stats modified by the skull
 
     /**
      * Constructs a new Character with the specified parameters.
@@ -85,7 +86,7 @@ public abstract class Character {
      * @param bombFactory the factory to create bombs
      */
     public Character(final GameManager manager, final Coord coord, final BombFactory bombFactory) {
-        this.manager = manager; //TODO: Solve manager, a copy?
+        this.manager = manager; // TODO: Solve manager, a copy?
         this.coordinate = coord;
         this.bombFactory = bombFactory;
         // this.bBox = new RectangleBoundingBox(null, STARTING_BOMBS, HEIGHT);
@@ -95,16 +96,22 @@ public abstract class Character {
      * Updates the character's state.
      * This method should be implemented by subclasses to define character-specific
      * behavior.
+     * 
+     * @param elapsedTime the time elapsed since the last update
      */
     public abstract void update(long elapsedTime);
 
-    // time elapsed since the last update
+    /**
+     * Updates the skeleton's effects.
+     * 
+     * @param elapsedTime the time elapsed since the last update
+     */
     public void updateSkeleton(final long elapsedTime) {
         if (this.effectDuration > 0) { // Continues until the duration reaches zero
             this.effectDuration -= elapsedTime;
-            if (this.effectDuration <= 0) { // When the effect ends the stats get resetted
-                this.resetTask.ifPresent(Runnable::run); // If there's a task to reset, it runs the reset task
-                this.resetTask = Optional.empty(); // Clear the reset task after it has run
+            if (this.effectDuration <= 0) { // When the effect ends the character's stats get resetted
+                this.resetEffect.ifPresent(Runnable::run); // If there's a effect to reset, it runs the reset effect
+                this.resetEffect = Optional.empty(); // Clear the reset effect after it has run
             }
             if (this.butterfingers) { // If the character has butterfingers, he places a bomb
                 placeBomb();
@@ -129,8 +136,7 @@ public abstract class Character {
     }
 
     /**
-     * Gets the integer coordinates of the character, adjusted by the character's
-     * width and height.
+     * Gets the integer coordinates of the character
      * 
      * @return the map's corrisponding integer coordinates of the character
      */
@@ -171,11 +177,22 @@ public abstract class Character {
         return false;
     }
 
-    //TODO: Cambia nome, no get
+    // TODO: Cambia nome, no get
+    /**
+     * Checks if the character has to place a bomb.
+     * 
+     * @return true if the character has to place a bomb, false otherwise
+     */
     public boolean getHasToPlaceBomb() {
         return hasToPlaceBomb;
     }
 
+    /**
+     * Sets whether the character should place a bomb.
+     * 
+     * @param hasToPlaceBomb true to cause the character to place a bomb, false
+     *                       otherwise
+     */
     public void setHasToPlaceBomb(final boolean hasToPlaceBomb) {
         this.hasToPlaceBomb = hasToPlaceBomb;
     }
@@ -198,11 +215,22 @@ public abstract class Character {
         }
     }
 
-    //TODO: Togli get, cambia nome
+    // TODO: Togli get, cambia nome
+    /**
+     * Checks if the character has to explode a remote bomb.
+     * 
+     * @return true if the character has to explode a remote bomb, false otherwise
+     */
     public boolean getHasToExplodeRemoteBomb() {
         return hasToExplodeRemoteBomb;
     }
 
+    /**
+     * Sets whether the character should explode a remote bomb.
+     * 
+     * @param hasToPlaceBomb true to cause the character to explode a remote bomb,
+     *                       false otherwise
+     */
     public void setHasToExplodeRemoteBomb(final boolean hasToExplodeRemoteBomb) {
         this.hasToExplodeRemoteBomb = hasToExplodeRemoteBomb;
     }
@@ -261,10 +289,20 @@ public abstract class Character {
         this.facingDirection = direction;
     }
 
+    /**
+     * Checks if the character is stationary.
+     * 
+     * @return true if the character is stationary, false otherwise
+     */
     public boolean isStationary() {
         return stationary;
     }
 
+    /**
+     * Sets whether the character is stanionary.
+     * 
+     * @param stationary true if the character is stationary, false otherwise
+     */
     public void setStationary(final boolean stationary) {
         this.stationary = stationary;
     }
@@ -438,40 +476,89 @@ public abstract class Character {
         this.lineBomb = lineBomb;
     }
 
-    //TODO: Togli get, cambia nome
+    // TODO: Togli get, cambia nome
+    /**
+     * Checks if the character has to place a line bomb.
+     * 
+     * @return true if the character has to place a line bomb, false otherwise
+     */
     public boolean getHasToPlaceLineBomb() {
         return hasToPlaceLineBomb;
     }
 
+    /**
+     * Sets whether the character should place a line bomb.
+     * 
+     * @param hasToPlaceBomb true to cause the character to place a line bomb, false
+     *                       otherwise
+     */
     public void setHasToPlaceLineBomb(final boolean hasToPlaceLineBomb) {
         this.hasToPlaceLineBomb = hasToPlaceLineBomb;
     }
 
+    /**
+     * Checks if the character has constipation.
+     * 
+     * @return true if the character has constipation, false otherwise
+     */
     public boolean hasConstipation() {
         return constipation;
     }
 
+    /**
+     * Sets whether the character should have constipation.
+     * 
+     * @param constipation true to cause the character constipation, false
+     *                     otherwise
+     */
     public void setConstipation(final boolean constipation) {
         this.constipation = constipation;
     }
 
+    /**
+     * Checks if the character has butterfingers.
+     * 
+     * @return true if the character has butterfingers, false otherwise
+     */
     public boolean hasButterfingers() {
         return butterfingers;
     }
 
+    /**
+     * Sets whether the character should have butterfingers.
+     * 
+     * @param butterfingers true to cause the character butterfingers, false
+     *                      otherwise
+     */
     public void setButterfingers(final boolean butterfingers) {
         this.butterfingers = butterfingers;
     }
 
+    /**
+     * Sets the effect's duration.
+     * 
+     * @param duration the duration of the effect
+     */
     public void setEffectDuration(final long duration) {
         this.effectDuration = duration;
     }
 
-    public Optional<Runnable> getResetTask() {
-        return resetTask;
+    //TODO: write better javadoc
+    /**
+     * Gets the reset effect
+     * 
+     * @return the reset effect
+     */
+    public Optional<Runnable> getResetEffect() {
+        return resetEffect;
     }
 
-    public void setResetTask(final Runnable resetTask) {
-        this.resetTask = Optional.of(resetTask);
+    /**
+     * Sets the reset effect.
+     * 
+     * @param resetEffect the reset effect
+     */
+    public void setResetEffect(final Runnable resetEffect) {
+        this.resetEffect = Optional.of(resetEffect);
     }
 }

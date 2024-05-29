@@ -37,7 +37,7 @@ public class TestPowerUp {
         IntStream.range(0, 100).forEach(n -> {
             PowerUp powerUP = factory.createPowerUp();
             powerUP.applyEffect(this.manager.getPlayer());
-            if (this.manager.getPlayer().getResetTask().isPresent()) {
+            if (this.manager.getPlayer().getResetEffect().isPresent()) {
                 this.manager.getPlayer().updateSkeleton(1000*9);
             }
             System.out.println(powerUP.getType());
@@ -45,7 +45,7 @@ public class TestPowerUp {
             System.out.println("numBomb " + this.manager.getPlayer().getNumBomb());
             System.out.println("speed " + this.manager.getPlayer().getSpeed());
             System.out.println("typebomb " + this.manager.getPlayer().getBombType());
-            System.out.println("resetTask " + this.manager.getPlayer().getResetTask());
+            System.out.println("resetTask " + this.manager.getPlayer().getResetEffect());
             System.out.println("\n\n\n\n");
         });
     }
