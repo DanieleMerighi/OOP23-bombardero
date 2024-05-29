@@ -11,7 +11,7 @@ public class BombarderoEngine extends Thread implements Engine {
 
     private final static long sleepTime = 16L; // Time during which the thread sleeps, equivalent to about 60FPS
     
-    private GameManager gameManager;
+    private GameManager manager;
     private BombarderoGraphics graphics;
     private Controller controller;
     private boolean isGameInterrupted = false;
@@ -20,7 +20,7 @@ public class BombarderoEngine extends Thread implements Engine {
     public BombarderoEngine(Controller controller, BombarderoGraphics graphics, GameManager manager) {
         this.controller = controller;
         this.graphics = graphics;
-        this.gameManager = manager;
+        this.manager = manager;
     }
     
     public void run() {
@@ -29,13 +29,12 @@ public class BombarderoEngine extends Thread implements Engine {
             long currentCycleStartTime = System.currentTimeMillis();
             long elapsed = currentCycleStartTime - previousCycleStartTime;
             if(!isGameInterrupted) {
-                gameManager.updateGame(elapsed);
+                manager.updateGame(elapsed);
                 graphics.update();
             }
             waitForNextFrame(currentCycleStartTime);
             previousCycleStartTime = currentCycleStartTime;
         }
-        graphics.showCard(BombarderoGraphics.END_CARD);
     }
 
     @Override
