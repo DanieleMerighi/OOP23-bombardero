@@ -74,7 +74,7 @@ public final class MenuCard extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                graphicsEngine.showCard(BombarderoGraphics.GUIDE_CARD);
+                controller.startGuide();
             }
             
         });
