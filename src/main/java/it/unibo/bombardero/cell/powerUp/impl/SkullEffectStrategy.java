@@ -28,8 +28,7 @@ public class SkullEffectStrategy implements PowerUpEffectStrategy {
             int previousFlameRange = character.getFlameRange();
 
             // Apply a random effect
-            Consumer<Character> skullEffect = skull.get(new Random().nextInt(5));
-            skullEffect.accept(character);
+            skull.get(new Random().nextInt(5)).accept(character);
 
              // Set the effect duration and reset logic
              character.setEffectDuration(EFFECT_DURATION_IN_SECONDS * SECONDS_TO_MILLISECONDS); // 10 seconds in milliseconds
