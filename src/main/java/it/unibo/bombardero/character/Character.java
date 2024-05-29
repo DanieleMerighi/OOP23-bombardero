@@ -34,7 +34,7 @@ public abstract class Character {
     private static final int MAX_BOMBS = 8;
 
     // Game manager reference
-    private final GameManager manager;
+    protected final GameManager manager;
     //TODO: Remove getManager method and make manager protected. Use it with super.manager
 
     // Bomb Factory reference
@@ -56,7 +56,7 @@ public abstract class Character {
     private Optional<PowerUpType> bombType = Optional.empty();
     private boolean kick; // False by default
     private boolean lineBomb;
-    private Deque<BasicBomb> remoteBombQueue = new ArrayDeque<>();
+    private final Deque<BasicBomb> remoteBombQueue = new ArrayDeque<>();
     /*
      * TODO: Gestire la rimozione di una bomba se è esplosa per concatenazione con
      * un'altra
@@ -85,7 +85,7 @@ public abstract class Character {
      * @param bombFactory the factory to create bombs
      */
     public Character(final GameManager manager, final Coord coord, final BombFactory bombFactory) {
-        this.manager = manager;
+        this.manager = manager; //TODO: Solve manager, a copy?
         this.coordinate = coord;
         this.bombFactory = bombFactory;
         // this.bBox = new RectangleBoundingBox(null, STARTING_BOMBS, HEIGHT);
@@ -96,7 +96,7 @@ public abstract class Character {
      * This method should be implemented by subclasses to define character-specific
      * behavior.
      */
-    public abstract void update(final long elapsedTime);
+    public abstract void update(long elapsedTime);
 
     // time elapsed since the last update
     public void updateSkeleton(final long elapsedTime) {
@@ -171,18 +171,19 @@ public abstract class Character {
         return false;
     }
 
+    //TODO: Cambia nome, no get
     public boolean getHasToPlaceBomb() {
         return hasToPlaceBomb;
     }
 
-    public void setHasToPlaceBomb(boolean hasToPlaceBomb) {
+    public void setHasToPlaceBomb(final boolean hasToPlaceBomb) {
         this.hasToPlaceBomb = hasToPlaceBomb;
     }
 
     // fa esplodere la prima remote piazzata della coda
     public void explodeRemoteBomb() {
         if (!remoteBombQueue.isEmpty()) {
-            BasicBomb bomb = remoteBombQueue.removeFirst();
+            final BasicBomb bomb = remoteBombQueue.removeFirst();
             System.out.println("exploded remote bomb\n\n");
             bomb.computeFlame(bomb);
         }
@@ -197,11 +198,12 @@ public abstract class Character {
         }
     }
 
+    //TODO: Togli get, cambia nome
     public boolean getHasToExplodeRemoteBomb() {
         return hasToExplodeRemoteBomb;
     }
 
-    public void setHasToExplodeRemoteBomb(boolean hasToExplodeRemoteBomb) {
+    public void setHasToExplodeRemoteBomb(final boolean hasToExplodeRemoteBomb) {
         this.hasToExplodeRemoteBomb = hasToExplodeRemoteBomb;
     }
 
@@ -212,15 +214,6 @@ public abstract class Character {
      */
     public boolean hasBombsLeft() {
         return this.numBomb > 0;
-    }
-
-    /**
-     * Gets the game manager associated with this character.
-     * 
-     * @return the game manager
-     */
-    public GameManager getManager() {
-        return manager;
     }
 
     /**
@@ -272,7 +265,7 @@ public abstract class Character {
         return stationary;
     }
 
-    public void setStationary(boolean stationary) {
+    public void setStationary(final boolean stationary) {
         this.stationary = stationary;
     }
 
@@ -445,11 +438,12 @@ public abstract class Character {
         this.lineBomb = lineBomb;
     }
 
+    //TODO: Togli get, cambia nome
     public boolean getHasToPlaceLineBomb() {
         return hasToPlaceLineBomb;
     }
 
-    public void setHasToPlaceLineBomb(boolean hasToPlaceLineBomb) {
+    public void setHasToPlaceLineBomb(final boolean hasToPlaceLineBomb) {
         this.hasToPlaceLineBomb = hasToPlaceLineBomb;
     }
 
@@ -457,7 +451,7 @@ public abstract class Character {
         return constipation;
     }
 
-    public void setConstipation(boolean constipation) {
+    public void setConstipation(final boolean constipation) {
         this.constipation = constipation;
     }
 
@@ -465,11 +459,11 @@ public abstract class Character {
         return butterfingers;
     }
 
-    public void setButterfingers(boolean butterfingers) {
+    public void setButterfingers(final boolean butterfingers) {
         this.butterfingers = butterfingers;
     }
 
-    public void setEffectDuration(long duration) {
+    public void setEffectDuration(final long duration) {
         this.effectDuration = duration;
     }
 
@@ -477,7 +471,7 @@ public abstract class Character {
         return resetTask;
     }
 
-    public void setResetTask(Runnable resetTask) {
+    public void setResetTask(final Runnable resetTask) {
         this.resetTask = Optional.of(resetTask);
     }
 }
