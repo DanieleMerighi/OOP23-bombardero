@@ -11,13 +11,9 @@ import it.unibo.bombardero.character.Character;
 
 public interface GameManager {
 
-    void updateGame();
+    void updateGame(final long elapsed);
 
     void endGame();
-
-    void startTimer();
-
-    BombarderoTimer getTimer();
 
     List<Character> getEnemies();
 
@@ -34,4 +30,6 @@ public interface GameManager {
     void removeFlame(Pair pos);
     
     boolean removeWall(Pair pos);
+
+    long getTimeLeft();
 }   
