@@ -39,7 +39,8 @@ public class BombarderoGraphics {
     private GameCard gameCard;
     private GameoverCard endGameCard;
     private final MenuCard menuCard;
-    private final GuideCard guideCard;
+    private GuideCard guideCard;
+    private String currentShowedCard = MENU_CARD;
     
     public BombarderoGraphics() {
         this.controller = new BombarderoController(this);
@@ -57,11 +58,8 @@ public class BombarderoGraphics {
         frame.setIconImage(game_icon.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
 
         this.menuCard = new MenuCard(controller, this, resourceGetter);
-        this.guideCard = new GuideCard(controller, this, resourceGetter);
         deck.add(MENU_CARD, menuCard);
         layout.addLayoutComponent(menuCard, MENU_CARD);
-        deck.add(GUIDE_CARD, guideCard);
-        layout.addLayoutComponent(guideCard, GUIDE_CARD);
         deck.validate();
 
         /* This listener calls for the ResizingEngine to dinamically update the 
@@ -71,7 +69,7 @@ public class BombarderoGraphics {
                 frame.setSize(resizingEngine.getNewWindowSize(frame));
             }
         });
-        // Recives keyboard input
+        
         frame.add(deck);
         showCard(MENU_CARD);
         this.frame.setVisible(true);
@@ -79,6 +77,7 @@ public class BombarderoGraphics {
 
     public void showCard(final String cardName) {
         layout.show(deck, cardName);
+        currentShowedCard = cardName;
         System.out.println("\"" + cardName + "\"" + " card showed");
     }
 
@@ -90,11 +89,24 @@ public class BombarderoGraphics {
         layout.addLayoutComponent(gameCard, GAME_CARD);
         layout.addLayoutComponent(endGameCard, END_CARD);
         deck.validate();
+        }
+
+    public void initGuideCard() {
+        this.guideCard = new GuideCard(frame, controller, this, resourceGetter, resizingEngine);
+        deck.add(GUIDE_CARD, guideCard);
+        layout.addLayoutComponent(guideCard, GUIDE_CARD);
+        deck.validate();
     }
 
     public void update() {
-        gameCard.updateMap();
-        gameCard.repaint(0);
+        if (currentShowedCard.equals(GAME_CARD)) {
+            gameCard.updateMap();
+            gameCard.repaint(0);
+        }
+        else if (currentShowedCard.equals(GUIDE_CARD)) {
+            guideCard.updateMap();
+            guideCard.repaint(0);
+        }
     }
 
     public Dimension getFrameSize() {
