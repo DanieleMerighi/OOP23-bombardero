@@ -13,8 +13,8 @@ import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;
 
-import it.unibo.bombardero.physics.api.*;
-import it.unibo.bombardero.physics.impl.*;
+import it.unibo.bombardero.physics.api.CollisionEngine;
+import it.unibo.bombardero.physics.impl.BombarderoCollision;
 
 /**
  * Abstract class representing a character in the game.
@@ -35,6 +35,7 @@ public abstract class Character {
 
     // Game manager reference
     private final GameManager manager;
+    //TODO: Remove getManager method and make manager protected. Use it with super.manager
 
     // Bomb Factory reference
     private final BombFactory bombFactory;
