@@ -66,7 +66,7 @@ public class TestPowerUp {
         }
 
         @Override
-        public void updateGame() {
+        public void updateGame(long elapsed) {
         }
 
         @Override
@@ -117,15 +117,9 @@ public class TestPowerUp {
         }
 
         @Override
-        public void startTimer() {
+        public long getTimeLeft() {
             // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'startTimer'");
-        }
-
-        @Override
-        public BombarderoTimer getTimer() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'getTimer'");
+            throw new UnsupportedOperationException("Unimplemented method 'getTimeLeft'");
         }
     }
 

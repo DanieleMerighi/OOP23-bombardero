@@ -56,7 +56,7 @@ public class TestEnemy {
     public void testEnemyPatrol_PlayerInDetectionRadius_ChangesToChaseState() {
         // Set player position within detection radius in TestGameManager
         this.manager.setPlayerCoord(0, 4);
-        this.manager.updateGame();
+        this.manager.updateGame(STANDARD_ELAPSED_TIME);
 
         // Verify enemy state is CHASE
         assertEquals(Enemy.State.CHASE, this.manager.enemy.getState());
@@ -67,8 +67,8 @@ public class TestEnemy {
         // Set initial player position within detection radius in TestGameManager
         this.manager.setPlayerCoord(0, 4);
         // We need more than 1 sec to move between cells
-        this.manager.updateGame();
-        this.manager.updateGame();
+        this.manager.updateGame(STANDARD_ELAPSED_TIME);
+        this.manager.updateGame(STANDARD_ELAPSED_TIME);
 
         // Verify enemy state is CHASE
         assertEquals(Enemy.State.CHASE, this.manager.enemy.getState());
@@ -76,7 +76,7 @@ public class TestEnemy {
 
         // Set player moving away after initial detection
         this.manager.setPlayerCoord(0, 12);
-        this.manager.updateGame();
+        this.manager.updateGame(STANDARD_ELAPSED_TIME);
 
         // Verify enemy state is PATROL
         assertEquals(Enemy.State.PATROL, this.manager.enemy.getState());
@@ -89,8 +89,8 @@ public class TestEnemy {
         this.manager.enemy.update(STANDARD_ELAPSED_TIME);
 
         assertEquals(Enemy.State.ESCAPE, this.manager.enemy.getState());
-        this.manager.updateGame();
-        this.manager.updateGame();
+        this.manager.updateGame(STANDARD_ELAPSED_TIME);
+        this.manager.updateGame(STANDARD_ELAPSED_TIME);
         // Verify enemy state is PATROL
         assertEquals(Enemy.State.PATROL, this.manager.enemy.getState());
         assertEquals(new Pair(1, 0), this.manager.enemy.getIntCoordinate());
@@ -104,11 +104,11 @@ public class TestEnemy {
         this.manager.enemy.update(STANDARD_ELAPSED_TIME);
 
         assertEquals(Enemy.State.CHASE, this.manager.enemy.getState());
-        //this.manager.updateGame();
+        //this.manager.updateGame(STANDARD_ELAPSED_TIME);
         // Verify bomb is placed on the enemy's position
         //assertTrue(this.manager.getGameMap().isBomb(new Pair(0, 0))); 
         assertEquals(Utils.ENEMY_STARTING_BOMBS-1, this.manager.enemy.getNumBomb());
-        this.manager.updateGame();
+        this.manager.updateGame(STANDARD_ELAPSED_TIME);
         assertEquals(new Pair(2, 1), this.manager.enemy.getIntCoordinate());
 
     }
@@ -140,7 +140,7 @@ public class TestEnemy {
         }
 
         @Override
-        public void updateGame() {
+        public void updateGame(long elapsed) {
             // 60 fps
             for (int i = 0; i < 59; i++) {
                 this.enemy.update(STANDARD_ELAPSED_TIME);
@@ -189,15 +189,9 @@ public class TestEnemy {
         }
 
         @Override
-        public void startTimer() {
+        public long getTimeLeft() {
             // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'startTimer'");
-        }
-
-        @Override
-        public BombarderoTimer getTimer() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'getTimer'");
+            throw new UnsupportedOperationException("Unimplemented method 'getTimeLeft'");
         }
     }
 
