@@ -56,16 +56,6 @@ public class Enemy extends Character {
         return distance <= detectionRadius; // Check if player is within detection radius
     }
 
-    /*
-    private void placeBomb(Pair targetCell) {
-        if (hasBombsLeft() && isValidCell(targetCell)
-                && this.getManager().getGameMap().isEmpty(targetCell)) {
-            // map.addBomb(null, targetCell);
-            //numBombs--;
-        }
-    }
-    */ 
-
     // when the enemy doesn't know where to move he choose randomly
     private void moveRandomly() {
         Pair currentCoord = getIntCoordinate();
@@ -105,7 +95,17 @@ public class Enemy extends Character {
     private void computeNextDir() {
         graph = new EnemyGraphReasonerImpl(this.getManager().getGameMap());
         currentState.execute(this); // Delegate behavior to current state
-        nextMove.ifPresent(cell -> {
+        // nextMove.ifPresent(cell -> {
+        //     if(graph.isInDangerZone(cell, getFlameRange())) {
+        //         nextMove = Optional.empty();
+        //     }
+        //     if (this.getManager().getGameMap().isBreakableWall(cell)) {
+        //         placeBomb();
+        //         // change the state of the enemy?
+        //     }
+        // });
+        if(nextMove.isPresent()) {
+            Pair cell = nextMove.get();
             if(graph.isInDangerZone(cell, getFlameRange())) {
                 nextMove = Optional.empty();
             }
@@ -113,7 +113,7 @@ public class Enemy extends Character {
                 placeBomb();
                 // change the state of the enemy?
             }
-        });
+        }
     }
 
     /**
@@ -123,6 +123,7 @@ public class Enemy extends Character {
     @Override
     public void update(final long elapsedTime) {
         movementTimer += 1;
+        updateSkeleton(elapsedTime);
         // Every 60 frames (assuming 60 fps), call computeNextDir to get the next target
         if (movementTimer >= 60 || nextMove.isEmpty()) {
             movementTimer = movementTimer >= 60 ? 0 : movementTimer;
