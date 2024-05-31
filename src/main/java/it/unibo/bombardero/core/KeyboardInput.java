@@ -26,7 +26,6 @@ public class KeyboardInput implements KeyListener {
     private boolean left;
     private boolean down;
     private boolean right;
-    //TODO: Risolvere le troppe direzioni. Usare una direzione e una variabile che dice se sei fermo?
 
     /**
      * Constructs a new KeyboardInput istance.
@@ -138,14 +137,18 @@ public class KeyboardInput implements KeyListener {
     @Override
     public void keyReleased(final KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_W ->
+            case KeyEvent.VK_W -> {
                 up = false;
-            case KeyEvent.VK_A ->
+            }
+            case KeyEvent.VK_A -> {
                 left = false;
-            case KeyEvent.VK_S ->
+            }
+            case KeyEvent.VK_S -> {
                 down = false;
-            case KeyEvent.VK_D ->
+            }
+            case KeyEvent.VK_D -> {
                 right = false;
+            }
             default -> {
             }
         }

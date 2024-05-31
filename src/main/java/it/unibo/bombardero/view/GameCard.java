@@ -99,11 +99,10 @@ public class GameCard extends JPanel {
 
         playerSprite = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN);
         player_image = playerSprite.getStandingImage();
-        /*
         for (int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
             enemySprite[i] = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN);
             enemiesImages[i] = enemySprite[i].getStandingImage();
-        }*/
+        }
         bomb_image = normalBomb.getImage();
 
         this.setFont(font);
@@ -197,11 +196,10 @@ public class GameCard extends JPanel {
             playerPosition.width, playerPosition.height,
             null
         );
-        /*
         for(int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
             Dimension enemyPos = computeCharacterPlacingPoint(controller.getEnemies().get(i).getCharacterPosition());
             g2d.drawImage(enemiesImages[i], enemyPos.width, enemyPos.height, null);
-        } */
+        } 
     }
 
     public void updateMap() {
@@ -223,7 +221,6 @@ public class GameCard extends JPanel {
             player_image = playerSprite.getImage();
         }
         /* Update enemy sprites: */
-        /* 
         for (int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
             enemySprite[i].update();
             if(enemies.get(i).getFacingDirection().equals(Direction.DEFAULT)) {
@@ -233,7 +230,7 @@ public class GameCard extends JPanel {
                 enemySprite[i] = enemySprite[i].getNewSprite(enemies.get(i).getFacingDirection());
                 enemiesImages[i] = enemySprite[i].getStandingImage();
             }
-        } */
+        } 
         /* Update bomb sprites: */
         normalBomb.update();
         bomb_image = normalBomb.getImage();

@@ -31,7 +31,7 @@ public class Player extends Character {
     @Override
     public void update(final long elapsedTime) {
         // Skeleton effect:
-        if (getResetTask().isPresent()) { // If there's a Task to reset
+        if (getResetEffect().isPresent()) { // If there's a Task to reset
             updateSkeleton(elapsedTime);
         }
         // Player movement:
@@ -45,7 +45,7 @@ public class Player extends Character {
         }
         // Place line bomb:
         if (getHasToPlaceLineBomb()) {
-            PowerUpImpl.placeLineBomb(this, getManager().getGameMap().getMap(), getFacingDirection());
+            PowerUpImpl.placeLineBomb(this, super.manager.getGameMap().getMap(), getFacingDirection());
             setHasToPlaceLineBomb(false);
         }
         // Explode remote bomb:
