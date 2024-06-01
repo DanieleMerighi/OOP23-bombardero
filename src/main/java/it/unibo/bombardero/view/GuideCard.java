@@ -25,13 +25,16 @@ import it.unibo.bombardero.view.sprites.BombarderoSprite;
 import it.unibo.bombardero.view.sprites.GenericBombarderoSprite;
 
 /**
- * IDEA PER LA GUIDA:
- * due pulsanti return to menu o start playing
- * sopra un personaggio che guarda a destra o a sinistra con i tast quadrati 
- * che si illuminano di verde quando premuti sotto. Il personaggio alla pressione di ogni tasto cambia verso
- * la bomba con sotto il suo tasto e poi una fila di power up con il loro tasto. IL TUTTO STATICO
+ * This class contains the panel for the Guide of
+ * the game. It essentially works the same as the {@link GameCard}
+ * with minor adjustments; such as removal of the timer and the Graphics
+ * and adding instruction for the player.
+ * <p>
+ * Instructions on what to display are given by the {@link Controller}
+ * through appropriate methods.
+ * @author Federico Bagattoni
  */
-public final class GuideCard extends JPanel {
+public final class GuideCard extends GamePlayCard {
 
     private final static int MISCHIEVOUS_PADDING = 23;
 

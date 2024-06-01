@@ -1,5 +1,6 @@
 package it.unibo.bombardero.view;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -11,8 +12,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Cell.CellType;
@@ -28,7 +31,11 @@ import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
 
-public class GameCard extends JPanel {
+/**
+ * This class is the panel containing the game view.
+ * @author Federico Bagattoni
+ */
+public final class GameCard extends GamePlayCard {
 
     /** 
      * For the first part of the class, the magic number checkstyle will be 
@@ -68,14 +75,18 @@ public class GameCard extends JPanel {
     private Map<Pair, Cell> cells;
     private final Controller controller;
     private final Character player;
-    private final List<Character> enemies;
+    //private final List<Character> enemies;
+
+    /* Pause state buttons: */
+    private final JButton resumeButton = new JButton("Resume");
+    private final JButton quitButton = new JButton("Quit");
     
     /* Sprites: */
     private BombarderoOrientedSprite playerSprite;
-    private final BombarderoOrientedSprite[] enemySprite = new GenericBombarderoSprite[Utils.NUM_OF_ENEMIES];
+    //private final BombarderoOrientedSprite[] enemySprite = new GenericBombarderoSprite[Utils.NUM_OF_ENEMIES];
     private final BombarderoSprite normalBomb = new GenericBombarderoSprite("bomb", resourceGetter, 4);
     private Image player_image;
-    private final Image[] enemiesImages = new Image[Utils.NUM_OF_ENEMIES];
+    //private final Image[] enemiesImages = new Image[Utils.NUM_OF_ENEMIES];
     private Image bomb_image;
 
     /* Static positions for quicker access: */
@@ -90,19 +101,20 @@ public class GameCard extends JPanel {
         this.resizingEngine = resizingEngine;
         this.controller = controller;
         this.setMinimumSize(resizingEngine.getMapSize());
-        
+        this.setLayout(new BorderLayout());
+
         scaleEverything();
 
         cells = controller.getMap(); 
         player = controller.getMainPlayer();
-        enemies = controller.getEnemies();
+        //enemies = controller.getEnemies();
 
         playerSprite = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN);
         player_image = playerSprite.getStandingImage();
-        for (int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
+        /*for (int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
             enemySprite[i] = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN);
             enemiesImages[i] = enemySprite[i].getStandingImage();
-        }
+        }*/
         bomb_image = normalBomb.getImage();
 
         this.setFont(font);
@@ -196,10 +208,10 @@ public class GameCard extends JPanel {
             playerPosition.width, playerPosition.height,
             null
         );
-        for(int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
+        /*for(int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
             Dimension enemyPos = computeCharacterPlacingPoint(controller.getEnemies().get(i).getCharacterPosition());
             g2d.drawImage(enemiesImages[i], enemyPos.width, enemyPos.height, null);
-        } 
+        } */
     }
 
     public void updateMap() {
@@ -221,7 +233,7 @@ public class GameCard extends JPanel {
             player_image = playerSprite.getImage();
         }
         /* Update enemy sprites: */
-        for (int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
+        /*for (int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
             enemySprite[i].update();
             if(enemies.get(i).getFacingDirection().equals(Direction.DEFAULT)) {
                 enemiesImages[i] = enemySprite[i].getStandingImage();
@@ -230,10 +242,22 @@ public class GameCard extends JPanel {
                 enemySprite[i] = enemySprite[i].getNewSprite(enemies.get(i).getFacingDirection());
                 enemiesImages[i] = enemySprite[i].getStandingImage();
             }
-        } 
+        } */
         /* Update bomb sprites: */
         normalBomb.update();
         bomb_image = normalBomb.getImage();
+    }
+
+    public void setPausedView() {
+        this.add(quitButton, BorderLayout.CENTER);
+        this.add(resumeButton, BorderLayout.CENTER);
+        this.repaint(0);
+    }
+
+    public void setUnpausedView() {
+        this.remove(quitButton);
+        this.remove(resumeButton);
+        this.repaint(0);
     }
 
     private Dimension computeMapPlacingPoint() {
