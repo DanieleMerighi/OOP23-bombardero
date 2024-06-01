@@ -58,11 +58,18 @@ public class BombarderoController implements Controller {
     @Override
     public void escape() {
         if (!engine.isInterrupted()) {
+            graphics.setPausedView();
             engine.pauseGameLoop();
         }
         else {
             engine.resumeGameLoop();
+            graphics.setUnpausedView();
         }
+    }
+    
+    @Override
+    public boolean isGamePaused() {
+        return engine.isInterrupted();
     }
 
     @Override
