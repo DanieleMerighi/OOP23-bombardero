@@ -22,6 +22,8 @@ public interface Controller {
     
     void escape();
 
+    boolean isGamePaused();
+
     Character getMainPlayer();
 
     List<Character> getEnemies();
