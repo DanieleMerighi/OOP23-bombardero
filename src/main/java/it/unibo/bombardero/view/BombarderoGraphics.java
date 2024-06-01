@@ -116,4 +116,12 @@ public class BombarderoGraphics {
             dim.height - frame.getInsets().top - frame.getInsets().bottom
         );
     }
+
+    public void setPausedView() {
+        gameCard.setPausedView();
+    }
+
+    public void setUnpausedView() {
+        gameCard.setUnpausedView();
+    }
 }
