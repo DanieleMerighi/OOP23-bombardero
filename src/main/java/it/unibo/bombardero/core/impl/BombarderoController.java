@@ -34,8 +34,7 @@ public class BombarderoController implements Controller {
 
     @Override
     public void endGame() {
-        /* TODO: NOT DONE YET */
-        /* CONTROLLER FA LA JOIN PER IL ENGINE */
+        engine.endGameLoop();
         graphics.showCard(BombarderoGraphics.END_CARD);
     }
 
@@ -46,13 +45,6 @@ public class BombarderoController implements Controller {
         graphics.initGuideCard();
         graphics.showCard(BombarderoGraphics.GUIDE_CARD);
         engine.startGameLoop();
-    }
-
-    @Override
-    public void endGuide() {
-        /* CONTROLLER FA LA JOIN PER IL ENGINE */
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'endGuide'");
     }
 
     @Override
