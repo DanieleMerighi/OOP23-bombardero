@@ -35,10 +35,12 @@ public class BombarderoEngine extends Thread implements Engine {
             waitForNextFrame(currentCycleStartTime);
             previousCycleStartTime = currentCycleStartTime;
         }
+        this.interrupt();
     }
 
     @Override
     public void startGameLoop() {
+        isGameOver = false;
         this.start();
     }
 
@@ -63,7 +65,9 @@ public class BombarderoEngine extends Thread implements Engine {
 
     @Override
     public void endGameLoop() {
+        System.out.println("Inizio end");
         isGameOver = true;
+        System.out.println("Join fatta");
     }
 
     @Override
