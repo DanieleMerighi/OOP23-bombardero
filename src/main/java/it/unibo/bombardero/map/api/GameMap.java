@@ -63,6 +63,12 @@ public interface GameMap {
      */
     void removeBomb(Pair coordinate);
 
+    /**
+     * remove the falme at the given coordinate
+     * @param coordinate
+     */
+    void removeFlame(Pair coordinate);
+
     /** 
      * Returns true if the cell at the coordinate is a Bomb.
      * @param coordinate the coordinate to check 
