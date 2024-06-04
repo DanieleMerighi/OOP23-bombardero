@@ -8,6 +8,7 @@ import edu.umd.cs.findbugs.annotations.OverrideMustInvoke;
 import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.BombFactoryImpl;
+import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
@@ -51,7 +52,7 @@ public class BombarderoGameManager implements GameManager {
         this.controller = controller;
         map = new GameMapImpl(false);
         ce = new BombarderoCollision(this);
-        bombFactory = new BombFactoryImpl(this, ce);
+        bombFactory = new BombFactoryImpl(this);
         /* TODO: CHANGE PLAYER SPAWNPOINT IN MIDDLE OF MAP */
         this.player = new Player(this, BombarderoGuideManager.PLAYER_GUIDE_SPAWNPOINT, bombFactory);
         this.map.addBreakableWall(BombarderoGuideManager.CRATE_GUIDE_SPAWNPOINT);
@@ -105,14 +106,12 @@ public class BombarderoGameManager implements GameManager {
 
     @Override
     public void addFlame(final Flame.FlameType type, final Pair pos) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addFlame'");
+        map.addFlame(new Flame(CellType.FLAME, type), pos);
     }
 
     @Override
     public void removeFlame(final Pair pos) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeFlame'");
+    
     }
 
     @Override
