@@ -30,7 +30,7 @@ public class BombarderoCollision implements CollisionEngine{
     List<Character> characters;
 
     public BombarderoCollision(GameManager mgr){
-        this.mgr=mgr;
+        
         gMap=mgr.getGameMap();
         characters= new LinkedList<>( mgr.getEnemies()) ;
         characters.add(mgr.getPlayer());

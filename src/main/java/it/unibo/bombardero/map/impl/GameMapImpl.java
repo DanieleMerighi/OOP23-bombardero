@@ -6,6 +6,8 @@ import java.util.Map;
 import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Wall;
+import it.unibo.bombardero.cell.powerup.api.PowerUpFactory;
+import it.unibo.bombardero.cell.powerup.impl.PowerUpFactoryImpl;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Flame;
@@ -22,6 +24,7 @@ public final class GameMapImpl implements GameMap {
     /* Using an HashMap to hold the information about the map's tiles: */
     private final Map<Pair, Cell> map = new HashMap<>();
     private final MapManager mapManager;
+    private final PowerUpFactory powerupFactory = new PowerUpFactoryImpl();
 
     /** 
      * Constructs a new Game Map generating unbreakable walls, to skip the wall generation use {@#GameMapImpl(boolean)}.
@@ -92,6 +95,7 @@ public final class GameMapImpl implements GameMap {
         if (this.isBreakableWall(coordinate)) {
             this.map.remove(coordinate);
             /* TODO: add powerup spawn mechanism */
+            /* this.map.put(coordinate, powerupFactory.createPowerUp()); */
         }
     }
 

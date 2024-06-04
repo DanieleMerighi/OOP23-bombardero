@@ -1,6 +1,7 @@
 package it.unibo.bombardero.view;
 
 import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
@@ -22,6 +23,7 @@ public class BombarderoGraphics {
     public final static String MENU_CARD = "menu";
     public final static String END_CARD = "end";
     public final static String GAME_CARD = "game";
+    public final static String GUIDE_CARD = "guide";
 
     private Controller controller;
 
@@ -37,6 +39,8 @@ public class BombarderoGraphics {
     private GameCard gameCard;
     private GameoverCard endGameCard;
     private final MenuCard menuCard;
+    private GuideCard guideCard;
+    private String currentShowedCard = MENU_CARD;
     
     public BombarderoGraphics() {
         this.controller = new BombarderoController(this);
@@ -65,7 +69,7 @@ public class BombarderoGraphics {
                 frame.setSize(resizingEngine.getNewWindowSize(frame));
             }
         });
-        // Recives keyboard input
+        
         frame.add(deck);
         showCard(MENU_CARD);
         this.frame.setVisible(true);
@@ -73,6 +77,7 @@ public class BombarderoGraphics {
 
     public void showCard(final String cardName) {
         layout.show(deck, cardName);
+        currentShowedCard = cardName;
         System.out.println("\"" + cardName + "\"" + " card showed");
     }
 
@@ -84,10 +89,39 @@ public class BombarderoGraphics {
         layout.addLayoutComponent(gameCard, GAME_CARD);
         layout.addLayoutComponent(endGameCard, END_CARD);
         deck.validate();
+        }
+
+    public void initGuideCard() {
+        this.guideCard = new GuideCard(frame, controller, this, resourceGetter, resizingEngine);
+        deck.add(GUIDE_CARD, guideCard);
+        layout.addLayoutComponent(guideCard, GUIDE_CARD);
+        deck.validate();
     }
 
     public void update() {
-        gameCard.updateMap();
-        gameCard.repaint(0);
+        if (currentShowedCard.equals(GAME_CARD)) {
+            gameCard.updateMap();
+            gameCard.repaint(0);
+        }
+        else if (currentShowedCard.equals(GUIDE_CARD)) {
+            guideCard.updateMap();
+            guideCard.repaint(0);
+        }
+    }
+
+    public Dimension getFrameSize() {
+        Dimension dim = frame.getSize();
+        return new Dimension(
+            dim.width - frame.getInsets().right - frame.getInsets().left,
+            dim.height - frame.getInsets().top - frame.getInsets().bottom
+        );
+    }
+
+    public void setPausedView() {
+        gameCard.setPausedView();
+    }
+
+    public void setUnpausedView() {
+        gameCard.setUnpausedView();
     }
 }

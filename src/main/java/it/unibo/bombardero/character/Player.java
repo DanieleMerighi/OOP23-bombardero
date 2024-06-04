@@ -3,13 +3,12 @@ package it.unibo.bombardero.character;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.cell.BombFactory;
+import it.unibo.bombardero.cell.powerup.impl.PowerUpImpl;
 
 /**
  * This class represents a Player in the game.
  * This class extends the Character class and is responsible for handling
  * player-specific actions and behaviors.
- * 
- * @Author: Jacopo Turchi
  */
 public class Player extends Character {
 
@@ -30,9 +29,30 @@ public class Player extends Character {
      * input.
      */
     @Override
-    public void update() {
+    public void update(final long elapsedTime) {
+        // Skeleton effect:
+        if (getResetEffect().isPresent()) { // If there's a Task to reset
+            updateSkeleton(elapsedTime);
+        }
         // Player movement:
-        setCharacterPosition(computeNewPlayerPosition());
+        if (!isStationary()) { // If he's not stationary, computes the new position
+            setCharacterPosition(computeNewPlayerPosition());
+        }
+        // Place bomb:
+        if (getHasToPlaceBomb()) {
+            placeBomb();
+            setHasToPlaceBomb(false);
+        }
+        // Place line bomb:
+        if (getHasToPlaceLineBomb()) {
+            PowerUpImpl.placeLineBomb(this, super.manager.getGameMap().getMap(), getFacingDirection());
+            setHasToPlaceLineBomb(false);
+        }
+        // Explode remote bomb:
+        if (getHasToExplodeRemoteBomb()) {
+            explodeRemoteBomb();
+            setHasToExplodeRemoteBomb(false);
+        }
     }
 
     /**

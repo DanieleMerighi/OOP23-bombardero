@@ -8,6 +8,7 @@ import it.unibo.bombardero.core.BombarderoEngine;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.Engine;
 import it.unibo.bombardero.core.api.GameManager;
+import it.unibo.bombardero.guide.impl.BombarderoGuideManager;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.view.BombarderoGraphics;
 import it.unibo.bombardero.character.Character;
@@ -24,27 +25,51 @@ public class BombarderoController implements Controller {
 
     @Override
     public void startGame() {
-        engine = new BombarderoEngine(this, this.graphics);
-        this.manager = engine.initGameManager();
+        this.manager = new BombarderoGameManager(this);
+        engine = new BombarderoEngine(this, this.graphics, this.manager);
         graphics.initGameCard();
         graphics.showCard(BombarderoGraphics.GAME_CARD);
-        manager.startTimer();
         engine.startGameLoop();
+    }
+
+    @Override
+    public void endGame() {
+        /* TODO: NOT DONE YET */
+        /* CONTROLLER FA LA JOIN PER IL ENGINE */
+        graphics.showCard(BombarderoGraphics.END_CARD);
+    }
+
+    @Override
+    public void startGuide() {
+        this.manager = new BombarderoGuideManager(this);
+        engine = new BombarderoEngine(this, this.graphics, this.manager);
+        graphics.initGuideCard();
+        graphics.showCard(BombarderoGraphics.GUIDE_CARD);
+        engine.startGameLoop();
+    }
+
+    @Override
+    public void endGuide() {
+        /* CONTROLLER FA LA JOIN PER IL ENGINE */
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'endGuide'");
     }
 
     @Override
     public void escape() {
         if (!engine.isInterrupted()) {
+            graphics.setPausedView();
             engine.pauseGameLoop();
         }
         else {
             engine.resumeGameLoop();
+            graphics.setUnpausedView();
         }
     }
-
+    
     @Override
-    public void endGame() {
-        graphics.showCard(BombarderoGraphics.END_CARD);
+    public boolean isGamePaused() {
+        return engine.isInterrupted();
     }
 
     @Override
@@ -64,7 +89,7 @@ public class BombarderoController implements Controller {
 
     @Override
     public long getTimeLeft() {
-        return manager.getTimer().getTimeLeft();
+        return manager.getTimeLeft();
     }
     
 }

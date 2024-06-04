@@ -5,48 +5,36 @@ package it.unibo.bombardero.cell.powerup.api;
  */
 public enum PowerUpType {
     // Bomb type-related P.U.
-    REMOTE_BOMB("powerup/bomb_remote", 5),
-    PIERCING_BOMB("powerup/bomb_piercing", 15),
-    POWER_BOMB("powerup/bomb_power", 10),
+    REMOTE_BOMB(5),
+    PIERCING_BOMB(15),
+    POWER_BOMB(10),
     // Number of bomb-related P.U.
-    PLUS_ONE_BOMB("powerup/bomb_plus_one", 55),
-    MINUS_ONE_BOMB("powerup/bomb_minus_one", 15),
+    PLUS_ONE_BOMB(55),
+    MINUS_ONE_BOMB(15),
     // Bomb range-related P.U.
-    PLUS_ONE_FLAME_RANGE("powerup/flame_plus_one", 55),
-    MINUS_ONE_FLAME_RANGE("powerup/flame_minus_one", 15),
-    MAX_FLAME_RANGE("powerup/flame_max", 5),
+    PLUS_ONE_FLAME_RANGE(55),
+    MINUS_ONE_FLAME_RANGE(5),
+    MAX_FLAME_RANGE(5),
     // Speed-related P.U.
-    PLUS_ONE_SKATES("powerup/skates_plus_one", 55),
-    MINUS_ONE_SKATES("powerup/skates_minus_one", 15),
+    PLUS_ONE_SKATES(55),
+    MINUS_ONE_SKATES(15),
     // Botton-related P.U.
-    LINE_BOMB("powerup/line", 15),
+    LINE_BOMB(15),
     // Bomb movement-related P.U.
-    KICK("powerup/kick", 10),
+    KICK(10),
     // Debuff P.U.
-    SKULL("powerup/skull", 25);
+    SKULL(25);
 
-    private String typeString;
     private double weight;
 
 
     /**
      * Constructor for PowerUpType.
      * 
-     * @param typeString The string representation of the power-up type.
      * @param weight
      */
-    PowerUpType(final String typeString, final int weight) {
-        this.typeString = typeString;
+    PowerUpType(final int weight) {
         this.weight = weight;
-    }
-
-    /**
-     * Get the string representation of the power-up type.
-     * 
-     * @return The string representation of the power-up type.
-     */
-    public String getTypeString() {
-        return this.typeString;
     }
 
     /**
