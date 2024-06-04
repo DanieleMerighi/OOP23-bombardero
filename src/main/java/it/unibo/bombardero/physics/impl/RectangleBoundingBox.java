@@ -1,5 +1,6 @@
 package it.unibo.bombardero.physics.impl;
 
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
@@ -27,16 +28,38 @@ public class RectangleBoundingBox implements BoundingBox{
     }
 
     @Override
-    public Coord distanceOfCollision(Rectangle2D cellBox ,Direction dir) {
+    public Coord computeCollision(BoundingBox bBox ,Direction dir) {
         switch (dir) {
             case UP:
-                return new Coord((float)fisicsBox.createIntersection(cellBox).getHeight(),0);
+                return new Coord((float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getHeight(),0);
             case DOWN:
-                return new Coord(-(float)fisicsBox.createIntersection(cellBox).getHeight() , 0);
+                return new Coord(-(float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getHeight() , 0);
             case LEFT:
-                return new Coord(0 , (float)fisicsBox.createIntersection(cellBox).getWidth());
+                return new Coord(0 , (float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getWidth());
             case RIGHT:
-                return new Coord(0, -(float)fisicsBox.createIntersection(cellBox).getWidth());
+                return new Coord(0, -(float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getWidth());
+            default:
+                return new Coord(0, 0);//TODO not sure about that
+        }
+    }
+
+    @Override
+    public boolean isColliding(Line2D.Float mapOutline) {
+        return fisicsBox.intersectsLine(mapOutline);
+        
+    }
+
+    @Override
+    public Coord computeCollision(Line2D.Float mapOutline ,Direction dir) {
+        switch (dir) {
+            case UP:
+                return new Coord(0 , (float)(mapOutline.getY1()-fisicsBox.getMinY()));
+            case DOWN:
+                return new Coord(0 , (float)(mapOutline.getY1()-fisicsBox.getMaxY()));
+            case LEFT:
+                return new Coord(0 , (float)(mapOutline.getX1()-fisicsBox.getMinX()));
+            case RIGHT:
+                return new Coord(0 , (float)(mapOutline.getX1()-fisicsBox.getMaxY()));
             default:
                 return new Coord(0, 0);//TODO not sure about that
         }

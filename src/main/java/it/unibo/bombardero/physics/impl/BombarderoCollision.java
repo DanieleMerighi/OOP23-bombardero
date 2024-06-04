@@ -9,6 +9,9 @@ import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
 import java.util.Set;
+import java.awt.geom.Line2D;
+import java.awt.geom.Line2D.Float;
+import java.awt.geom.Point2D;
 
 import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Bomb;
@@ -27,7 +30,13 @@ public class BombarderoCollision implements CollisionEngine{
     private GameManager mgr;
     private GameMap gMap;
     private Map<Pair,Cell> map;
-    List<Character> characters;
+    private List<Character> characters;
+    private Map<Direction, Line2D.Float> MAP_OUTLINES = Map.of(
+        Direction.UP , new Line2D.Float(new Point2D.Float(0, 0) , new Point2D.Float(13, 0)),
+        Direction.DOWN , new Line2D.Float(new Point2D.Float(0, 13) , new Point2D.Float(13, 13)),
+        Direction.LEFT , new Line2D.Float(new Point2D.Float(0, 0) , new Point2D.Float(0, 13)),
+        Direction.DOWN , new Line2D.Float(new Point2D.Float(13, 0) , new Point2D.Float(13, 13))
+    );
 
     public BombarderoCollision(GameManager mgr){
         this.mgr=mgr;
@@ -49,22 +58,31 @@ public class BombarderoCollision implements CollisionEngine{
 
     @Override
     public void checkCharacterCollision(Character character) {
-        Optional<BoundingBox> collidigBox = getDirectionCell(character.getFacingDirection()).
-            stream().map( p -> map.get(p).getBoundingBox() )
-            .filter(b->b.isColliding(character.getBoundingBox()))
-            .findFirst();
-        if(collidigBox.isPresent()){
-            character.setCharacterPosition(character.getCharacterPosition()
-                .sum(character.getBoundingBox()
-                .distanceOfCollision(collidigBox.get().getPhysicsBox(), character.getFacingDirection())));
+        Optional<List<Pair>> collidingCell = getDirectionCell(character.getFacingDirection() , character.getIntCoordinate());
+        if(collidingCell.isPresent()) {
+            Optional<BoundingBox> collidigBox = getDirectionCell(character.getFacingDirection() , character.getIntCoordinate())
+                .stream().map( p -> map.get(p).getBoundingBox() )
+                .filter(b->b.isColliding(character.getBoundingBox()))
+                .findFirst();
+                if(collidigBox.isPresent()){
+                    character.setCharacterPosition(character.getCharacterPosition()
+                        .sum(character.getBoundingBox()
+                        .computeCollision(collidigBox.get(), character.getFacingDirection())));
+                }
+        } else {
+
         }
 
     }
 
 
-    private List<Pair> getDirectionCell(Direction dir) {
-        List<Pair> l = new LinkedList<Pair> (dir.getDiagonals(dir));
-        l.add(dir.getPair());
-        return l;
+    private Optional<List<Pair>> getDirectionCell(Direction dir , Pair cDir) {
+        Optional<List<Pair>> l = dir.getDiagonals(dir);
+        if(l.isPresent()) {
+            l.get().add(dir.getPair());
+            return l;
+        } else {
+            return Optional.empty();
+        }
     }
 }
