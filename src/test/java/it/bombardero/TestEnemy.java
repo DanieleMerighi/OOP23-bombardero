@@ -122,8 +122,8 @@ public class TestEnemy {
 
         public TestGameManager() {
             this.map = new GameMapImpl(false);
-            this.enemy = new Enemy(this, new Coord(0, 0), new BombFactoryImpl(this, null));
-            this.player = new Player(this, new Coord(0, 12), new BombFactoryImpl(this, null));
+            this.enemy = new Enemy(this, new Coord(0, 0), new BombFactoryImpl(this));
+            this.player = new Player(this, new Coord(0, 12), new BombFactoryImpl(this));
         }
 
         public void setPlayerCoord(int row, int col) {
