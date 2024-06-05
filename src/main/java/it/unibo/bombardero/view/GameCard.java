@@ -75,7 +75,7 @@ public final class GameCard extends GamePlayCard {
     private Map<Pair, Cell> cells;
     private final Controller controller;
     private final Character player;
-    //private final List<Character> enemies;
+    private final List<Character> enemies;
 
     /* Pause state buttons: */
     private final JButton resumeButton = new JButton("Resume");
@@ -83,10 +83,10 @@ public final class GameCard extends GamePlayCard {
     
     /* Sprites: */
     private BombarderoOrientedSprite playerSprite;
-    //private final BombarderoOrientedSprite[] enemySprite = new GenericBombarderoSprite[Utils.NUM_OF_ENEMIES];
+    private final BombarderoOrientedSprite[] enemySprite = new GenericBombarderoSprite[Utils.NUM_OF_ENEMIES];
     private final BombarderoSprite normalBomb = new GenericBombarderoSprite("bomb", resourceGetter, 4);
     private Image player_image;
-    //private final Image[] enemiesImages = new Image[Utils.NUM_OF_ENEMIES];
+    private final Image[] enemiesImages = new Image[Utils.NUM_OF_ENEMIES];
     private Image bomb_image;
 
     /* Static positions for quicker access: */
@@ -107,14 +107,14 @@ public final class GameCard extends GamePlayCard {
 
         cells = controller.getMap(); 
         player = controller.getMainPlayer();
-        //enemies = controller.getEnemies();
+        enemies = controller.getEnemies();
 
         playerSprite = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN);
         player_image = playerSprite.getStandingImage();
-        /*for (int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
+        for (int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
             enemySprite[i] = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN);
             enemiesImages[i] = enemySprite[i].getStandingImage();
-        }*/
+        }
         bomb_image = normalBomb.getImage();
 
         this.setFont(font);
@@ -208,10 +208,10 @@ public final class GameCard extends GamePlayCard {
             playerPosition.width, playerPosition.height,
             null
         );
-        /*for(int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
+        for(int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
             Dimension enemyPos = computeCharacterPlacingPoint(controller.getEnemies().get(i).getCharacterPosition());
             g2d.drawImage(enemiesImages[i], enemyPos.width, enemyPos.height, null);
-        } */
+        }
     }
 
     public void updateMap() {
@@ -233,7 +233,7 @@ public final class GameCard extends GamePlayCard {
             player_image = playerSprite.getImage();
         }
         /* Update enemy sprites: */
-        /*for (int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
+        for (int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
             enemySprite[i].update();
             if(enemies.get(i).getFacingDirection().equals(Direction.DEFAULT)) {
                 enemiesImages[i] = enemySprite[i].getStandingImage();
@@ -242,7 +242,7 @@ public final class GameCard extends GamePlayCard {
                 enemySprite[i] = enemySprite[i].getNewSprite(enemies.get(i).getFacingDirection());
                 enemiesImages[i] = enemySprite[i].getStandingImage();
             }
-        } */
+        }
         /* Update bomb sprites: */
         normalBomb.update();
         bomb_image = normalBomb.getImage();
@@ -276,8 +276,8 @@ public final class GameCard extends GamePlayCard {
 
     private Dimension computeCellPlacingPoint(Pair coordinate) {
         return new Dimension(
-            entityPlacingPoint.width + (int)(resizingEngine.getScaledCellSize() * coordinate.row()),
-            entityPlacingPoint.height + (int)(resizingEngine.getScaledCellSize() * coordinate.col())
+            entityPlacingPoint.width + (int)(resizingEngine.getScaledCellSize() * coordinate.x()),
+            entityPlacingPoint.height + (int)(resizingEngine.getScaledCellSize() * coordinate.y())
         );
     }
 
@@ -306,18 +306,18 @@ public final class GameCard extends GamePlayCard {
 
     /* The Character object's position contains a float coordinate representing the center of the charater therefore we
      * have to compute the placing point for the character's image
-     * SE NON VA PROVA AD INVERTIRE row E col
+     * SE NON VA PROVA AD INVERTIRE x E y
      */
     private Dimension computeCharacterPlacingPoint(final Coord playerPosition) {
 
         return new Dimension(
             mapPlacingPoint.width
-            + (int)(Math.floor(playerPosition.row() * resizingEngine.getScaledCellSize())
+            + (int)(Math.floor(playerPosition.x() * resizingEngine.getScaledCellSize())
                 - Math.floorDiv(Utils.PLAYER_WIDTH, 2)
                 + resizingEngine.getScaledCellSize()
                 + resizingEngine.getScale() * MISCHIEVOUS_PADDING),
             mapPlacingPoint.height 
-            + (int)(Math.floor(playerPosition.col() * resizingEngine.getScaledCellSize())
+            + (int)(Math.floor(playerPosition.y() * resizingEngine.getScaledCellSize())
                 - Utils.PLAYER_HEIGHT * 0.85
                 + 2 * resizingEngine.getScaledCellSize())
         );

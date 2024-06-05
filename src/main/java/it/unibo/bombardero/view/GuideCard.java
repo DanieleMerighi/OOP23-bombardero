@@ -236,8 +236,8 @@ public final class GuideCard extends GamePlayCard {
 
     private Dimension computeCellPlacingPoint(Pair coordinate) {
         return new Dimension(
-            entityPlacingPoint.width + (int)(resizingEngine.getScaledCellSize() * coordinate.row()),
-            entityPlacingPoint.height + (int)(resizingEngine.getScaledCellSize() * coordinate.col())
+            entityPlacingPoint.width + (int)(resizingEngine.getScaledCellSize() * coordinate.x()),
+            entityPlacingPoint.height + (int)(resizingEngine.getScaledCellSize() * coordinate.y())
         );
     }
 
@@ -266,18 +266,18 @@ public final class GuideCard extends GamePlayCard {
 
     /* The Character object's position contains a float coordinate representing the center of the charater therefore we
      * have to compute the placing point for the character's image
-     * SE NON VA PROVA AD INVERTIRE row E col
+     * SE NON VA PROVA AD INVERTIRE x E y
      */
     private Dimension computeCharacterPlacingPoint(final Coord playerPosition) {
 
         return new Dimension(
             mapPlacingPoint.width
-            + (int)(Math.floor(playerPosition.row() * resizingEngine.getScaledCellSize())
+            + (int)(Math.floor(playerPosition.x() * resizingEngine.getScaledCellSize())
                 - Math.floorDiv(Utils.PLAYER_WIDTH, 2)
                 + resizingEngine.getScaledCellSize()
                 + resizingEngine.getScale() * MISCHIEVOUS_PADDING),
             mapPlacingPoint.height 
-            + (int)(Math.floor(playerPosition.col() * resizingEngine.getScaledCellSize())
+            + (int)(Math.floor(playerPosition.y() * resizingEngine.getScaledCellSize())
                 - Utils.PLAYER_HEIGHT * 0.85
                 + 2 * resizingEngine.getScaledCellSize())
         );

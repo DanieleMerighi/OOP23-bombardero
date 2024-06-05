@@ -36,10 +36,10 @@ public class TestReasoner {
     // parameters and avoiding duplicate tests
     @ParameterizedTest
     @CsvSource({
-            "0,0, 0,2, 2, true", // horizontal bomb
+            "0,0, 0,2, 2, true", // vertical bomb
             "0,0, 0,2, 1, false", // outside range
             "0,0, 0,3, 2, false",
-            "0,0, 2,0, 2, true", // vertical bomb
+            "0,0, 2,0, 2, true", // horizzontal bomb
             "0,0, 0,2, 1, false", // outside range
             "0,0, 3,0, 2, false",
             "1,0, 0,1, 4, false"
@@ -80,7 +80,7 @@ public class TestReasoner {
     * 
     This code represents a path as a string. 
     The string format consists of a series of cell coordinates separated by semicolons (;). 
-    Each cell coordinate is specified in the format 'row:column', where 'row' and 'column' 
+    Each cell coordinate is specified in the format 'x:column', where 'x' and 'column' 
     are integers representing the position of the cell in a grid
     */
     @ParameterizedTest
@@ -140,8 +140,8 @@ public class TestReasoner {
         Optional<Pair> safeSpace = reasoner.findNearestSafeSpace(enemyCoord, explRadius);
         if(expectedSafeSpaceX != -1 && expectedSafeSpaceY != -1) {
             assertTrue(safeSpace.isPresent());
-            assertEquals(expectedSafeSpaceX, safeSpace.get().row());
-            assertEquals(expectedSafeSpaceY, safeSpace.get().col());
+            assertEquals(expectedSafeSpaceX, safeSpace.get().x());
+            assertEquals(expectedSafeSpaceY, safeSpace.get().y());
         } else {
             assertTrue(safeSpace.isEmpty());
         }   
