@@ -215,10 +215,16 @@ public class Enemy extends Character {
             @Override
             void execute(Enemy enemy) {
                 if (!enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) { // Safe now
-                    enemy.currentState = State.PATROL;
+                    enemy.currentState = State.WAITING;
                 } else {
                     enemy.nextMove = enemy.graph.findNearestSafeCell(enemy.getIntCoordinate(), enemy.getFlameRange());
                 }
+            }
+        },
+        WAITING {
+            @Override
+            void execute(Enemy enemy) {
+                enemy.nextMove = Optional.empty(); //da cambiare, quando la bomba esplode allora ti muovi
             }
         };
 
