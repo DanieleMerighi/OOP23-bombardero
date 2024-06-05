@@ -11,6 +11,7 @@ import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.guide.impl.BombarderoGuideManager;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.view.BombarderoGraphics;
+import it.unibo.bombardero.view.BombarderoViewMessages;
 import it.unibo.bombardero.character.Character;
 
 public class BombarderoController implements Controller {
@@ -45,6 +46,7 @@ public class BombarderoController implements Controller {
         graphics.initGuideCard();
         graphics.showCard(BombarderoGraphics.GUIDE_CARD);
         engine.startGameLoop();
+        toggleMessage(BombarderoViewMessages.EXPLAIN_MOVEMENT);
     }
 
     @Override
@@ -57,6 +59,11 @@ public class BombarderoController implements Controller {
             engine.resumeGameLoop();
             graphics.setUnpausedView();
         }
+    }
+
+    @Override
+    public void toggleMessage(final BombarderoViewMessages message) {
+        graphics.setMessage(message);
     }
     
     @Override
