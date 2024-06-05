@@ -220,6 +220,10 @@ public final class GuideCard extends GamePlayCard {
         bombImage = normalBombSprite.getImage();
     }
 
+    public void showMessage(final BombarderoViewMessages message) {
+        return;
+    }
+
     private Dimension computeMapPlacingPoint() {
         return new Dimension(
             parentFrame.getSize().width/2 - resizingEngine.getMapSize().width/2 - (parentFrame.getInsets().right + parentFrame.getInsets().left),
