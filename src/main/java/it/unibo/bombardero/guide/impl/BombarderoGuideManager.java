@@ -1,15 +1,20 @@
 package it.unibo.bombardero.guide.impl;
 
-import org.jgrapht.alg.shortestpath.ContractionHierarchyBidirectionalDijkstra;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.function.BiPredicate;
+import java.util.function.BiConsumer;
 
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.core.impl.BombarderoGameManager;
-import it.unibo.bombardero.guide.api.Guide;
+import it.unibo.bombardero.guide.api.GuideManager;
 import it.unibo.bombardero.map.api.Coord;
+import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.view.BombarderoViewMessages;
 
 /**
  * This class represents a single instance of the game's guide
@@ -20,11 +25,13 @@ import it.unibo.bombardero.map.api.Pair;
  * stages, dictated by the Controller. 
  * @author Federico Bagattoni
  */
-public final class BombarderoGuideManager extends BombarderoGameManager implements Guide {
+public final class BombarderoGuideManager extends BombarderoGameManager implements GuideManager {
 
     public final static Coord PLAYER_GUIDE_SPAWNPOINT = new Coord(4.5f, 6.5f);
     public final static Pair CRATE_GUIDE_SPAWNPOINT = new Pair(8, 6);
     public final static Coord DUMMY_GUIDE_SPAWNPOINT = new Coord(7.5f, 5.5f);
+
+    private final Map<BiPredicate<GameMap, GuideManager>, BiConsumer<GuideManager, Controller>> guideProcedures = new HashMap<>();
 
     /**
      * Creates a new {@link BombarderoGuideManager}, creating a map with no
@@ -38,6 +45,7 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
     public BombarderoGuideManager(final Controller controller) {
         super(controller, true);
         this.getGameMap().addBreakableWall(CRATE_GUIDE_SPAWNPOINT);
+        initialiseProcedures();
     }
 
     @Override
@@ -50,6 +58,20 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
     public void spawnDummy() {
         addEnemy(new Dummy(DUMMY_GUIDE_SPAWNPOINT));
     }
+
+    private void initialiseProcedures() {
+        guideProcedures.put((map, manager) -> true, (manager, controller) -> {
+            controller.toggleMessage(BombarderoViewMessages.PLACE_BOMB);
+        });
+        guideProcedures.put((map, manager) -> map.isEmpty(CRATE_GUIDE_SPAWNPOINT), (manager, controller) -> {
+            controller.toggleMessage(BombarderoViewMessages.EXPLAIN_POWERUP);
+        });
+        guideProcedures.put((map, manager) -> map.isEmpty(CRATE_GUIDE_SPAWNPOINT),
+        (manager, controller) -> {
+            manager.spawnDummy();
+            controller.toggleMessage(BombarderoViewMessages.KILL_ENEMY);
+        });
+    } 
 
     /**
      * This nested class represents a "Dummy", and NPC capable of 
