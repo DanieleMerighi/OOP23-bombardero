@@ -92,8 +92,8 @@ public class TestEnemy {
         assertEquals(Enemy.State.ESCAPE, this.manager.enemy.getState());
         this.manager.updateGame(STANDARD_ELAPSED_TIME);
         this.manager.updateGame(STANDARD_ELAPSED_TIME);
-        // Verify enemy state is PATROL
-        assertEquals(Enemy.State.PATROL, this.manager.enemy.getState());
+        // Verify enemy state is WAITING
+        assertEquals(Enemy.State.WAITING, this.manager.enemy.getState());
         assertEquals(new Pair(1, 0), this.manager.enemy.getIntCoordinate());
     }
 
