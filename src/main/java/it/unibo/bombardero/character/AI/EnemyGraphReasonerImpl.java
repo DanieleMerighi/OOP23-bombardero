@@ -128,7 +128,7 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
         List<Pair> grassCells = StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(bfsIterator, Spliterator.ORDERED), false)
                 .takeWhile(cell -> bfsIterator.getDepth(cell) <= explRad+1)
-                .sorted(Comparator.comparingInt(cell -> bfsIterator.getDepth(cell)))
+                .sorted(Comparator.comparingDouble(cell -> calculateDistance(enemyCoord, cell)))
                 .filter(cell -> map.isEmpty(cell))
                 .collect(Collectors.toCollection(ArrayList::new));
         while(!grassCells.isEmpty() && safeCell.isEmpty()) {
@@ -138,6 +138,12 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
             }
         }
         return safeCell.isEmpty() ? Optional.empty() : Optional.of(findShortestPathToPlayer(enemyCoord, safeCell.get()).get(0));
+    }
+
+    private double calculateDistance(Pair p1, Pair p2) {
+        int dx = p2.x() - p1.x();
+        int dy = p2.y() - p1.y();
+        return Math.sqrt(dx*dx + dy*dy);
     }
 
     /**
