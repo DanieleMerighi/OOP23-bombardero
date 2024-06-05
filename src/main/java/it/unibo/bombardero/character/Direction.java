@@ -36,13 +36,13 @@ public enum Direction {
         Pair pd= dir.getPair();
         switch (dir) {
             case UP:
-                return List.of(new Pair(pd.col()-1, pd.row()-1) , new Pair(pd.col()+1, pd.row()-1) );
+                return List.of(new Pair(pd.x()-1, pd.y()-1) , new Pair(pd.x()+1, pd.y()-1) );
             case DOWN:
-                return List.of(new Pair(pd.col()-1, pd.row()+1) , new Pair(pd.col()+1, pd.row()+1) );
+                return List.of(new Pair(pd.x()-1, pd.y()+1) , new Pair(pd.x()+1, pd.y()+1) );
             case LEFT:
-                return List.of(new Pair(pd.col()-1, pd.row()-1) , new Pair(pd.col()-1, pd.row()+1) );
+                return List.of(new Pair(pd.x()-1, pd.y()-1) , new Pair(pd.x()-1, pd.y()+1) );
             case RIGHT:
-                return List.of(new Pair(pd.col()+1, pd.row()-1) , new Pair(pd.col()+1, pd.row()+1) );
+                return List.of(new Pair(pd.x()+1, pd.y()-1) , new Pair(pd.x()+1, pd.y()+1) );
             default:
                 return null;
         }
