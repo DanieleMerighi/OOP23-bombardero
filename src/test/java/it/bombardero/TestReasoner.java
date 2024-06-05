@@ -76,13 +76,15 @@ public class TestReasoner {
         assertEquals(expectedBlocked, isBlocked);
     }
 
-   /*
-    * 
-    This code represents a path as a string. 
-    The string format consists of a series of cell coordinates separated by semicolons (;). 
-    Each cell coordinate is specified in the format 'x:column', where 'x' and 'column' 
-    are integers representing the position of the cell in a grid
-    */
+    /*
+     * 
+     * This code represents a path as a string.
+     * The string format consists of a series of cell coordinates separated by
+     * semicolons (;).
+     * Each cell coordinate is specified in the format 'x:column', where 'x' and
+     * 'column'
+     * are integers representing the position of the cell in a grid
+     */
     @ParameterizedTest
     @CsvSource({
             "0,0, 0,2, 2, 0:1;0:2", // Player 2 cells right, path length 2
@@ -125,7 +127,7 @@ public class TestReasoner {
     @CsvSource({
             "0,0, 0,2, 2, 1,0", // Bomb to the right, safe space down
             "12,0, 12,2, 2, 11,0", // Bomb to the left, safe space above
-            "1,0, 1,2, 2, -1,-1", // no needed a safe space
+            "1,0, 1,2, 2, 1,0", // no needed a safe space
     })
     public void testFindNearestSafeSpace(int enemyX, int enemyY, int bombX, int bombY, int explRadius,
             int expectedSafeSpaceX, int expectedSafeSpaceY) {
@@ -137,14 +139,12 @@ public class TestReasoner {
 
         EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
 
-        Optional<Pair> safeSpace = reasoner.findNearestSafeSpace(enemyCoord, explRadius);
-        if(expectedSafeSpaceX != -1 && expectedSafeSpaceY != -1) {
-            assertTrue(safeSpace.isPresent());
-            assertEquals(expectedSafeSpaceX, safeSpace.get().x());
-            assertEquals(expectedSafeSpaceY, safeSpace.get().y());
-        } else {
-            assertTrue(safeSpace.isEmpty());
-        }   
+        Optional<Pair> safeSpace = reasoner.findNearestSafeCell(enemyCoord, explRadius);
+
+        assertTrue(safeSpace.isPresent());
+        assertEquals(expectedSafeSpaceX, safeSpace.get().x());
+        assertEquals(expectedSafeSpaceY, safeSpace.get().y());
+
     }
 
-} 
+}

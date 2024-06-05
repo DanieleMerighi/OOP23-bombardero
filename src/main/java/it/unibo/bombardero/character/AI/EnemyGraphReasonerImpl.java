@@ -1,6 +1,5 @@
 package it.unibo.bombardero.character.AI;
 
-import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -9,11 +8,9 @@ import org.jgrapht.traverse.BreadthFirstIterator;
 import java.util.*;
 import java.util.stream.*;
 
-import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.character.AI.api.EnemyGraphReasoner;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
-import it.unibo.bombardero.utils.Utils;
 
 /**
  * This class provides pathfinding and danger zone analysis functionalities for
@@ -120,61 +117,7 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
         DijkstraShortestPath<Pair, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<>(
                 GraphBuilderImpl.buildFromMap(map));
         GraphPath<Pair, DefaultWeightedEdge> path = dijkstra.getPath(enemyCoord, playerCoord);
-        return path == null ? Collections.emptyList() : path.getVertexList().subList(1, path.getVertexList().size());
-    }
-
-    // public Optional<Pair> findNearestSafeSpace(Pair enemyCoord, int explRad) {
-    // Optional<Pair> nearestBomb = findNearestBomb(enemyCoord);
-    // if (nearestBomb.isEmpty()) {
-    // return Optional.empty();
-    // }
-
-    // return Arrays.stream(Direction.values())
-    // .filter(direction -> !direction.equals(getDirectionToCell(enemyCoord,
-    // nearestBomb.get())))
-    // .map(direction -> new Pair(enemyCoord.x() + direction.getDx(), enemyCoord.y()
-    // + direction.getDy()))
-    // .filter(potentialSafeCell -> isValidCell(potentialSafeCell)
-    // && !isInDangerZone(potentialSafeCell, explRad))
-    // .findFirst();
-    // }
-
-    public Optional<Pair> findNearestSafeSpace(Pair enemyCoord, int explRad) {
-        Optional<Pair> nearestBomb = findNearestBomb(enemyCoord);
-        if (nearestBomb.isEmpty()) {
-            return Optional.empty(); // No bomb found, no safe space to escape to
-        }
-
-        Pair bombCoord = nearestBomb.get();
-        Direction bombDirection = getDirectionToCell(enemyCoord, bombCoord);
-
-        // Consider all 4 directions and check for safe cells in each direction
-        for (Direction direction : Direction.values()) {
-            if (direction.equals(bombDirection) || direction == Direction.DEFAULT) {
-                continue; // Skip the direction opposite to the bomb
-            }
-
-            // Check for safe cells along the direction until the explosion range is reached
-            for (int i = 1; i <= explRad + 1; i++) {
-                Pair potentialSafeCell = new Pair(enemyCoord.x() + i * direction.x(),
-                        enemyCoord.y() + i * direction.y());
-
-                if (!isValidCell(potentialSafeCell) || !map.isEmpty(potentialSafeCell)) {
-                    break; // Cell is invalid or within danger zone, stop checking
-                }
-
-                // Check if the cell is blocked by a wall
-                if (isPathBlockedByWalls(enemyCoord, potentialSafeCell) || isInDangerZone(potentialSafeCell, explRad)) {
-                    continue; // Path blocked, check next direction or iteration
-                }
-
-                // Safe cell found, return it
-                return Optional.of(potentialSafeCell);
-            }
-        }
-
-        // No safe cells found in any direction
-        return Optional.empty();
+        return path == null ? Collections.emptyList() : path.getVertexList().size() == 1 ? path.getVertexList() : path.getVertexList().subList(1, path.getVertexList().size());
     }
 
     public Optional<Pair> findNearestSafeCell(Pair enemyCoord, int explRad) {
@@ -190,7 +133,7 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
                 .toList();
         while(!grassCells.isEmpty() && safeCell.isEmpty()) {
             safeCell = grassCells.stream().filter(c -> !isInDangerZone(c, explRad)).findFirst();
-            if(safeCell.isPresent() && isPathBlockedByWalls(enemyCoord, safeCell.get())) {
+            if(safeCell.isPresent() && !grassCells.isEmpty() && isPathBlockedByWalls(enemyCoord, safeCell.get())) {
                 grassCells.remove(safeCell.get());
             }
         }
@@ -222,20 +165,20 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
                 .findFirst();
     }
 
-    private Direction getDirectionToCell(Pair fromCell, Pair toCell) {
-        int dx = toCell.x() - fromCell.x();
-        int dy = toCell.y() - fromCell.y();
-        // Check for horizontal or vertical movement
-        if (dx != 0 && dy == 0) {
-            return dx > 0 ? Direction.RIGHT : Direction.LEFT;
-        } else if (dx == 0 && dy != 0) {
-            return dy > 0 ? Direction.DOWN : Direction.UP;
-        }
+    // private Direction getDirectionToCell(Pair fromCell, Pair toCell) {
+    //     int dx = toCell.x() - fromCell.x();
+    //     int dy = toCell.y() - fromCell.y();
+    //     // Check for horizontal or vertical movement
+    //     if (dx != 0 && dy == 0) {
+    //         return dx > 0 ? Direction.RIGHT : Direction.LEFT;
+    //     } else if (dx == 0 && dy != 0) {
+    //         return dy > 0 ? Direction.DOWN : Direction.UP;
+    //     }
 
-        return null;
-    }
+    //     return null;
+    // }
 
-    private boolean isValidCell(Pair cell) {
-        return cell.x() >= 0 && cell.x() < Utils.MAP_ROWS && cell.y() >= 0 && cell.y() < Utils.MAP_COLS;
-    }
+    // private boolean isValidCell(Pair cell) {
+    //     return cell.x() >= 0 && cell.x() < Utils.MAP_ROWS && cell.y() >= 0 && cell.y() < Utils.MAP_COLS;
+    // }
 }
