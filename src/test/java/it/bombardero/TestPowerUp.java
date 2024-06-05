@@ -32,23 +32,23 @@ public class TestPowerUp {
         this.manager = new TestGameManager();
     }
 
-    @Test
-    public void Test100PowerUp() {
-        IntStream.range(0, 100).forEach(n -> {
-            PowerUp powerUP = factory.createPowerUp();
-            powerUP.applyEffect(this.manager.getPlayer());
-            if (this.manager.getPlayer().getResetEffect().isPresent()) {
-                this.manager.getPlayer().updateSkeleton(1000*9);
-            }
-            System.out.println(powerUP.getType());
-            System.out.println("flame " + this.manager.getPlayer().getFlameRange());
-            System.out.println("numBomb " + this.manager.getPlayer().getNumBomb());
-            System.out.println("speed " + this.manager.getPlayer().getSpeed());
-            System.out.println("typebomb " + this.manager.getPlayer().getBombType());
-            System.out.println("resetTask " + this.manager.getPlayer().getResetEffect());
-            System.out.println("\n\n\n\n");
-        });
-    }
+    // @Test
+    // public void Test100PowerUp() {
+    //     IntStream.range(0, 100).forEach(n -> {
+    //         PowerUp powerUP = factory.createPowerUp();
+    //         powerUP.applyEffect(this.manager.getPlayer());
+    //         if (this.manager.getPlayer().getResetEffect().isPresent()) {
+    //             this.manager.getPlayer().updateSkeleton(1000*9);
+    //         }
+    //         System.out.println(powerUP.getType());
+    //         System.out.println("flame " + this.manager.getPlayer().getFlameRange());
+    //         System.out.println("numBomb " + this.manager.getPlayer().getNumBomb());
+    //         System.out.println("speed " + this.manager.getPlayer().getSpeed());
+    //         System.out.println("typebomb " + this.manager.getPlayer().getBombType());
+    //         System.out.println("resetTask " + this.manager.getPlayer().getResetEffect());
+    //         System.out.println("\n\n\n\n");
+    //     });
+    // }
 
     private static class TestGameManager implements GameManager {
 

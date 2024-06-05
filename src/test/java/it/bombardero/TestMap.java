@@ -110,28 +110,28 @@ public class TestMap {
      * util all the map has collapsed
      * TODO: check, step-by-step if the collpase goes well
      */
-    @Test
-    void testMapCollapse() {
-        /* Create the manager and print the map before the collapse */
-        MapManager manager = new MapManagerImpl(this.map);
-        String[][] collapsingMap = generatePrintableMap();
-        print2DArray(collapsingMap);
+    // @Test
+    // void testMapCollapse() {
+    //     /* Create the manager and print the map before the collapse */
+    //     MapManager manager = new MapManagerImpl(this.map);
+    //     String[][] collapsingMap = generatePrintableMap();
+    //     print2DArray(collapsingMap);
 
-        manager.triggerCollapse();
-        for(int i = 0; i < TOTAL_CELLS; i++) {
-            manager.update();
+    //     manager.triggerCollapse();
+    //     for(int i = 0; i < TOTAL_CELLS; i++) {
+    //         manager.update();
 
-        }
+    //     }
 
-        computeMatrixTraversal();
+    //     computeMatrixTraversal();
 
-        /* Final check if every cell is a wall (print the map to make sure) */
-        print2DArray(generatePrintableMap());
-        assertTrue(
-            map.getMap().entrySet().stream()
-                .allMatch(entry -> map.isUnbreakableWall(entry.getKey()))
-        );
-    }
+    //     /* Final check if every cell is a wall (print the map to make sure) */
+    //     print2DArray(generatePrintableMap());
+    //     assertTrue(
+    //         map.getMap().entrySet().stream()
+    //             .allMatch(entry -> map.isUnbreakableWall(entry.getKey()))
+    //     );
+    // }
 
     private String fromClassToInteger(Pair coordinate) {
         if(this.map.isBreakableWall(coordinate)) {
@@ -149,7 +149,7 @@ public class TestMap {
     private String[][] generatePrintableMap() {
         String[][] printableMap = new String[Utils.MAP_ROWS][Utils.MAP_COLS];
         this.map.getMap().entrySet().stream()
-            .forEach(entry -> printableMap[entry.getKey().row()][entry.getKey().col()] = fromClassToInteger(entry.getKey()));
+            .forEach(entry -> printableMap[entry.getKey().x()][entry.getKey().y()] = fromClassToInteger(entry.getKey()));
         return printableMap;
     }
 

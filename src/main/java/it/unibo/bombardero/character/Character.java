@@ -142,8 +142,8 @@ public abstract class Character {
      * @return the map's corrisponding integer coordinates of the character
      */
     public Pair getIntCoordinate() {
-        return new Pair((int) Math.floor(this.coordinate.row()),
-                (int) Math.floor(this.coordinate.col()));
+        return new Pair((int) Math.floor(this.coordinate.x()),
+                (int) Math.floor(this.coordinate.y()));
     }
 
     /**
