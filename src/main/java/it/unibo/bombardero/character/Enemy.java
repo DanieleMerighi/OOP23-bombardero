@@ -2,6 +2,7 @@ package it.unibo.bombardero.character;
 
 import java.util.Optional;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Random;
 
 import it.unibo.bombardero.cell.BombFactory;
@@ -51,10 +52,10 @@ public class Enemy extends Character {
     private boolean isEnemyClose() {
         Pair enemyCoord = getIntCoordinate();
         int detectionRadius = Utils.ENEMY_DETECTION_RADIUS;
-        List<Pair> allEnemies = super.manager.getEnemies().stream().map(e -> e.getIntCoordinate()).toList();
-        allEnemies.add(super.manager.getPlayer().getIntCoordinate());
+        List<Character> allEnemies = new ArrayList<>(super.manager.getEnemies());
+        allEnemies.add(super.manager.getPlayer());
         // Calculate Manhattan distance between enemy and player
-        return allEnemies.stream().anyMatch(coord -> {
+        return allEnemies.stream().map(e -> e.getIntCoordinate()).filter(e -> !e.equals(enemyCoord)).anyMatch(coord -> {
             int distance = Math.abs(enemyCoord.x() - coord.x()) + Math.abs(enemyCoord.y() - coord.y());
             return distance <= detectionRadius;
         });

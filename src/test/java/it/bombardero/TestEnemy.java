@@ -23,6 +23,7 @@ import it.unibo.bombardero.utils.Utils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Arrays;
 
 public class TestEnemy {
 
@@ -155,7 +156,7 @@ public class TestEnemy {
 
         @Override
         public List<Character> getEnemies() {
-            throw new UnsupportedOperationException("Unimplemented method 'getEnemies'");
+            return Arrays.asList(enemy);
         }
 
         @Override
