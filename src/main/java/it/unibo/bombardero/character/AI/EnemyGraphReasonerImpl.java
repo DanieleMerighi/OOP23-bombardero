@@ -130,7 +130,7 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
                 .takeWhile(cell -> bfsIterator.getDepth(cell) <= explRad+1)
                 .sorted(Comparator.comparingInt(cell -> bfsIterator.getDepth(cell)))
                 .filter(cell -> map.isEmpty(cell))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
         while(!grassCells.isEmpty() && safeCell.isEmpty()) {
             safeCell = grassCells.stream().filter(c -> !isInDangerZone(c, explRad)).findFirst();
             if(safeCell.isPresent() && !grassCells.isEmpty() && isPathBlockedByWalls(enemyCoord, safeCell.get())) {
