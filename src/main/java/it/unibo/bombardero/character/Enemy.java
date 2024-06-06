@@ -43,6 +43,10 @@ public class Enemy extends Character {
         graph = new EnemyGraphReasonerImpl(manager.getGameMap());
     }
 
+    private int calculateDistance(Pair coord1, Pair coord2) {
+        return Math.abs(coord1.x() - coord2.x()) + Math.abs(coord1.y() - coord2.y());
+    }
+
     /**
      * Checks if the player is within the enemy's detection radius using Manhattan
      * distance.
@@ -50,15 +54,21 @@ public class Enemy extends Character {
      * @return true if the player is within detection radius, false otherwise.
      */
     private boolean isEnemyClose() {
+        return getClosestEntity().map(
+                closestCoord -> calculateDistance(getIntCoordinate(), closestCoord) <= Utils.ENEMY_DETECTION_RADIUS)
+                .orElse(false);
+    }
+
+    private Optional<Pair> getClosestEntity() {
         Pair enemyCoord = getIntCoordinate();
-        int detectionRadius = Utils.ENEMY_DETECTION_RADIUS;
-        List<Character> allEnemies = new ArrayList<>(super.manager.getEnemies());
-        allEnemies.add(super.manager.getPlayer());
-        // Calculate Manhattan distance between enemy and player
-        return allEnemies.stream().map(e -> e.getIntCoordinate()).filter(e -> !e.equals(enemyCoord)).anyMatch(coord -> {
-            int distance = Math.abs(enemyCoord.x() - coord.x()) + Math.abs(enemyCoord.y() - coord.y());
-            return distance <= detectionRadius;
-        });
+        List<Character> allEntities = new ArrayList<>(super.manager.getEnemies());
+        allEntities.add(super.manager.getPlayer());
+
+        return allEntities.stream()
+                .map(Character::getIntCoordinate)
+                .filter(coord -> !coord.equals(enemyCoord))
+                .min((coord1, coord2) -> Integer.compare(calculateDistance(enemyCoord, coord1),
+                        calculateDistance(enemyCoord, coord2)));
     }
 
     // when the enemy doesn't know where to move he choose randomly
@@ -104,6 +114,15 @@ public class Enemy extends Character {
         if (nextMove.isPresent() && currentState != State.ESCAPE) {
             Pair cell = nextMove.get();
             GameMap gameMap = super.manager.getGameMap();
+            if (currentState == State.CHASE) {
+                Pair closeEnemy = getClosestEntity().get();
+                Pair currPos = getIntCoordinate();
+                if ((closeEnemy.x() == currPos.x() || closeEnemy.y() == currPos.y())
+                        && !graph.isPathBlockedByWalls(closeEnemy, getIntCoordinate())
+                        && calculateDistance(currPos, closeEnemy) <= getFlameRange()) {
+                    placeBomb();
+                }
+            }
             if (gameMap.isUnbreakableWall(cell)) {
                 nextMove = Optional.empty();
             } else if (gameMap.isBreakableWall(cell)) {
@@ -128,7 +147,7 @@ public class Enemy extends Character {
         }
 
         if (nextMove.isPresent()) {
-            Coord target = new Coord(nextMove.get().x()+0.5f, nextMove.get().y()+0.5f);
+            Coord target = new Coord(nextMove.get().x() + 0.5f, nextMove.get().y() + 0.5f);
             Coord currentPos = getCharacterPosition();
             Pair currentCoord = getIntCoordinate();
 
@@ -140,11 +159,11 @@ public class Enemy extends Character {
 
             // Aggiorna la posizione del nemico
             Coord newPos = currentPos.sum(dir.multiply(getSpeed()));
-           
+
             // Check if reached the target cell using a small tolerance
             if (currentCoord.equals(nextMove.get()) &&
-                    Math.abs(newPos.subtract(target).x()) <= getSpeed()/2 &&
-                    Math.abs(newPos.subtract(target).y()) <= getSpeed()/2) {
+                    Math.abs(newPos.subtract(target).x()) <= getSpeed() / 2 &&
+                    Math.abs(newPos.subtract(target).y()) <= getSpeed() / 2) {
                 nextMove = Optional.empty(); // Clear target if reached
             } else {
                 setCharacterPosition(newPos);
@@ -224,7 +243,7 @@ public class Enemy extends Character {
         WAITING {
             @Override
             void execute(Enemy enemy) {
-                enemy.nextMove = Optional.empty(); //da cambiare, quando la bomba esplode allora ti muovi
+                enemy.nextMove = Optional.empty(); // da cambiare, quando la bomba esplode allora ti muovi
             }
         };
 
