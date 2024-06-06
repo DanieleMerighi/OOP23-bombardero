@@ -14,12 +14,10 @@ import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.map.api.BombarderoTimer;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
-import it.unibo.bombardero.utils.Utils;
 
 import java.util.List;
 import java.util.Optional;
