@@ -21,12 +21,13 @@ public abstract class BasicBomb extends Cell implements Bomb{
     public final static long TIME_TO_EXPLODE=2000L;
     public final static int MAX_RANGE = 3; // TO-DO: decide the max bomb range
 
+    private boolean exploded = false;
     private final int range;
     private int countTick=0;
     private final Character character;
     private final GameManager mgr;
     private Pair pos;
-    private long elapsedTime=0;
+    private long elapsedTime = 0;
     protected GameMap map;
     private Optional<PowerUpType> bombType;
 
@@ -45,6 +46,11 @@ public abstract class BasicBomb extends Cell implements Bomb{
             return bombType.get().toBombType();
         }
         return null;
+    }
+
+    @Override
+    public boolean isExploded() {
+        return exploded;
     }
 
     @Override
@@ -69,6 +75,8 @@ public abstract class BasicBomb extends Cell implements Bomb{
     private void explode() {
         computeFlame(this);
         character.increaseNumBomb();
+        exploded = true;
+        mgr.removeBomb(pos);
     }
 
     public int getRange(){
@@ -88,7 +96,8 @@ public abstract class BasicBomb extends Cell implements Bomb{
     }
     
     private Set<Entry<Pair , FlameType>> checkDirection(Direction dir , int range , Pair pos) {
-        return IntStream.iterate(0 , i->i < range , i->i+1)
+        System.out.println(pos);
+        return IntStream.iterate(1 , i->i <= range , i->i+1)
             .mapToObj(i->pos.sum(dir.getPair().multipy(i)))
             .takeWhile(stopFlamePropagation())
             .collect(Collectors.toMap(
@@ -100,7 +109,7 @@ public abstract class BasicBomb extends Cell implements Bomb{
     }
 
     protected Predicate<? super Pair> stopFlamePropagation() {
-        return p-> !map.isBomb(p) && !map.isUnbreakableWall(p) && (!map.isBreakableWall(p) && mgr.removeWall(p));
+        return p-> !map.isBomb(p) && !map.isUnbreakableWall(p) || (map.isBreakableWall(p) && mgr.removeWall(p));
     }
 
 }

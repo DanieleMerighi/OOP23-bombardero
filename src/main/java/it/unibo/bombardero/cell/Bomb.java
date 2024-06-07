@@ -27,6 +27,8 @@ public interface Bomb {
 
     }
 
+    boolean isExploded();
+
     void update();
 
     BombType getBombType();
