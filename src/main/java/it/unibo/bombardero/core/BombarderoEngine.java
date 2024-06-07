@@ -11,21 +11,16 @@ public class BombarderoEngine extends Thread implements Engine {
 
     private final static long sleepTime = 16L; // Time during which the thread sleeps, equivalent to about 60FPS
     
-    private GameManager gameManager;
+    private GameManager manager;
     private BombarderoGraphics graphics;
     private Controller controller;
     private boolean isGameInterrupted = false;
     private boolean isGameOver = false;
 
-    public BombarderoEngine(Controller controller, BombarderoGraphics graphics) {
+    public BombarderoEngine(Controller controller, BombarderoGraphics graphics, GameManager manager) {
         this.controller = controller;
         this.graphics = graphics;
-    }
-
-    @Override
-    public GameManager initGameManager() {
-        gameManager = new BombarderoGameManager(controller);
-        return gameManager;
+        this.manager = manager;
     }
     
     public void run() {
@@ -34,17 +29,18 @@ public class BombarderoEngine extends Thread implements Engine {
             long currentCycleStartTime = System.currentTimeMillis();
             long elapsed = currentCycleStartTime - previousCycleStartTime;
             if(!isGameInterrupted) {
-                gameManager.updateGame();
+                manager.updateGame(elapsed);
                 graphics.update();
             }
             waitForNextFrame(currentCycleStartTime);
             previousCycleStartTime = currentCycleStartTime;
         }
-        graphics.showCard(BombarderoGraphics.END_CARD);
+        this.interrupt();
     }
 
     @Override
     public void startGameLoop() {
+        isGameOver = false;
         this.start();
     }
 
@@ -69,7 +65,9 @@ public class BombarderoEngine extends Thread implements Engine {
 
     @Override
     public void endGameLoop() {
+        System.out.println("Inizio end");
         isGameOver = true;
+        System.out.println("Join fatta");
     }
 
     @Override

@@ -8,9 +8,11 @@ import edu.umd.cs.findbugs.annotations.OverrideMustInvoke;
 import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.BombFactoryImpl;
+import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
+import it.unibo.bombardero.guide.impl.BombarderoGuideManager;
 import it.unibo.bombardero.map.api.BombarderoTimer;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.GameMap;
@@ -25,6 +27,9 @@ import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;
 
 public class BombarderoGameManager implements GameManager {
+
+    public final static long TOTAL_GAME_TIME = 120000L;
+    public final static long GAME_OVER_TIME = 0L;
     
     private final GameMap map;
     private final List<Character> enemies = new ArrayList<>();
@@ -32,7 +37,7 @@ public class BombarderoGameManager implements GameManager {
     private final Controller controller;
     private final CollisionEngine ce;
     private final BombFactory bombFactory;
-    private final BombarderoTimer gameTimer = new BombarderoTimerImpl();
+    private long gameTime = 0;
 
     public BombarderoGameManager(final Controller ctrl){
         this.controller = ctrl;
@@ -43,35 +48,39 @@ public class BombarderoGameManager implements GameManager {
         Utils.ENEMIES_SPAWNPOINT.forEach(enemyCoord -> enemies.add(new Enemy(this, enemyCoord, bombFactory)));
     }
 
+    public BombarderoGameManager(final Controller controller, final boolean guideMode) {
+        this.controller = controller;
+        map = new GameMapImpl(false);
+        ce = new BombarderoCollision(this);
+        bombFactory = new BombFactoryImpl(this);
+        /* TODO: CHANGE PLAYER SPAWNPOINT IN MIDDLE OF MAP */
+        this.player = new Player(this, BombarderoGuideManager.PLAYER_GUIDE_SPAWNPOINT, bombFactory);
+        this.map.addBreakableWall(BombarderoGuideManager.CRATE_GUIDE_SPAWNPOINT);
+        /* TODO: enemies.add(new Player(this, , bombFactory)); */ 
+    }
+
     @Override
-    public void updateGame() {
-        if (player.isAlive()) {
-            player.update();
-        }
-        enemies.forEach(enemy -> {
-            if (enemy.isAlive()) {
-                enemy.update();
-            }
-        });
-        gameTimer.updateTimer();
-        if (gameTimer.isOver()) {
-            map.triggerCollapse();
-        }
+    public void updateGame(final long elapsed) {
+        gameTime += elapsed;
+        /* TODO: CAPIRE COME FARE A FARE COLLASSO DELLA MAPPA IN GAME MA NON IN GUIDE */
         map.update();
+        if (player.isAlive()) {
+            player.update(elapsed);
+        }
+        // enemies.forEach(enemy -> {
+        //     if (enemy.isAlive()) {
+        //         enemy.update(elapsed);
+        //     }
+        // });
+        if(enemies.get(0).isAlive()){
+            System.out.println(enemies.get(0).getCharacterPosition());
+            enemies.get(0).update(elapsed);
+        }
     }
 
     @Override
     public void endGame() {
         controller.endGame();
-    }
-
-    @Override
-    public void startTimer() {
-        gameTimer.startTimer();
-    }
-
-    public BombarderoTimer getTimer() {
-        return gameTimer;
     }
 
     @Override
@@ -101,20 +110,31 @@ public class BombarderoGameManager implements GameManager {
 
     @Override
     public void addFlame(final Flame.FlameType type, final Pair pos) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addFlame'");
+        map.addFlame(new Flame(CellType.FLAME, type), pos);
     }
 
     @Override
     public void removeFlame(final Pair pos) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeFlame'");
+    
     }
 
     @Override
     public boolean removeWall(final Pair pos) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'removeWall'");
+    }
+
+    @Override
+    public long getTimeLeft() {
+        return gameTime < TOTAL_GAME_TIME ? TOTAL_GAME_TIME - gameTime : GAME_OVER_TIME;
+    }
+
+    protected void addEnemy(final Character enemy) {
+        this.enemies.add(enemy);
+    }
+
+    protected BombFactory getBombFactory() {
+        return this.bombFactory;
     }
     
 }

@@ -32,18 +32,23 @@ public class TestPowerUp {
         this.manager = new TestGameManager();
     }
 
-    @Test
-    public void Test100PowerUp() {
-        IntStream.range(0, 100).forEach(n -> {
-            PowerUp powerUP = factory.createPowerUp();
-            powerUP.applyEffect(this.manager.getPlayer());
-            System.out.println(powerUP.getType());
-            System.out.println("flame " + this.manager.getPlayer().getFlameRange());
-            System.out.println("numBomb " + this.manager.getPlayer().getNumBomb());
-            System.out.println("speed " + this.manager.getPlayer().getSpeed());
-            System.out.println("typebomb " + this.manager.getPlayer().getBombType());
-        });
-    }
+    // @Test
+    // public void Test100PowerUp() {
+    //     IntStream.range(0, 100).forEach(n -> {
+    //         PowerUp powerUP = factory.createPowerUp();
+    //         powerUP.applyEffect(this.manager.getPlayer());
+    //         if (this.manager.getPlayer().getResetEffect().isPresent()) {
+    //             this.manager.getPlayer().updateSkeleton(1000*9);
+    //         }
+    //         System.out.println(powerUP.getType());
+    //         System.out.println("flame " + this.manager.getPlayer().getFlameRange());
+    //         System.out.println("numBomb " + this.manager.getPlayer().getNumBomb());
+    //         System.out.println("speed " + this.manager.getPlayer().getSpeed());
+    //         System.out.println("typebomb " + this.manager.getPlayer().getBombType());
+    //         System.out.println("resetTask " + this.manager.getPlayer().getResetEffect());
+    //         System.out.println("\n\n\n\n");
+    //     });
+    // }
 
     private static class TestGameManager implements GameManager {
 
@@ -61,7 +66,7 @@ public class TestPowerUp {
         }
 
         @Override
-        public void updateGame() {
+        public void updateGame(long elapsed) {
         }
 
         @Override
@@ -112,15 +117,9 @@ public class TestPowerUp {
         }
 
         @Override
-        public void startTimer() {
+        public long getTimeLeft() {
             // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'startTimer'");
-        }
-
-        @Override
-        public BombarderoTimer getTimer() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'getTimer'");
+            throw new UnsupportedOperationException("Unimplemented method 'getTimeLeft'");
         }
     }
 

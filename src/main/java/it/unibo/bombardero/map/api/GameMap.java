@@ -58,6 +58,12 @@ public interface GameMap {
     void removeBreakableWall(Pair coordinate);
 
     /**
+     * Removes the flame at the given coordinate.
+     * @param coordinate the coordinate where to remove the bomb
+     */
+    void removeFlame(Pair coordinate);
+
+    /**
      * Removes the bomb at the given coordinate.
      * @param coordinate the coordinate where to remove the bomb
      */

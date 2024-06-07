@@ -7,43 +7,43 @@ import java.util.Optional;
 import it.unibo.bombardero.map.api.Pair;
 
 public enum Direction {
-    UP(-1, 0),
-    DOWN(1, 0),
-    LEFT(0, -1),
-    RIGHT(0, 1),
+    UP(0, -1),
+    DOWN(0, 1),
+    LEFT(-1, 0),
+    RIGHT(1, 0),
     DEFAULT(0, 0);
 
-    private final int dx;
-    private final int dy;
+    private final int x;
+    private final int y;
 
-    Direction(final int dx, final int dy) {
-        this.dx = dx;
-        this.dy = dy;
+    Direction(final int x, final int y) {
+        this.x = x;
+        this.y = y;
     }
 
-    public int getDx() {
-        return dx;
+    public int x() {
+        return x;
     }
 
-    public int getDy() {
-        return dy;
+    public int y() {
+        return y;
     }
 
     public Pair getPair() {
-        return new Pair(getDx(), getDy());
+        return new Pair(x, y);
     }
 
     public Optional<List<Pair>> getDiagonals(Direction dir) {
         Pair pd= dir.getPair();
         switch (dir) {
             case UP:
-                return Optional.of(List.of(new Pair(pd.col()-1, pd.row()-1) , new Pair(pd.col()+1, pd.row()-1) ));
+                return Optional.of(List.of(new Pair(pd.x()-1, pd.y()-1) , new Pair(pd.y()+1, pd.y()-1) ));
             case DOWN:
-                return Optional.of(List.of(new Pair(pd.col()-1, pd.row()+1) , new Pair(pd.col()+1, pd.row()+1) ));
+                return Optional.of(List.of(new Pair(pd.x()-1, pd.y()+1) , new Pair(pd.x()+1, pd.y()+1) ));
             case LEFT:
-                return Optional.of(List.of(new Pair(pd.col()-1, pd.row()-1) , new Pair(pd.col()-1, pd.row()+1) ));
+                return Optional.of(List.of(new Pair(pd.x()-1, pd.y()-1) , new Pair(pd.x()-1, pd.y()+1) ));
             case RIGHT:
-                return Optional.of(List.of(new Pair(pd.col()+1, pd.row()-1) , new Pair(pd.col()+1, pd.row()+1) ));
+                return Optional.of(List.of(new Pair(pd.x()+1, pd.y()-1) , new Pair(pd.x()+1, pd.y()+1) ));
             default:
                 return null;
         }

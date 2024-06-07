@@ -1,46 +1,50 @@
 package it.unibo.bombardero.character;
 
 import java.util.Optional;
+import java.util.Deque;
+import java.util.ArrayDeque;
 
 import org.jgrapht.alg.drawing.model.Point2D;
 
+import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;
-
-import it.unibo.bombardero.physics.api.*;
-import it.unibo.bombardero.physics.impl.*;
+import it.unibo.bombardero.physics.api.BoundingBox;
+import it.unibo.bombardero.physics.api.CollisionEngine;
+import it.unibo.bombardero.physics.impl.BombarderoCollision;
 
 /**
  * Abstract class representing a character in the game.
  * Contains common properties and methods for characters.
- * 
- * @author Jacopo Turchi
  */
 public abstract class Character {
 
     // Constants for default settings
-    private static final float STARTING_SPEED = 0.05f;
+    public static final float STARTING_SPEED = 0.05f;
     private static final float INCREASE_SPEED = 0.005f;
-    private static final int STARTING_FLAME_RANGE = 1;
+    public static final int STARTING_FLAME_RANGE = 1;
     private static final int STARTING_BOMBS = 1;
 
     // Constants for controls
-    private static final float MAX_SPEED = 0.09f;
+    public static final float MAX_SPEED = 0.09f;
     public static final int MAX_FLAME_RANGE = 8;
     private static final int MAX_BOMBS = 8;
 
     // Game manager reference
-    private final GameManager manager;
+    protected final GameManager manager;
+    // TODO: Remove getManager method and make manager protected. Use it with
+    // super.manager
 
     // Bomb Factory reference
     private final BombFactory bombFactory;
 
     // Position related
     private Coord coordinate; // Starting character coordinate
-    private Direction facingDirection = Direction.DEFAULT; // Starting character facingDirection
+    private Direction facingDirection = Direction.DOWN; // Starting character facingDirection
+    private boolean stationary = true;
     private BoundingBox bBox; // Solid area of the character
 
     // Physics part of character
@@ -54,6 +58,26 @@ public abstract class Character {
     private Optional<PowerUpType> bombType = Optional.empty();
     private boolean kick; // False by default
     private boolean lineBomb;
+    private final Deque<BasicBomb> remoteBombQueue = new ArrayDeque<>();
+    /*
+     * TODO: Gestire la rimozione di una bomba se è esplosa per concatenazione con
+     * un'altra
+     * usare character.removeRemoteBomb(BasicBomb bomb); ogni volta che si sta per
+     * far esplodere una remote bomb
+     */
+
+    // Update related
+    private boolean hasToPlaceBomb;
+    private boolean hasToPlaceLineBomb;
+    private boolean hasToExplodeRemoteBomb;
+
+    // Skull effects
+    private boolean constipation; // The character is unable to lay down bombs
+    private boolean butterfingers; // The character's hand becomes slippery. The character rapidly lay down bombs
+
+    // Skull manager
+    private long effectDuration; // Indicates the duration of the skull effect
+    private Optional<Runnable> resetEffect = Optional.empty(); // Restores all stats modified by the skull
 
     /**
      * Constructs a new Character with the specified parameters.
@@ -63,7 +87,7 @@ public abstract class Character {
      * @param bombFactory the factory to create bombs
      */
     public Character(final GameManager manager, final Coord coord, final BombFactory bombFactory) {
-        this.manager = manager;
+        this.manager = manager; // TODO: Solve manager, a copy?
         this.coordinate = coord;
         this.bombFactory = bombFactory;
         //this.bBox = new RectangleBoundingBox(null, STARTING_BOMBS, HEIGHT);
@@ -73,8 +97,28 @@ public abstract class Character {
      * Updates the character's state.
      * This method should be implemented by subclasses to define character-specific
      * behavior.
+     * 
+     * @param elapsedTime the time elapsed since the last update
      */
-    public abstract void update();
+    public abstract void update(long elapsedTime);
+
+    /**
+     * Updates the skeleton's effects.
+     * 
+     * @param elapsedTime the time elapsed since the last update
+     */
+    public void updateSkeleton(final long elapsedTime) {
+        if (this.effectDuration > 0) { // Continues until the duration reaches zero
+            this.effectDuration -= elapsedTime;
+            if (this.effectDuration <= 0) { // When the effect ends the character's stats get resetted
+                this.resetEffect.ifPresent(Runnable::run); // If there's a effect to reset, it runs the reset effect
+                this.resetEffect = Optional.empty(); // Clear the reset effect after it has run
+            }
+            if (this.butterfingers) { // If the character has butterfingers, he places a bomb
+                placeBomb();
+            }
+        }
+    }
 
     /**
      * Checks if the character is alive.
@@ -86,14 +130,20 @@ public abstract class Character {
     }
 
     /**
-     * Gets the integer coordinates of the character, adjusted by the character's
-     * width and height.
+     * Kills the character, setting its alive status to false.
+     */
+    public void kill() {
+        isAlive = false;
+    }
+
+    /**
+     * Gets the integer coordinates of the character
      * 
      * @return the map's corrisponding integer coordinates of the character
      */
     public Pair getIntCoordinate() {
-        return new Pair((int) Math.floor(this.coordinate.row()),
-                (int) Math.floor(this.coordinate.col()));
+        return new Pair((int) Math.floor(this.coordinate.x()),
+                (int) Math.floor(this.coordinate.y()));
     }
 
     /**
@@ -105,13 +155,11 @@ public abstract class Character {
     
     /**
      * Places a bomb at the character's current location if he has bombs left.
+     * 
+     * @return true if the character has placed the bomb, false otherwise
      */
-    public void placeBomb() {
-        if (hasBombsLeft() && this.manager
-                .addBomb(this.bombFactory.CreateBomb(this))) {
-            this.numBomb--;
-            System.out.println("bomb placed");
-        }
+    public boolean placeBomb() {
+        return placeBombImpl(this.bombFactory.CreateBomb(this.bombType, getIntCoordinate(), this.flameRange));
     }
 
     /**
@@ -122,13 +170,77 @@ public abstract class Character {
      * @return true if the character has placed the bomb, false otherwise
      */
     public boolean placeBomb(final Pair coordinate) {
-        if (hasBombsLeft() && this.manager
-                .addBomb(this.bombFactory.CreateBomb(this))) {
+        return placeBombImpl(this.bombFactory.CreateBomb(this));
+    }
+
+    private boolean placeBombImpl(final BasicBomb bomb) {
+        if (hasBombsLeft() && !this.constipation && this.manager
+                .addBomb(bomb)) {
             this.numBomb--;
-            System.out.println("line bomb placed");
+            if (bombType.equals(Optional.of(PowerUpType.REMOTE_BOMB))) { // If character has the remote bomb
+                remoteBombQueue.addLast(bomb);
+            }
             return true;
         }
         return false;
+    }
+
+    // TODO: Cambia nome, no get
+    /**
+     * Checks if the character has to place a bomb.
+     * 
+     * @return true if the character has to place a bomb, false otherwise
+     */
+    public boolean getHasToPlaceBomb() {
+        return hasToPlaceBomb;
+    }
+
+    /**
+     * Sets whether the character should place a bomb.
+     * 
+     * @param hasToPlaceBomb true to cause the character to place a bomb, false
+     *                       otherwise
+     */
+    public void setHasToPlaceBomb(final boolean hasToPlaceBomb) {
+        this.hasToPlaceBomb = hasToPlaceBomb;
+    }
+
+    // fa esplodere la prima remote piazzata della coda
+    public void explodeRemoteBomb() {
+        if (!remoteBombQueue.isEmpty()) {
+            final BasicBomb bomb = remoteBombQueue.removeFirst();
+            System.out.println("exploded remote bomb\n\n");
+            bomb.computeFlame(bomb);
+        }
+    }
+
+    // Quando si sta per far esplodere una bomba remote per concatenazione viene
+    // chiamato questo metodo
+    public void removeRemoteBomb(final BasicBomb remoteBomb) {
+        if (!remoteBombQueue.isEmpty()) {
+            System.out.println("removed remote bomb\n\n");
+            remoteBombQueue.removeFirstOccurrence(remoteBomb);
+        }
+    }
+
+    // TODO: Togli get, cambia nome
+    /**
+     * Checks if the character has to explode a remote bomb.
+     * 
+     * @return true if the character has to explode a remote bomb, false otherwise
+     */
+    public boolean getHasToExplodeRemoteBomb() {
+        return hasToExplodeRemoteBomb;
+    }
+
+    /**
+     * Sets whether the character should explode a remote bomb.
+     * 
+     * @param hasToPlaceBomb true to cause the character to explode a remote bomb,
+     *                       false otherwise
+     */
+    public void setHasToExplodeRemoteBomb(final boolean hasToExplodeRemoteBomb) {
+        this.hasToExplodeRemoteBomb = hasToExplodeRemoteBomb;
     }
 
     /**
@@ -138,22 +250,6 @@ public abstract class Character {
      */
     public boolean hasBombsLeft() {
         return this.numBomb > 0;
-    }
-
-    /**
-     * Kills the character, setting its alive status to false.
-     */
-    public void kill() {
-        isAlive = false;
-    }
-
-    /**
-     * Gets the game manager associated with this character.
-     * 
-     * @return the game manager
-     */
-    public GameManager getManager() {
-        return manager;
     }
 
     /**
@@ -199,6 +295,24 @@ public abstract class Character {
      */
     public void setFacingDirection(final Direction direction) {
         this.facingDirection = direction;
+    }
+
+    /**
+     * Checks if the character is stationary.
+     * 
+     * @return true if the character is stationary, false otherwise
+     */
+    public boolean isStationary() {
+        return stationary;
+    }
+
+    /**
+     * Sets whether the character is stanionary.
+     * 
+     * @param stationary true if the character is stationary, false otherwise
+     */
+    public void setStationary(final boolean stationary) {
+        this.stationary = stationary;
     }
 
     /**
@@ -311,7 +425,7 @@ public abstract class Character {
      */
     public void decreaseSpeed() {
         if (this.speed > STARTING_SPEED) {
-            this.speed -= 0.005f;
+            this.speed -= INCREASE_SPEED;
         }
     }
 
@@ -370,4 +484,89 @@ public abstract class Character {
         this.lineBomb = lineBomb;
     }
 
+    // TODO: Togli get, cambia nome
+    /**
+     * Checks if the character has to place a line bomb.
+     * 
+     * @return true if the character has to place a line bomb, false otherwise
+     */
+    public boolean getHasToPlaceLineBomb() {
+        return hasToPlaceLineBomb;
+    }
+
+    /**
+     * Sets whether the character should place a line bomb.
+     * 
+     * @param hasToPlaceBomb true to cause the character to place a line bomb, false
+     *                       otherwise
+     */
+    public void setHasToPlaceLineBomb(final boolean hasToPlaceLineBomb) {
+        this.hasToPlaceLineBomb = hasToPlaceLineBomb;
+    }
+
+    /**
+     * Checks if the character has constipation.
+     * 
+     * @return true if the character has constipation, false otherwise
+     */
+    public boolean hasConstipation() {
+        return constipation;
+    }
+
+    /**
+     * Sets whether the character should have constipation.
+     * 
+     * @param constipation true to cause the character constipation, false
+     *                     otherwise
+     */
+    public void setConstipation(final boolean constipation) {
+        this.constipation = constipation;
+    }
+
+    /**
+     * Checks if the character has butterfingers.
+     * 
+     * @return true if the character has butterfingers, false otherwise
+     */
+    public boolean hasButterfingers() {
+        return butterfingers;
+    }
+
+    /**
+     * Sets whether the character should have butterfingers.
+     * 
+     * @param butterfingers true to cause the character butterfingers, false
+     *                      otherwise
+     */
+    public void setButterfingers(final boolean butterfingers) {
+        this.butterfingers = butterfingers;
+    }
+
+    /**
+     * Sets the effect's duration.
+     * 
+     * @param duration the duration of the effect
+     */
+    public void setEffectDuration(final long duration) {
+        this.effectDuration = duration;
+    }
+
+    //TODO: write better javadoc
+    /**
+     * Gets the reset effect
+     * 
+     * @return the reset effect
+     */
+    public Optional<Runnable> getResetEffect() {
+        return resetEffect;
+    }
+
+    /**
+     * Sets the reset effect.
+     * 
+     * @param resetEffect the reset effect
+     */
+    public void setResetEffect(final Runnable resetEffect) {
+        this.resetEffect = Optional.of(resetEffect);
+    }
 }

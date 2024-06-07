@@ -1,13 +1,11 @@
 package it.unibo.bombardero.view;
 
-import javax.print.event.PrintEvent;
 import javax.swing.JFrame;
 
 import it.unibo.bombardero.utils.Utils;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.GraphicsEnvironment;
 
 /** 
  * A class to compute the scale of the game relative to the window size and display size
@@ -24,7 +22,7 @@ public class ResizingEngine {
     public ResizingEngine() {
         int resolution = Toolkit.getDefaultToolkit().getScreenResolution();
         if(resolution >= 200) {              
-            currentScale = 1.25; /* for high resolution devices, the scale goes up */
+            currentScale = 1.25; 
         }
         SCALED_CELL_SIZE = (int)(currentScale * Utils.CELL_SIZE);
     }  
