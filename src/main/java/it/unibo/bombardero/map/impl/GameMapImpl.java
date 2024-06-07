@@ -107,13 +107,6 @@ public final class GameMapImpl implements GameMap {
     }
 
     @Override
-    public void removeFlame(final Pair coordinate) {
-        if (this.isFlame(coordinate)) {
-            this.map.remove(coordinate);
-        }
-    }
-
-    @Override
     public void removeBomb(final Pair coordinate) {
         if (this.isBomb(coordinate)) {
             this.map.remove(coordinate);
