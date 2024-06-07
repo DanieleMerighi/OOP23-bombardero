@@ -128,5 +128,13 @@ public class BombarderoGameManager implements GameManager {
     public long getTimeLeft() {
         return gameTime < TOTAL_GAME_TIME ? TOTAL_GAME_TIME - gameTime : GAME_OVER_TIME;
     }
+
+    protected void addEnemy(final Character enemy) {
+        this.enemies.add(enemy);
+    }
+
+    protected BombFactory getBombFactory() {
+        return this.bombFactory;
+    }
     
 }

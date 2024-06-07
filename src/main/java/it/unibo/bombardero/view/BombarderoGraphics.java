@@ -124,4 +124,8 @@ public class BombarderoGraphics {
     public void setUnpausedView() {
         gameCard.setUnpausedView();
     }
+
+    public void setMessage(final BombarderoViewMessages message) {
+        guideCard.showMessage(message);
+    }
 }

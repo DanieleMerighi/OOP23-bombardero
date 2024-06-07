@@ -11,6 +11,7 @@ import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.guide.impl.BombarderoGuideManager;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.view.BombarderoGraphics;
+import it.unibo.bombardero.view.BombarderoViewMessages;
 import it.unibo.bombardero.character.Character;
 
 public class BombarderoController implements Controller {
@@ -34,8 +35,7 @@ public class BombarderoController implements Controller {
 
     @Override
     public void endGame() {
-        /* TODO: NOT DONE YET */
-        /* CONTROLLER FA LA JOIN PER IL ENGINE */
+        engine.endGameLoop();
         graphics.showCard(BombarderoGraphics.END_CARD);
     }
 
@@ -46,13 +46,7 @@ public class BombarderoController implements Controller {
         graphics.initGuideCard();
         graphics.showCard(BombarderoGraphics.GUIDE_CARD);
         engine.startGameLoop();
-    }
-
-    @Override
-    public void endGuide() {
-        /* CONTROLLER FA LA JOIN PER IL ENGINE */
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'endGuide'");
+        toggleMessage(BombarderoViewMessages.EXPLAIN_MOVEMENT);
     }
 
     @Override
@@ -65,6 +59,11 @@ public class BombarderoController implements Controller {
             engine.resumeGameLoop();
             graphics.setUnpausedView();
         }
+    }
+
+    @Override
+    public void toggleMessage(final BombarderoViewMessages message) {
+        graphics.setMessage(message);
     }
     
     @Override
