@@ -3,6 +3,7 @@ package it.unibo.bombardero.cell;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import edu.umd.cs.findbugs.annotations.OverrideMustInvoke;
 import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
@@ -57,12 +58,12 @@ public class BombFactoryImpl implements BombFactory{
 
     private BasicBomb createRemoteBomb(Character character) {
         return new BasicBomb(mgr , character ) {
-            
-            public void update(){
-                if(true){
-                    super.update(BasicBomb.TIME_TO_EXPLODE); //TODO find better option cosi non funziona
-                }
+
+            @Override
+            public void update () {
+                super.update(character.getHasToExplodeRemoteBomb());
             }
+
         };
     }
 
