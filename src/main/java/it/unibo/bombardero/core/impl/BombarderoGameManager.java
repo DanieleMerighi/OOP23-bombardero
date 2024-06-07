@@ -33,7 +33,7 @@ public class BombarderoGameManager implements GameManager {
     public final static long GAME_OVER_TIME = 0L;
     
     private final GameMap map;
-    private List<Bomb> boombs;
+    private List<Bomb> boombs = new ArrayList<>();
     private final List<Character> enemies = new ArrayList<>();
     private final Character player;
     private final Controller controller;
@@ -69,14 +69,16 @@ public class BombarderoGameManager implements GameManager {
         if (player.isAlive()) {
             player.update(elapsed);
         }
-        boombs.forEach(b->b.update());
+        if(!boombs.isEmpty()) {
+            boombs.forEach(b->b.update());
+            boombs.removeIf(b->b.isExploded());
+        }
         // enemies.forEach(enemy -> {
         //     if (enemy.isAlive()) {
         //         enemy.update(elapsed);
         //     }
         // });
         if(enemies.get(0).isAlive()){
-            System.out.println(enemies.get(0).getCharacterPosition());
             enemies.get(0).update(elapsed);
         }
     }
@@ -109,7 +111,6 @@ public class BombarderoGameManager implements GameManager {
 
     @Override
     public void removeBomb(final Pair pos) {
-        boombs.removeIf(b->b.getPos().equals(pos));
         map.removeBomb(pos);
     }
 
@@ -125,8 +126,11 @@ public class BombarderoGameManager implements GameManager {
 
     @Override
     public boolean removeWall(final Pair pos) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeWall'");
+        if(map.isBreakableWall(pos)) {
+            map.removeBreakableWall(pos);
+            return true;
+        }
+        return false;
     }
 
     @Override

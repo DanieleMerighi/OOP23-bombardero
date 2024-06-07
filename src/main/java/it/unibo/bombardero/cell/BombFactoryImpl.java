@@ -21,7 +21,7 @@ public class BombFactoryImpl implements BombFactory{
     @Override
     public BasicBomb CreateBomb(Character character) {
         if(!character.getBombType().isPresent()){
-            createBasicBomb(character);
+            return createBasicBomb(character);
         }
         switch (character.getBombType().get()) {
             case PIERCING_BOMB:
@@ -60,10 +60,10 @@ public class BombFactoryImpl implements BombFactory{
         return new BasicBomb(mgr , character ) {
 
             @Override
-            public void update () {
+            public void update (boolean condition) {
                 super.update(character.getHasToExplodeRemoteBomb());
             }
-
+            
         };
     }
 
