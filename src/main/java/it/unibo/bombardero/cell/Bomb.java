@@ -27,7 +27,7 @@ public interface Bomb {
 
     }
 
-    void update(long time);
+    void update();
 
     BombType getBombType();
 

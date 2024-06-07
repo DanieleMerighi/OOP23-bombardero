@@ -22,6 +22,7 @@ public abstract class BasicBomb extends Cell implements Bomb{
     public final static int MAX_RANGE = 3; // TO-DO: decide the max bomb range
 
     private final int range;
+    private int countTick=0;
     private final Character character;
     private final GameManager mgr;
     private Pair pos;
@@ -51,10 +52,16 @@ public abstract class BasicBomb extends Cell implements Bomb{
         return super.getCellType();
     }
 
+    public void update(boolean condition) {
+        if(condition){
+            this.explode();
+        }
+    }
+
     @Override
-    public void update(long time) {
-        elapsedTime += time;
-        if(elapsedTime>=TIME_TO_EXPLODE) {
+    public void update() {
+        countTick++;
+        if(countTick*16>=TIME_TO_EXPLODE) {
             explode();
         }
     }
