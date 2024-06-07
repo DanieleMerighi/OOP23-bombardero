@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.OverrideMustInvoke;
 import it.unibo.bombardero.cell.BasicBomb;
+import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.BombFactoryImpl;
 import it.unibo.bombardero.cell.Cell.CellType;
@@ -32,6 +33,7 @@ public class BombarderoGameManager implements GameManager {
     public final static long GAME_OVER_TIME = 0L;
     
     private final GameMap map;
+    private List<Bomb> boombs;
     private final List<Character> enemies = new ArrayList<>();
     private final Character player;
     private final Controller controller;
@@ -67,6 +69,7 @@ public class BombarderoGameManager implements GameManager {
         if (player.isAlive()) {
             player.update(elapsed);
         }
+        boombs.forEach(b->b.update());
         // enemies.forEach(enemy -> {
         //     if (enemy.isAlive()) {
         //         enemy.update(elapsed);
@@ -100,11 +103,13 @@ public class BombarderoGameManager implements GameManager {
 
     @Override
     public boolean addBomb(final BasicBomb bomb) {
+        boombs.add(bomb);
         return map.addBomb(bomb, bomb.getPos());
     }
 
     @Override
     public void removeBomb(final Pair pos) {
+        boombs.removeIf(b->b.getPos().equals(pos));
         map.removeBomb(pos);
     }
 
