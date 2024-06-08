@@ -9,6 +9,7 @@ import it.unibo.bombardero.map.api.GameMap;
 /** 
  * This record represents a guide's step. It is formed by a {@link #condition} 
  * that has to be verified in order to execute the relative {@link #action}.
+ * @author Federico Bagattoni
  */
 public record GuideStep(BiPredicate<GameMap, GuideManager> condition, BiConsumer<GuideManager, Controller> action) {
     
