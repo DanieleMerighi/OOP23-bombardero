@@ -85,7 +85,7 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
     } 
 
     /**
-     * This nested class represents a "Dummy", and NPC capable of 
+     * This nested class represents a "Dummy", a NPC capable of 
      * doing nothing. 
      * <p>
      * It's sole purporse is to be the target of the player during the guide.
