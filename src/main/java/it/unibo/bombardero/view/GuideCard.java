@@ -68,10 +68,11 @@ public final class GuideCard extends GamePlayCard {
     private Dimension timerPosition;
     private int overlayLevel;
 
-    public GuideCard(final JFrame parentFrame, final Controller controller, final BombarderoGraphics graphicsEngine, final ResourceGetter resourceGetter, final ResizingEngine resizingEngine) {
+    public GuideCard(final JFrame parentFrame, final Controller controller, final BombarderoGraphics graphics, final ResourceGetter resourceGetter, final ResizingEngine resizingEngine) {
+        super(graphics);
         this.resourceGetter = resourceGetter;
         this.controller = controller;
-        this.graphicsEngine = graphicsEngine;
+        this.graphicsEngine = graphics;
         this.resizingEngine = resizingEngine;
         this.parentFrame = parentFrame;
 
@@ -82,8 +83,8 @@ public final class GuideCard extends GamePlayCard {
         enemies = controller.getEnemies();
 
         // CHECKSTYLE: MagicNumbers OFF
-        playerSprite = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN);
-        normalBombSprite = new GenericBombarderoSprite("bomb", resourceGetter, 4);
+        playerSprite = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCellImage);
+        normalBombSprite = new GenericBombarderoSprite("bomb", resourceGetter, 4, graphics.getResizingEngine()::getScaledCellImage);
         enemyImage = resourceGetter.loadImage("character/main/walking/down/down_standing");
         grass_bg_image = resourceGetter.loadImage("grass_background");
         map = resourceGetter.loadImage("map_square_nowalls");
