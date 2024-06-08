@@ -137,5 +137,9 @@ public class BombarderoGameManager implements GameManager {
     protected BombFactory getBombFactory() {
         return this.bombFactory;
     }
+
+    protected Controller getController() {
+        return this.controller;
+    }
     
 }
