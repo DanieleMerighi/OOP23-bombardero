@@ -1,7 +1,6 @@
 package it.unibo.bombardero.guide.impl;
 
-import java.util.Map;
-import java.util.HashMap;
+import java.util.Stack;
 import java.util.function.BiPredicate;
 import java.util.function.BiConsumer;
 
@@ -11,6 +10,7 @@ import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.core.impl.BombarderoGameManager;
 import it.unibo.bombardero.guide.api.GuideManager;
+import it.unibo.bombardero.guide.api.GuideStep;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
@@ -31,7 +31,7 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
     public final static Pair CRATE_GUIDE_SPAWNPOINT = new Pair(8, 6);
     public final static Coord DUMMY_GUIDE_SPAWNPOINT = new Coord(7.5f, 5.5f);
 
-    private final Map<BiPredicate<GameMap, GuideManager>, BiConsumer<GuideManager, Controller>> guideProcedures = new HashMap<>();
+    private final Stack<GuideStep> guideProcedures = new Stack<>();
 
     /**
      * Creates a new {@link BombarderoGuideManager}, creating a map with no
@@ -52,6 +52,9 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
     public void updateGame(final long elapsed) {
         this.getGameMap().update();
         this.getPlayer().update(elapsed);
+        if(guideProcedures.peek().condition().test(getGameMap(), this)) {
+            guideProcedures.pop().action().accept(this, getController());
+        }
     }
 
     @Override
@@ -60,17 +63,21 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
     }
 
     private void initialiseProcedures() {
-        guideProcedures.put((map, manager) -> true, (manager, controller) -> {
-            controller.toggleMessage(BombarderoViewMessages.PLACE_BOMB);
-        });
-        guideProcedures.put((map, manager) -> map.isEmpty(CRATE_GUIDE_SPAWNPOINT), (manager, controller) -> {
-            controller.toggleMessage(BombarderoViewMessages.EXPLAIN_POWERUP);
-        });
-        guideProcedures.put((map, manager) -> map.isEmpty(CRATE_GUIDE_SPAWNPOINT),
-        (manager, controller) -> {
-            manager.spawnDummy();
-            controller.toggleMessage(BombarderoViewMessages.KILL_ENEMY);
-        });
+        guideProcedures.add(new GuideStep(
+            (map, manager) -> true,
+            (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.PLACE_BOMB)
+        ));
+        guideProcedures.add(new GuideStep(
+            (map, manager) -> map.isEmpty(CRATE_GUIDE_SPAWNPOINT),
+            (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.EXPLAIN_POWERUP)
+        ));
+        guideProcedures.add(new GuideStep(
+            (map, manager) -> map.isEmpty(CRATE_GUIDE_SPAWNPOINT),
+            (manager, controller) -> {
+                manager.spawnDummy();
+                controller.toggleMessage(BombarderoViewMessages.KILL_ENEMY);
+            }
+        ));
     } 
 
     /**
