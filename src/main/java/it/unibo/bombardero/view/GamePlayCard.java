@@ -43,9 +43,6 @@ public class GamePlayCard extends JPanel {
      */
     // CHECKSTYLE: MagicNumber OFF
 
-    /* A mischevious padding no one knows its reason to exist: */
-    private final static int MISCHIEVOUS_PADDING = 23;
-
     /* Game resources: */
     private final ResourceGetter resourceGetter = new ResourceGetter();
     private final Image grass_bg_image = resourceGetter.loadImage("grass_background");
@@ -71,41 +68,47 @@ public class GamePlayCard extends JPanel {
     private Map<Pair, Cell> cells;
     private final Character player;
     private final List<Character> enemies;
-
-    /* Pause state buttons: */
-    private final JButton resumeButton = new JButton("Resume");
-    private final JButton quitButton = new JButton("Quit");
     
     /* Sprites: */
     private BombarderoOrientedSprite playerSprite;
     private final BombarderoOrientedSprite[] enemySprite = new GenericBombarderoSprite[Utils.NUM_OF_ENEMIES];
-    private final BombarderoSprite normalBomb = new GenericBombarderoSprite("bomb", resourceGetter, 4);
-    private Image player_image;
+    private final BombarderoSprite normalBomb;
+    private Image playerImage;
     private final Image[] enemiesImages = new Image[Utils.NUM_OF_ENEMIES];
     private Image bomb_image;
 
     /* Static positions for quicker access: */
-    private Dimension mapPlacingPoint;
-    private Dimension entityPlacingPoint; // the upper-left corner of the first cell, readily available
+    private final Dimension mapPlacingPoint;
+    private final Dimension entityPlacingPoint;
+
+    private final Dimension mapSize;
+    private final Dimension bgSize;
 
     public GamePlayCard(final BombarderoGraphics graphics) {
         this.graphics = graphics;
         this.setMinimumSize(graphics.getResizingEngine().getMapSize());
         this.setLayout(new BorderLayout());
 
-        scaleEverything();
+        mapPlacingPoint = graphics.getResizingEngine().getMapPlacingPoint();
+        entityPlacingPoint = graphics.getResizingEngine().getEntityPlacingPoint();
+        mapSize = graphics.getResizingEngine().getMapSize();
+        bgSize = graphics.getResizingEngine().getBackgroundImageSize();
 
         cells = graphics.getController().getMap(); 
         player = graphics.getController().getMainPlayer();
         enemies = graphics.getController().getEnemies();
 
-        playerSprite = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN);
-        player_image = playerSprite.getStandingImage();
+        normalBomb = new GenericBombarderoSprite("bomb", resourceGetter, 4, graphics.getResizingEngine()::getScaledCellImage);
+
+        playerSprite = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
+        playerImage = playerSprite.getStandingImage();
         for (int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
-            enemySprite[i] = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN);
+            enemySprite[i] = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
             enemiesImages[i] = enemySprite[i].getStandingImage();
         }
         bomb_image = normalBomb.getImage();
+
+        scaleEverything();
     }
 
     // CHECKSTYLE: MagicNumber OFF
@@ -113,22 +116,15 @@ public class GamePlayCard extends JPanel {
     @Override
     public void paint(Graphics g) {
         Graphics2D g2d = (Graphics2D)g;
-        /* If the scale changes, then scale again the images */
-        if(graphics.getResizingEngine().hasScaleChanged()) {
-            scaleEverything();
-            /* TODO: scale the rest of the resources */
-        }
         /* Drawing the Map and the Background */
-        Dimension actualMapSize = graphics.getResizingEngine().getMapSize();
-        Dimension actualBgSize = graphics.getResizingEngine().getBackgroundImageSize();
         g2d.drawImage(
-            grass_bg_image.getScaledInstance(actualBgSize.width, actualBgSize.height, Image.SCALE_SMOOTH),
+            grass_bg_image.getScaledInstance(bgSize.width, bgSize.height, Image.SCALE_SMOOTH),
             0, 0,
             null);
         g2d.drawImage(
-            map.getScaledInstance(actualMapSize.width, actualMapSize.height, Image.SCALE_SMOOTH),
-            computeMapPlacingPoint().width,
-            computeMapPlacingPoint().height,
+            map.getScaledInstance(mapSize.width, mapSize.height, Image.SCALE_SMOOTH),
+            graphics.getResizingEngine().getMapPlacingPoint().width,
+            graphics.getResizingEngine().getMapPlacingPoint().height,
             null
         );
         /* Drawing the breakable obstacles, the bombs and the power ups (TODO: not done yet) */
@@ -141,15 +137,15 @@ public class GamePlayCard extends JPanel {
                     switch (entry.getCellType()) {
                         case WALL_BREAKABLE:
                             img = obstacle;
-                            placingPoint = computeCellPlacingPoint(new Pair(i, j));
+                            placingPoint = graphics.getResizingEngine().getCellPlacingPoint(new Pair(i, j));
                             break;
                         case WALL_UNBREAKABLE:
                             img = unbreakable;
-                            placingPoint = computeCellPlacingPoint(new Pair(i, j));
+                            placingPoint = graphics.getResizingEngine().getCellPlacingPoint(new Pair(i, j));
                             break;
                         case BOMB: 
                             img = bomb_image;
-                            placingPoint = computeBombPlacingPoint(new Pair(i, j));
+                            placingPoint = graphics.getResizingEngine().getBombPlacingPoint(new Pair(i, j));
                             break;
                         case POWERUP:
                             PowerUp pu = (PowerUp)entry;
@@ -169,11 +165,11 @@ public class GamePlayCard extends JPanel {
                                 case SKULL -> skull;
                                 default -> throw new IllegalArgumentException("texture not present for \"" + pu.getType() + "\"");
                             };
-                            placingPoint = computeCellPlacingPoint(new Pair(i, j));
+                            placingPoint = graphics.getResizingEngine().getCellPlacingPoint(new Pair(i, j));
                             break;
                         default:
                             img = unbreakable;
-                            placingPoint = computeCellPlacingPoint(new Pair(i, j));
+                            placingPoint = graphics.getResizingEngine().getCellPlacingPoint(new Pair(i, j));
                             break;
                     }
                     g2d.drawImage(
@@ -187,13 +183,13 @@ public class GamePlayCard extends JPanel {
             }
         }
         /* Drawing the player and the enemies */
-        Dimension playerPosition = computeCharacterPlacingPoint(graphics.getController().getMainPlayer().getCharacterPosition());
-        g2d.drawImage(player_image.getScaledInstance(35, 55, Image.SCALE_SMOOTH),
+        Dimension playerPosition = graphics.getResizingEngine().getCharacterPlacingPoint(graphics.getController().getMainPlayer().getCharacterPosition());
+        g2d.drawImage(playerImage,
             playerPosition.width, playerPosition.height,
             null
         );
         for(int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
-            Dimension enemyPos = computeCharacterPlacingPoint(graphics.getController().getEnemies().get(i).getCharacterPosition());
+            Dimension enemyPos = graphics.getResizingEngine().getCharacterPlacingPoint(graphics.getController().getEnemies().get(i).getCharacterPosition());
             g2d.drawImage(enemiesImages[i], enemyPos.width, enemyPos.height, null);
         }
     }
@@ -207,14 +203,14 @@ public class GamePlayCard extends JPanel {
         /* Update player sprites: */
         playerSprite.update();
         if (player.isStationary()) {
-            player_image = playerSprite.getStandingImage();
+            playerImage = playerSprite.getStandingImage();
         }
         else if (playerSprite.getCurrentFacingDirection().equals(player.getFacingDirection())) {
-            player_image = playerSprite.getImage();
+            playerImage = playerSprite.getImage();
         }
         else {
             playerSprite = playerSprite.getNewSprite(player.getFacingDirection());
-            player_image = playerSprite.getImage();
+            playerImage = playerSprite.getImage();
         }
         /* Update enemy sprites: */
         for (int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
@@ -232,83 +228,21 @@ public class GamePlayCard extends JPanel {
         bomb_image = normalBomb.getImage();
     }
 
-    public void setPausedView() {
-        this.add(quitButton, BorderLayout.CENTER);
-        this.add(resumeButton, BorderLayout.CENTER);
-        this.repaint(0);
-    }
-
-    public void setUnpausedView() {
-        this.remove(quitButton);
-        this.remove(resumeButton);
-        this.repaint(0);
-    }
-
-    protected Dimension computeMapPlacingPoint() {
-        return new Dimension(
-            graphics.getParentFrame().getSize().width/2 - graphics.getResizingEngine().getMapSize().width/2 - (graphics.getParentFrame().getInsets().right + graphics.getParentFrame().getInsets().left),
-            graphics.getParentFrame().getSize().height/2 - graphics.getResizingEngine().getMapSize().height/2 - (graphics.getParentFrame().getInsets().top + graphics.getParentFrame().getInsets().bottom)
-        );
-    }
-
-    protected Dimension computeEntityPlacingPoint() {
-        return new Dimension(
-            mapPlacingPoint.width + graphics.getResizingEngine().getScaledCellSize() + (int)(graphics.getResizingEngine().getScale() * MISCHIEVOUS_PADDING),
-            mapPlacingPoint.height + 2 * graphics.getResizingEngine().getScaledCellSize() - (int)(7 * graphics.getResizingEngine().getScale())
-        );
-    }
-
-    protected Dimension computeCellPlacingPoint(Pair coordinate) {
-        return new Dimension(
-            entityPlacingPoint.width + (int)(graphics.getResizingEngine().getScaledCellSize() * coordinate.x()),
-            entityPlacingPoint.height + (int)(graphics.getResizingEngine().getScaledCellSize() * coordinate.y())
-        );
-    }
-
-    protected Dimension computeBombPlacingPoint(Pair coordinate) {
-        Dimension placingPoint = computeCellPlacingPoint(coordinate);
-        return new Dimension(
-            placingPoint.width + (int)(graphics.getResizingEngine().getScaledCellSize() / 2),
-            placingPoint.height + (int)(graphics.getResizingEngine().getScaledCellSize() / 2)
-        );
-    }
-
-    /* The Character object's position contains a float coordinate representing the center of the charater therefore we
-     * have to compute the placing point for the character's image
-     * SE NON VA PROVA AD INVERTIRE x E y
-     */
-    protected Dimension computeCharacterPlacingPoint(final Coord playerPosition) {
-
-        return new Dimension(
-            mapPlacingPoint.width
-            + (int)(Math.floor(playerPosition.x() * graphics.getResizingEngine().getScaledCellSize())
-                - Math.floorDiv(Utils.PLAYER_WIDTH, 2)
-                + graphics.getResizingEngine().getScaledCellSize()
-                + graphics.getResizingEngine().getScale() * MISCHIEVOUS_PADDING),
-            mapPlacingPoint.height 
-            + (int)(Math.floor(playerPosition.y() * graphics.getResizingEngine().getScaledCellSize())
-                - Utils.PLAYER_HEIGHT * 0.85
-                + 2 * graphics.getResizingEngine().getScaledCellSize())
-        );
-    }
 
     protected void scaleEverything() {
-        mapPlacingPoint = computeMapPlacingPoint();
-        entityPlacingPoint = computeEntityPlacingPoint();
-        unbreakable = unbreakable.getScaledInstance((int)(graphics.getResizingEngine().getScale() * 32), (int)graphics.getResizingEngine().getScale() * 39, Image.SCALE_SMOOTH);
-        obstacle = obstacle.getScaledInstance((int)(graphics.getResizingEngine().getScale() * 32), (int)(graphics.getResizingEngine().getScale() * 39), Image.SCALE_SMOOTH);
-        
-        bombLine = bombLine.getScaledInstance((int)graphics.getResizingEngine().getScale() * 32, (int)(graphics.getResizingEngine().getScale() * 39), Image.SCALE_SMOOTH);
-        bombPlusOne = bombPlusOne.getScaledInstance((int)graphics.getResizingEngine().getScale() * 32, (int)(graphics.getResizingEngine().getScale() * 39), Image.SCALE_SMOOTH);
-        bombMinusOne = bombMinusOne.getScaledInstance((int)graphics.getResizingEngine().getScale() * 32, (int)(graphics.getResizingEngine().getScale() * 39), Image.SCALE_SMOOTH);
-        bombPower = bombPower.getScaledInstance((int)graphics.getResizingEngine().getScale() * 32, (int)(graphics.getResizingEngine().getScale() * 39), Image.SCALE_SMOOTH);
-        bombRemote = bombRemote.getScaledInstance((int)graphics.getResizingEngine().getScale() * 32, (int)(graphics.getResizingEngine().getScale() * 39), Image.SCALE_SMOOTH);
-        bombPierce = bombPierce.getScaledInstance((int)graphics.getResizingEngine().getScale() * 32, (int)(graphics.getResizingEngine().getScale() * 39), Image.SCALE_SMOOTH);
-        fireMax = fireMax.getScaledInstance((int)graphics.getResizingEngine().getScale() * 32, (int)(graphics.getResizingEngine().getScale() * 39), Image.SCALE_SMOOTH);
-        firePlusOne = firePlusOne.getScaledInstance((int)graphics.getResizingEngine().getScale() * 32, (int)(graphics.getResizingEngine().getScale() * 39), Image.SCALE_SMOOTH);
-        fireMinusOne = fireMinusOne.getScaledInstance((int)graphics.getResizingEngine().getScale() * 32, (int)(graphics.getResizingEngine().getScale() * 39), Image.SCALE_SMOOTH);
-        skatesPlusOne = skatesPlusOne.getScaledInstance((int)graphics.getResizingEngine().getScale() * 32, (int)(graphics.getResizingEngine().getScale() * 39), Image.SCALE_SMOOTH);
-        skateMinusOne = skateMinusOne.getScaledInstance((int)graphics.getResizingEngine().getScale() * 32, (int)(graphics.getResizingEngine().getScale() * 39), Image.SCALE_SMOOTH);
-        skull = skull.getScaledInstance((int)graphics.getResizingEngine().getScale() * 32, (int)(graphics.getResizingEngine().getScale() * 39), Image.SCALE_SMOOTH);
+        unbreakable = graphics.getResizingEngine().getScaledCellImage(unbreakable);
+        obstacle = graphics.getResizingEngine().getScaledCellImage(obstacle);
+        bombLine = graphics.getResizingEngine().getScaledCellImage(bombLine);
+        bombPlusOne = graphics.getResizingEngine().getScaledCellImage(bombPlusOne);
+        bombMinusOne = graphics.getResizingEngine().getScaledCellImage(bombMinusOne);
+        bombPower = graphics.getResizingEngine().getScaledCellImage(bombPower);
+        bombRemote = graphics.getResizingEngine().getScaledCellImage(bombRemote);
+        bombPierce = graphics.getResizingEngine().getScaledCellImage(bombPierce);
+        fireMax = graphics.getResizingEngine().getScaledCellImage(fireMax);
+        firePlusOne = graphics.getResizingEngine().getScaledCellImage(firePlusOne);
+        fireMinusOne = graphics.getResizingEngine().getScaledCellImage(fireMinusOne);
+        skatesPlusOne = graphics.getResizingEngine().getScaledCellImage(skatesPlusOne);
+        skateMinusOne = graphics.getResizingEngine().getScaledCellImage(skateMinusOne);
+        skull = graphics.getResizingEngine().getScaledCellImage(skull);
     }
 }
