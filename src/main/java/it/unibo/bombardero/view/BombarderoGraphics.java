@@ -128,4 +128,20 @@ public class BombarderoGraphics {
     public void setMessage(final BombarderoViewMessages message) {
         guideCard.showMessage(message);
     }
+
+    public Controller getController() {
+        return this.controller;
+    }
+
+    public ResizingEngine getResizingEngine() {
+        return this.resizingEngine;
+    }
+
+    public ResourceGetter getResourceGetter() {
+        return this.resourceGetter;
+    }
+
+    public JFrame getParentFrame() {
+        return this.frame;
+    }
 }
