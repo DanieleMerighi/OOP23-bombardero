@@ -19,7 +19,7 @@ public final class GameCard extends GamePlayCard {
 
     private final static SimpleDateFormat format = new SimpleDateFormat("mm:ss");
 
-    private Image clock;
+    private final Image clockImage;
     private final Font font;
 
     /* Pause state buttons: */
@@ -33,7 +33,9 @@ public final class GameCard extends GamePlayCard {
     public GameCard(final BombarderoGraphics graphics) {
         super(graphics);
         
-        clock = graphics.getResizingEngine().getScaledCellImage(graphics.getResourceGetter().loadImage("overlay/clock"));
+        clockImage = graphics.getResizingEngine().getScaledClockImage(
+            graphics.getResourceGetter().loadImage("overlay/clock")
+        );
         font = graphics.getResourceGetter().loadFont("clock_font");
 
         imageClockPosition = graphics.getResizingEngine().getImageClockPosition();
@@ -48,7 +50,7 @@ public final class GameCard extends GamePlayCard {
         Graphics2D g2d = (Graphics2D)g;
         g2d.setFont(font);
         g2d.drawString(getFormattedTime(), timerPosition.width, timerPosition.height);
-        g2d.drawImage(clock,imageClockPosition.width, imageClockPosition.height, null);
+        g2d.drawImage(clockImage, imageClockPosition.width, imageClockPosition.height, null);
     }
 
     
