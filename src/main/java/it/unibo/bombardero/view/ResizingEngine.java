@@ -113,6 +113,10 @@ public class ResizingEngine {
     public Image getScaledBackgroundImage(final Image background) {
         return background.getScaledInstance(getBackgroundImageSize().width, getBackgroundImageSize().height, Image.SCALE_SMOOTH);
     }
+
+    public Image getScaledMapImage(final Image map) {
+        return map.getScaledInstance(getMapSize().width, getMapSize().height, Image.SCALE_SMOOTH);
+    }
     
     /* GAME-RELATED METHODS: */
     
