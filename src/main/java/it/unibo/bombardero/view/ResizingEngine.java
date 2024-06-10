@@ -30,7 +30,6 @@ public class ResizingEngine {
     private final Dimension entityPlacingPoint;
     private final Dimension imageClockPosition;
     private final Dimension timerPosition;
-    private int overlayLevel;
 
     public ResizingEngine(final BombarderoGraphics graphics) {
         this.graphics = graphics;
@@ -46,7 +45,6 @@ public class ResizingEngine {
         entityPlacingPoint = initEntityPlacingPoint();
         imageClockPosition = initImageClockPosition();
         timerPosition = initTimerPosition();
-        overlayLevel = initOverlayLevel();
     }  
 
     /* FRAME-RELATED METHODS */
@@ -122,6 +120,10 @@ public class ResizingEngine {
     public Image getScaledMapImage(final Image mapImage) {
         return mapImage.getScaledInstance(getMapSize().width, getMapSize().height, Image.SCALE_SMOOTH);
     }
+
+    public Image getScaledClockImage(final Image clockImage) {
+        return clockImage.getScaledInstance(getScaledCellSize(), getScaledCellSize(), Image.SCALE_SMOOTH);
+    }
     
     /* GAME-RELATED METHODS: */
     
@@ -172,10 +174,6 @@ public class ResizingEngine {
         return timerPosition;
     }
 
-    public int getOverlayLevel() {
-        return overlayLevel;
-    }
-
     private Dimension initMapPlacingPoint() {
         return new Dimension(
             gameWindowSize.width/2 - getMapSize().width/2 - (graphics.getParentFrame().getInsets().right + graphics.getParentFrame().getInsets().left),
@@ -207,7 +205,7 @@ public class ResizingEngine {
     private Dimension initImageClockPosition() {
         return new Dimension(
             getMapPlacingPoint().width + Utils.MAP_WIDTH / 2 - getScaledCellSize() / 2,
-            getOverlayLevel() + getScaledCellSize() / 2
+            getMapPlacingPoint().height + getScaledCellSize() / 2
         );
     }
 
@@ -215,12 +213,8 @@ public class ResizingEngine {
         Dimension clockPos = getImageClockPosition();
         return new Dimension(
             (int)Math.floor(clockPos.width + getScaledCellSize() * 1.5),
-            overlayLevel + getScaledCellSize()
+            getMapPlacingPoint().height + getScaledCellSize()
         );
-    }
-
-    private int initOverlayLevel() {
-        return getMapPlacingPoint().height;
     }
     
 }
