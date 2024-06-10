@@ -81,7 +81,6 @@ public class GamePlayCard extends JPanel {
     private final Dimension mapPlacingPoint;
     private final Dimension entityPlacingPoint;
 
-    private final Dimension mapSize;
 
     public GamePlayCard(final BombarderoGraphics graphics) {
         this.graphics = graphics;
@@ -90,7 +89,6 @@ public class GamePlayCard extends JPanel {
 
         mapPlacingPoint = graphics.getResizingEngine().getMapPlacingPoint();
         entityPlacingPoint = graphics.getResizingEngine().getEntityPlacingPoint();
-        mapSize = graphics.getResizingEngine().getMapSize();
 
         cells = graphics.getController().getMap(); 
         player = graphics.getController().getMainPlayer();
