@@ -3,6 +3,7 @@ package it.unibo.bombardero.view.sprites;
 import java.awt.Image;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.apache.http.MethodNotSupportedException;
 
@@ -23,6 +24,7 @@ public class GenericBombarderoSprite implements BombarderoOrientedSprite {
     private final String resource;
     private final ResourceGetter rg;
     private final Optional<Direction> currentFacingDirection;
+    private final Function<Image, Image> imageResizer;
     private int counter = 0;
     private int currentFrame = 0;
 
@@ -36,10 +38,14 @@ public class GenericBombarderoSprite implements BombarderoOrientedSprite {
      * @param facingDirection the direction that the assets will face (e.g. <code>Direction.UP</code> tells the constructor
      * to load the sprite facing the <code>UP</code> direction)
      */
-    public GenericBombarderoSprite(final String resource, final ResourceGetter rg, final Direction facingDirection) {
+    public GenericBombarderoSprite(final String resource,
+        final ResourceGetter rg,
+        final Direction facingDirection,
+        final Function<Image, Image> imageResizer) {
         this.resource = resource;
         this.rg = rg;
         this.currentFacingDirection = Optional.of(facingDirection);
+        this.imageResizer = imageResizer;
         framesPerSprite = getFramesFromPosition(facingDirection);
         ticksPerFrame = (framesPerSprite == 2 ? 16 : 7);
 
@@ -53,15 +59,20 @@ public class GenericBombarderoSprite implements BombarderoOrientedSprite {
                 + getStringFromDirection(facingDirection)
                 + Integer.toString(i)
             );
+            asset[i - 1] = imageResizer.apply(asset[i - 1]);
         }
 
-        standingAsset = Optional.of(rg.loadImage(
-            resource
-            + "/"
-            + getStringFromDirection(facingDirection)
-            + "/"
-            + getStringFromDirection(facingDirection)
-            + "_standing"));
+        standingAsset = Optional.of(
+            imageResizer.apply(
+                rg.loadImage(
+                resource
+                + "/"
+                + getStringFromDirection(facingDirection)
+                + "/"
+                + getStringFromDirection(facingDirection)
+                + "_standing")
+            )
+        );
     }
 
     /** 
@@ -73,10 +84,14 @@ public class GenericBombarderoSprite implements BombarderoOrientedSprite {
      * @param framesPerSprite how many frames to get. In the directory have to be present at least {@link #framesPerSprite}
      * resources present
     */
-    public GenericBombarderoSprite(final String resource, final ResourceGetter rg, final int framesPerSprite) {
+    public GenericBombarderoSprite(final String resource,
+        final ResourceGetter rg,
+        final int framesPerSprite,
+        final Function<Image, Image> imageResizer) {
         this.resource = resource;
         this.rg = rg;
         this.framesPerSprite = framesPerSprite;
+        this.imageResizer = imageResizer;
         ticksPerFrame = 16;
 
         asset = new Image[framesPerSprite];
@@ -87,6 +102,7 @@ public class GenericBombarderoSprite implements BombarderoOrientedSprite {
                 + resource
                 + Integer.toString(i)
             );
+            asset[i - 1] = imageResizer.apply(asset[i - 1]);
         }
 
         standingAsset = Optional.empty();
@@ -117,7 +133,7 @@ public class GenericBombarderoSprite implements BombarderoOrientedSprite {
     
     @Override
     public BombarderoOrientedSprite getNewSprite(final Direction dir) {
-        return new GenericBombarderoSprite(resource, rg, dir);
+        return new GenericBombarderoSprite(resource, rg, dir, imageResizer);
     }
 
     @Override
