@@ -204,7 +204,7 @@ public class ResizingEngine {
 
     private Dimension initImageClockPosition() {
         return new Dimension(
-            getMapPlacingPoint().width + Utils.MAP_WIDTH / 2 - getScaledCellSize() / 2,
+            (int)Math.floor(getMapPlacingPoint().width + getScaledCellSize() * 6.8),
             getMapPlacingPoint().height + getScaledCellSize() / 2
         );
     }
