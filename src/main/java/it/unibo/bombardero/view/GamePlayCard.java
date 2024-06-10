@@ -123,8 +123,8 @@ public class GamePlayCard extends JPanel {
             null);
         g2d.drawImage(
             map.getScaledInstance(mapSize.width, mapSize.height, Image.SCALE_SMOOTH),
-            graphics.getResizingEngine().getMapPlacingPoint().width,
-            graphics.getResizingEngine().getMapPlacingPoint().height,
+            mapPlacingPoint.width,
+            mapPlacingPoint.height,
             null
         );
         /* Drawing the breakable obstacles, the bombs and the power ups (TODO: not done yet) */
