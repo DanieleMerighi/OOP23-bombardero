@@ -107,16 +107,18 @@ public class GamePlayCard extends JPanel {
         scaleEverything();
     }
 
-    // CHECKSTYLE: MagicNumber OFF
+    // CHECKSTYLE: MagicNumber ON
 
     @Override
     public void paint(Graphics g) {
         Graphics2D g2d = (Graphics2D)g;
         /* Drawing the Map and the Background */
+        // CHECKSTYLE: MagicNumber OFF
         g2d.drawImage(
             grass_bg_image,
             0, 0,
             null);
+        // CHECKSTYLE: MagicNumber ON
         g2d.drawImage(
             mapImage,
             mapPlacingPoint.width,
