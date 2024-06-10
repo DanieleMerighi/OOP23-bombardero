@@ -51,10 +51,10 @@ public class BombarderoGraphics {
 
         keyInput = new KeyboardInput(controller);
         frame.addKeyListener(keyInput);
-        
+
         resizingEngine = new ResizingEngine(this);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(resizingEngine.getInitialWindowSize(frame));
+        frame.setSize(resizingEngine.getGameWindowSize(frame));
         frame.setResizable(true);
         frame.setLocationRelativeTo(null);
         frame.setIconImage(game_icon.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
@@ -91,7 +91,7 @@ public class BombarderoGraphics {
         layout.addLayoutComponent(gameCard, GAME_CARD);
         layout.addLayoutComponent(endGameCard, END_CARD);
         deck.validate();
-        }
+    }
 
     public void initGuideCard() {
         this.guideCard = new GuideCard(frame, controller, this, resourceGetter, resizingEngine);

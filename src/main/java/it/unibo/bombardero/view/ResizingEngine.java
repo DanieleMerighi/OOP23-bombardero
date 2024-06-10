@@ -24,8 +24,12 @@ public class ResizingEngine {
     private double currentScale = 1.125; /* default scale size for every device */
     private final int scaledCellSize;
     private Dimension minimumFrameSize;
-    private Dimension mapPlacingPoint;
-    private Dimension entityPlacingPoint;
+    private final Dimension gameWindowSize;
+
+    private final Dimension mapPlacingPoint;
+    private final Dimension entityPlacingPoint;
+    private final Dimension imageClockPosition;
+    private final Dimension timerPosition;
     private int overlayLevel;
 
     public ResizingEngine(final BombarderoGraphics graphics) {
@@ -37,9 +41,12 @@ public class ResizingEngine {
 
         scaledCellSize = (int)(currentScale * Utils.CELL_SIZE);
 
-        mapPlacingPoint = getMapPlacingPoint();
-        entityPlacingPoint = getEntityPlacingPoint();
-        overlayLevel = getOverlayLevel();
+        gameWindowSize = initGameWindowSize(graphics.getParentFrame());
+        mapPlacingPoint = initMapPlacingPoint();
+        entityPlacingPoint = initEntityPlacingPoint();
+        imageClockPosition = initImageClockPosition();
+        timerPosition = initTimerPosition();
+        overlayLevel = initOverlayLevel();
     }  
 
     /* FRAME-RELATED METHODS */
@@ -61,15 +68,8 @@ public class ResizingEngine {
     }
     
     /* The initial windows size is calculated scaling the map and adding some grass on the sides, other than the insets */
-    public Dimension getInitialWindowSize(JFrame frame) {       
-        minimumFrameSize = new Dimension(
-            frame.getInsets().left + frame.getInsets().right + (int)(Utils.MAP_WIDTH * currentScale), 
-            frame.getInsets().top + frame.getInsets().bottom + (int)(Utils.MAP_HEIGHT * currentScale)
-        ); 
-        return new Dimension(
-            frame.getInsets().left + frame.getInsets().right + (int)(Utils.MAP_WIDTH * currentScale + Utils.GRASS_PADDING_RATIO * Utils.MAP_WIDTH), 
-            frame.getInsets().top + frame.getInsets().bottom + (int)(Utils.MAP_HEIGHT * currentScale + Utils.GRASS_PADDING_RATIO * Utils.MAP_HEIGHT)
-        );
+    public Dimension getGameWindowSize(JFrame frame) {       
+        return gameWindowSize;
     }
 
     public Dimension getMapSize() {
@@ -126,20 +126,14 @@ public class ResizingEngine {
     /* GAME-RELATED METHODS: */
     
     public Dimension getMapPlacingPoint() {
-        return new Dimension(
-            graphics.getParentFrame().getSize().width/2 - getMapSize().width/2 - (graphics.getParentFrame().getInsets().right + graphics.getParentFrame().getInsets().left),
-            graphics.getParentFrame().getSize().height/2 - getMapSize().height/2 - (graphics.getParentFrame().getInsets().top + graphics.getParentFrame().getInsets().bottom)
-        );
+        return mapPlacingPoint;
     }
 
     /** 
      * Returns the corner of the north-eastern cell of the map
      */
     public Dimension getEntityPlacingPoint() {
-        return new Dimension(
-            getMapPlacingPoint().width + getScaledCellSize() + (int)(getScale() * MISCHIEVOUS_PADDING),
-            getMapPlacingPoint().height + 2 * getScaledCellSize() - (int)(7 * getScale())
-        );
+        return entityPlacingPoint;
     }
 
     /** 
@@ -147,8 +141,8 @@ public class ResizingEngine {
      */
     public Dimension getCellPlacingPoint(Pair coordinate) {
         return new Dimension(
-            getEntityPlacingPoint().width + (int)(getScaledCellSize() * coordinate.x()),
-            getEntityPlacingPoint().height + (int)(getScaledCellSize() * coordinate.y())
+            entityPlacingPoint.width + (int)(getScaledCellSize() * coordinate.x()),
+            entityPlacingPoint.height + (int)(getScaledCellSize() * coordinate.y())
         );
     }
 
@@ -171,13 +165,53 @@ public class ResizingEngine {
     }
 
     public Dimension getImageClockPosition() {
+        return imageClockPosition;
+    }
+
+    public Dimension getTimerPosition() {
+        return timerPosition;
+    }
+
+    public int getOverlayLevel() {
+        return overlayLevel;
+    }
+
+    private Dimension initMapPlacingPoint() {
+        return new Dimension(
+            gameWindowSize.width/2 - getMapSize().width/2 - (graphics.getParentFrame().getInsets().right + graphics.getParentFrame().getInsets().left),
+            gameWindowSize.height/2 - getMapSize().height/2 - (graphics.getParentFrame().getInsets().top + graphics.getParentFrame().getInsets().bottom)
+        );
+    }
+
+    public Dimension initGameWindowSize(JFrame frame) {       
+        minimumFrameSize = new Dimension(
+            frame.getInsets().left + frame.getInsets().right + (int)(Utils.MAP_WIDTH * currentScale), 
+            frame.getInsets().top + frame.getInsets().bottom + (int)(Utils.MAP_HEIGHT * currentScale)
+        ); 
+        return new Dimension(
+            frame.getInsets().left + frame.getInsets().right + (int)(Utils.MAP_WIDTH * currentScale + Utils.GRASS_PADDING_RATIO * Utils.MAP_WIDTH), 
+            frame.getInsets().top + frame.getInsets().bottom + (int)(Utils.MAP_HEIGHT * currentScale + Utils.GRASS_PADDING_RATIO * Utils.MAP_HEIGHT)
+        );
+    }
+
+    /** 
+     * Returns the corner of the north-eastern cell of the map
+     */
+    private Dimension initEntityPlacingPoint() {
+        return new Dimension(
+            getMapPlacingPoint().width + getScaledCellSize() + (int)(getScale() * MISCHIEVOUS_PADDING),
+            getMapPlacingPoint().height + 2 * getScaledCellSize() - (int)(7 * getScale())
+        );
+    }
+
+    private Dimension initImageClockPosition() {
         return new Dimension(
             getMapPlacingPoint().width + Utils.MAP_WIDTH / 2 - getScaledCellSize() / 2,
             getOverlayLevel() + getScaledCellSize() / 2
         );
     }
 
-    public Dimension getTimerPosition() {
+    private Dimension initTimerPosition() {
         Dimension clockPos = getImageClockPosition();
         return new Dimension(
             (int)Math.floor(clockPos.width + getScaledCellSize() * 1.5),
@@ -185,7 +219,7 @@ public class ResizingEngine {
         );
     }
 
-    private int getOverlayLevel() {
+    private int initOverlayLevel() {
         return getMapPlacingPoint().height;
     }
     
