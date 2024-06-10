@@ -157,12 +157,15 @@ public class ResizingEngine {
     }
 
     public Dimension getCharacterPlacingPoint(final Coord playerPosition) {
-        Dimension cellCorner = getCellPlacingPoint(new Pair((int)Math.floor(playerPosition.x()), (int)Math.floor(playerPosition.y())));
         return new Dimension(
-            cellCorner.width
-            + (int)Math.floorDiv((int)Math.floor(getScaledCellSize() - (31 * getScale())), 2),
-            cellCorner.height 
-            + (int)((int)Math.floor(getScaledCellSize() - (49 * getScale())))
+            (int)Math.floor(
+                entityPlacingPoint.width
+                + playerPosition.x() * getScaledCellSize()
+                + (int)Math.floorDiv((int)Math.floor(getScaledCellSize() - (31 * getScale())), 2)),
+            (int)Math.floor(
+                entityPlacingPoint.height
+                + playerPosition.y() * getScaledCellSize()
+                + (int)((int)Math.floor(getScaledCellSize() - (49 * getScale()))))
         );
     }
 
