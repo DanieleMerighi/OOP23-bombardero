@@ -110,12 +110,17 @@ public class ResizingEngine {
         return characterImage.getScaledInstance((int)Math.floor(35 * getScale()), (int)Math.floor(55 * getScale()), Image.SCALE_SMOOTH);
     }
 
-    public Image getScaledBackgroundImage(final Image background) {
-        return background.getScaledInstance(getBackgroundImageSize().width, getBackgroundImageSize().height, Image.SCALE_SMOOTH);
+    public Image getScaledBombImage(final Image bombImage) {
+        /* TODO: scale appropriately */
+        return bombImage;
     }
 
-    public Image getScaledMapImage(final Image map) {
-        return map.getScaledInstance(getMapSize().width, getMapSize().height, Image.SCALE_SMOOTH);
+    public Image getScaledBackgroundImage(final Image backgroundImage) {
+        return backgroundImage.getScaledInstance(getBackgroundImageSize().width, getBackgroundImageSize().height, Image.SCALE_SMOOTH);
+    }
+
+    public Image getScaledMapImage(final Image mapImage) {
+        return mapImage.getScaledInstance(getMapSize().width, getMapSize().height, Image.SCALE_SMOOTH);
     }
     
     /* GAME-RELATED METHODS: */
