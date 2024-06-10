@@ -45,7 +45,7 @@ public class GamePlayCard extends JPanel {
 
     /* Game resources: */
     private final ResourceGetter resourceGetter = new ResourceGetter();
-    private final Image grass_bg_image = resourceGetter.loadImage("grass_background");
+    private Image grass_bg_image = resourceGetter.loadImage("grass_background");
     private final Image map = resourceGetter.loadImage("map_square_nowalls");
     private Image obstacle = resourceGetter.loadImage("obstacles/cassa_prosp3");
     private Image unbreakable = resourceGetter.loadImage("obstacles/wall_prosp2");
@@ -82,7 +82,6 @@ public class GamePlayCard extends JPanel {
     private final Dimension entityPlacingPoint;
 
     private final Dimension mapSize;
-    private final Dimension bgSize;
 
     public GamePlayCard(final BombarderoGraphics graphics) {
         this.graphics = graphics;
@@ -92,7 +91,6 @@ public class GamePlayCard extends JPanel {
         mapPlacingPoint = graphics.getResizingEngine().getMapPlacingPoint();
         entityPlacingPoint = graphics.getResizingEngine().getEntityPlacingPoint();
         mapSize = graphics.getResizingEngine().getMapSize();
-        bgSize = graphics.getResizingEngine().getBackgroundImageSize();
 
         cells = graphics.getController().getMap(); 
         player = graphics.getController().getMainPlayer();
@@ -118,7 +116,7 @@ public class GamePlayCard extends JPanel {
         Graphics2D g2d = (Graphics2D)g;
         /* Drawing the Map and the Background */
         g2d.drawImage(
-            grass_bg_image.getScaledInstance(bgSize.width, bgSize.height, Image.SCALE_SMOOTH),
+            grass_bg_image,
             0, 0,
             null);
         g2d.drawImage(
@@ -230,6 +228,7 @@ public class GamePlayCard extends JPanel {
 
 
     protected void scaleEverything() {
+        grass_bg_image = graphics.getResizingEngine().getScaledBackgroundImage(grass_bg_image);
         unbreakable = graphics.getResizingEngine().getScaledCellImage(unbreakable);
         obstacle = graphics.getResizingEngine().getScaledCellImage(obstacle);
         bombLine = graphics.getResizingEngine().getScaledCellImage(bombLine);

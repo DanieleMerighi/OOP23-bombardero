@@ -100,7 +100,7 @@ public class ResizingEngine {
         return false;
     }
     
-    /* CHARACTER-RELATED METHODS: */
+    /* SCALING-RELATED METHODS: */
 
     public Image getScaledCellImage(final Image cellImage) {
         return cellImage.getScaledInstance(getScaledCellSize(), (int)(getScaledCellSize() + 7 * getScale()), Image.SCALE_SMOOTH);
@@ -108,6 +108,10 @@ public class ResizingEngine {
 
     public Image getScaledCharacterImage(final Image characterImage) {
         return characterImage.getScaledInstance((int)Math.floor(35 * getScale()), (int)Math.floor(55 * getScale()), Image.SCALE_SMOOTH);
+    }
+
+    public Image getScaledBackgroundImage(final Image background) {
+        return background.getScaledInstance(getBackgroundImageSize().width, getBackgroundImageSize().height, Image.SCALE_SMOOTH);
     }
     
     /* GAME-RELATED METHODS: */
