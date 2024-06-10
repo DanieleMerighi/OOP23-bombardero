@@ -46,7 +46,7 @@ public class GamePlayCard extends JPanel {
     /* Game resources: */
     private final ResourceGetter resourceGetter = new ResourceGetter();
     private Image grass_bg_image = resourceGetter.loadImage("grass_background");
-    private final Image mapImage = resourceGetter.loadImage("map_square_nowalls");
+    private Image mapImage = resourceGetter.loadImage("map_square_nowalls");
     private Image obstacle = resourceGetter.loadImage("obstacles/cassa_prosp3");
     private Image unbreakable = resourceGetter.loadImage("obstacles/wall_prosp2");
     private Image bombLine = resourceGetter.loadImage("powerup/line_bomb");
@@ -226,6 +226,7 @@ public class GamePlayCard extends JPanel {
 
 
     protected void scaleEverything() {
+        mapImage = graphics.getResizingEngine().getScaledMapImage(mapImage);
         grass_bg_image = graphics.getResizingEngine().getScaledBackgroundImage(grass_bg_image);
         unbreakable = graphics.getResizingEngine().getScaledCellImage(unbreakable);
         obstacle = graphics.getResizingEngine().getScaledCellImage(obstacle);
