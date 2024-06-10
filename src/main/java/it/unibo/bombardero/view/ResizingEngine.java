@@ -105,7 +105,7 @@ public class ResizingEngine {
     }
 
     public Image getScaledCharacterImage(final Image characterImage) {
-        return characterImage.getScaledInstance((int)Math.floor(35 * getScale()), (int)Math.floor(55 * getScale()), Image.SCALE_SMOOTH);
+        return characterImage.getScaledInstance((int)Math.floor(31 * getScale()), (int)Math.floor(49 * getScale()), Image.SCALE_SMOOTH);
     }
 
     public Image getScaledBombImage(final Image bombImage) {
@@ -160,9 +160,9 @@ public class ResizingEngine {
         Dimension cellCorner = getCellPlacingPoint(new Pair((int)Math.floor(playerPosition.x()), (int)Math.floor(playerPosition.y())));
         return new Dimension(
             cellCorner.width
-            + (int)Math.floorDiv((int)Math.floor(getScaledCellSize() - (35 * getScale())), 2),
+            + (int)Math.floorDiv((int)Math.floor(getScaledCellSize() - (31 * getScale())), 2),
             cellCorner.height 
-            + (int)((int)Math.floor(getScaledCellSize() - (55 * getScale())))
+            + (int)((int)Math.floor(getScaledCellSize() - (49 * getScale())))
         );
     }
 
@@ -213,7 +213,7 @@ public class ResizingEngine {
         Dimension clockPos = getImageClockPosition();
         return new Dimension(
             (int)Math.floor(clockPos.width + getScaledCellSize() * 1.5),
-            getMapPlacingPoint().height + getScaledCellSize()
+            (int)Math.floor(getMapPlacingPoint().height + getScaledCellSize() * 1.2)
         );
     }
     
