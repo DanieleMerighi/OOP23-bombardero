@@ -30,6 +30,7 @@ public abstract class BasicBomb extends Cell implements Bomb{
     private long elapsedTime = 0;
     protected GameMap map;
     private Optional<PowerUpType> bombType;
+    private int coutBreckable;
 
     public BasicBomb(GameManager mgr, Character character) {
         super(CellType.BOMB);
@@ -96,7 +97,7 @@ public abstract class BasicBomb extends Cell implements Bomb{
     }
     
     private Set<Entry<Pair , FlameType>> checkDirection(Direction dir , int range , Pair pos) {
-        System.out.println(pos);
+        coutBreckable = 0;
         return IntStream.iterate(1 , i->i <= range , i->i+1)
             .mapToObj(i->pos.sum(dir.getPair().multipy(i)))
             .takeWhile(stopFlamePropagation())
@@ -109,7 +110,14 @@ public abstract class BasicBomb extends Cell implements Bomb{
     }
 
     protected Predicate<? super Pair> stopFlamePropagation() {
-        return p-> !map.isBomb(p) && !map.isUnbreakableWall(p) || (map.isBreakableWall(p) && mgr.removeWall(p));
+        return p-> (map.isEmpty(p) && coutBreckable < 1) || !map.isUnbreakableWall(p) && !map.isBomb(p) && isFirstBreckableWall(p);
+    }
+
+    private boolean isFirstBreckableWall(Pair pos) {
+        if(map.isBreakableWall(pos)) {
+            coutBreckable++;
+        }
+        return map.isBreakableWall(pos) && coutBreckable <= 1 ;
     }
 
 }
