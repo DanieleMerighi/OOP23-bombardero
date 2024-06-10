@@ -94,7 +94,7 @@ public class GamePlayCard extends JPanel {
         player = graphics.getController().getMainPlayer();
         enemies = graphics.getController().getEnemies();
 
-        normalBomb = new GenericBombarderoSprite("bomb", resourceGetter, 4, graphics.getResizingEngine()::getScaledCellImage);
+        normalBomb = new GenericBombarderoSprite("bomb", resourceGetter, 4, graphics.getResizingEngine()::getScaledBombImage);
 
         playerSprite = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
         playerImage = playerSprite.getStandingImage();
