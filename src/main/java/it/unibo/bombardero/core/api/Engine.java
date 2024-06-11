@@ -19,14 +19,6 @@ package it.unibo.bombardero.core.api;
  */
 public interface Engine extends Runnable {
 
-    /** 
-     * Initialises and returns the game manager, also keeping a reference
-     * of such element for further use. This method basically creates all
-     * the objects in the game.
-     * @return the initialised game manager
-     */
-    GameManager initGameManager();
-
     /**  
      * The method containing the game loop, this will be run in
      * a separate Thread. 

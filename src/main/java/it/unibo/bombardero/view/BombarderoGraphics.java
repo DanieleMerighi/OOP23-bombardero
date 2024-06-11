@@ -28,7 +28,7 @@ public class BombarderoGraphics {
     private Controller controller;
 
     private final ResourceGetter resourceGetter = new ResourceGetter();
-    private final ResizingEngine resizingEngine = new ResizingEngine();
+    private final ResizingEngine resizingEngine; 
     private final BufferedImage game_icon = resourceGetter.loadImage("icons/icon_happy");
 
     private final JFrame frame; 
@@ -39,29 +39,29 @@ public class BombarderoGraphics {
     private GameCard gameCard;
     private GameoverCard endGameCard;
     private final MenuCard menuCard;
-    private final GuideCard guideCard;
+    private GuideCard guideCard;
+    private String currentShowedCard = MENU_CARD;
     
     public BombarderoGraphics() {
         this.controller = new BombarderoController(this);
         this.frame = new JFrame("Bombardero: the Bomberman remake");
         this.deck = new JPanel(layout);
 
+        frame.pack(); // calling pack on the frame generates the insets
+
         keyInput = new KeyboardInput(controller);
         frame.addKeyListener(keyInput);
-        
-        frame.pack(); // calling pack on the frame generates the insets
+
+        resizingEngine = new ResizingEngine(this);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(resizingEngine.getInitialWindowSize(frame));
+        frame.setSize(resizingEngine.getGameWindowSize(frame));
         frame.setResizable(true);
         frame.setLocationRelativeTo(null);
         frame.setIconImage(game_icon.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
 
         this.menuCard = new MenuCard(controller, this, resourceGetter);
-        this.guideCard = new GuideCard(controller, this, resourceGetter);
         deck.add(MENU_CARD, menuCard);
         layout.addLayoutComponent(menuCard, MENU_CARD);
-        deck.add(GUIDE_CARD, guideCard);
-        layout.addLayoutComponent(guideCard, GUIDE_CARD);
         deck.validate();
 
         /* This listener calls for the ResizingEngine to dinamically update the 
@@ -71,7 +71,7 @@ public class BombarderoGraphics {
                 frame.setSize(resizingEngine.getNewWindowSize(frame));
             }
         });
-        // Recives keyboard input
+        
         frame.add(deck);
         showCard(MENU_CARD);
         this.frame.setVisible(true);
@@ -79,11 +79,12 @@ public class BombarderoGraphics {
 
     public void showCard(final String cardName) {
         layout.show(deck, cardName);
+        currentShowedCard = cardName;
         System.out.println("\"" + cardName + "\"" + " card showed");
     }
 
     public void initGameCard() {
-        this.gameCard = new GameCard(frame, resizingEngine, controller);
+        this.gameCard = new GameCard(this);
         this.endGameCard = new GameoverCard();
         deck.add(GAME_CARD, gameCard);
         deck.add(END_CARD, endGameCard);
@@ -92,9 +93,23 @@ public class BombarderoGraphics {
         deck.validate();
     }
 
+    public void initGuideCard() {
+        this.guideCard = new GuideCard(frame, controller, this, resourceGetter, resizingEngine);
+        deck.add(GUIDE_CARD, guideCard);
+        layout.addLayoutComponent(guideCard, GUIDE_CARD);
+        deck.validate();
+    }
+
     public void update() {
-        gameCard.updateMap();
-        gameCard.repaint(0);
+        if (currentShowedCard.equals(GAME_CARD)) {
+            gameCard.updateMap();
+            gameCard.setTimeLeft(controller.getTimeLeft());
+            gameCard.repaint(0);
+        }
+        else if (currentShowedCard.equals(GUIDE_CARD)) {
+            guideCard.updateMap();
+            guideCard.repaint(0);
+        }
     }
 
     public Dimension getFrameSize() {
@@ -103,5 +118,33 @@ public class BombarderoGraphics {
             dim.width - frame.getInsets().right - frame.getInsets().left,
             dim.height - frame.getInsets().top - frame.getInsets().bottom
         );
+    }
+
+    public void setPausedView() {
+        gameCard.setPausedView();
+    }
+
+    public void setUnpausedView() {
+        gameCard.setUnpausedView();
+    }
+
+    public void setMessage(final BombarderoViewMessages message) {
+        guideCard.showMessage(message);
+    }
+
+    public Controller getController() {
+        return this.controller;
+    }
+
+    public ResizingEngine getResizingEngine() {
+        return this.resizingEngine;
+    }
+
+    public ResourceGetter getResourceGetter() {
+        return this.resourceGetter;
+    }
+
+    public JFrame getParentFrame() {
+        return this.frame;
     }
 }

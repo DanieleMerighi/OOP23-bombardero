@@ -5,6 +5,7 @@ import java.util.List;
 
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.view.BombarderoViewMessages;
 import it.unibo.bombardero.character.Character;
 
 public interface Controller {
@@ -15,8 +16,14 @@ public interface Controller {
     void startGame();
 
     void endGame();
+
+    void startGuide();
     
     void escape();
+
+    void toggleMessage(final BombarderoViewMessages message);
+
+    boolean isGamePaused();
 
     Character getMainPlayer();
 

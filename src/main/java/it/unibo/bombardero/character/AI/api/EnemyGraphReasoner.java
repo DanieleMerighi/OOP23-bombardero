@@ -16,7 +16,7 @@ public interface EnemyGraphReasoner {
 
     List<Pair> findShortestPathToPlayer(Pair enemyCoord, Pair playerCoord);
 
-    Optional<Pair> findNearestSafeSpace(Pair enemyCoord, int explRadius);
+    Optional<Pair> findNearestSafeCell(Pair enemyCoord, int explRadius);
 
     Optional<Pair> findNearestBomb(Pair enemyCoord);
 }

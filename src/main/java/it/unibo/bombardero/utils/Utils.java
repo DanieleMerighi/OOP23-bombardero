@@ -34,7 +34,7 @@ public class Utils {
     // Valori per l'esplosione
     public static final int EXPLOSION_RADIUS = 4;
     public static final int ENEMY_DETECTION_RADIUS = 4;
-    public static final int ENEMY_STARTING_BOMBS = 3;
+    public static final int ENEMY_STARTING_BOMBS = 1;
     public static final int ENEMY_SPEED = 1;
 
     // PARAMETRI PER LA VIEW

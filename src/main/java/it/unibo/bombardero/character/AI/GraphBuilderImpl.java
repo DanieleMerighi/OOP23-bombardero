@@ -25,7 +25,7 @@ public class GraphBuilderImpl {
      * Constructs a weighted graph representing the game map.
      * This method takes a GameMap object as input and creates a SimpleWeightedGraph
      * using JGraphT library. Vertices in the graph represent walkable cells (Pairs
-     * of row
+     * of x
      * and column coordinates), and edges represent valid connections (movement
      * paths)
      * between walkable cells.
@@ -61,8 +61,8 @@ public class GraphBuilderImpl {
                 .stream()
                 .filter(d -> d != Direction.DEFAULT)
                 .forEach(direction -> {
-                    Pair newCoord = new Pair(p.row() + direction.getDx(), p.col() + direction.getDy());
-                    if (isValidCell(newCoord.row(), newCoord.col())
+                    Pair newCoord = new Pair(p.x() + direction.x(), p.y() + direction.y());
+                    if (isValidCell(newCoord.x(), newCoord.y())
                             && graph.containsVertex(newCoord)) {
                         DefaultWeightedEdge e = graph.addEdge(p, newCoord);
                         if (map.isBreakableWall(newCoord) || map.isBreakableWall(p)) {
@@ -74,7 +74,7 @@ public class GraphBuilderImpl {
                 });
     }
 
-    private static boolean isValidCell(int row, int col) {
-        return row >= 0 && row < Utils.MAP_ROWS && col >= 0 && col < Utils.MAP_COLS;
+    private static boolean isValidCell(int x, int y) {
+        return x >= 0 && x < Utils.MAP_ROWS && y >= 0 && y < Utils.MAP_COLS;
     }
 }
