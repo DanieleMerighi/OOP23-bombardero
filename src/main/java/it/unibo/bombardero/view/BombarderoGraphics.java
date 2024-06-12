@@ -28,7 +28,7 @@ public class BombarderoGraphics {
     private Controller controller;
 
     private final ResourceGetter resourceGetter = new ResourceGetter();
-    private final ResizingEngine resizingEngine = new ResizingEngine();
+    private final ResizingEngine resizingEngine; 
     private final BufferedImage game_icon = resourceGetter.loadImage("icons/icon_happy");
 
     private final JFrame frame; 
@@ -47,10 +47,12 @@ public class BombarderoGraphics {
         this.frame = new JFrame("Bombardero: the Bomberman remake");
         this.deck = new JPanel(layout);
 
+        frame.pack(); // calling pack on the frame generates the insets
+
         keyInput = new KeyboardInput(controller);
         frame.addKeyListener(keyInput);
         
-        frame.pack(); // calling pack on the frame generates the insets
+        resizingEngine = new ResizingEngine(this);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(resizingEngine.getInitialWindowSize(frame));
         frame.setResizable(true);
@@ -82,7 +84,7 @@ public class BombarderoGraphics {
     }
 
     public void initGameCard() {
-        this.gameCard = new GameCard(frame, resizingEngine, controller);
+        this.gameCard = new GameCard(this);
         this.endGameCard = new GameoverCard();
         deck.add(GAME_CARD, gameCard);
         deck.add(END_CARD, endGameCard);
@@ -101,6 +103,7 @@ public class BombarderoGraphics {
     public void update() {
         if (currentShowedCard.equals(GAME_CARD)) {
             gameCard.updateMap();
+            gameCard.setTimeLeft(controller.getTimeLeft());
             gameCard.repaint(0);
         }
         else if (currentShowedCard.equals(GUIDE_CARD)) {
@@ -123,5 +126,25 @@ public class BombarderoGraphics {
 
     public void setUnpausedView() {
         gameCard.setUnpausedView();
+    }
+
+    public void setMessage(final BombarderoViewMessages message) {
+        guideCard.showMessage(message);
+    }
+
+    public Controller getController() {
+        return this.controller;
+    }
+
+    public ResizingEngine getResizingEngine() {
+        return this.resizingEngine;
+    }
+
+    public ResourceGetter getResourceGetter() {
+        return this.resourceGetter;
+    }
+
+    public JFrame getParentFrame() {
+        return this.frame;
     }
 }
