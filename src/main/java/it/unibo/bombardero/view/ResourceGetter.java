@@ -18,7 +18,7 @@ public final class ResourceGetter {
     private final static String FONT_PATH = "font/";
     private final static String RESOURCE_PATH = "it/unibo/bombardero/";
     private final static String IMAGE_EXTENSION = ".png";
-    private final static String FONT_EXTENSION = ".TFF";
+    private final static String FONT_EXTENSION = ".TTF";
 
     /**  
      * Gets a resource named @name
@@ -42,6 +42,7 @@ public final class ResourceGetter {
      */
     public Font loadFont(final String name) {
         try {
+            System.out.println(RESOURCE_PATH + FONT_PATH + name + FONT_EXTENSION);
             InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream(RESOURCE_PATH + FONT_PATH + name + FONT_EXTENSION);
             Font font = Font.createFont(Font.TRUETYPE_FONT, inputStream);
             return font;

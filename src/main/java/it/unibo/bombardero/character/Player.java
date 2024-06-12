@@ -64,7 +64,7 @@ public class Player extends Character {
      */
     private Coord computeNewPlayerPosition() {
         return getCharacterPosition()
-                .sum(new Coord((getFacingDirection().y()) * getSpeed(),
-                        (getFacingDirection().x()) * getSpeed()));
+                .sum(new Coord((getFacingDirection().x()) * getSpeed(),
+                        (getFacingDirection().y()) * getSpeed()));
     }
 }

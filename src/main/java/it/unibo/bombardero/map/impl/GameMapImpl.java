@@ -68,7 +68,7 @@ public final class GameMapImpl implements GameMap {
         /* NOTA: sarebbe una ridondanza controllare anche se è vuota perché se le collisioni
          *  sono fatte bene allora l'unica cosa per cui si deve controllare è la presenza della 
          * bomba */
-        if (!isBomb(coordinate) || isEmpty(coordinate)) {
+        if (!isBomb(coordinate) && isEmpty(coordinate)) {
             map.put(coordinate, bomb);
             return true;
         }

@@ -24,9 +24,12 @@ public class ResizingEngine {
     private double currentScale = 1.125; /* default scale size for every device */
     private final int scaledCellSize;
     private Dimension minimumFrameSize;
-    private Dimension mapPlacingPoint;
-    private Dimension entityPlacingPoint;
-    private int overlayLevel;
+    private final Dimension gameWindowSize;
+
+    private final Dimension mapPlacingPoint;
+    private final Dimension entityPlacingPoint;
+    private final Dimension imageClockPosition;
+    private final Dimension timerPosition;
 
     public ResizingEngine(final BombarderoGraphics graphics) {
         this.graphics = graphics;
@@ -37,9 +40,11 @@ public class ResizingEngine {
 
         scaledCellSize = (int)(currentScale * Utils.CELL_SIZE);
 
-        mapPlacingPoint = getMapPlacingPoint();
-        entityPlacingPoint = getEntityPlacingPoint();
-        overlayLevel = getOverlayLevel();
+        gameWindowSize = initGameWindowSize(graphics.getParentFrame());
+        mapPlacingPoint = initMapPlacingPoint();
+        entityPlacingPoint = initEntityPlacingPoint();
+        imageClockPosition = initImageClockPosition();
+        timerPosition = initTimerPosition();
     }  
 
     /* FRAME-RELATED METHODS */
@@ -61,15 +66,8 @@ public class ResizingEngine {
     }
     
     /* The initial windows size is calculated scaling the map and adding some grass on the sides, other than the insets */
-    public Dimension getInitialWindowSize(JFrame frame) {       
-        minimumFrameSize = new Dimension(
-            frame.getInsets().left + frame.getInsets().right + (int)(Utils.MAP_WIDTH * currentScale), 
-            frame.getInsets().top + frame.getInsets().bottom + (int)(Utils.MAP_HEIGHT * currentScale)
-        ); 
-        return new Dimension(
-            frame.getInsets().left + frame.getInsets().right + (int)(Utils.MAP_WIDTH * currentScale + Utils.GRASS_PADDING_RATIO * Utils.MAP_WIDTH), 
-            frame.getInsets().top + frame.getInsets().bottom + (int)(Utils.MAP_HEIGHT * currentScale + Utils.GRASS_PADDING_RATIO * Utils.MAP_HEIGHT)
-        );
+    public Dimension getGameWindowSize(JFrame frame) {       
+        return gameWindowSize;
     }
 
     public Dimension getMapSize() {
@@ -100,33 +98,44 @@ public class ResizingEngine {
         return false;
     }
     
-    /* CHARACTER-RELATED METHODS: */
+    /* SCALING-RELATED METHODS: */
 
     public Image getScaledCellImage(final Image cellImage) {
         return cellImage.getScaledInstance(getScaledCellSize(), (int)(getScaledCellSize() + 7 * getScale()), Image.SCALE_SMOOTH);
     }
 
     public Image getScaledCharacterImage(final Image characterImage) {
-        return characterImage.getScaledInstance((int)Math.floor(35 * getScale()), (int)Math.floor(55 * getScale()), Image.SCALE_SMOOTH);
+        return characterImage.getScaledInstance((int)Math.floor(31 * getScale()), (int)Math.floor(49 * getScale()), Image.SCALE_SMOOTH);
+    }
+
+    public Image getScaledBombImage(final Image bombImage) {
+        /* TODO: scale appropriately */
+        return bombImage;
+    }
+
+    public Image getScaledBackgroundImage(final Image backgroundImage) {
+        return backgroundImage.getScaledInstance(getBackgroundImageSize().width, getBackgroundImageSize().height, Image.SCALE_SMOOTH);
+    }
+
+    public Image getScaledMapImage(final Image mapImage) {
+        return mapImage.getScaledInstance(getMapSize().width, getMapSize().height, Image.SCALE_SMOOTH);
+    }
+
+    public Image getScaledClockImage(final Image clockImage) {
+        return clockImage.getScaledInstance(getScaledCellSize(), getScaledCellSize(), Image.SCALE_SMOOTH);
     }
     
     /* GAME-RELATED METHODS: */
     
     public Dimension getMapPlacingPoint() {
-        return new Dimension(
-            graphics.getParentFrame().getSize().width/2 - getMapSize().width/2 - (graphics.getParentFrame().getInsets().right + graphics.getParentFrame().getInsets().left),
-            graphics.getParentFrame().getSize().height/2 - getMapSize().height/2 - (graphics.getParentFrame().getInsets().top + graphics.getParentFrame().getInsets().bottom)
-        );
+        return mapPlacingPoint;
     }
 
     /** 
      * Returns the corner of the north-eastern cell of the map
      */
     public Dimension getEntityPlacingPoint() {
-        return new Dimension(
-            getMapPlacingPoint().width + getScaledCellSize() + (int)(getScale() * MISCHIEVOUS_PADDING),
-            getMapPlacingPoint().height + 2 * getScaledCellSize() - (int)(7 * getScale())
-        );
+        return entityPlacingPoint;
     }
 
     /** 
@@ -134,8 +143,8 @@ public class ResizingEngine {
      */
     public Dimension getCellPlacingPoint(Pair coordinate) {
         return new Dimension(
-            getEntityPlacingPoint().width + (int)(getScaledCellSize() * coordinate.x()),
-            getEntityPlacingPoint().height + (int)(getScaledCellSize() * coordinate.y())
+            entityPlacingPoint.width + (int)(getScaledCellSize() * coordinate.x()),
+            entityPlacingPoint.height + (int)(getScaledCellSize() * coordinate.y())
         );
     }
 
@@ -148,32 +157,67 @@ public class ResizingEngine {
     }
 
     public Dimension getCharacterPlacingPoint(final Coord playerPosition) {
-        Dimension cellCorner = getCellPlacingPoint(new Pair((int)Math.floor(playerPosition.x()), (int)Math.floor(playerPosition.y())));
         return new Dimension(
-            cellCorner.width
-            + (int)Math.floorDiv((int)Math.floor(getScaledCellSize() - (35 * getScale())), 2),
-            cellCorner.height 
-            + (int)((int)Math.floor(getScaledCellSize() - (55 * getScale())))
+            (int)Math.floor(
+                entityPlacingPoint.width
+                + playerPosition.x() * getScaledCellSize()
+                + (int)Math.floorDiv((int)Math.floor(getScaledCellSize() - (31 * getScale())), 2)),
+            (int)Math.floor(
+                entityPlacingPoint.height
+                + playerPosition.y() * getScaledCellSize()
+                + (int)((int)Math.floor(getScaledCellSize() - (49 * getScale()))))
         );
     }
 
     public Dimension getImageClockPosition() {
-        return new Dimension(
-            getMapPlacingPoint().width + Utils.MAP_WIDTH / 2 - getScaledCellSize() / 2,
-            getOverlayLevel() + getScaledCellSize() / 2
-        );
+        return imageClockPosition;
     }
 
     public Dimension getTimerPosition() {
-        Dimension clockPos = getImageClockPosition();
+        return timerPosition;
+    }
+
+    private Dimension initMapPlacingPoint() {
         return new Dimension(
-            (int)Math.floor(clockPos.width + getScaledCellSize() * 1.5),
-            overlayLevel + getScaledCellSize()
+            gameWindowSize.width/2 - getMapSize().width/2 - (graphics.getParentFrame().getInsets().right + graphics.getParentFrame().getInsets().left),
+            gameWindowSize.height/2 - getMapSize().height/2 - (graphics.getParentFrame().getInsets().top + graphics.getParentFrame().getInsets().bottom)
         );
     }
 
-    private int getOverlayLevel() {
-        return getMapPlacingPoint().height;
+    public Dimension initGameWindowSize(JFrame frame) {       
+        minimumFrameSize = new Dimension(
+            frame.getInsets().left + frame.getInsets().right + (int)(Utils.MAP_WIDTH * currentScale), 
+            frame.getInsets().top + frame.getInsets().bottom + (int)(Utils.MAP_HEIGHT * currentScale)
+        ); 
+        return new Dimension(
+            frame.getInsets().left + frame.getInsets().right + (int)(Utils.MAP_WIDTH * currentScale + Utils.GRASS_PADDING_RATIO * Utils.MAP_WIDTH), 
+            frame.getInsets().top + frame.getInsets().bottom + (int)(Utils.MAP_HEIGHT * currentScale + Utils.GRASS_PADDING_RATIO * Utils.MAP_HEIGHT)
+        );
+    }
+
+    /** 
+     * Returns the corner of the north-eastern cell of the map
+     */
+    private Dimension initEntityPlacingPoint() {
+        return new Dimension(
+            getMapPlacingPoint().width + getScaledCellSize() + (int)(getScale() * MISCHIEVOUS_PADDING),
+            getMapPlacingPoint().height + 2 * getScaledCellSize() - (int)(7 * getScale())
+        );
+    }
+
+    private Dimension initImageClockPosition() {
+        return new Dimension(
+            (int)Math.floor(getMapPlacingPoint().width + getScaledCellSize() * 6.8),
+            getMapPlacingPoint().height + getScaledCellSize() / 2
+        );
+    }
+
+    private Dimension initTimerPosition() {
+        Dimension clockPos = getImageClockPosition();
+        return new Dimension(
+            (int)Math.floor(clockPos.width + getScaledCellSize() * 1.5),
+            (int)Math.floor(getMapPlacingPoint().height + getScaledCellSize() * 1.2)
+        );
     }
     
 }
