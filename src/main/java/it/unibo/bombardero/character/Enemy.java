@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import it.unibo.bombardero.cell.BombFactory;
-import it.unibo.bombardero.character.AI.*;
+import it.unibo.bombardero.character.AI.impl.EnemyGraphReasonerImpl;
+import it.unibo.bombardero.character.AI.impl.GraphManagerImpl;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.GameMap;
@@ -40,7 +41,7 @@ public class Enemy extends Character {
      */
     public Enemy(GameManager manager, Coord coord, BombFactory bombFactory) {
         super(manager, coord, bombFactory);
-        graph = new EnemyGraphReasonerImpl(manager.getGameMap());
+        GraphManagerImpl.initialize(manager.getGameMap());
     }
 
     private int calculateDistance(Pair coord1, Pair coord2) {
@@ -108,12 +109,12 @@ public class Enemy extends Character {
      * and potentially updates the `nextMove` target based on danger zone detection
      * or pathfinding results.
      */
-    private void computeNextDir() {
-        graph = new EnemyGraphReasonerImpl(super.manager.getGameMap());
+    private void computeNextDir(long time) {
+        GameMap gameMap = super.manager.getGameMap();
+        graph = GraphManagerImpl.getGraphReasoner(gameMap, time);
         currentState.execute(this); // Delegate behavior to current state
         if (nextMove.isPresent() && currentState != State.ESCAPE) {
             Pair cell = nextMove.get();
-            GameMap gameMap = super.manager.getGameMap();
             if (currentState == State.CHASE) {
                 Pair closeEnemy = getClosestEntity().get();
                 Pair currPos = getIntCoordinate();
@@ -143,7 +144,7 @@ public class Enemy extends Character {
         // Every 60 frames (assuming 60 fps), call computeNextDir to get the next target
         if (movementTimer >= 60 || nextMove.isEmpty()) {
             movementTimer = movementTimer >= 60 ? 0 : movementTimer;
-            computeNextDir();
+            computeNextDir(elapsedTime);
         }
 
         if (nextMove.isPresent()) {

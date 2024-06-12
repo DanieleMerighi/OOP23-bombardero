@@ -10,8 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.BombFactoryImpl;
-import it.unibo.bombardero.character.AI.*;
 import it.unibo.bombardero.character.AI.api.EnemyGraphReasoner;
+import it.unibo.bombardero.character.AI.impl.EnemyGraphReasonerImpl;
 import it.unibo.bombardero.core.impl.BombarderoGameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;

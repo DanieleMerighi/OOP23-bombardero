@@ -1,5 +1,6 @@
-package it.unibo.bombardero.character.AI;
+package it.unibo.bombardero.character.AI.impl;
 
+import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -8,6 +9,7 @@ import org.jgrapht.traverse.BreadthFirstIterator;
 import java.util.*;
 import java.util.stream.*;
 
+import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.character.AI.api.EnemyGraphReasoner;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
@@ -27,7 +29,7 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      * Vertices in this graph represent cells (Pairs of x and column coordinates),
      * and edges represent valid connections between cells.
      */
-    // final private Graph<Pair, DefaultWeightedEdge> graph;
+    private Graph<Pair, DefaultWeightedEdge> graph;
 
     /**
      * Constructs a new EnemyGraphReasoner instance for the given game map.
@@ -38,7 +40,7 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      */
     public EnemyGraphReasonerImpl(GameMap map) {
         this.map = map;
-        // this.graph = GraphBuilderImpl.buildFromMap(map);
+        this.graph = GraphBuilderImpl.buildFromMap(map);
     }
 
     /**
@@ -56,7 +58,7 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      */
     public boolean isInDangerZone(Pair enemyCoord, int explRadius) {
         final BreadthFirstIterator<Pair, DefaultWeightedEdge> bfsIterator = new BreadthFirstIterator<>(
-                GraphBuilderImpl.buildFromMap(map),
+                graph,
                 enemyCoord);
         return StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(bfsIterator, Spliterator.ORDERED), false)
@@ -115,7 +117,7 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
     public List<Pair> findShortestPathToPlayer(Pair enemyCoord, Pair playerCoord) {
         // Use Dijkstra's algorithm to find the shortest path to the player
         DijkstraShortestPath<Pair, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<>(
-                GraphBuilderImpl.buildFromMap(map));
+                graph);
         GraphPath<Pair, DefaultWeightedEdge> path = dijkstra.getPath(enemyCoord, playerCoord);
         return path == null ? Collections.emptyList() : path.getVertexList().size() == 1 ? path.getVertexList() : path.getVertexList().subList(1, path.getVertexList().size());
     }
@@ -162,13 +164,26 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      */
     public Optional<Pair> findNearestBomb(Pair enemyCoord) {
         final BreadthFirstIterator<Pair, DefaultWeightedEdge> bfsIterator = new BreadthFirstIterator<>(
-                GraphBuilderImpl.buildFromMap(map),
+                graph,
                 enemyCoord);
 
         return StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(bfsIterator, Spliterator.ORDERED), false)
                 .filter(cell -> map.isBomb(cell) && !isPathBlockedByWalls(enemyCoord, cell)) // Find reachable bombs
                 .findFirst();
+    }
+
+    public void updateGraph(GameMap newMap) {
+        List<Pair> oldWalls = map.getMap().keySet().stream().filter(c -> map.isBreakableWall(c)).toList();
+        List<Pair> newWalls = newMap.getMap().keySet().stream().filter(c -> newMap.isBreakableWall(c)).toList();
+        if(oldWalls.size() != newWalls.size()) {
+            oldWalls.stream().filter(c -> !newWalls.contains(c)).forEach(c -> updateEdges(c));
+        }
+        this.map = newMap;
+    }
+
+    private void updateEdges(Pair cell) {
+        graph.edgesOf(cell).forEach(e -> graph.setEdgeWeight(e, 1));
     }
 
     // private Direction getDirectionToCell(Pair fromCell, Pair toCell) {
