@@ -3,7 +3,7 @@ package it.unibo.bombardero.view;
 import javax.swing.JButton;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.text.SimpleDateFormat;
@@ -19,8 +19,8 @@ public final class GameCard extends GamePlayCard {
 
     private final static SimpleDateFormat format = new SimpleDateFormat("mm:ss");
 
-    private Image clock;
-    private final Font font;
+    private final Image clockImage;
+    private Font clockFont;
 
     /* Pause state buttons: */
     private final JButton resumeButton = new JButton("Resume");
@@ -33,22 +33,24 @@ public final class GameCard extends GamePlayCard {
     public GameCard(final BombarderoGraphics graphics) {
         super(graphics);
         
-        clock = graphics.getResizingEngine().getScaledCellImage(graphics.getResourceGetter().loadImage("overlay/clock"));
-        font = graphics.getResourceGetter().loadFont("clock_font");
+        clockImage = graphics.getResizingEngine().getScaledClockImage(
+            graphics.getResourceGetter().loadImage("overlay/clock")
+        );
+        clockFont = graphics.getResourceGetter().loadFont("clock_font");
 
         imageClockPosition = graphics.getResizingEngine().getImageClockPosition();
         timerPosition = graphics.getResizingEngine().getTimerPosition();
         
-        this.setFont(font);
+        this.setFont(clockFont);
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2d = (Graphics2D)g;
-        g2d.setFont(font);
+        g2d.setFont(clockFont.deriveFont(Font.PLAIN, 16));
         g2d.drawString(getFormattedTime(), timerPosition.width, timerPosition.height);
-        g2d.drawImage(clock,imageClockPosition.width, imageClockPosition.height, null);
+        g2d.drawImage(clockImage, imageClockPosition.width, imageClockPosition.height, null);
     }
 
     
