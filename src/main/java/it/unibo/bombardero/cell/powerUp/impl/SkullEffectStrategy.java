@@ -19,7 +19,7 @@ public class SkullEffectStrategy implements PowerUpEffectStrategy {
         skull.add(character -> character.setSpeed(Character.MAX_SPEED * 2)); // Hyperactivity
         skull.add(character -> character.setConstipation(true)); // Constipation: unables to lay down bomb
         skull.add(character -> character.setButterfingers(true)); // Butterfinger: constantly lays down bomb in his cell
-        skull.add(character -> character.setFlameRange(Character.STARTING_FLAME_RANGE)); // Hyperactivity
+        skull.add(character -> character.setFlameRange(Character.STARTING_FLAME_RANGE)); // Weakness
 
         return character -> {
             // Save the previous stats

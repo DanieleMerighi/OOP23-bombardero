@@ -45,8 +45,8 @@ public class PowerUpImpl extends Cell implements PowerUp {
                         .containsKey(character
                         .getIntCoordinate()
                         .sum(new Pair(
-                            facingDirection.y() * offset,
-                            facingDirection.x() * offset)
+                            facingDirection.x() * offset,
+                            facingDirection.y() * offset)
                         )
                     )
                 )
@@ -55,8 +55,8 @@ public class PowerUpImpl extends Cell implements PowerUp {
                     .placeBomb(character
                         .getIntCoordinate()
                         .sum(new Pair(
-                            facingDirection.y() * offset,
-                            facingDirection.x() * offset)
+                            facingDirection.x() * offset,
+                            facingDirection.y() * offset)
                         )
                     )
                 );

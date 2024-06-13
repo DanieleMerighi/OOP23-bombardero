@@ -45,8 +45,8 @@ public class GamePlayCard extends JPanel {
 
     /* Game resources: */
     private final ResourceGetter resourceGetter = new ResourceGetter();
-    private final Image grass_bg_image = resourceGetter.loadImage("grass_background");
-    private final Image map = resourceGetter.loadImage("map_square_nowalls");
+    private Image grass_bg_image = resourceGetter.loadImage("grass_background");
+    private Image mapImage = resourceGetter.loadImage("map_square_nowalls");
     private Image obstacle = resourceGetter.loadImage("obstacles/cassa_prosp3");
     private Image unbreakable = resourceGetter.loadImage("obstacles/wall_prosp2");
     private Image bombLine = resourceGetter.loadImage("powerup/line_bomb");
@@ -81,8 +81,6 @@ public class GamePlayCard extends JPanel {
     private final Dimension mapPlacingPoint;
     private final Dimension entityPlacingPoint;
 
-    private final Dimension mapSize;
-    private final Dimension bgSize;
 
     public GamePlayCard(final BombarderoGraphics graphics) {
         this.graphics = graphics;
@@ -91,14 +89,12 @@ public class GamePlayCard extends JPanel {
 
         mapPlacingPoint = graphics.getResizingEngine().getMapPlacingPoint();
         entityPlacingPoint = graphics.getResizingEngine().getEntityPlacingPoint();
-        mapSize = graphics.getResizingEngine().getMapSize();
-        bgSize = graphics.getResizingEngine().getBackgroundImageSize();
 
         cells = graphics.getController().getMap(); 
         player = graphics.getController().getMainPlayer();
         enemies = graphics.getController().getEnemies();
 
-        normalBomb = new GenericBombarderoSprite("bomb", resourceGetter, 4, graphics.getResizingEngine()::getScaledCellImage);
+        normalBomb = new GenericBombarderoSprite("bomb", resourceGetter, 4, graphics.getResizingEngine()::getScaledBombImage);
 
         playerSprite = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
         playerImage = playerSprite.getStandingImage();
@@ -111,20 +107,22 @@ public class GamePlayCard extends JPanel {
         scaleEverything();
     }
 
-    // CHECKSTYLE: MagicNumber OFF
+    // CHECKSTYLE: MagicNumber ON
 
     @Override
     public void paint(Graphics g) {
         Graphics2D g2d = (Graphics2D)g;
         /* Drawing the Map and the Background */
+        // CHECKSTYLE: MagicNumber OFF
         g2d.drawImage(
-            grass_bg_image.getScaledInstance(bgSize.width, bgSize.height, Image.SCALE_SMOOTH),
+            grass_bg_image,
             0, 0,
             null);
+        // CHECKSTYLE: MagicNumber ON
         g2d.drawImage(
-            map.getScaledInstance(mapSize.width, mapSize.height, Image.SCALE_SMOOTH),
-            graphics.getResizingEngine().getMapPlacingPoint().width,
-            graphics.getResizingEngine().getMapPlacingPoint().height,
+            mapImage,
+            mapPlacingPoint.width,
+            mapPlacingPoint.height,
             null
         );
         /* Drawing the breakable obstacles, the bombs and the power ups (TODO: not done yet) */
@@ -230,6 +228,8 @@ public class GamePlayCard extends JPanel {
 
 
     protected void scaleEverything() {
+        mapImage = graphics.getResizingEngine().getScaledMapImage(mapImage);
+        grass_bg_image = graphics.getResizingEngine().getScaledBackgroundImage(grass_bg_image);
         unbreakable = graphics.getResizingEngine().getScaledCellImage(unbreakable);
         obstacle = graphics.getResizingEngine().getScaledCellImage(obstacle);
         bombLine = graphics.getResizingEngine().getScaledCellImage(bombLine);
