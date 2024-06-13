@@ -2,9 +2,9 @@ package it.unibo.bombardero.character;
 
 import java.util.Optional;
 import java.util.Deque;
+import java.awt.geom.Point2D;
 import java.util.ArrayDeque;
 
-import org.jgrapht.alg.drawing.model.Point2D;
 
 import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.BombFactory;
@@ -15,6 +15,7 @@ import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.physics.api.BoundingBox;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.physics.impl.BombarderoCollision;
+import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 
 /**
  * Abstract class representing a character in the game.
@@ -90,7 +91,7 @@ public abstract class Character {
         this.manager = manager; // TODO: Solve manager, a copy?
         this.coordinate = coord;
         this.bombFactory = bombFactory;
-        //this.bBox = new RectangleBoundingBox(null, STARTING_BOMBS, HEIGHT);
+        this.bBox = new RectangleBoundingBox(new Point2D.Float(0.1562f, 0.844f) , 0.781f , 0.875f);
     }
 
     /**

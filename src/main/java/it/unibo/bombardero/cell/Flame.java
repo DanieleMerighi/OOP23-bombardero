@@ -3,6 +3,7 @@ package it.unibo.bombardero.cell;
 import java.util.Map;
 
 import it.unibo.bombardero.character.Direction;
+import it.unibo.bombardero.map.api.Pair;
 
 public class Flame extends Cell {
 
@@ -52,8 +53,8 @@ public class Flame extends Cell {
 
     private FlameType specificFlameType;
 
-    public Flame(CellType type, FlameType specfiFlameType) {
-        super(type);
+    public Flame(CellType type, FlameType specfiFlameType, Pair pos) {
+        super(type, pos);
         this.specificFlameType = specfiFlameType;
     }
 

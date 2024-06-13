@@ -82,12 +82,12 @@ public final class GameMapImpl implements GameMap {
 
     @Override
     public void addUnbreakableWall(final Pair coordinate) {
-        this.map.put(coordinate, new Wall(Cell.CellType.WALL_UNBREAKABLE));
+        this.map.put(coordinate , new Wall(Cell.CellType.WALL_UNBREAKABLE, coordinate));
     }
 
     @Override
     public void addBreakableWall(final Pair coordinate) {
-        this.map.put(coordinate, new Wall(Cell.CellType.WALL_BREAKABLE));
+        this.map.put(coordinate, new Wall(Cell.CellType.WALL_BREAKABLE, coordinate));
     }
 
     @Override

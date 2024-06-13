@@ -31,11 +31,11 @@ public class PowerUpFactoryImpl implements PowerUpFactory {
 
     public PowerUpFactoryImpl() {
         this.powerUpMap = new HashMap<>();
-        initializePowerUps();
+        //initializePowerUps();
     }
 
     // Initializes the map 
-    private void initializePowerUps() {
+    /*private void initializePowerUps() {
         powerUpMap.put(PowerUpType.REMOTE_BOMB,
                 () -> new PowerUpImpl(PowerUpType.REMOTE_BOMB, new RemoteBombEffectStrategy()));
         powerUpMap.put(PowerUpType.PIERCING_BOMB,
@@ -62,7 +62,7 @@ public class PowerUpFactoryImpl implements PowerUpFactory {
                 () -> new PowerUpImpl(PowerUpType.KICK, new KickEffectStrategy()));
         powerUpMap.put(PowerUpType.SKULL,
                 () -> new PowerUpImpl(PowerUpType.SKULL, new SkullEffectStrategy()));
-    }
+    }*/
 
     @Override
     public PowerUp createPowerUp() {

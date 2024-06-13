@@ -33,6 +33,7 @@ public class RectangleBoundingBox implements BoundingBox{
             case UP:
                 return new Coord((float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getHeight(),0);
             case DOWN:
+                System.out.println(-(float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getHeight() + "height");
                 return new Coord(-(float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getHeight() , 0);
             case LEFT:
                 return new Coord(0 , (float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getWidth());

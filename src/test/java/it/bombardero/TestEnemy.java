@@ -86,7 +86,7 @@ public class TestEnemy {
     @Test
     public void testEnemyEscape_ChangesToPatrolState() {
         // Set enemy position inside a danger zone
-        this.manager.getGameMap().addBomb(b.CreateBomb(Optional.empty(), new Pair(0, 1), 1), new Pair(0, 1));
+        this.manager.getGameMap().addBomb(b.CreateBomb(null), new Pair(0, 1));
         this.manager.enemy.update(STANDARD_ELAPSED_TIME);
 
         assertEquals(Enemy.State.ESCAPE, this.manager.enemy.getState());

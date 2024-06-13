@@ -81,6 +81,7 @@ public class BombarderoGameManager implements GameManager {
         if(enemies.get(0).isAlive()){
             enemies.get(0).update(elapsed);
         }
+        ce.checkCharacterCollision(player);
     }
 
     @Override
@@ -116,7 +117,7 @@ public class BombarderoGameManager implements GameManager {
 
     @Override
     public void addFlame(final Flame.FlameType type, final Pair pos) {
-        map.addFlame(new Flame(CellType.FLAME, type), pos);
+        map.addFlame(new Flame(CellType.FLAME, type, pos), pos);
     }
 
     @Override

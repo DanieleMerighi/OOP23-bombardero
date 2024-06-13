@@ -2,6 +2,9 @@ package it.unibo.bombardero.character;
 
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
+
+import java.awt.geom.Point2D;
+
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.powerup.impl.PowerUpImpl;
 
@@ -36,7 +39,9 @@ public class Player extends Character {
         }
         // Player movement:
         if (!isStationary()) { // If he's not stationary, computes the new position
-            setCharacterPosition(computeNewPlayerPosition());
+            Coord app = computeNewPlayerPosition();
+            super.getBoundingBox().move(new Point2D.Float(app.x(), app.y()));
+            setCharacterPosition(app);
         }
         // Place bomb:
         if (getHasToPlaceBomb()) {
