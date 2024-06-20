@@ -1,8 +1,8 @@
 package it.unibo.bombardero.character;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 import it.unibo.bombardero.map.api.Pair;
 
@@ -33,20 +33,28 @@ public enum Direction {
         return new Pair(x, y);
     }
 
-    public Optional<List<Pair>> getDiagonals(Direction dir) {
-        Pair pd= dir.getPair();
+    public List<Pair> getDiagonals(Direction dir , Pair characterPos) { 
+        List<Pair> cells;
+        List<Pair> aCell = new ArrayList<>();
         switch (dir) {
             case UP:
-                return Optional.of(List.of(new Pair(pd.x()-1, pd.y()-1) , new Pair(pd.y()+1, pd.y()-1) ));
+                cells = List.of(new Pair(characterPos.x()-1, characterPos.y()-1) , new Pair(characterPos.x()+1, characterPos.y()-1) );
+                break;
             case DOWN:
-                return Optional.of(List.of(new Pair(pd.x()-1, pd.y()+1) , new Pair(pd.x()+1, pd.y()+1) ));
+                cells = List.of(new Pair(characterPos.x()-1, characterPos.y()+1) , new Pair(characterPos.x()+1, characterPos.y()+1) );
+                break;
             case LEFT:
-                return Optional.of(List.of(new Pair(pd.x()-1, pd.y()-1) , new Pair(pd.x()-1, pd.y()+1) ));
+                cells = List.of(new Pair(characterPos.x()-1, characterPos.y()-1) , new Pair(characterPos.x()-1, characterPos.y()+1) );
+                break;
             case RIGHT:
-                return Optional.of(List.of(new Pair(pd.x()+1, pd.y()-1) , new Pair(pd.x()+1, pd.y()+1) ));
-            default:
+                cells = List.of(new Pair(characterPos.x()+1, characterPos.y()-1) , new Pair(characterPos.x()+1, characterPos.y()+1) );
+                break;
+            default :
                 return null;
         }
+        aCell = cells.stream().filter(c -> c.x() >= 0 && c.y() >= 0 ).toList();
+        return aCell;
+        
         
     }
 
