@@ -30,6 +30,7 @@ public class ResizingEngine {
     private final Dimension entityPlacingPoint;
     private final Dimension imageClockPosition;
     private final Dimension timerPosition;
+    private final Dimension messageBoxPosition;
 
     public ResizingEngine(final BombarderoGraphics graphics) {
         this.graphics = graphics;
@@ -45,6 +46,7 @@ public class ResizingEngine {
         entityPlacingPoint = initEntityPlacingPoint();
         imageClockPosition = initImageClockPosition();
         timerPosition = initTimerPosition();
+        messageBoxPosition = initMessageBoxPosition();
     }  
 
     /* FRAME-RELATED METHODS */
@@ -161,11 +163,11 @@ public class ResizingEngine {
             (int)Math.floor(
                 entityPlacingPoint.width
                 + playerPosition.x() * getScaledCellSize()
-                + (int)Math.floorDiv((int)Math.floor(getScaledCellSize() - (31 * getScale())), 2)),
+                - (int)Math.floor((31 * getScale()) / 2)),
             (int)Math.floor(
                 entityPlacingPoint.height
                 + playerPosition.y() * getScaledCellSize()
-                + (int)((int)Math.floor(getScaledCellSize() - (49 * getScale()))))
+                - (int)Math.floor(getScaledCellSize() - (49 * getScale() * (3/4))))
         );
     }
 
@@ -175,6 +177,10 @@ public class ResizingEngine {
 
     public Dimension getTimerPosition() {
         return timerPosition;
+    }
+
+    public Dimension getMessageBoxPosition() {
+        return messageBoxPosition;
     }
 
     private Dimension initMapPlacingPoint() {
@@ -217,6 +223,13 @@ public class ResizingEngine {
         return new Dimension(
             (int)Math.floor(clockPos.width + getScaledCellSize() * 1.5),
             (int)Math.floor(getMapPlacingPoint().height + getScaledCellSize() * 1.2)
+        );
+    }
+
+    private Dimension initMessageBoxPosition() {
+        return new Dimension(
+            100,
+            100
         );
     }
     
