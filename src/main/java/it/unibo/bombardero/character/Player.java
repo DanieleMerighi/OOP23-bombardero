@@ -40,7 +40,6 @@ public class Player extends Character {
         // Player movement:
         if (!isStationary()) { // If he's not stationary, computes the new position
             Coord app = computeNewPlayerPosition();
-            super.getBoundingBox().move(new Point2D.Float(app.x(), app.y()));
             setCharacterPosition(app);
         }
         // Place bomb:

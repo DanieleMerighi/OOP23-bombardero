@@ -91,7 +91,7 @@ public abstract class Character {
         this.manager = manager; // TODO: Solve manager, a copy?
         this.coordinate = coord;
         this.bombFactory = bombFactory;
-        this.bBox = new RectangleBoundingBox(new Point2D.Float(0.1562f, 0.844f) , 0.781f , 0.875f);
+        this.bBox = new RectangleBoundingBox(new Point2D.Float(0.1562f, 0.0625f) , 0.781f , 0.875f);
     }
 
     /**
@@ -278,6 +278,7 @@ public abstract class Character {
      */
     public void setCharacterPosition(final Coord c) {
         this.coordinate = c;
+        bBox.move(new Point2D.Float(c.x()-(float)(0.781/2), c.y()-(float)(0.875/2)));
     }
 
     /**
