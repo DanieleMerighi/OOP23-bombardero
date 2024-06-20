@@ -10,12 +10,16 @@ import java.awt.image.BufferedImage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
+
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Cell.CellType;
@@ -67,14 +71,12 @@ public class GamePlayCard extends JPanel {
     private final BombarderoGraphics graphics;
     private Map<Pair, Cell> cells;
     private final Character player;
-    private final List<Character> enemies;
+    private final Map<Character, EnemyImage> enemies = new HashMap<>(); // every enemy is linked to its own sprite
     
-    /* Sprites: */
+    /* Sprites and images: */
     private BombarderoOrientedSprite playerSprite;
-    private final BombarderoOrientedSprite[] enemySprite = new GenericBombarderoSprite[Utils.NUM_OF_ENEMIES];
-    private final BombarderoSprite normalBomb;
     private Image playerImage;
-    private final Image[] enemiesImages = new Image[Utils.NUM_OF_ENEMIES];
+    private final BombarderoSprite normalBomb;
     private Image bomb_image;
 
     /* Static positions for quicker access: */
@@ -92,16 +94,20 @@ public class GamePlayCard extends JPanel {
 
         cells = graphics.getController().getMap(); 
         player = graphics.getController().getMainPlayer();
-        enemies = graphics.getController().getEnemies();
-
-        normalBomb = new GenericBombarderoSprite("bomb", resourceGetter, 4, graphics.getResizingEngine()::getScaledBombImage);
+        graphics.getController().getEnemies().forEach(enemy -> {
+            BombarderoOrientedSprite sprite = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
+            enemies.put(
+                enemy,
+                new EnemyImage(
+                    sprite,
+                    sprite.getStandingImage()
+                )
+            );
+        });
 
         playerSprite = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
         playerImage = playerSprite.getStandingImage();
-        for (int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
-            enemySprite[i] = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
-            enemiesImages[i] = enemySprite[i].getStandingImage();
-        }
+        normalBomb = new GenericBombarderoSprite("bomb", resourceGetter, 4, graphics.getResizingEngine()::getScaledBombImage);
         bomb_image = normalBomb.getImage();
 
         scaleEverything();
@@ -186,10 +192,15 @@ public class GamePlayCard extends JPanel {
             playerPosition.width, playerPosition.height,
             null
         );
+        /*
         for(int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
             Dimension enemyPos = graphics.getResizingEngine().getCharacterPlacingPoint(graphics.getController().getEnemies().get(i).getCharacterPosition());
             g2d.drawImage(enemiesImages[i], enemyPos.width, enemyPos.height, null);
-        }
+        } */
+        enemies.entrySet().forEach(enemy -> {
+            Dimension enemyPos = graphics.getResizingEngine().getCharacterPlacingPoint(enemy.getKey().getCharacterPosition());
+            g2d.drawImage(enemy.getValue().displayedImage(), enemyPos.width, enemyPos.height, null);
+        });
     }
 
     public void updateMap() {
@@ -210,7 +221,24 @@ public class GamePlayCard extends JPanel {
             playerSprite = playerSprite.getNewSprite(player.getFacingDirection());
             playerImage = playerSprite.getImage();
         }
-        /* Update enemy sprites: */
+
+        enemies.entrySet().forEach(enemy -> {
+            enemy.getValue().sprite.update();
+            BombarderoOrientedSprite sprite = enemy.getValue().sprite();
+            Image image = enemy.getValue().displayedImage();
+            if(enemy.getKey().getFacingDirection().equals(Direction.DEFAULT)) {
+                image = enemy.getValue().sprite().getStandingImage();
+            }
+            else {
+                sprite = enemy.getValue().sprite().getNewSprite(enemy.getKey().getFacingDirection());
+                image = sprite.getStandingImage();
+            }
+            enemies.put(
+                enemy.getKey(),
+                new EnemyImage(sprite, image)
+            );
+        });
+        /* Update enemy sprites: 
         for (int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
             enemySprite[i].update();
             if(enemies.get(i).getFacingDirection().equals(Direction.DEFAULT)) {
@@ -220,7 +248,7 @@ public class GamePlayCard extends JPanel {
                 enemySprite[i] = enemySprite[i].getNewSprite(enemies.get(i).getFacingDirection());
                 enemiesImages[i] = enemySprite[i].getStandingImage();
             }
-        }
+        } */
         /* Update bomb sprites: */
         normalBomb.update();
         bomb_image = normalBomb.getImage();
@@ -244,5 +272,8 @@ public class GamePlayCard extends JPanel {
         skatesPlusOne = graphics.getResizingEngine().getScaledCellImage(skatesPlusOne);
         skateMinusOne = graphics.getResizingEngine().getScaledCellImage(skateMinusOne);
         skull = graphics.getResizingEngine().getScaledCellImage(skull);
+    }
+
+    private record EnemyImage (BombarderoOrientedSprite sprite, Image displayedImage) {
     }
 }
