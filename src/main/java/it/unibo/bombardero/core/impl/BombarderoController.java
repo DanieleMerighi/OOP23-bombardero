@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.List;
 
 import it.unibo.bombardero.cell.AbstractCell;
+import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.core.BombarderoEngine;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.Engine;
@@ -82,7 +83,7 @@ public class BombarderoController implements Controller {
     }
 
     @Override
-    public Map<Pair, AbstractCell> getMap() {
+    public Map<Pair, Cell> getMap() {
         return manager.getGameMap().getMap();
     }
 

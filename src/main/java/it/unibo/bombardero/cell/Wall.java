@@ -1,5 +1,6 @@
 package it.unibo.bombardero.cell;
 
+import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.map.api.Pair;
 
 public class Wall extends AbstractCell {

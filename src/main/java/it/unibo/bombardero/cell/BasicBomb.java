@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.Set;
 
+import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.Character;

@@ -5,8 +5,8 @@ import java.util.Map;
 
 import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Bomb;
+import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Wall;
-import it.unibo.bombardero.cell.AbstractCell.CellType;
 import it.unibo.bombardero.cell.powerup.api.PowerUpFactory;
 import it.unibo.bombardero.cell.powerup.impl.PowerUpFactoryImpl;
 import it.unibo.bombardero.core.api.GameManager;
@@ -23,7 +23,7 @@ import it.unibo.bombardero.map.api.Pair;
 public final class GameMapImpl implements GameMap {
 
     /* Using an HashMap to hold the information about the map's tiles: */
-    private final Map<Pair, AbstractCell> map = new HashMap<>();
+    private final Map<Pair, Cell> map = new HashMap<>();
     private final MapManager mapManager;
     private final PowerUpFactory powerupFactory = new PowerUpFactoryImpl();
 
@@ -83,12 +83,12 @@ public final class GameMapImpl implements GameMap {
 
     @Override
     public void addUnbreakableWall(final Pair coordinate) {
-        this.map.put(coordinate , new Wall(AbstractCell.CellType.WALL_UNBREAKABLE, coordinate));
+        this.map.put(coordinate , new Wall(Cell.CellType.WALL_UNBREAKABLE, coordinate));
     }
 
     @Override
     public void addBreakableWall(final Pair coordinate) {
-        this.map.put(coordinate, new Wall(AbstractCell.CellType.WALL_BREAKABLE, coordinate));
+        this.map.put(coordinate, new Wall(Cell.CellType.WALL_BREAKABLE, coordinate));
     }
 
     @Override
@@ -96,7 +96,7 @@ public final class GameMapImpl implements GameMap {
         if (this.isBreakableWall(coordinate)) {
             this.map.remove(coordinate);
             /* TODO: add powerup spawn mechanism */
-            /* this.map.put(coordinate, powerupFactory.createPowerUp()); */
+            this.map.put(coordinate, powerupFactory.createPowerUp());
         }
     }
 
@@ -122,13 +122,13 @@ public final class GameMapImpl implements GameMap {
     @Override
     public boolean isBreakableWall(final Pair coordinate) {
         return this.map.containsKey(coordinate) 
-            && this.map.get(coordinate).getCellType().equals(AbstractCell.CellType.WALL_BREAKABLE);
+            && this.map.get(coordinate).getCellType().equals(Cell.CellType.WALL_BREAKABLE);
     }
 
     @Override
     public boolean isUnbreakableWall(final Pair coordinate) {
         return this.map.containsKey(coordinate)
-            && this.map.get(coordinate).getCellType().equals(AbstractCell.CellType.WALL_UNBREAKABLE);
+            && this.map.get(coordinate).getCellType().equals(Cell.CellType.WALL_UNBREAKABLE);
     }
 
     @Override
@@ -142,7 +142,7 @@ public final class GameMapImpl implements GameMap {
     }
 
     @Override
-    public Map<Pair, AbstractCell> getMap() {
+    public Map<Pair, Cell> getMap() {
         return Map.copyOf(this.map);
     }
  
