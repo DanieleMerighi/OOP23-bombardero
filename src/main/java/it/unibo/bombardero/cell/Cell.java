@@ -26,10 +26,16 @@ public abstract class Cell {
 
     private BoundingBox bBox=null;
     private final CellType type;
+    private final boolean boundingCollision;
 
-    public Cell(final CellType type , Pair pos) {
+    public Cell(final CellType type , Pair pos , boolean boundingCollision) {
         this.type = type;
         this.bBox = new RectangleBoundingBox(new Point2D.Float(pos.x(), pos.y()), 1.0f , 1.0f);
+        this.boundingCollision=boundingCollision;
+    }
+
+    public boolean getBoundingCollision() {
+        return boundingCollision;
     }
 
     public CellType getCellType() {

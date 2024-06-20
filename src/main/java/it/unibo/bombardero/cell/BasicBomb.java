@@ -33,7 +33,7 @@ public abstract class BasicBomb extends Cell implements Bomb{
     private int coutBreckable;
 
     public BasicBomb(GameManager mgr, Character character) {
-        super(CellType.BOMB , character.getIntCoordinate());
+        super(CellType.BOMB , character.getIntCoordinate(), true);
         this.mgr = mgr;
         this.pos = character.getIntCoordinate();
         this.range = character.getFlameRange();
