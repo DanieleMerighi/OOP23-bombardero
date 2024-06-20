@@ -3,11 +3,8 @@ package it.unibo.bombardero.core;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.Controller;
-
-import java.util.Optional;
 
 /**
  * This class implements KeyListener to handle keyboard input for the game.
@@ -67,9 +64,7 @@ public class KeyboardInput implements KeyListener {
             }
             // calls player method to explode remote bomb powerup
             case 'p', 'P' -> {
-                if (controller.getMainPlayer().getBombType().equals(Optional.of(PowerUpType.REMOTE_BOMB))) {
-                    controller.getMainPlayer().setHasToExplodeRemoteBomb(true);
-                }
+                controller.getMainPlayer().setHasToExplodeRemoteBomb(true);
                 System.out.println("p");
             }
             default -> {

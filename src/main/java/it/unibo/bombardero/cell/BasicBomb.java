@@ -77,6 +77,7 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
     private void explode() {
         computeFlame(this);
         character.increaseNumBomb();
+        character.removeBombFromDeque(this);
         exploded = true;
         mgr.removeBomb(pos);
     }

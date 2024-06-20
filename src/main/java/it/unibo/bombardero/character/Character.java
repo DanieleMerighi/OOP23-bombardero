@@ -5,16 +5,14 @@ import java.util.Deque;
 import java.awt.geom.Point2D;
 import java.util.ArrayDeque;
 
-
 import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.BombFactory;
+import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.physics.api.BoundingBox;
-import it.unibo.bombardero.physics.api.CollisionEngine;
-import it.unibo.bombardero.physics.impl.BombarderoCollision;
 import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 
 /**
@@ -36,8 +34,6 @@ public abstract class Character {
 
     // Game manager reference
     protected final GameManager manager;
-    // TODO: Remove getManager method and make manager protected. Use it with
-    // super.manager
 
     // Bomb Factory reference
     private final BombFactory bombFactory;
@@ -47,10 +43,9 @@ public abstract class Character {
     // Indicates where the character is looking
     private Direction facingDirection = Direction.DOWN; // Starting character facingDirection
     private boolean stationary = true;
-    private BoundingBox bBox; // Solid area of the character
 
-    // Physics part of character
-    // private BoundingBox bBox; //TODO change with point 2D
+    // Hit box of the Character
+    private BoundingBox bBox; // Solid area of the character
 
     // Game attribute related
     private boolean isAlive = true;
@@ -60,7 +55,7 @@ public abstract class Character {
     private Optional<PowerUpType> bombType = Optional.empty();
     private boolean kick; // False by default
     private boolean lineBomb;
-    private final Deque<BasicBomb> remoteBombQueue = new ArrayDeque<>();
+    private final Deque<BasicBomb> bombQueue = new ArrayDeque<>();
     /*
      * TODO: Gestire la rimozione di una bomba se è esplosa per concatenazione con
      * un'altra
@@ -92,7 +87,7 @@ public abstract class Character {
         this.manager = manager; // TODO: Solve manager, a copy?
         this.coordinate = coord;
         this.bombFactory = bombFactory;
-        this.bBox = new RectangleBoundingBox(new Point2D.Float(0.1562f, 0.0625f) , 0.781f , 0.875f);
+        this.bBox = new RectangleBoundingBox(new Point2D.Float(0.1562f, 0.0625f), 0.781f, 0.875f);
     }
 
     /**
@@ -154,7 +149,9 @@ public abstract class Character {
     public BoundingBox getBoundingBox() {
         return bBox;
     }
-    
+
+    // TODO: Change bomb factory. Add bomb pos in the input field
+
     /**
      * Places a bomb at the character's current location if he has bombs left.
      * 
@@ -179,9 +176,7 @@ public abstract class Character {
         if (hasBombsLeft() && !this.constipation && this.manager
                 .addBomb(bomb)) {
             this.numBomb--;
-            if (bombType.equals(Optional.of(PowerUpType.REMOTE_BOMB))) { // If character has the remote bomb
-                remoteBombQueue.addLast(bomb);
-            }
+            bombQueue.addLast(bomb);
             return true;
         }
         return false;
@@ -207,21 +202,30 @@ public abstract class Character {
         this.hasToPlaceBomb = hasToPlaceBomb;
     }
 
-    // fa esplodere la prima remote piazzata della coda
-    public void explodeRemoteBomb() {
-        if (!remoteBombQueue.isEmpty()) {
-            final BasicBomb bomb = remoteBombQueue.removeFirst();
+    /**
+     * Explodes the first Remote Bomb placed by the character if present.
+     */
+    public void explodeRemoteBomb() { // Checks if there's a remote bomb to explode.
+        if (hasPlacedRemoteBomb()) { // Finds the first remote bomb occurrence.
+            final BasicBomb remoteBomb = bombQueue.stream()
+                    .filter(bomb -> bomb.getBombType().equals(BombType.BOMB_REMOTE))
+                    .findFirst()
+                    .get();
+            remoteBomb.update(true); // Initialises the explosion process.
+            removeBombFromDeque(remoteBomb); // Removes the bomb from the deque.
             System.out.println("exploded remote bomb\n\n");
-            bomb.computeFlame(bomb);
         }
     }
 
-    // Quando si sta per far esplodere una bomba remote per concatenazione viene
-    // chiamato questo metodo
-    public void removeRemoteBomb(final BasicBomb remoteBomb) {
-        if (!remoteBombQueue.isEmpty()) {
+    /**
+     * Removes the exploded bomb if present in the deque.
+     * 
+     * @param explodedBomb the exploded bomb that needs to be removed
+     */
+    public void removeBombFromDeque(final BasicBomb explodedBomb) {
+        if (!bombQueue.isEmpty()) {
             System.out.println("removed remote bomb\n\n");
-            remoteBombQueue.removeFirstOccurrence(remoteBomb);
+            bombQueue.removeFirstOccurrence(explodedBomb);
         }
     }
 
@@ -238,11 +242,23 @@ public abstract class Character {
     /**
      * Sets whether the character should explode a remote bomb.
      * 
-     * @param hasToPlaceBomb true to cause the character to explode a remote bomb,
-     *                       false otherwise
+     * @param hasToExplodeRemoteBomb true to cause the character to explode a remote
+     *                               bomb,
+     *                               false otherwise
      */
     public void setHasToExplodeRemoteBomb(final boolean hasToExplodeRemoteBomb) {
-        this.hasToExplodeRemoteBomb = hasToExplodeRemoteBomb;
+        // Checks if the character has the remote-bomb PowerUp
+        if (bombType.equals(Optional.of(PowerUpType.REMOTE_BOMB))) {
+            this.hasToExplodeRemoteBomb = hasToExplodeRemoteBomb;
+        }
+    }
+
+    /*
+     * Checks whether the character has placed a remote bomb or not.
+     */
+    private boolean hasPlacedRemoteBomb() {
+        return bombQueue.stream()
+                .anyMatch(bomb -> bomb.getBombType().equals(BombType.BOMB_REMOTE));
     }
 
     /**
@@ -279,7 +295,7 @@ public abstract class Character {
      */
     public void setCharacterPosition(final Coord c) {
         this.coordinate = c;
-        bBox.move(new Point2D.Float(c.x()-(float)(0.781/2), c.y()-(float)(0.875/2)));
+        bBox.move(new Point2D.Float(c.x() - (float) (0.781 / 2), c.y() - (float) (0.875 / 2)));
     }
 
     /**
@@ -554,7 +570,7 @@ public abstract class Character {
         this.effectDuration = duration;
     }
 
-    //TODO: write better javadoc
+    // TODO: write better javadoc
     /**
      * Gets the reset effect
      * 
