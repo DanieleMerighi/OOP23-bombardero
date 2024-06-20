@@ -8,7 +8,6 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
 import it.unibo.bombardero.cell.Cell;
-import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.GameManager;
@@ -19,6 +18,7 @@ import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.character.Character;
 
 public class BombarderoCollision implements CollisionEngine{
+    private final GameManager mgr;
     private GameMap gMap;
     private Map<Pair,Cell> map;
     private List<Character> characters;
@@ -30,11 +30,9 @@ public class BombarderoCollision implements CollisionEngine{
     );
 
     public BombarderoCollision(GameManager mgr){
-        
-        gMap=mgr.getGameMap();
+        this.mgr=mgr;
         characters= new LinkedList<>( mgr.getEnemies()) ;
         characters.add(mgr.getPlayer());
-        map=gMap.getMap();
     }
 
     @Override
@@ -49,19 +47,20 @@ public class BombarderoCollision implements CollisionEngine{
 
     @Override
     public void checkCharacterCollision(Character character) {
-        Optional<List<Pair>> Cells = getDirectionCell(character.getFacingDirection() , character.getIntCoordinate());
-        System.out.println(character.getIntCoordinate() + "initial");
-        if(Cells.isPresent()) {
-            Optional<Cell> collidingCell= Cells.get()
-                .stream().filter(p -> map.containsKey(p)).peek(p->System.out.println(p + "colliding cell"))
+        gMap=mgr.getGameMap();
+        map=gMap.getMap();
+        List<Pair> cells = getDirectionCell(character.getFacingDirection() , character.getIntCoordinate());
+        if(!cells.isEmpty()) {
+            Optional<Cell> collidingCell= cells
+                .stream().filter(p -> map.containsKey(p))
                 .map( p -> map.get(p))
-                .filter(c-> c.getBoundingBox().isColliding(character.getBoundingBox()))
+                .filter(c-> c.getBoundingBox().isColliding(character.getBoundingBox()) && c.getBoundingCollision())
                 .findFirst();
+
             CellCollision(character, collidingCell);
         } else {
             checkCoolisionWithMapWall(character);
         }
-        System.out.println(character.getIntCoordinate() + "final");
     }
 
     private void SolidCellCollision(Character character, Cell collidingCell) {
@@ -94,21 +93,19 @@ public class BombarderoCollision implements CollisionEngine{
     private void checkCoolisionWithMapWall(Character character) {
         BoundingBox bBox = character.getBoundingBox();
         Line2D.Float outerLine = MAP_OUTLINES.get(character.getFacingDirection());
-        System.out.println(character.getIntCoordinate() + "initial map");
         if(bBox.isColliding(outerLine)) {
-            character.setCharacterPosition(bBox.computeCollision(outerLine, character.getFacingDirection()));
+            character.setCharacterPosition(
+                character.getCharacterPosition()
+                .sum(bBox.computeCollision(outerLine, character.getFacingDirection())));
         }
-        System.out.println(character.getIntCoordinate() + "final map");
     }
 
-    private Optional<List<Pair>> getDirectionCell(Direction dir , Pair cDir) {
-        Optional<List<Pair>> l = dir.getDiagonals(dir);
-        if(l.isPresent()) {
-            List<Pair> l2 = new LinkedList <> (l.get());
-            l2.add(dir.getPair());
-            return l;
-        } else {
-            return Optional.empty();
-        }
+    private List<Pair> getDirectionCell(Direction dir , Pair cPos) {//TODO brutto
+        List<Pair> l = dir.getDiagonals(dir,cPos);
+        List<Pair> l2 = new LinkedList <> (l);
+        if(cPos.sum(dir.getPair()).x() >= 0 && cPos.sum(dir.getPair()).y() >= 0) {
+            l2.add(cPos.sum(dir.getPair()));
+        } 
+        return l2;
     }
 }

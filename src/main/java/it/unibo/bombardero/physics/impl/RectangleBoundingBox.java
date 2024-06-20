@@ -30,15 +30,14 @@ public class RectangleBoundingBox implements BoundingBox{
     @Override
     public Coord computeCollision(BoundingBox bBox ,Direction dir) {
         switch (dir) {
-            case UP:
-                return new Coord((float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getHeight(),0);
-            case DOWN:
-                System.out.println(-(float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getHeight() + "height");
-                return new Coord(-(float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getHeight() , 0);
             case LEFT:
-                return new Coord(0 , (float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getWidth());
+                return new Coord((float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getWidth(),0);
             case RIGHT:
-                return new Coord(0, -(float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getWidth());
+                return new Coord(-(float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getWidth() , 0);
+            case UP:
+                return new Coord(0 , (float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getHeight());
+            case DOWN:
+                return new Coord(0, -(float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getHeight());
             default:
                 return new Coord(0, 0);//TODO not sure about that
         }
@@ -58,9 +57,9 @@ public class RectangleBoundingBox implements BoundingBox{
             case DOWN:
                 return new Coord(0 , (float)(mapOutline.getY1()-fisicsBox.getMaxY()));
             case LEFT:
-                return new Coord(0 , (float)(mapOutline.getX1()-fisicsBox.getMinX()));
+                return new Coord((float)(mapOutline.getX1()-fisicsBox.getMinX()) , 0);
             case RIGHT:
-                return new Coord(0 , (float)(mapOutline.getX1()-fisicsBox.getMaxY()));
+                return new Coord((float)(mapOutline.getX1()-fisicsBox.getMaxY()) , 0);
             default:
                 return new Coord(0, 0);//TODO not sure about that
         }
