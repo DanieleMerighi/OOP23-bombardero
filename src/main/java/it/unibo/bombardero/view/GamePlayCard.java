@@ -2,35 +2,20 @@ package it.unibo.bombardero.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
-
-import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import it.unibo.bombardero.cell.Cell;
-import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
-import it.unibo.bombardero.core.KeyboardInput;
-import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.utils.Utils;
 import it.unibo.bombardero.view.sprites.BombarderoSprite;
 import it.unibo.bombardero.view.sprites.BombarderoOrientedSprite;
 import it.unibo.bombardero.view.sprites.GenericBombarderoSprite;
-import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
