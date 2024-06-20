@@ -2,6 +2,7 @@ package it.unibo.bombardero.cell;
 
 import java.awt.geom.Point2D;
 
+import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.physics.api.BoundingBox;
 import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
@@ -14,15 +15,7 @@ import it.unibo.bombardero.utils.Utils;
  * @author Luca Venturini
  * @author Jacopo Turchi 
  */
-public abstract class AbstractCell {
-    
-    public enum CellType {
-        WALL_BREAKABLE,
-        WALL_UNBREAKABLE,
-        BOMB,
-        FLAME,
-        POWERUP;
-    }
+public abstract class AbstractCell implements Cell {
 
     private BoundingBox bBox=null;
     private final CellType type;
