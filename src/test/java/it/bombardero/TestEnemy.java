@@ -3,6 +3,7 @@ package it.bombardero;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,12 +15,10 @@ import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.map.api.BombarderoTimer;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
-import it.unibo.bombardero.utils.Utils;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,9 +27,9 @@ import java.util.Arrays;
 public class TestEnemy {
 
     private static final int STANDARD_ELAPSED_TIME = 100;
+    private static final int STARTING_BOMBS = 1;
 
     private TestGameManager manager;
-    private BombFactory b;
 
     @BeforeEach
     void setUp() {
@@ -43,48 +42,49 @@ public class TestEnemy {
     @Test
     public void testEnemyPatrol_PlayerNotInDetectionRadius_MovesRandomly() {
         // outside ENEMY_DETECTION_RADIUS
-        this.manager.setPlayerCoord(0, 5);
-        this.manager.enemy.update(STANDARD_ELAPSED_TIME);
+        manager.setPlayerCoord(0, 5);
+        manager.enemy.update(STANDARD_ELAPSED_TIME);
 
         // Verify enemy state is PATROL
-        assertEquals(Enemy.State.PATROL, this.manager.enemy.getState());
+        assertEquals(Enemy.State.PATROL, manager.enemy.getState());
         // We can't directly verify moveRandomly is called, but we can check if nextMove
         // is set through random movement
-        assertTrue(this.manager.enemy.getNextMove().isPresent());
+        assertTrue(manager.enemy.getNextMove().isPresent());
     }
 
     @Test
     public void testEnemyPatrol_PlayerInDetectionRadius_ChangesToChaseState() {
         // Set player position within detection radius in TestGameManager
-        this.manager.setPlayerCoord(0, 4);
-        this.manager.updateGame(STANDARD_ELAPSED_TIME);
+        manager.setPlayerCoord(0, 4);
+        manager.updateGame(STANDARD_ELAPSED_TIME);
 
         // Verify enemy state is CHASE
-        assertEquals(Enemy.State.CHASE, this.manager.enemy.getState());
+        assertEquals(Enemy.State.CHASE, manager.enemy.getState());
     }
 
     @Test
     public void testEnemyChase_LosesPlayer_ChangesToPatrolState() {
         // Set initial player position within detection radius in TestGameManager
-        this.manager.setPlayerCoord(0, 4);
+        manager.setPlayerCoord(0, 4);
+        manager.enemy.setNumBomb(0);
         // We need more than 1 sec to move between cells
-        this.manager.updateGame(STANDARD_ELAPSED_TIME);
-        this.manager.updateGame(STANDARD_ELAPSED_TIME);
+        manager.updateGame(STANDARD_ELAPSED_TIME);
+        //manager.updateGame(STANDARD_ELAPSED_TIME);
 
         // Verify enemy state is CHASE
-        assertEquals(Enemy.State.CHASE, this.manager.enemy.getState());
-        assertEquals(new Pair(0, 1), this.manager.enemy.getIntCoordinate());
+        assertEquals(Enemy.State.CHASE, manager.enemy.getState());
+        assertEquals(new Pair(0, 3), manager.enemy.getIntCoordinate());
 
         // Set player moving away after initial detection
-        this.manager.setPlayerCoord(0, 12);
-        this.manager.updateGame(STANDARD_ELAPSED_TIME);
+        manager.setPlayerCoord(3, 12);
+        manager.updateGame(STANDARD_ELAPSED_TIME);
 
         // Verify enemy state is PATROL
-        assertEquals(Enemy.State.PATROL, this.manager.enemy.getState());
+        assertEquals(Enemy.State.PATROL, manager.enemy.getState());
     }
 
     @Test
-    public void testEnemyEscape_ChangesToPatrolState() {
+    public void testEnemyEscape_ChangesToWaiting() {
         // Set enemy position inside a danger zone
         this.manager.getGameMap().addBomb(b.CreateBomb(null), new Pair(0, 1));
         this.manager.enemy.update(STANDARD_ELAPSED_TIME);
@@ -93,28 +93,26 @@ public class TestEnemy {
         this.manager.updateGame(STANDARD_ELAPSED_TIME);
         this.manager.updateGame(STANDARD_ELAPSED_TIME);
         // Verify enemy state is WAITING
-        assertEquals(Enemy.State.WAITING, this.manager.enemy.getState());
-        assertEquals(new Pair(1, 0), this.manager.enemy.getIntCoordinate());
+        assertEquals(Enemy.State.WAITING, manager.enemy.getState());
+        assertEquals(new Pair(1, 0), manager.enemy.getIntCoordinate());
     }
 
-    // @Test
-    // public void testEnemyPatrol_BreakableWallNextToEnemy_PlacesBomb() {
-    //     // Set enemy next to a breakable wall
-    //     this.manager.setPlayerCoord(0, 2);
-    //     this.manager.getGameMap().addBreakableWall(new Pair(0, 1));
-    //     this.manager.enemy.update(STANDARD_ELAPSED_TIME);
+    @Test
+    public void testEnemyPatrol_BreakableWallNextToEnemy_PlacesBomb() {
+        // Set enemy next to a breakable wall
+        manager.setPlayerCoord(0, 2);
+        manager.enemy.setNumBomb(STARTING_BOMBS);
+        manager.getGameMap().addBreakableWall(new Pair(0, 1));
+        manager.enemy.update(STANDARD_ELAPSED_TIME);
 
-    //     assertEquals(Enemy.State.CHASE, this.manager.enemy.getState());
-    //     this.manager.updateGame();
-    //     // Verify bomb is placed on the enemy's position
-    //     assertTrue(this.manager.getGameMap().isBomb(new Pair(0, 0))); 
-    //     assertEquals(Utils.ENEMY_STARTING_BOMBS-1, this.manager.enemy.getNumBomb());
-    //     this.manager.updateGame();
-    //     assertEquals(new Pair(2, 1), this.manager.enemy.getIntCoordinate());
+        assertEquals(Enemy.State.CHASE, manager.enemy.getState());
+        manager.updateGame(STANDARD_ELAPSED_TIME);
+        // Verify bomb is placed on the enemy's position
+        assertTrue(manager.getGameMap().isBomb(new Pair(0, 0))); 
+        assertEquals(STARTING_BOMBS-1, manager.enemy.getNumBomb());
+    }
 
-    // }
-
-    // this is a class for simulating some aspects of the GameManager
+    // is a class for simulating some aspects of the GameManager
     private static class TestGameManager implements GameManager {
 
         private Player player;
@@ -127,26 +125,26 @@ public class TestEnemy {
             this.player = new Player(this, new Coord(0, 12), new BombFactoryImpl(this));
         }
 
-        public void setPlayerCoord(int row, int col) {
-            this.player = new Player(this, new Coord(row, col), null);
+        public void setPlayerCoord(int x, int y) {
+            player.setCharacterPosition(new Coord(x+0.5f, y+0.5f));
         }
 
-        public void setEnemyCoord(int row, int col) {
-            this.enemy = new Enemy(this, new Coord(row, col), null);
+        public void setEnemyCoord(int x, int y) {
+            enemy.setCharacterPosition(new Coord(x+0.5f, y+0.5f));
         }
 
         @Override
         public Player getPlayer() {
-            return this.player;
+            return player;
         }
 
         @Override
         public void updateGame(long elapsed) {
             // 60 fps
             for (int i = 0; i < 59; i++) {
-                this.enemy.update(STANDARD_ELAPSED_TIME);
+                enemy.update(STANDARD_ELAPSED_TIME);
             }
-            this.enemy.update(STANDARD_ELAPSED_TIME);
+            enemy.update(STANDARD_ELAPSED_TIME);
         }
 
         @Override
@@ -161,12 +159,12 @@ public class TestEnemy {
 
         @Override
         public GameMap getGameMap() {
-            return this.map;
+            return map;
         }
 
         @Override
-        public boolean addBomb(BasicBomb bomb) {
-            throw new UnsupportedOperationException("Unimplemented method 'addBomb'");
+        public boolean addBomb(BasicBomb b) {
+            return map.addBomb(b, b.getPos());
         }
 
         @Override
@@ -194,6 +192,7 @@ public class TestEnemy {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'getTimeLeft'");
         }
+
     }
 
 }

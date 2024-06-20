@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import it.unibo.bombardero.cell.BombFactory;
-import it.unibo.bombardero.character.AI.*;
+import it.unibo.bombardero.character.AI.impl.EnemyGraphReasonerImpl;
+import it.unibo.bombardero.character.AI.impl.GraphManagerImpl;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.GameMap;
@@ -15,6 +16,7 @@ import it.unibo.bombardero.utils.Utils;
 
 import java.util.EnumSet;
 import java.util.stream.Collectors;
+import java.util.stream.*;
 
 /**
  * Represents an enemy character within the game environment.
@@ -40,7 +42,11 @@ public class Enemy extends Character {
      */
     public Enemy(GameManager manager, Coord coord, BombFactory bombFactory) {
         super(manager, coord, bombFactory);
-        graph = new EnemyGraphReasonerImpl(manager.getGameMap());
+        GraphManagerImpl.initialize(manager.getGameMap());
+    }
+
+    private int calculateDistance(Pair coord1, Pair coord2) {
+        return Math.abs(coord1.x() - coord2.x()) + Math.abs(coord1.y() - coord2.y());
     }
 
     /**
@@ -50,15 +56,21 @@ public class Enemy extends Character {
      * @return true if the player is within detection radius, false otherwise.
      */
     private boolean isEnemyClose() {
+        return getClosestEntity().map(
+                closestCoord -> calculateDistance(getIntCoordinate(), closestCoord) <= Utils.ENEMY_DETECTION_RADIUS)
+                .orElse(false);
+    }
+
+    private Optional<Pair> getClosestEntity() {
         Pair enemyCoord = getIntCoordinate();
-        int detectionRadius = Utils.ENEMY_DETECTION_RADIUS;
-        List<Character> allEnemies = new ArrayList<>(super.manager.getEnemies());
-        allEnemies.add(super.manager.getPlayer());
-        // Calculate Manhattan distance between enemy and player
-        return allEnemies.stream().map(e -> e.getIntCoordinate()).filter(e -> !e.equals(enemyCoord)).anyMatch(coord -> {
-            int distance = Math.abs(enemyCoord.x() - coord.x()) + Math.abs(enemyCoord.y() - coord.y());
-            return distance <= detectionRadius;
-        });
+        List<Character> allEntities = new ArrayList<>(super.manager.getEnemies());
+        allEntities.add(super.manager.getPlayer());
+
+        return allEntities.stream()
+                .map(Character::getIntCoordinate)
+                .filter(coord -> !coord.equals(enemyCoord))
+                .min((coord1, coord2) -> Integer.compare(calculateDistance(enemyCoord, coord1),
+                        calculateDistance(enemyCoord, coord2)));
     }
 
     // when the enemy doesn't know where to move he choose randomly
@@ -98,12 +110,21 @@ public class Enemy extends Character {
      * and potentially updates the `nextMove` target based on danger zone detection
      * or pathfinding results.
      */
-    private void computeNextDir() {
-        graph = new EnemyGraphReasonerImpl(super.manager.getGameMap());
+    private void computeNextDir(long time) {
+        GameMap gameMap = super.manager.getGameMap();
+        graph = GraphManagerImpl.getGraphReasoner(gameMap, time);
         currentState.execute(this); // Delegate behavior to current state
         if (nextMove.isPresent() && currentState != State.ESCAPE) {
             Pair cell = nextMove.get();
-            GameMap gameMap = super.manager.getGameMap();
+            if (currentState == State.CHASE) {
+                Pair closeEnemy = getClosestEntity().get();
+                Pair currPos = getIntCoordinate();
+                if ((closeEnemy.x() == currPos.x() || closeEnemy.y() == currPos.y())
+                        && !graph.isPathBlockedByWalls(closeEnemy, getIntCoordinate())
+                        && calculateDistance(currPos, closeEnemy) <= getFlameRange()) {
+                    placeBomb();
+                }
+            }
             if (gameMap.isUnbreakableWall(cell)) {
                 nextMove = Optional.empty();
             } else if (gameMap.isBreakableWall(cell)) {
@@ -124,11 +145,11 @@ public class Enemy extends Character {
         // Every 60 frames (assuming 60 fps), call computeNextDir to get the next target
         if (movementTimer >= 60 || nextMove.isEmpty()) {
             movementTimer = movementTimer >= 60 ? 0 : movementTimer;
-            computeNextDir();
+            computeNextDir(elapsedTime);
         }
 
         if (nextMove.isPresent()) {
-            Coord target = new Coord(nextMove.get().x()+0.5f, nextMove.get().y()+0.5f);
+            Coord target = new Coord(nextMove.get().x() + 0.5f, nextMove.get().y() + 0.5f);
             Coord currentPos = getCharacterPosition();
             Pair currentCoord = getIntCoordinate();
 
@@ -137,19 +158,30 @@ public class Enemy extends Character {
 
             // Restrict movement to 4 directions (up, down, left, right)
             dir = restrictToGridDirections(dir);
+            setFacingDirection(dir);
 
             // Aggiorna la posizione del nemico
             Coord newPos = currentPos.sum(dir.multiply(getSpeed()));
-           
+
             // Check if reached the target cell using a small tolerance
             if (currentCoord.equals(nextMove.get()) &&
-                    Math.abs(newPos.subtract(target).x()) <= getSpeed()/2 &&
-                    Math.abs(newPos.subtract(target).y()) <= getSpeed()/2) {
+                    Math.abs(newPos.subtract(target).x()) <= getSpeed() / 2 &&
+                    Math.abs(newPos.subtract(target).y()) <= getSpeed() / 2) {
                 nextMove = Optional.empty(); // Clear target if reached
             } else {
                 setCharacterPosition(newPos);
             }
         }
+    }
+
+    private void setFacingDirection(Coord dir) {
+        Direction newDirection = Stream.of(Direction.values())
+            .filter(d -> !d.equals(Direction.DEFAULT))
+            .filter(d -> d.x() == Integer.signum((int) dir.x()) || d.y() == Integer.signum((int) dir.y()))
+            .findFirst()
+            .orElse(Direction.DEFAULT);
+    
+        setFacingDirection(newDirection);
     }
 
     private Coord restrictToGridDirections(Coord direction) {
@@ -224,7 +256,7 @@ public class Enemy extends Character {
         WAITING {
             @Override
             void execute(Enemy enemy) {
-                enemy.nextMove = Optional.empty(); //da cambiare, quando la bomba esplode allora ti muovi
+                enemy.nextMove = Optional.empty(); // da cambiare, quando la bomba esplode allora ti muovi
             }
         };
 
