@@ -82,7 +82,7 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      */
     public boolean isPathBlockedByWalls(Pair startCell, Pair endCell) {
         if (startCell.x() != endCell.x() && startCell.y() != endCell.y()) {
-            return false; // Diagonal paths not supported
+            return true; // Diagonal paths not supported
         }
 
         int dx = endCell.x() - startCell.x();
