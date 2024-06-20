@@ -1,10 +1,10 @@
 package it.unibo.bombardero.view;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -23,17 +23,25 @@ import it.unibo.bombardero.core.api.Controller;
  */
 public final class GuideCard extends GamePlayCard {
 
-    private Image messageBox;
+    private String message = "";
+    private Image messageBoxImage;
     private final Font font;
+
+    private final Dimension messageBoxPlacingPoint;
 
     public GuideCard(final JFrame parentFrame, final Controller controller, final BombarderoGraphics graphics, final ResourceGetter resourceGetter, final ResizingEngine resizingEngine) {
         super(graphics);
 
+        // CHECKSTYLE: MagicNumber OFF
         font = resourceGetter.loadFont("mono");
-        messageBox = resourceGetter.loadImage("overlay/dialog");
+        messageBoxImage = resourceGetter.loadImage("overlay/dialog");
+        // CHECKSTYLE: MagicNumber ON
+        
+        messageBoxPlacingPoint = graphics.getResizingEngine().getMessageBoxPosition();
         JButton back = new JButton("back");
         JButton start = new JButton("start");
 
+        /*
         this.add(back);
         this.add(start);
         
@@ -54,16 +62,19 @@ public final class GuideCard extends GamePlayCard {
                 controller.startGame();
             }
             
-        });
+        }); */
     }
 
     @Override 
     public void paint(Graphics g) {
         super.paint(g);
+        Graphics2D g2d = (Graphics2D)g;
+        g2d.drawString(message, messageBoxPlacingPoint.width, messageBoxPlacingPoint.height);
+        g2d.drawImage(messageBoxImage, messageBoxPlacingPoint.width, messageBoxPlacingPoint.height, null);
     }
 
     public void showMessage(final BombarderoViewMessages message) {
-        return;
+        this.message = message.getMessage();
     }
     
 }
