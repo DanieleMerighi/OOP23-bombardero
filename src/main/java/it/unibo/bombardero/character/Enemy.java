@@ -16,6 +16,7 @@ import it.unibo.bombardero.utils.Utils;
 
 import java.util.EnumSet;
 import java.util.stream.Collectors;
+import java.util.stream.*;
 
 /**
  * Represents an enemy character within the game environment.
@@ -157,6 +158,7 @@ public class Enemy extends Character {
 
             // Restrict movement to 4 directions (up, down, left, right)
             dir = restrictToGridDirections(dir);
+            setFacingDirection(dir);
 
             // Aggiorna la posizione del nemico
             Coord newPos = currentPos.sum(dir.multiply(getSpeed()));
@@ -170,6 +172,16 @@ public class Enemy extends Character {
                 setCharacterPosition(newPos);
             }
         }
+    }
+
+    private void setFacingDirection(Coord dir) {
+        Direction newDirection = Stream.of(Direction.values())
+            .filter(d -> !d.equals(Direction.DEFAULT))
+            .filter(d -> d.x() == Integer.signum((int) dir.x()) || d.y() == Integer.signum((int) dir.y()))
+            .findFirst()
+            .orElse(Direction.DEFAULT);
+    
+        setFacingDirection(newDirection);
     }
 
     private Coord restrictToGridDirections(Coord direction) {
