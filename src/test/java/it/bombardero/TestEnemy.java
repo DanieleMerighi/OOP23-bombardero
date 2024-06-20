@@ -30,6 +30,7 @@ public class TestEnemy {
     private static final int STARTING_BOMBS = 1;
 
     private TestGameManager manager;
+    private BombFactory b;
 
     @BeforeEach
     void setUp() {
