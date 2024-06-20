@@ -3,9 +3,9 @@ package it.unibo.bombardero.view;
 import javax.swing.JButton;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.geom.Rectangle2D;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.awt.Font;
@@ -36,11 +36,11 @@ public final class GameCard extends GamePlayCard {
         clockImage = graphics.getResizingEngine().getScaledClockImage(
             graphics.getResourceGetter().loadImage("overlay/clock")
         );
-        clockFont = graphics.getResourceGetter().loadFont("clock_font");
+        clockFont = graphics.getResourceGetter().loadFont("mono");
 
         imageClockPosition = graphics.getResizingEngine().getImageClockPosition();
         timerPosition = graphics.getResizingEngine().getTimerPosition();
-        
+
         this.setFont(clockFont);
     }
 
@@ -48,8 +48,9 @@ public final class GameCard extends GamePlayCard {
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2d = (Graphics2D)g;
+        int fontYOffset = (int)(g.getFontMetrics(clockFont).getAscent() / 2);
         g2d.setFont(clockFont.deriveFont(Font.PLAIN, 16));
-        g2d.drawString(getFormattedTime(), timerPosition.width, timerPosition.height);
+        g2d.drawString(getFormattedTime(), timerPosition.width, timerPosition.height + fontYOffset);
         g2d.drawImage(clockImage, imageClockPosition.width, imageClockPosition.height, null);
     }
 
