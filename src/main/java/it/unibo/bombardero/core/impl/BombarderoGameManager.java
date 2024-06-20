@@ -34,6 +34,7 @@ public class BombarderoGameManager implements GameManager {
     
     private final GameMap map;
     private List<Bomb> boombs = new ArrayList<>();
+    private List<Flame> flames = new ArrayList<>();
     private final List<Character> enemies = new ArrayList<>();
     private final Character player;
     private final Controller controller;
@@ -72,6 +73,10 @@ public class BombarderoGameManager implements GameManager {
         if(!boombs.isEmpty()) {
             boombs.forEach(b->b.update());
             boombs.removeIf(b->b.isExploded());
+        }
+        if(!flames.isEmpty()) {
+            flames.forEach(f->f.update(elapsed));
+            flames.removeIf(f->f.isExpired());
         }
         // enemies.forEach(enemy -> {
         //     if (enemy.isAlive()) {
@@ -117,12 +122,14 @@ public class BombarderoGameManager implements GameManager {
 
     @Override
     public void addFlame(final Flame.FlameType type, final Pair pos) {
-        map.addFlame(new Flame(CellType.FLAME, type, pos), pos);
+        Flame f = new Flame(CellType.FLAME, type, pos , this);
+        flames.add(f);
+        map.addFlame(f, pos);
     }
 
     @Override
     public void removeFlame(final Pair pos) {
-    
+        map.removeFlame(pos);
     }
 
     @Override

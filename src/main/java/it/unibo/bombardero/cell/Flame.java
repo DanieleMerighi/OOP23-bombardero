@@ -52,6 +52,7 @@ public class Flame extends Cell {
 
     }
 
+    private boolean expired=false;
     private final GameManager mgr;
     private final FlameType specificFlameType;
     private final Pair pos;
@@ -66,9 +67,14 @@ public class Flame extends Cell {
 
     public void update(float timeElapsed) {
         this.countTime+=timeElapsed;
-        if(countTime>0.5) {
-            mgr.removeFlame(this.pos);
+        if(countTime>500) {
+            expired=true;
+            mgr.removeFlame(pos);
         }
+    }
+
+    public boolean isExpired() {
+        return this.expired;
     }
 
     public Pair getPos() {

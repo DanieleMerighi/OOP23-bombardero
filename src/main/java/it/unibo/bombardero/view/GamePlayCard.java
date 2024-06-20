@@ -166,7 +166,7 @@ public class GamePlayCard extends JPanel {
                             placingPoint = graphics.getResizingEngine().getCellPlacingPoint(new Pair(i, j));
                             break;
                         default:
-                            img = null;
+                            img = unbreakable;
                             placingPoint = graphics.getResizingEngine().getCellPlacingPoint(new Pair(i, j));
                             break;
                     }
