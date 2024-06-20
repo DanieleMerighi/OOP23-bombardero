@@ -43,8 +43,9 @@ public abstract class Character {
 
     // Position related
     private Coord coordinate; // Starting character coordinate
+    // Indicates where the character is looking
     private Direction facingDirection = Direction.DOWN; // Starting character facingDirection
-    private boolean stationary = true;
+    private boolean stationary = true; // Indicates if the character is stanionary or not
 
     // Physics part of character
     // private BoundingBox bBox; //TODO change with point 2D
