@@ -9,7 +9,7 @@ import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.BombFactoryImpl;
-import it.unibo.bombardero.cell.Cell.CellType;
+import it.unibo.bombardero.cell.AbstractCell.CellType;
 import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;

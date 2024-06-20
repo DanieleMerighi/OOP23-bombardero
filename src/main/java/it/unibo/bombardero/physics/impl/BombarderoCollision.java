@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
-import it.unibo.bombardero.cell.Cell;
+import it.unibo.bombardero.cell.AbstractCell;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.GameManager;
@@ -20,7 +20,7 @@ import it.unibo.bombardero.character.Character;
 public class BombarderoCollision implements CollisionEngine{
     private final GameManager mgr;
     private GameMap gMap;
-    private Map<Pair,Cell> map;
+    private Map<Pair,AbstractCell> map;
     private List<Character> characters;
     private Map<Direction, Line2D.Float> MAP_OUTLINES = Map.of(
         Direction.UP , new Line2D.Float(new Point2D.Float(0, 0) , new Point2D.Float(13, 0)),
@@ -51,7 +51,7 @@ public class BombarderoCollision implements CollisionEngine{
         map=gMap.getMap();
         List<Pair> cells = getDirectionCell(character.getFacingDirection() , character.getIntCoordinate());
         if(!cells.isEmpty()) {
-            Optional<Cell> collidingCell= cells
+            Optional<AbstractCell> collidingCell= cells
                 .stream().filter(p -> map.containsKey(p))
                 .map( p -> map.get(p))
                 .filter(c-> c.getBoundingBox().isColliding(character.getBoundingBox()) && c.getBoundingCollision())
@@ -63,17 +63,17 @@ public class BombarderoCollision implements CollisionEngine{
         }
     }
 
-    private void SolidCellCollision(Character character, Cell collidingCell) {
+    private void SolidCellCollision(Character character, AbstractCell collidingCell) {
         character.setCharacterPosition(character.getCharacterPosition()
             .sum(character.getBoundingBox()
                 .computeCollision(collidingCell.getBoundingBox(), character.getFacingDirection())));
     }
 
-    private void pickUpCollision(Character character, Cell collidingCell) {
+    private void pickUpCollision(Character character, AbstractCell collidingCell) {
         ((PowerUp)collidingCell).applyEffect(character);
     }
 
-    private void CellCollision(Character character , Optional<Cell> collidingCell) {
+    private void CellCollision(Character character , Optional<AbstractCell> collidingCell) {
         if(collidingCell.isPresent()) {
             switch (collidingCell.get().getCellType()) {
                 case WALL_BREAKABLE:

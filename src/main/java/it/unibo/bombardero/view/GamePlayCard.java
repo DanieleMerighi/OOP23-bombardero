@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 import javax.swing.JPanel;
 
-import it.unibo.bombardero.cell.Cell;
+import it.unibo.bombardero.cell.AbstractCell;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.utils.Utils;
 import it.unibo.bombardero.view.sprites.BombarderoSprite;
@@ -54,7 +54,7 @@ public class GamePlayCard extends JPanel {
 
     /* References to model components: */
     private final BombarderoGraphics graphics;
-    private Map<Pair, Cell> cells;
+    private Map<Pair, AbstractCell> cells;
     private final Character player;
     private final Map<Character, EnemyImage> enemies = new HashMap<>(); // every enemy is linked to its own sprite
     
@@ -120,7 +120,7 @@ public class GamePlayCard extends JPanel {
         for (int i = 0; i < Utils.MAP_ROWS; i++) {
             for (int j = 0; j < Utils.MAP_COLS; j++) {
                 if (cells.containsKey(new Pair(i, j))) {
-                    Cell entry = cells.get(new Pair(i ,j));
+                    AbstractCell entry = cells.get(new Pair(i ,j));
                     Image img = unbreakable;
                     Dimension placingPoint;
                     switch (entry.getCellType()) {

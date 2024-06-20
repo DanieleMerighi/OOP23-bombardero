@@ -3,7 +3,7 @@ package it.unibo.bombardero.core.api;
 import java.util.Map;
 import java.util.List;
 
-import it.unibo.bombardero.cell.Cell;
+import it.unibo.bombardero.cell.AbstractCell;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.view.BombarderoViewMessages;
 import it.unibo.bombardero.character.Character;
@@ -29,7 +29,7 @@ public interface Controller {
 
     List<Character> getEnemies();
 
-    Map<Pair, Cell> getMap();
+    Map<Pair, AbstractCell> getMap();
 
     long getTimeLeft();
 
