@@ -5,7 +5,7 @@ import java.util.function.Predicate;
 
 import edu.umd.cs.findbugs.annotations.OverrideMustInvoke;
 import it.unibo.bombardero.cell.Bomb.BombType;
-import it.unibo.bombardero.cell.Cell.CellType;
+import it.unibo.bombardero.cell.AbstractCell.CellType;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.character.Character;

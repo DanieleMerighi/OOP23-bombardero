@@ -6,7 +6,7 @@ import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
 
-public class Flame extends Cell {
+public class Flame extends AbstractCell {
 
     public enum FlameType {
 

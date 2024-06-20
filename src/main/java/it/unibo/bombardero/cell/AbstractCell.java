@@ -14,7 +14,7 @@ import it.unibo.bombardero.utils.Utils;
  * @author Luca Venturini
  * @author Jacopo Turchi 
  */
-public abstract class Cell {
+public abstract class AbstractCell {
     
     public enum CellType {
         WALL_BREAKABLE,
@@ -28,7 +28,7 @@ public abstract class Cell {
     private final CellType type;
     private final boolean boundingCollision;
 
-    public Cell(final CellType type , Pair pos , boolean boundingCollision) {
+    public AbstractCell(final CellType type , Pair pos , boolean boundingCollision) {
         this.type = type;
         this.bBox = new RectangleBoundingBox(new Point2D.Float(pos.x(), pos.y()), 1.0f , 1.0f);
         this.boundingCollision=boundingCollision;
