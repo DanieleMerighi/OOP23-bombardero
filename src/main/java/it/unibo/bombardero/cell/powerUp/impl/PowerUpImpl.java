@@ -19,7 +19,7 @@ public class PowerUpImpl extends Cell implements PowerUp {
     // private List<Pair<Direction, Bomb>> kickBombList = new ArrayList<>();
 
     public PowerUpImpl(final PowerUpType type, final PowerUpEffectStrategy strategy, Pair pos) {
-        super(CellType.POWERUP, pos);
+        super(CellType.POWERUP, pos, true);
         this.type = type;
         this.effect = strategy.getEffect();
     }
