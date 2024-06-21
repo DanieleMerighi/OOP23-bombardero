@@ -7,18 +7,19 @@ import java.util.Map;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
+import it.unibo.bombardero.cell.AbstractCell;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.cell.powerup.api.PowerUpEffectStrategy;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 
-public class PowerUpImpl extends Cell implements PowerUp {
+public class PowerUpImpl extends AbstractCell implements PowerUp {
     final private PowerUpType type;
     final private Consumer<Character> effect;
     // private float kickBombSpeed;
     // private List<Pair<Direction, Bomb>> kickBombList = new ArrayList<>();
 
-    public PowerUpImpl(final PowerUpType type, final PowerUpEffectStrategy strategy, Pair pos) {
+    public PowerUpImpl(final PowerUpType type, Pair pos, final PowerUpEffectStrategy strategy) {
         super(CellType.POWERUP, pos, true);
         this.type = type;
         this.effect = strategy.getEffect();
@@ -35,7 +36,7 @@ public class PowerUpImpl extends Cell implements PowerUp {
     }
 
     //how to stop the forEach from placing bomb after placebomb returns flase?
-    public static void placeLineBomb(final Character character, final Map<Pair,Cell> map, final Direction facingDirection) {
+    public static void placeLineBomb(final Character character, final Map<Pair, Cell> map, final Direction facingDirection) {
         if (character.hasLineBomb()) {
             // Lo stream continua finché non ha piazzato tutte le bombe o finché incontra un ostacolo
             IntStream

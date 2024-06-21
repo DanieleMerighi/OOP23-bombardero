@@ -3,6 +3,7 @@ package it.unibo.bombardero.core.impl;
 import java.util.Map;
 import java.util.List;
 
+import it.unibo.bombardero.cell.AbstractCell;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.core.BombarderoEngine;
 import it.unibo.bombardero.core.api.Controller;

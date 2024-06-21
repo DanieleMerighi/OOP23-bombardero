@@ -15,7 +15,6 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
 import it.unibo.bombardero.cell.Flame;
-import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.character.AI.impl.GraphBuilderImpl;
 
 public class TestGraphBuilder {
