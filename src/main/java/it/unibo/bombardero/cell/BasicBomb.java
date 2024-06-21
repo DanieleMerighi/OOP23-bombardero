@@ -27,15 +27,14 @@ public abstract class BasicBomb extends Cell implements Bomb{
     private final Character character;
     private final GameManager mgr;
     private Pair pos;
-    private long elapsedTime = 0;
     protected GameMap map;
-    private Optional<PowerUpType> bombType;
+    private final Optional<PowerUpType> bombType;
     private int coutBreckable;
 
-    public BasicBomb(GameManager mgr, Character character) {
+    public BasicBomb(GameManager mgr, Character character, Pair pos) {
         super(CellType.BOMB , character.getIntCoordinate(), true);
         this.mgr = mgr;
-        this.pos = character.getIntCoordinate();
+        this.pos = pos;
         this.range = character.getFlameRange();
         this.map=mgr.getGameMap();
         this.character = character;
@@ -46,7 +45,7 @@ public abstract class BasicBomb extends Cell implements Bomb{
         if(bombType.isPresent()){
             return bombType.get().toBombType();
         }
-        return null;
+        return BombType.BOMB_BASIC;
     }
 
     @Override
@@ -61,7 +60,7 @@ public abstract class BasicBomb extends Cell implements Bomb{
 
     public void update(boolean condition) {
         if(condition){
-            this.explode();
+            this.explode(); 
         }
     }
 
@@ -110,7 +109,7 @@ public abstract class BasicBomb extends Cell implements Bomb{
     }
 
     protected Predicate<? super Pair> stopFlamePropagation() {
-        return p-> (map.isEmpty(p) && coutBreckable < 1) || !map.isUnbreakableWall(p) && !map.isBomb(p) && isFirstBreckableWall(p);
+        return p-> (map.isEmpty(p) && coutBreckable < 1) || !map.isUnbreakableWall(p) && isFirstBreckableWall(p);
     }
 
     private boolean isFirstBreckableWall(Pair pos) {

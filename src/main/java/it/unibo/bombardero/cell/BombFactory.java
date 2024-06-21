@@ -8,6 +8,8 @@ import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.map.api.Pair;
 
 public interface BombFactory {
-    
+
+    BasicBomb CreateBomb(Character character, Pair pos);
+
     BasicBomb CreateBomb(Character character);
 }
