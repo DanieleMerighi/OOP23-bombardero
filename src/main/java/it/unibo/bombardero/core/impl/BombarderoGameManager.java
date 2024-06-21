@@ -81,10 +81,14 @@ public class BombarderoGameManager implements GameManager {
         // enemies.forEach(enemy -> {
         //     if (enemy.isAlive()) {
         //         enemy.update(elapsed);
+        //     } else {
+        //         enemies.remove(enemy);
         //     }
         // });
         if(enemies.get(0).isAlive()){
             enemies.get(0).update(elapsed);
+        } else {
+            System.out.println("ma ciao");
         }
         ce.checkFlameCollision();
         ce.checkCharacterCollision(player);
