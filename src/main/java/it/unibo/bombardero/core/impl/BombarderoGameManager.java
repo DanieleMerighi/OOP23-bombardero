@@ -11,6 +11,7 @@ import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.BombFactoryImpl;
 import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.Flame;
+import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.guide.impl.BombarderoGuideManager;
@@ -112,7 +113,9 @@ public class BombarderoGameManager implements GameManager {
 
     @Override
     public boolean addBomb(final BasicBomb bomb) {
-        boombs.add(bomb);
+        if(!bomb.getBombType().equals(BombType.BOMB_REMOTE)) {
+            boombs.add(bomb);
+        }
         return map.addBomb(bomb, bomb.getPos());
     }
 
