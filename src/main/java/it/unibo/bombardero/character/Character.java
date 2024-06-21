@@ -172,7 +172,7 @@ public abstract class Character {
      * @return true if the character has placed the bomb, false otherwise
      */
     public boolean placeBomb(final Pair coordinate) {
-        return placeBombImpl(this.bombFactory.CreateBomb(this));
+        return placeBombImpl(this.bombFactory.CreateBomb(this, coordinate));
     }
 
     private boolean placeBombImpl(final BasicBomb bomb) {
