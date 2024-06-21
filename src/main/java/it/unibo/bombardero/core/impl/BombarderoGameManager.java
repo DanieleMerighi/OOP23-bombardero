@@ -86,6 +86,7 @@ public class BombarderoGameManager implements GameManager {
         if(enemies.get(0).isAlive()){
             enemies.get(0).update(elapsed);
         }
+        ce.checkFlameCollision();
         ce.checkCharacterCollision(player);
     }
 

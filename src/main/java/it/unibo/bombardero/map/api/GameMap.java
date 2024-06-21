@@ -4,6 +4,7 @@ import java.util.Map;
 
 import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Cell;
+import it.unibo.bombardero.cell.AbstractCell;
 import it.unibo.bombardero.cell.Flame;
 
 /**

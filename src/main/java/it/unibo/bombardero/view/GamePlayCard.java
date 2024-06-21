@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 import javax.swing.JPanel;
 
+import it.unibo.bombardero.cell.AbstractCell;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.utils.Utils;

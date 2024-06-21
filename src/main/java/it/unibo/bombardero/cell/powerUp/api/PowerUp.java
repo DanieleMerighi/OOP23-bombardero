@@ -1,8 +1,9 @@
 package it.unibo.bombardero.cell.powerup.api;
 
+import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.character.Character;
 
-public interface PowerUp {
+public interface PowerUp extends Cell {
 
     PowerUpType getType();
 
