@@ -62,14 +62,26 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      * @return true if the enemy is within a danger zone, false otherwise
      */
     public boolean isInDangerZone(Pair enemyCoord, int explRadius) {
-        final BreadthFirstIterator<Pair, DefaultWeightedEdge> bfsIterator = new BreadthFirstIterator<>(
-                graph,
-                enemyCoord);
-        return StreamSupport.stream(
-                Spliterators.spliteratorUnknownSize(bfsIterator, Spliterator.ORDERED), false)
-                .takeWhile(cell -> bfsIterator.getDepth(cell) <= explRadius) // Limit traversal to explosion radius
-                .anyMatch(cell -> (map.isBomb(cell) || map.isFlame(cell)) && (enemyCoord.x() == cell.x() || enemyCoord.y() == cell.y())
-                        && !isPathBlockedByWalls(enemyCoord, cell));
+        // Check if the enemy coordinate is in the danger zone
+        return getDangerZoneCells(explRadius).contains(enemyCoord);
+    }
+
+    private Set<Pair> getDangerZoneCells(int explRadius) {
+        List<Pair> dangerCells = graph.vertexSet().stream().filter(c -> map.isBomb(c)).toList();
+
+        // Expand each bomb to cover its explosion radius
+        return dangerCells.stream()
+                .flatMap(cell -> expandExplosion(cell, explRadius))
+                .collect(Collectors.toSet());
+    }
+
+    private Stream<Pair> expandExplosion(Pair bombCell, int explRadius) {
+        return EnumSet.allOf(Direction.class).stream()
+                .filter(d -> d != Direction.DEFAULT)
+                .flatMap(direction -> IntStream.rangeClosed(1, explRadius)
+                        .mapToObj(i -> new Pair(bombCell.x() + i * direction.x(), bombCell.y() + i * direction.y()))
+                        .takeWhile(cell -> isValidCell(cell)
+                                && !(map.isUnbreakableWall(cell) || map.isBreakableWall(cell))));
     }
 
     /**
@@ -132,17 +144,20 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
     }
 
     public Optional<Pair> findNearestSafeCell(Pair enemyCoord, int explRad) {
-        Optional<Pair> safeCell = Optional.empty();
+        // Find all possible safe cells
+        List<Pair> possibleSafeCells = graph.vertexSet().stream()
+                .filter(cell -> !isInDangerZone(cell, explRad))
+                .sorted(Comparator.comparingDouble(cell -> calculateDistance(enemyCoord, cell)))
+                .collect(Collectors.toList());
 
-        List<Pair> grass = EnumSet.allOf(Direction.class)
-                .stream()
-                .filter(d -> d != Direction.DEFAULT)
-                .map(d -> new Pair(enemyCoord.x() + d.x(), enemyCoord.y() + d.y()))
-                .filter(cell -> isValidCell(cell) && map.isEmpty(cell))
-                .collect(Collectors.toCollection(ArrayList::new));
+        for (Pair safeCell : possibleSafeCells) {
+            List<Pair> path = findShortestPathToPlayer(enemyCoord, safeCell);
+            if (path != null && path.stream().allMatch(cell -> map.isEmpty(cell))) {
+                return Optional.of(safeCell);
+            }
+        }
+        return Optional.empty();
 
-        safeCell = grass.stream().filter(c -> !isInDangerZone(c, explRad)).findFirst();
-        return safeCell.isEmpty() && !grass.isEmpty() ? Optional.of(grass.get(0)) : safeCell;
     }
 
     public boolean canPlaceBomb(Pair enemyCoord, int explRad) {

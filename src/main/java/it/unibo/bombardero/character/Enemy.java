@@ -221,10 +221,11 @@ public class Enemy extends Character {
                 } else {
                     enemy.moveToClosestEntity(); // Keep patrolling
                     if (enemy.manager.getGameMap().isBreakableWall(enemy.nextMove.get())) {
-                        if (enemy.graph.canPlaceBomb(enemy.getIntCoordinate(), enemy.getFlameRange())) {
+                        Optional<Pair> safeCell = enemy.graph.findNearestSafeCell(enemy.getIntCoordinate(), enemy.getFlameRange());
+                        if (safeCell.isPresent()) {
                             enemy.placeBomb();
+                            enemy.nextMove = safeCell;
                         }
-                        enemy.nextMove = Optional.empty();
                     }
                 }
             }
@@ -249,8 +250,10 @@ public class Enemy extends Character {
                     }
                     enemy.nextMove = Optional.of(enemy.path.removeFirst());
                     if (enemy.manager.getGameMap().isBreakableWall(enemy.nextMove.get())) {
-                        if (enemy.graph.canPlaceBomb(enemy.getIntCoordinate(), enemy.getFlameRange())) {
+                        Optional<Pair> safeCell = enemy.graph.findNearestSafeCell(enemy.getIntCoordinate(), enemy.getFlameRange());
+                        if (safeCell.isPresent()) {
                             enemy.placeBomb();
+                            enemy.nextMove = safeCell;
                         }
                     } else {
                         Pair closeEnemy = enemy.getClosestEntity().get();

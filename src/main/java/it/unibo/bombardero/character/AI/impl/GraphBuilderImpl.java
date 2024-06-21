@@ -67,6 +67,8 @@ public class GraphBuilderImpl {
                         DefaultWeightedEdge e = graph.addEdge(p, newCoord);
                         if (map.isBreakableWall(newCoord) || map.isBreakableWall(p)) {
                             graph.setEdgeWeight(e, 2.5);
+                        } else if (map.isBomb(newCoord) || map.isBomb(p) || map.isFlame(newCoord) || map.isFlame(p)) {
+                            graph.setEdgeWeight(e, Double.POSITIVE_INFINITY);
                         } else {
                             graph.setEdgeWeight(e, 1);
                         }
