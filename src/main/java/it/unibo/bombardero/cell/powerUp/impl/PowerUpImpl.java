@@ -19,7 +19,7 @@ public class PowerUpImpl extends AbstractCell implements PowerUp {
     // private float kickBombSpeed;
     // private List<Pair<Direction, Bomb>> kickBombList = new ArrayList<>();
 
-    public PowerUpImpl(final PowerUpType type, final PowerUpEffectStrategy strategy, Pair pos) {
+    public PowerUpImpl(final PowerUpType type, Pair pos, final PowerUpEffectStrategy strategy) {
         super(CellType.POWERUP, pos, true);
         this.type = type;
         this.effect = strategy.getEffect();
