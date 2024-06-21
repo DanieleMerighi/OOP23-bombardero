@@ -15,7 +15,6 @@ import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.utils.Utils;
 
 import java.util.EnumSet;
-import java.util.stream.Collectors;
 import java.util.stream.*;
 
 /**
@@ -114,7 +113,7 @@ public class Enemy extends Character {
         GameMap gameMap = super.manager.getGameMap();
         graph = GraphManagerImpl.getGraphReasoner(gameMap, time);
         currentState.execute(this); // Delegate behavior to current state
-        if (nextMove.isPresent() && currentState != State.ESCAPE) {
+        if (nextMove.isPresent() &&  currentState != State.ESCAPE) {
             Pair cell = nextMove.get();
             if (currentState == State.CHASE) {
                 Pair closeEnemy = getClosestEntity().get();
@@ -151,7 +150,6 @@ public class Enemy extends Character {
         if (nextMove.isPresent()) {
             Coord target = new Coord(nextMove.get().x() + 0.5f, nextMove.get().y() + 0.5f);
             Coord currentPos = getCharacterPosition();
-            Pair currentCoord = getIntCoordinate();
 
             // Calculate direction vector
             Coord dir = target.subtract(currentPos);
@@ -164,9 +162,7 @@ public class Enemy extends Character {
             Coord newPos = currentPos.sum(dir.multiply(getSpeed()));
 
             // Check if reached the target cell using a small tolerance
-            if (currentCoord.equals(nextMove.get()) &&
-                    Math.abs(newPos.subtract(target).x()) <= getSpeed() / 2 &&
-                    Math.abs(newPos.subtract(target).y()) <= getSpeed() / 2) {
+            if (isReachedTarget(newPos, target)) {
                 nextMove = Optional.empty(); // Clear target if reached
             } else {
                 setCharacterPosition(newPos);
@@ -174,13 +170,19 @@ public class Enemy extends Character {
         }
     }
 
+    private boolean isReachedTarget(Coord currentPos, Coord target) {
+        double distance = currentPos.distanceTo(target);
+        // Use a small fixed tolerance value for the distance check
+        return distance <= 0.1;
+    }
+
     private void setFacingDirection(Coord dir) {
         Direction newDirection = Stream.of(Direction.values())
-            .filter(d -> !d.equals(Direction.DEFAULT))
-            .filter(d -> d.x() == Integer.signum((int) dir.x()) || d.y() == Integer.signum((int) dir.y()))
-            .findFirst()
-            .orElse(Direction.DEFAULT);
-    
+                .filter(d -> !d.equals(Direction.DEFAULT))
+                .filter(d -> d.x() == Integer.signum((int) dir.x()) || d.y() == Integer.signum((int) dir.y()))
+                .findFirst()
+                .orElse(Direction.DEFAULT);
+
         setFacingDirection(newDirection);
     }
 
