@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -57,8 +58,9 @@ public class GamePlayCard extends JPanel {
     private final BombarderoGraphics graphics;
     private Map<Pair, Cell> cells;
     private final Character player;
-    private final Map<Character, EnemyImage> enemies = new HashMap<>(); // every enemy is linked to its own sprite
-    
+    private final Map<Character, EnemyImage> enemiesImages = new HashMap<>(); // every enemy is linked to its own sprite
+    private final List<Character> enemiesList;
+
     /* Sprites and images: */
     private BombarderoOrientedSprite playerSprite;
     private Image playerImage;
@@ -80,16 +82,8 @@ public class GamePlayCard extends JPanel {
 
         cells = graphics.getController().getMap(); 
         player = graphics.getController().getMainPlayer();
-        graphics.getController().getEnemies().forEach(enemy -> {
-            BombarderoOrientedSprite sprite = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
-            enemies.put(
-                enemy,
-                new EnemyImage(
-                    sprite,
-                    sprite.getStandingImage()
-                )
-            );
-        });
+        enemiesList = graphics.getController().getEnemies();
+        checkForNewEnemies();
 
         playerSprite = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
         playerImage = playerSprite.getStandingImage();
@@ -183,7 +177,7 @@ public class GamePlayCard extends JPanel {
             Dimension enemyPos = graphics.getResizingEngine().getCharacterPlacingPoint(graphics.getController().getEnemies().get(i).getCharacterPosition());
             g2d.drawImage(enemiesImages[i], enemyPos.width, enemyPos.height, null);
         } */
-        enemies.entrySet().forEach(enemy -> {
+        enemiesImages.entrySet().forEach(enemy -> {
             Dimension enemyPos = graphics.getResizingEngine().getCharacterPlacingPoint(enemy.getKey().getCharacterPosition());
             g2d.drawImage(enemy.getValue().displayedImage(), enemyPos.width, enemyPos.height, null);
         });
@@ -208,18 +202,21 @@ public class GamePlayCard extends JPanel {
             playerImage = playerSprite.getImage();
         }
 
-        enemies.entrySet().forEach(enemy -> {
+        enemiesImages.entrySet().forEach(enemy -> {
             enemy.getValue().sprite.update();
             BombarderoOrientedSprite sprite = enemy.getValue().sprite();
             Image image = enemy.getValue().displayedImage();
-            if(enemy.getKey().getFacingDirection().equals(Direction.DEFAULT)) {
+            if(enemy.getKey().isStationary()) {
                 image = enemy.getValue().sprite().getStandingImage();
+            }
+            if(enemy.getValue().sprite().getCurrentFacingDirection().equals(enemy.getKey().getFacingDirection())) {
+                image = enemy.getValue().sprite().getImage();
             }
             else {
                 sprite = enemy.getValue().sprite().getNewSprite(enemy.getKey().getFacingDirection());
-                image = sprite.getStandingImage();
+                image = sprite.getImage();
             }
-            enemies.put(
+            enemiesImages.put(
                 enemy.getKey(),
                 new EnemyImage(sprite, image)
             );
@@ -258,6 +255,22 @@ public class GamePlayCard extends JPanel {
         skatesPlusOne = graphics.getResizingEngine().getScaledCellImage(skatesPlusOne);
         skateMinusOne = graphics.getResizingEngine().getScaledCellImage(skateMinusOne);
         skull = graphics.getResizingEngine().getScaledCellImage(skull);
+    }
+
+    private void checkForNewEnemies() {
+        enemiesList.stream()
+            .filter(enemy -> !enemiesImages.keySet().contains(enemy))
+            .forEach(enemy -> {
+                BombarderoOrientedSprite sprite = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
+                enemiesImages.put(
+                    enemy,
+                    new EnemyImage(
+                        sprite,
+                        sprite.getStandingImage()
+                    )
+                );
+                System.out.println("enemy added");
+            });
     }
 
     private record EnemyImage (BombarderoOrientedSprite sprite, Image displayedImage) {
