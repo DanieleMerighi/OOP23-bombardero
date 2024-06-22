@@ -28,10 +28,6 @@ import it.unibo.bombardero.view.BombarderoViewMessages;
  */
 public final class BombarderoGuideManager extends BombarderoGameManager implements GuideManager {
 
-    public final static Coord PLAYER_GUIDE_SPAWNPOINT = new Coord(4.5f, 6.5f);
-    public final static Pair CRATE_GUIDE_SPAWNPOINT = new Pair(8, 6);
-    public final static Coord DUMMY_GUIDE_SPAWNPOINT = new Coord(7.5f, 5.5f);
-
     private final Stack<GuideStep> guideProcedures = new Stack<>();
 
     /**
