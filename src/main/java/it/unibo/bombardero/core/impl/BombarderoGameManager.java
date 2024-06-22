@@ -49,7 +49,8 @@ public class BombarderoGameManager implements GameManager {
         ce = new BombarderoCollision(this);
         bombFactory = new BombFactoryImpl(this);
         this.player = new Player(this, Utils.PLAYER_SPAWNPOINT, bombFactory);
-        Utils.ENEMIES_SPAWNPOINT.forEach(enemyCoord -> enemies.add(new Enemy(this, enemyCoord, bombFactory)));
+        enemies.add(new Enemy(this, Utils.ENEMIES_SPAWNPOINT.get(0), bombFactory));
+        //Utils.ENEMIES_SPAWNPOINT.forEach(enemyCoord -> enemies.add(new Enemy(this, enemyCoord, bombFactory)));
     }
 
     public BombarderoGameManager(final Controller controller, final boolean guideMode) {
@@ -57,10 +58,8 @@ public class BombarderoGameManager implements GameManager {
         map = new GameMapImpl(false);
         ce = new BombarderoCollision(this);
         bombFactory = new BombFactoryImpl(this);
-        /* TODO: CHANGE PLAYER SPAWNPOINT IN MIDDLE OF MAP */
         this.player = new Player(this, BombarderoGuideManager.PLAYER_GUIDE_SPAWNPOINT, bombFactory);
         this.map.addBreakableWall(BombarderoGuideManager.CRATE_GUIDE_SPAWNPOINT);
-        /* TODO: enemies.add(new Player(this, , bombFactory)); */ 
     }
 
     @Override
@@ -79,14 +78,14 @@ public class BombarderoGameManager implements GameManager {
             flames.forEach(f->f.update(elapsed));
             flames.removeIf(f->f.isExpired());
         }
-        // enemies.forEach(enemy -> {
-        //     if (enemy.isAlive()) {
-        //         enemy.update(elapsed);
-        //     }
-        // });
-        if(enemies.get(0).isAlive()){
+        enemies.forEach(enemy -> {
+             if (enemy.isAlive()) {
+                 enemy.update(elapsed);
+             }
+        });
+        /*if(enemies.get(0).isAlive()){
             enemies.get(0).update(elapsed);
-        }
+        }*/
         ce.checkFlameCollision();
         ce.checkCharacterCollision(player);
     }
