@@ -6,6 +6,7 @@ import java.util.function.BiConsumer;
 
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.character.Character;
+import it.unibo.bombardero.character.Player;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.core.impl.BombarderoGameManager;
@@ -50,8 +51,7 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
 
     @Override
     public void updateGame(final long elapsed) {
-        this.getGameMap().update();
-        this.getPlayer().update(elapsed);
+        super.updateGame(elapsed);
         if(guideProcedures.peek().condition().test(getGameMap(), this)) {
             guideProcedures.pop().action().accept(this, getController());
         }
