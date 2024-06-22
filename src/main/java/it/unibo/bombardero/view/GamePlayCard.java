@@ -59,7 +59,7 @@ public class GamePlayCard extends JPanel {
     private Map<Pair, Cell> cells;
     private final Character player;
     private final Map<Character, EnemyImage> enemiesImages = new HashMap<>(); // every enemy is linked to its own sprite
-    private final List<Character> enemiesList;
+    private List<Character> enemiesList;
 
     /* Sprites and images: */
     private BombarderoOrientedSprite playerSprite;
@@ -83,6 +83,7 @@ public class GamePlayCard extends JPanel {
         cells = graphics.getController().getMap(); 
         player = graphics.getController().getMainPlayer();
         enemiesList = graphics.getController().getEnemies();
+
         checkForNewEnemies();
 
         playerSprite = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
@@ -202,6 +203,8 @@ public class GamePlayCard extends JPanel {
             playerImage = playerSprite.getImage();
         }
 
+        checkForNewEnemies();
+
         enemiesImages.entrySet().forEach(enemy -> {
             enemy.getValue().sprite.update();
             BombarderoOrientedSprite sprite = enemy.getValue().sprite();
@@ -258,6 +261,7 @@ public class GamePlayCard extends JPanel {
     }
 
     private void checkForNewEnemies() {
+        enemiesList = graphics.getController().getEnemies();
         enemiesList.stream()
             .filter(enemy -> !enemiesImages.keySet().contains(enemy))
             .forEach(enemy -> {
@@ -269,7 +273,6 @@ public class GamePlayCard extends JPanel {
                         sprite.getStandingImage()
                     )
                 );
-                System.out.println("enemy added");
             });
     }
 
