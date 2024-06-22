@@ -64,12 +64,8 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
 
     private void initialiseProcedures() {
         guideProcedures.add(new GuideStep(
-            (map, manager) -> true,
-            (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.PLACE_BOMB)
-        ));
-        guideProcedures.add(new GuideStep(
-            (map, manager) -> map.isEmpty(CRATE_GUIDE_SPAWNPOINT),
-            (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.EXPLAIN_POWERUP)
+            (map, manager) -> manager.getEnemies().stream().allMatch(enemy -> !enemy.isAlive()),
+            (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.END_GUIDE)
         ));
         guideProcedures.add(new GuideStep(
             (map, manager) -> map.isEmpty(CRATE_GUIDE_SPAWNPOINT),
@@ -79,8 +75,13 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
             }
         ));
         guideProcedures.add(new GuideStep(
-            (map, manager) -> manager.getEnemies().stream().allMatch(enemy -> !enemy.isAlive()),
-            (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.END_GUIDE)
+            (map, manager) -> map.isEmpty(CRATE_GUIDE_SPAWNPOINT),
+            (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.EXPLAIN_POWERUP)
+        ));
+        /* TODO: capire assieme a turchi come fare a capire che il player si è mosso in tutte le direzioni */
+        guideProcedures.add(new GuideStep(
+            (map, manager) -> true,
+            (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.PLACE_BOMB)
         ));
     } 
 
