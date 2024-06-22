@@ -14,6 +14,7 @@ import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
+import it.unibo.bombardero.guide.api.GuideManager;
 import it.unibo.bombardero.guide.impl.BombarderoGuideManager;
 import it.unibo.bombardero.map.api.BombarderoTimer;
 import it.unibo.bombardero.map.api.Coord;
@@ -58,8 +59,8 @@ public class BombarderoGameManager implements GameManager {
         map = new GameMapImpl(false);
         ce = new BombarderoCollision(this);
         bombFactory = new BombFactoryImpl(this);
-        this.player = new Player(this, BombarderoGuideManager.PLAYER_GUIDE_SPAWNPOINT, bombFactory);
-        this.map.addBreakableWall(BombarderoGuideManager.CRATE_GUIDE_SPAWNPOINT);
+        this.player = new Player(this, GuideManager.PLAYER_GUIDE_SPAWNPOINT, bombFactory);
+        this.map.addBreakableWall(GuideManager.CRATE_GUIDE_SPAWNPOINT);
     }
 
     @Override
