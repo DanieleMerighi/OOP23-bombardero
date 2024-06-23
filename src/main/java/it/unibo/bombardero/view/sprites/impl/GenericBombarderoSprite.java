@@ -1,4 +1,4 @@
-package it.unibo.bombardero.view.sprites;
+package it.unibo.bombardero.view.sprites.impl;
 
 import java.awt.Image;
 
@@ -9,6 +9,8 @@ import org.apache.http.MethodNotSupportedException;
 
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.view.ResourceGetter;
+import it.unibo.bombardero.view.sprites.api.BombarderoOrientedSprite;
+import it.unibo.bombardero.view.sprites.api.BombarderoSprite;
 
 /** This class represents an immutable single instance of a animated cell, that requires being updated
  * and returns a frame when requested.
