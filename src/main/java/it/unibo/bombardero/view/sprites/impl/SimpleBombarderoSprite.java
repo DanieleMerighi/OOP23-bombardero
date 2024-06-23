@@ -69,6 +69,25 @@ public class SimpleBombarderoSprite implements Sprite {
         return asset;
     }
 
+    public static Image[] importAssets(
+        final String resource,
+        final String path,
+        final ResourceGetter rg,
+        final Function<Image, Image> imageResizer,
+        final int framesPerSprite) {
+        Image[] asset = new Image[framesPerSprite];
+        for (int i = 1; i <= framesPerSprite; i++) {
+            asset[i - 1] = rg.loadImage(
+                path
+                + "/"
+                + resource
+                + Integer.toString(i)
+            );
+            asset[i - 1] = imageResizer.apply(asset[i - 1]);
+        }
+        return asset;
+    }
+
     public static String getStringFromDirection(final Direction dir) {
         return switch (dir) {
             case UP -> "up";
