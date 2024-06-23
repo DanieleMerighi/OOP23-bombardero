@@ -51,10 +51,6 @@ public class SimpleBombarderoSprite implements Sprite {
         return asset[currentFrame];
     }
 
-    public int getCurrentFrame() {
-        return currentFrame;
-    }
-
     /**
      * Imports an asset immediately contained in a directory named
      * as the asset itself. 
