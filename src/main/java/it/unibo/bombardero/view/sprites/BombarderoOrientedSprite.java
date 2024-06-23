@@ -42,6 +42,7 @@ public interface BombarderoOrientedSprite extends BombarderoSprite {
      * @throws MethodNotSupportedException whenever this method is called on an object that does
      * not store the direction of an asset or the asset has no direction
      */
+    /* TODO: CHANGE EXCEPTION, THIS IS FOR HTTP */
     Direction getCurrentFacingDirection() throws UnsupportedOperationException;
 
 }
