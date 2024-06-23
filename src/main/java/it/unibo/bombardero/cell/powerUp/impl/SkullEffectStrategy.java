@@ -18,7 +18,7 @@ public class SkullEffectStrategy implements PowerUpEffectStrategy {
         skull.add(character -> character.setSpeed(Character.STARTING_SPEED / 2)); // Slownes
         skull.add(character -> character.setSpeed(Character.MAX_SPEED * 2)); // Hyperactivity
         skull.add(character -> character.setConstipation(true)); // Constipation: unables to lay down bomb
-        skull.add(character -> character.setButterfingers(true)); // Butterfinger: constantly lays down bomb in his cell
+        skull.add(character -> character.setButterfingers(true)); // Butterfinger: constantly lays down bombs in his cell
         skull.add(character -> character.setFlameRange(Character.STARTING_FLAME_RANGE)); // Weakness
 
         return character -> {
@@ -31,7 +31,7 @@ public class SkullEffectStrategy implements PowerUpEffectStrategy {
             skull.get(new Random().nextInt(5)).accept(character);
 
              // Set the effect duration and reset logic
-             character.setEffectDuration(EFFECT_DURATION_IN_SECONDS * SECONDS_TO_MILLISECONDS); // 10 seconds in milliseconds
+             character.setSkeletonEffectDuration(EFFECT_DURATION_IN_SECONDS * SECONDS_TO_MILLISECONDS); // 10 seconds in milliseconds
              character.setResetEffect(() -> { // Restores all stats modified by the skull
                  character.setSpeed(previousSpeed);
                  character.setNumBomb(previousNumBombs);

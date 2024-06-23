@@ -7,6 +7,7 @@ import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Wall;
+import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.powerup.api.PowerUpFactory;
 import it.unibo.bombardero.cell.powerup.impl.PowerUpFactoryImpl;
 import it.unibo.bombardero.core.api.GameManager;
