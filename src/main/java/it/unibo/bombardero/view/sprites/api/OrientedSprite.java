@@ -2,10 +2,6 @@ package it.unibo.bombardero.view.sprites.api;
 
 import java.awt.Image;
 
-import java.lang.UnsupportedOperationException;
-
-import org.apache.http.MethodNotSupportedException;
-
 import it.unibo.bombardero.character.Direction;
 
 /** 
@@ -39,10 +35,7 @@ public interface OrientedSprite extends Sprite {
     /**
      * Returns the direction that the asset is pointing towards
      * @return the direction the asset is pointing to
-     * @throws MethodNotSupportedException whenever this method is called on an object that does
-     * not store the direction of an asset or the asset has no direction
      */
-    /* TODO: CHANGE EXCEPTION, THIS IS FOR HTTP */
-    Direction getCurrentFacingDirection() throws UnsupportedOperationException;
+    Direction getCurrentFacingDirection();
 
 }
