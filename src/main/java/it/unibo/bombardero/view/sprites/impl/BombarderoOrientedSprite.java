@@ -2,21 +2,23 @@ package it.unibo.bombardero.view.sprites.impl;
 
 import java.awt.Image;
 import java.util.function.Function;
-import java.util.Optional;
 
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.view.ResourceGetter;
 import it.unibo.bombardero.view.sprites.api.OrientedSprite;
 
-public class BombarderoOrientedSprite extends SimpleBombarderoSprite implements OrientedSprite {
+/** 
+ * This class represents an immutable sprite of a game element
+ * pointing in a specific direction. 
+ * @author Federico Bagattoni
+ */
+public final class BombarderoOrientedSprite extends SimpleBombarderoSprite implements OrientedSprite {
 
     private final Image standingAsset;
     private final String resource;
     private final ResourceGetter rg;
     private final Direction currentFacingDirection;
     private final Function<Image, Image> imageResizer;
-    private int counter = 0;
-    private int currentFrame = 0;
 
     /** 
      * Creates a new {@link SimpleBombarderoSprite} object, assigning it a {@link ResourceGetter} 
@@ -73,6 +75,24 @@ public class BombarderoOrientedSprite extends SimpleBombarderoSprite implements 
         return currentFacingDirection;
     }
 
+    /**
+     * Imports a version of an asset pointing in a certain direction. 
+     * The asset is immediately contained in a directory named
+     * as the asset itself. 
+     * <p>
+     * The asset must be contained in a directory named the same as 
+     * the direction it is pointing to. The single images must be named
+     * the same as the directory and contain it their name an incremental
+     * number starting from one. 
+     * <p>
+     * {@code main/walking} in the direction {@code down} will import assets 
+     * {@code main/walking/down/down1.png}, {@code main/walking/down/down2.png}..
+     * @param resource the name of the asset.
+     * @param rg the ResourceGetter used to fetch the asset
+     * @param imageResizer the function used to resize the asset
+     * @param framesPerSprite the number of frames the sprite is composed
+     * @return the array of assets representing the sprite resource
+     */
     public static Image[] importOrientedAssets(
         final String resource,
         final ResourceGetter rg,
