@@ -19,6 +19,8 @@ public interface Controller {
     void endGame();
 
     void startGuide();
+
+    void endGuide();
     
     void escape();
 

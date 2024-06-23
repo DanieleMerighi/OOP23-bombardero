@@ -51,6 +51,13 @@ public class BombarderoController implements Controller {
     }
 
     @Override
+    public void endGuide() {
+        graphics.displayEndGuide();
+        /*engine.endGameLoop();
+        graphics.update(); */
+    }
+
+    @Override
     public void escape() {
         if (!engine.isInterrupted()) {
             graphics.setPausedView();
