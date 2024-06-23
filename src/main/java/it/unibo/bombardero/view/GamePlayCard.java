@@ -97,7 +97,7 @@ public class GamePlayCard extends JPanel {
     // CHECKSTYLE: MagicNumber ON
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D)g;
         /* Drawing the Map and the Background */
         // CHECKSTYLE: MagicNumber OFF
