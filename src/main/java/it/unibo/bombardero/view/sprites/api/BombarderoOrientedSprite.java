@@ -1,4 +1,4 @@
-package it.unibo.bombardero.view.sprites;
+package it.unibo.bombardero.view.sprites.api;
 
 import java.awt.Image;
 
