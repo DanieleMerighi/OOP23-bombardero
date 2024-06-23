@@ -23,12 +23,25 @@ public class SimpleBombarderoSprite implements Sprite {
     private int currentFrame;
     private int framesPerSprite;
 
+    /** 
+     * Creates a new {@link SimpleBombarderoSprite} from the passed
+     * asset and containing the specified number of frames.
+     * @param asset the asset that will be displayed
+     * @param framesPerSprite the number of frames contained in the asset
+     */
     public SimpleBombarderoSprite(final Image[] asset, final int framesPerSprite) {
         this.asset = asset;
         this.framesPerSprite = framesPerSprite;
         ticksPerFrame = (framesPerSprite == 2 ? 16 : 7);
     }
-
+    /**
+     * Creates a new {@link SimpleBombarderoSprite} importin the asset using 
+     * the objects and parameters passed as arugments.
+     * @param resource the name of the resource to import
+     * @param rg the {@link #ResourceGetter} that will be used to import the assets
+     * @param imageResizer the function used to resize the assets
+     * @param framesPerSprite the number of frames contained in the asset
+     */
     public SimpleBombarderoSprite(
         final String resource,
         final ResourceGetter rg,
