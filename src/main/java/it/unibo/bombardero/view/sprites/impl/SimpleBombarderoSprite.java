@@ -7,8 +7,12 @@ import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.view.ResourceGetter;
 import it.unibo.bombardero.view.sprites.api.Sprite;
 
-/** This class represents an immutable single instance of a animated cell, that requires being updated
+/** 
+ * This class represents an immutable single instance of a animated cell, that requires being updated
  * and returns a frame when requested.
+ * <p>
+ * This class offers the possibility to pass the asset to the constructor 
+ * or import it.
  * @author Federico Bagattoni
  */
 public class SimpleBombarderoSprite implements Sprite {  
@@ -51,6 +55,21 @@ public class SimpleBombarderoSprite implements Sprite {
         return currentFrame;
     }
 
+    /**
+     * Imports an asset immediately contained in a directory named
+     * as the asset itself. 
+     * <p>
+     * An "asset" is contained in a directory and is composed by files 
+     * named as the resource with an incremental number to the end, starting from
+     * one (1).
+     * <p>
+     * {@code gun} will import assets {@code gun/gun1.png}, {@code gun/gun2.png}..
+     * @param resource the name of the asset.
+     * @param rg the ResourceGetter used to fetch the asset
+     * @param imageResizer the function used to resize the asset
+     * @param framesPerSprite the number of frames the sprite is composed
+     * @return the array of assets representing the sprite resource
+     */
     public static Image[] importAssets(
         final String resource,
         final ResourceGetter rg,
@@ -69,6 +88,20 @@ public class SimpleBombarderoSprite implements Sprite {
         return asset;
     }
 
+    /**
+     * Imports an asset contained in the directory specified by the 
+     * argument.
+     * <p>
+     * An "asset" is contained in a single directory and is composed by files 
+     * named as the resource with an incremental number to the end, starting from
+     * one (1).
+     * @param resource the name of the resource to import
+     * @param path the path where the asset can be found
+     * @param rg the ResourceGetter used to fetch the asset
+     * @param imageResizer the function used to resize the asset
+     * @param framesPerSprite the number of frames the sprite is composed
+     * @return the array of assets representing the sprite resource
+     */
     public static Image[] importAssets(
         final String resource,
         final String path,
@@ -88,6 +121,11 @@ public class SimpleBombarderoSprite implements Sprite {
         return asset;
     }
 
+    /**
+     * Returns the string associated to the {@link Direction}
+     * requested.
+     * @return the string representing then {@link Direction}
+     */
     public static String getStringFromDirection(final Direction dir) {
         return switch (dir) {
             case UP -> "up";
