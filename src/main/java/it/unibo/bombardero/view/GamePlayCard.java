@@ -13,10 +13,12 @@ import javax.swing.JPanel;
 
 import it.unibo.bombardero.cell.AbstractCell;
 import it.unibo.bombardero.cell.Cell;
+import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.utils.Utils;
 import it.unibo.bombardero.view.sprites.api.OrientedSprite;
 import it.unibo.bombardero.view.sprites.api.Sprite;
+import it.unibo.bombardero.view.sprites.impl.BombarderoFlameSprite;
 import it.unibo.bombardero.view.sprites.impl.BombarderoOrientedSprite;
 import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
 import it.unibo.bombardero.map.api.Pair;
@@ -64,6 +66,7 @@ public class GamePlayCard extends JPanel {
 
     /* Sprites and images: */
     private OrientedSprite playerSprite;
+    private final BombarderoFlameSprite flamesSprite;
     private Image playerImage;
     private final Sprite normalBomb;
     private Image bomb_image;
@@ -87,6 +90,7 @@ public class GamePlayCard extends JPanel {
 
         checkForNewEnemies();
 
+        flamesSprite = new BombarderoFlameSprite(500, 6, graphics.getResizingEngine()::getScaledCellImage, resourceGetter);
         playerSprite = new BombarderoOrientedSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
         playerImage = playerSprite.getStandingImage();
         normalBomb = new SimpleBombarderoSprite("bomb", resourceGetter, graphics.getResizingEngine()::getScaledBombImage, 4);
@@ -151,6 +155,11 @@ public class GamePlayCard extends JPanel {
                                 case SKULL -> skull;
                                 default -> throw new IllegalArgumentException("texture not present for \"" + pu.getType() + "\"");
                             };
+                            placingPoint = graphics.getResizingEngine().getCellPlacingPoint(new Pair(i, j));
+                            break;
+                        case FLAME: 
+                            Flame fl = (Flame)entry;
+                            img = flamesSprite.getImage(fl.getTimePassed(), fl.getFlameType());
                             placingPoint = graphics.getResizingEngine().getCellPlacingPoint(new Pair(i, j));
                             break;
                         default:
