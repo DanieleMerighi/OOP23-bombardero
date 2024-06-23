@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.function.Function;
 
 import it.unibo.bombardero.cell.Flame;
-import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.view.ResourceGetter;
 import it.unibo.bombardero.view.sprites.api.FlameSprite;
 
