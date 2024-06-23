@@ -15,9 +15,10 @@ import it.unibo.bombardero.cell.AbstractCell;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.utils.Utils;
-import it.unibo.bombardero.view.sprites.api.BombarderoOrientedSprite;
-import it.unibo.bombardero.view.sprites.api.BombarderoSprite;
-import it.unibo.bombardero.view.sprites.impl.GenericBombarderoSprite;
+import it.unibo.bombardero.view.sprites.api.OrientedSprite;
+import it.unibo.bombardero.view.sprites.api.Sprite;
+import it.unibo.bombardero.view.sprites.impl.BombarderoOrientedSprite;
+import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
@@ -62,9 +63,9 @@ public class GamePlayCard extends JPanel {
     private List<Character> enemiesList;
 
     /* Sprites and images: */
-    private BombarderoOrientedSprite playerSprite;
+    private OrientedSprite playerSprite;
     private Image playerImage;
-    private final BombarderoSprite normalBomb;
+    private final Sprite normalBomb;
     private Image bomb_image;
 
     /* Static positions for quicker access: */
@@ -86,9 +87,9 @@ public class GamePlayCard extends JPanel {
 
         checkForNewEnemies();
 
-        playerSprite = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
+        playerSprite = new BombarderoOrientedSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
         playerImage = playerSprite.getStandingImage();
-        normalBomb = new GenericBombarderoSprite("bomb", resourceGetter, 4, graphics.getResizingEngine()::getScaledBombImage);
+        normalBomb = new SimpleBombarderoSprite("bomb", resourceGetter, graphics.getResizingEngine()::getScaledBombImage, 4);
         bomb_image = normalBomb.getImage();
 
         scaleEverything();
@@ -207,7 +208,7 @@ public class GamePlayCard extends JPanel {
 
         enemiesImages.entrySet().forEach(enemy -> {
             enemy.getValue().sprite.update();
-            BombarderoOrientedSprite sprite = enemy.getValue().sprite();
+            OrientedSprite sprite = enemy.getValue().sprite();
             Image image = enemy.getValue().displayedImage();
             if(enemy.getKey().isStationary()) {
                 image = enemy.getValue().sprite().getStandingImage();
@@ -265,7 +266,7 @@ public class GamePlayCard extends JPanel {
         enemiesList.stream()
             .filter(enemy -> !enemiesImages.keySet().contains(enemy))
             .forEach(enemy -> {
-                BombarderoOrientedSprite sprite = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
+                OrientedSprite sprite = new BombarderoOrientedSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
                 enemiesImages.put(
                     enemy,
                     new EnemyImage(
@@ -276,6 +277,6 @@ public class GamePlayCard extends JPanel {
             });
     }
 
-    private record EnemyImage (BombarderoOrientedSprite sprite, Image displayedImage) {
+    private record EnemyImage (OrientedSprite sprite, Image displayedImage) {
     }
 }
