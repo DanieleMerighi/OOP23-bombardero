@@ -6,7 +6,7 @@ import java.awt.Image;
  * from which you can get the current image from.
  * @author Federico Bagattoni
  */
-public interface BombarderoSprite {
+public interface Sprite {
     
     /**
      * Updates the sprites, eventually changing the displayed frame.

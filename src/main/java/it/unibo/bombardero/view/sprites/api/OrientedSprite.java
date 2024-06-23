@@ -9,7 +9,7 @@ import org.apache.http.MethodNotSupportedException;
 import it.unibo.bombardero.character.Direction;
 
 /** 
- * This interface extends the {@link BombarderoSprite} interface
+ * This interface extends the {@link Sprite} interface
  * and models an immutable sprite which handles assets moving in a 
  * certain direction, or standing still but facing the same direction.
  * <p>
@@ -19,7 +19,7 @@ import it.unibo.bombardero.character.Direction;
  * of the current sprite, but facing a different Direction.
  * <p>
  */
-public interface BombarderoOrientedSprite extends BombarderoSprite {
+public interface OrientedSprite extends Sprite {
     
     /** 
      * Returns the image of the asset standing still, in the same
@@ -29,12 +29,12 @@ public interface BombarderoOrientedSprite extends BombarderoSprite {
     Image getStandingImage();
 
     /**
-     * Returns a {@link BombarderoOrientedSprite} of the same resource of this object, but
+     * Returns a {@link OrientedSprite} of the same resource of this object, but
      * in the direction passed as argument.
      * @param dir the direction the new asset will face
      * @return the new sprite, facing the requested direction
      */
-    BombarderoOrientedSprite getNewSprite(Direction dir);
+    OrientedSprite getNewSprite(Direction dir);
 
     /**
      * Returns the direction that the asset is pointing towards
