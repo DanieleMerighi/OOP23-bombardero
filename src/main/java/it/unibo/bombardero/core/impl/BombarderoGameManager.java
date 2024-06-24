@@ -127,6 +127,11 @@ public class BombarderoGameManager implements GameManager {
     }
 
     @Override
+    public void removePowerUp(final Pair pos) {
+        map.removePowerUp(pos);
+    }
+
+    @Override
     public void addFlame(final Flame.FlameType type, final Pair pos) {
         Flame f = new Flame(CellType.FLAME, type, pos , this);
         flames.add(f);
