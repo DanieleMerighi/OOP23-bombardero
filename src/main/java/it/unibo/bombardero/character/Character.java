@@ -6,7 +6,6 @@ import java.awt.geom.Point2D;
 import java.util.ArrayDeque;
 
 import it.unibo.bombardero.cell.BasicBomb;
-import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
