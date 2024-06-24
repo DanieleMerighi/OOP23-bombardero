@@ -57,7 +57,7 @@ public class Flame extends AbstractCell {
     private final GameManager mgr;
     private final FlameType specificFlameType;
     private final Pair pos;
-    private float countTime=0;
+    private long countTime=0;
 
     public Flame(CellType type, FlameType specfiFlameType, Pair pos, GameManager mgr) {
         super(type, pos, false);
@@ -66,7 +66,7 @@ public class Flame extends AbstractCell {
         this.pos = pos;
     }
 
-    public void update(float timeElapsed) {
+    public void update(long timeElapsed) {
         this.countTime+=timeElapsed;
         if(countTime>500) {
             expired=true;
@@ -84,5 +84,9 @@ public class Flame extends AbstractCell {
 
     public FlameType getFlameType() {
         return specificFlameType;
+    }
+
+    public long getTimePassed() {
+        return countTime;
     }
 }
