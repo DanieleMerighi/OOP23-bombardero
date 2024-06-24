@@ -21,7 +21,6 @@ public class BombarderoCollision implements CollisionEngine{
     private final GameManager mgr;
     private GameMap gMap;
     private Map<Pair,Cell> map;
-    private List<Character> characters;
     private final Map<Direction, Line2D.Float> MAP_OUTLINES = Map.of(
         Direction.UP , new Line2D.Float(new Point2D.Float(0, 0) , new Point2D.Float(13, 0)),
         Direction.DOWN , new Line2D.Float(new Point2D.Float(0, 13) , new Point2D.Float(13, 13)),
@@ -31,18 +30,13 @@ public class BombarderoCollision implements CollisionEngine{
 
     public BombarderoCollision(GameManager mgr){
         this.mgr=mgr;
-        characters= new LinkedList<>( mgr.getEnemies()) ;
-        characters.add(mgr.getPlayer());
     }
 
     @Override
     public void checkFlameCollision(Character character) {
-        characters.stream().forEach( c ->
-            { 
-                if( c!=null && gMap.isFlame(c.getIntCoordinate())) {
-                    c.kill();
-                }
-            });
+        if( character!=null && gMap.isFlame(character.getIntCoordinate())) {
+            character.kill();
+        }
     }
 
     @Override
@@ -94,7 +88,6 @@ public class BombarderoCollision implements CollisionEngine{
         BoundingBox bBox = character.getBoundingBox();
         Line2D.Float outerLine = MAP_OUTLINES.get(character.getFacingDirection());
         if(bBox.isColliding(outerLine)) {
-            System.out.println(outerLine.x1+ " " + outerLine.y2);
             character.setCharacterPosition(
                 character.getCharacterPosition()
                 .sum(bBox.computeCollision(outerLine, character.getFacingDirection())));
