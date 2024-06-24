@@ -1,20 +1,12 @@
 package it.unibo.bombardero.guide.impl;
 
 import java.util.Stack;
-import java.util.function.BiPredicate;
-import java.util.function.BiConsumer;
-
-import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.character.Character;
-import it.unibo.bombardero.character.Player;
 import it.unibo.bombardero.core.api.Controller;
-import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.core.impl.BombarderoGameManager;
 import it.unibo.bombardero.guide.api.GuideManager;
 import it.unibo.bombardero.guide.api.GuideStep;
 import it.unibo.bombardero.map.api.Coord;
-import it.unibo.bombardero.map.api.GameMap;
-import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.view.BombarderoViewMessages;
 
 /**
@@ -48,7 +40,7 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
     @Override
     public void updateGame(final long elapsed) {
         super.updateGame(elapsed);
-        if(guideProcedures.peek().condition().test(getGameMap(), this)) {
+        if(!guideProcedures.isEmpty() && guideProcedures.peek().condition().test(getGameMap(), this)) {
             guideProcedures.pop().action().accept(this, getController());
         }
     }
@@ -60,8 +52,11 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
 
     private void initialiseProcedures() {
         guideProcedures.add(new GuideStep(
-            (map, manager) -> manager.getEnemies().stream().allMatch(enemy -> !enemy.isAlive()),
-            (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.END_GUIDE)
+            (map, manager) -> true /* manager.getEnemies().stream().allMatch(enemy -> !enemy.isAlive())*/,
+            (manager, controller) -> {
+                controller.toggleMessage(BombarderoViewMessages.END_GUIDE);
+                controller.endGuide();
+            }
         ));
         guideProcedures.add(new GuideStep(
             (map, manager) -> map.isEmpty(CRATE_GUIDE_SPAWNPOINT),

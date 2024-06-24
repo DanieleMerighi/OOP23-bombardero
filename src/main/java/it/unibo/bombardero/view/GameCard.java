@@ -45,8 +45,8 @@ public final class GameCard extends GamePlayCard {
     }
 
     @Override
-    public void paint(Graphics g) {
-        super.paint(g);
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         Graphics2D g2d = (Graphics2D)g;
         int fontYOffset = (int)(g.getFontMetrics(clockFont).getAscent() / 2);
         g2d.setFont(clockFont.deriveFont(Font.PLAIN, 16));

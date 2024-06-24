@@ -13,11 +13,14 @@ import javax.swing.JPanel;
 
 import it.unibo.bombardero.cell.AbstractCell;
 import it.unibo.bombardero.cell.Cell;
+import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.utils.Utils;
-import it.unibo.bombardero.view.sprites.BombarderoSprite;
-import it.unibo.bombardero.view.sprites.BombarderoOrientedSprite;
-import it.unibo.bombardero.view.sprites.GenericBombarderoSprite;
+import it.unibo.bombardero.view.sprites.api.OrientedSprite;
+import it.unibo.bombardero.view.sprites.api.Sprite;
+import it.unibo.bombardero.view.sprites.impl.BombarderoFlameSprite;
+import it.unibo.bombardero.view.sprites.impl.BombarderoOrientedSprite;
+import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
@@ -62,9 +65,10 @@ public class GamePlayCard extends JPanel {
     private List<Character> enemiesList;
 
     /* Sprites and images: */
-    private BombarderoOrientedSprite playerSprite;
+    private OrientedSprite playerSprite;
+    private final BombarderoFlameSprite flamesSprite;
     private Image playerImage;
-    private final BombarderoSprite normalBomb;
+    private final Sprite normalBomb;
     private Image bomb_image;
 
     /* Static positions for quicker access: */
@@ -86,9 +90,10 @@ public class GamePlayCard extends JPanel {
 
         checkForNewEnemies();
 
-        playerSprite = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
+        flamesSprite = new BombarderoFlameSprite(500, 6, graphics.getResizingEngine()::getScaledCellImage, resourceGetter);
+        playerSprite = new BombarderoOrientedSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
         playerImage = playerSprite.getStandingImage();
-        normalBomb = new GenericBombarderoSprite("bomb", resourceGetter, 4, graphics.getResizingEngine()::getScaledBombImage);
+        normalBomb = new SimpleBombarderoSprite("bomb", resourceGetter, graphics.getResizingEngine()::getScaledBombImage, 4);
         bomb_image = normalBomb.getImage();
 
         scaleEverything();
@@ -97,7 +102,7 @@ public class GamePlayCard extends JPanel {
     // CHECKSTYLE: MagicNumber ON
 
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D)g;
         /* Drawing the Map and the Background */
         // CHECKSTYLE: MagicNumber OFF
@@ -150,6 +155,11 @@ public class GamePlayCard extends JPanel {
                                 case SKULL -> skull;
                                 default -> throw new IllegalArgumentException("texture not present for \"" + pu.getType() + "\"");
                             };
+                            placingPoint = graphics.getResizingEngine().getCellPlacingPoint(new Pair(i, j));
+                            break;
+                        case FLAME: 
+                            Flame fl = (Flame)entry;
+                            img = flamesSprite.getImage(fl.getTimePassed(), fl.getFlameType());
                             placingPoint = graphics.getResizingEngine().getCellPlacingPoint(new Pair(i, j));
                             break;
                         default:
@@ -207,7 +217,7 @@ public class GamePlayCard extends JPanel {
 
         enemiesImages.entrySet().forEach(enemy -> {
             enemy.getValue().sprite.update();
-            BombarderoOrientedSprite sprite = enemy.getValue().sprite();
+            OrientedSprite sprite = enemy.getValue().sprite();
             Image image = enemy.getValue().displayedImage();
             if(enemy.getKey().isStationary()) {
                 image = enemy.getValue().sprite().getStandingImage();
@@ -265,7 +275,7 @@ public class GamePlayCard extends JPanel {
         enemiesList.stream()
             .filter(enemy -> !enemiesImages.keySet().contains(enemy))
             .forEach(enemy -> {
-                BombarderoOrientedSprite sprite = new GenericBombarderoSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
+                OrientedSprite sprite = new BombarderoOrientedSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
                 enemiesImages.put(
                     enemy,
                     new EnemyImage(
@@ -276,6 +286,6 @@ public class GamePlayCard extends JPanel {
             });
     }
 
-    private record EnemyImage (BombarderoOrientedSprite sprite, Image displayedImage) {
+    private record EnemyImage (OrientedSprite sprite, Image displayedImage) {
     }
 }
