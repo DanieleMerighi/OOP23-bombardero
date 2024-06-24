@@ -52,7 +52,7 @@ public enum Direction {
             default :
                 return null;
         }
-        aCell = cells.stream().filter(c -> c.x() >= 0 && c.y() >= 0 ).toList();
+        aCell = cells.stream().filter(c -> c.x() >= 0 && c.y() >= 0 && c.x() < 13 && c.y() < 13).toList();
         return aCell;
         
         

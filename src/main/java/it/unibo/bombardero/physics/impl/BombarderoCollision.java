@@ -22,11 +22,11 @@ public class BombarderoCollision implements CollisionEngine{
     private GameMap gMap;
     private Map<Pair,Cell> map;
     private List<Character> characters;
-    private Map<Direction, Line2D.Float> MAP_OUTLINES = Map.of(
+    private final Map<Direction, Line2D.Float> MAP_OUTLINES = Map.of(
         Direction.UP , new Line2D.Float(new Point2D.Float(0, 0) , new Point2D.Float(13, 0)),
         Direction.DOWN , new Line2D.Float(new Point2D.Float(0, 13) , new Point2D.Float(13, 13)),
         Direction.LEFT , new Line2D.Float(new Point2D.Float(0, 0) , new Point2D.Float(0, 13)),
-        Direction.RIGHT , new Line2D.Float(new Point2D.Float(13, 0) , new Point2D.Float(13, 13))
+        Direction.RIGHT , new Line2D.Float(new Point2D.Float(13, 0) , new Point2D.Float(13, 13f))
     );
 
     public BombarderoCollision(GameManager mgr){
@@ -94,6 +94,7 @@ public class BombarderoCollision implements CollisionEngine{
         BoundingBox bBox = character.getBoundingBox();
         Line2D.Float outerLine = MAP_OUTLINES.get(character.getFacingDirection());
         if(bBox.isColliding(outerLine)) {
+            System.out.println(outerLine.x1+ " "+ outerLine.y2);
             character.setCharacterPosition(
                 character.getCharacterPosition()
                 .sum(bBox.computeCollision(outerLine, character.getFacingDirection())));
@@ -103,7 +104,7 @@ public class BombarderoCollision implements CollisionEngine{
     private List<Pair> getDirectionCell(Direction dir , Pair cPos) {//TODO brutto
         List<Pair> l = dir.getDiagonals(dir,cPos);
         List<Pair> l2 = new LinkedList <> (l);
-        if(cPos.sum(dir.getPair()).x() >= 0 && cPos.sum(dir.getPair()).y() >= 0) {
+        if(cPos.sum(dir.getPair()).x() >= 0 && cPos.sum(dir.getPair()).y() >= 0 && cPos.sum(dir.getPair()).x() < 13 && cPos.sum(dir.getPair()).y() < 13) {
             l2.add(cPos.sum(dir.getPair()));
         } 
         return l2;
