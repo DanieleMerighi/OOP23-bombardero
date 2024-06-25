@@ -7,6 +7,7 @@ import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Wall;
+import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.powerup.api.PowerUpFactory;
 import it.unibo.bombardero.cell.powerup.impl.PowerUpFactoryImpl;
 import it.unibo.bombardero.core.api.GameManager;
@@ -133,7 +134,7 @@ public final class GameMapImpl implements GameMap {
 
     @Override
     public boolean isFlame(final Pair coordinate) {
-        return this.map.containsKey(coordinate) && this.map.get(coordinate) instanceof Flame;
+        return this.map.containsKey(coordinate) && this.map.get(coordinate).getCellType().equals(CellType.FLAME);
     }
 
     @Override
@@ -144,6 +145,18 @@ public final class GameMapImpl implements GameMap {
     @Override
     public Map<Pair, Cell> getMap() {
         return Map.copyOf(this.map);
+    }
+
+    @Override
+    public void removePowerUp(final Pair coordinate) {
+        if(isPowerUp(coordinate)) {
+            map.remove(coordinate);
+        }
+    }
+
+    @Override
+    public boolean isPowerUp(final Pair coordinate) {
+        return this.map.containsKey(coordinate) && this.map.get(coordinate).getCellType().equals(CellType.POWERUP);
     }
  
 }

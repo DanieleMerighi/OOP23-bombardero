@@ -65,6 +65,18 @@ public interface GameMap {
     void removeBomb(Pair coordinate);
 
     /**
+     * Removes the powerUp at the given coordinate.
+     * @param coordinate the position of the wall to remove
+     */
+    void removePowerUp(final Pair coordinate);
+
+    /**
+     * @param coordinate
+     * @return if the Cell with this coordinates is a PowerUp
+     */
+    boolean isPowerUp(final Pair coordinate);
+
+    /**
      * remove the falme at the given coordinate
      * @param coordinate
      */

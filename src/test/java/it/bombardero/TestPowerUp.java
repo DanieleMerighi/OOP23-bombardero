@@ -121,6 +121,12 @@ public class TestPowerUp {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'getTimeLeft'");
         }
+
+        @Override
+        public void removePowerUp(Pair pos) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'removePowerUp'");
+        }
     }
 
 }
