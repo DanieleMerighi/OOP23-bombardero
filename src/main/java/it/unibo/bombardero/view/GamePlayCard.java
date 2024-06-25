@@ -11,7 +11,6 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import it.unibo.bombardero.cell.AbstractCell;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;

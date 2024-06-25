@@ -70,6 +70,8 @@ public class BombarderoGameManager implements GameManager {
         map.update();
         if (player.isAlive()) {
             player.update(elapsed);
+            ce.checkCharacterCollision(player);
+            ce.checkFlameCollision(player);
         }
         if(!boombs.isEmpty()) {
             boombs.forEach(b->b.update());
@@ -82,13 +84,13 @@ public class BombarderoGameManager implements GameManager {
         enemies.forEach(enemy -> {
              if (enemy.isAlive()) {
                  enemy.update(elapsed);
+                 ce.checkCharacterCollision(enemy);
+                 ce.checkCharacterCollision(enemy);
              }
         });
         /*if(enemies.get(0).isAlive()){
             enemies.get(0).update(elapsed);
         }*/
-        ce.checkFlameCollision();
-        ce.checkCharacterCollision(player);
     }
 
     @Override
@@ -122,6 +124,11 @@ public class BombarderoGameManager implements GameManager {
     @Override
     public void removeBomb(final Pair pos) {
         map.removeBomb(pos);
+    }
+
+    @Override
+    public void removePowerUp(final Pair pos) {
+        map.removePowerUp(pos);
     }
 
     @Override

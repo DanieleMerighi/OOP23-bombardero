@@ -80,7 +80,7 @@ public abstract class Character {
         this.manager = manager; // TODO: Solve manager, a copy?
         this.coordinate = coord;
         this.bombFactory = bombFactory;
-        this.bBox = new RectangleBoundingBox(new Point2D.Float(0.1562f, 0.0625f), 0.781f, 0.875f);
+        this.bBox = new RectangleBoundingBox(new Point2D.Float(0.1562f, 0.0625f), 0.700f, 0.75f);
     }
 
     /**

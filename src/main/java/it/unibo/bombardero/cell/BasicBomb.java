@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.Set;
 
-import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.Character;
@@ -30,7 +29,6 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
     private Pair pos;
     protected GameMap map;
     private final Optional<PowerUpType> bombType;
-    private int coutBreckable;
 
     public BasicBomb(GameManager mgr, Character character, Pair pos) {
         super(CellType.BOMB , character.getIntCoordinate(), true);
@@ -98,7 +96,6 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
     }
     
     private Set<Entry<Pair , FlameType>> checkDirection(Direction dir , int range , Pair pos) {
-        coutBreckable = 0;
         return IntStream.iterate(1 , i->i <= range , i->i+1)
             .mapToObj(i->pos.sum(dir.getPair().multipy(i)))
             .takeWhile(stopFlamePropagation())
@@ -111,14 +108,15 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
     }
 
     protected Predicate<? super Pair> stopFlamePropagation() {
-        return p-> (map.isEmpty(p) && coutBreckable < 1) || !map.isUnbreakableWall(p) && isFirstBreckableWall(p);
+        return p-> map.isEmpty(p) || !map.isUnbreakableWall(p) && !isBreckableWall(p);
     }
 
-    private boolean isFirstBreckableWall(Pair pos) {
+    private boolean isBreckableWall(Pair pos) {
         if(map.isBreakableWall(pos)) {
-            coutBreckable++;
+            mgr.removeWall(pos);
+            return true;
         }
-        return map.isBreakableWall(pos) && coutBreckable <= 1 ;
+        return false;
     }
 
 }

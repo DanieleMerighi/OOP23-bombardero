@@ -5,9 +5,10 @@ import it.unibo.bombardero.character.Character;
 public interface CollisionEngine {
     
     /**
-     * Check if character are in the same cell of flames
+     * Check if character is in the same cell of flames
+     * @param character
      */
-    void checkFlameCollision();
+    void checkFlameCollision(Character character);
 
     /**
      * check collision for the character with the cells in front of him

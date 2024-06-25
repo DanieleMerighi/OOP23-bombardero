@@ -53,8 +53,8 @@ public class BombarderoController implements Controller {
     @Override
     public void endGuide() {
         graphics.displayEndGuide();
-        /*engine.endGameLoop();
-        graphics.update(); */
+        engine.endGameLoop();
+        graphics.update();
     }
 
     @Override

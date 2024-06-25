@@ -21,8 +21,7 @@ public class BombarderoCollision implements CollisionEngine{
     private final GameManager mgr;
     private GameMap gMap;
     private Map<Pair,Cell> map;
-    private List<Character> characters;
-    private Map<Direction, Line2D.Float> MAP_OUTLINES = Map.of(
+    private final Map<Direction, Line2D.Float> MAP_OUTLINES = Map.of(
         Direction.UP , new Line2D.Float(new Point2D.Float(0, 0) , new Point2D.Float(13, 0)),
         Direction.DOWN , new Line2D.Float(new Point2D.Float(0, 13) , new Point2D.Float(13, 13)),
         Direction.LEFT , new Line2D.Float(new Point2D.Float(0, 0) , new Point2D.Float(0, 13)),
@@ -31,18 +30,13 @@ public class BombarderoCollision implements CollisionEngine{
 
     public BombarderoCollision(GameManager mgr){
         this.mgr=mgr;
-        characters= new LinkedList<>( mgr.getEnemies()) ;
-        characters.add(mgr.getPlayer());
     }
 
     @Override
-    public void checkFlameCollision() {
-        characters.stream().forEach( c ->
-            { 
-                if( c!=null && gMap.isFlame(c.getIntCoordinate())) {
-                    c.kill();
-                }
-            });
+    public void checkFlameCollision(Character character) {
+        if( character!=null && gMap.isFlame(character.getIntCoordinate())) {
+            character.kill();
+        }
     }
 
     @Override
@@ -103,7 +97,7 @@ public class BombarderoCollision implements CollisionEngine{
     private List<Pair> getDirectionCell(Direction dir , Pair cPos) {//TODO brutto
         List<Pair> l = dir.getDiagonals(dir,cPos);
         List<Pair> l2 = new LinkedList <> (l);
-        if(cPos.sum(dir.getPair()).x() >= 0 && cPos.sum(dir.getPair()).y() >= 0) {
+        if(cPos.sum(dir.getPair()).x() >= 0 && cPos.sum(dir.getPair()).y() >= 0 && cPos.sum(dir.getPair()).x() < 13 && cPos.sum(dir.getPair()).y() < 13) {
             l2.add(cPos.sum(dir.getPair()));
         } 
         return l2;

@@ -23,8 +23,7 @@ public class RectangleBoundingBox implements BoundingBox{
 
     @Override
     public boolean isColliding(BoundingBox bBox) {
-        return fisicsBox.intersects(bBox.getPhysicsBox());
-        
+        return fisicsBox.intersects(bBox.getPhysicsBox()) && (float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getWidth()>0.01 && (float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getHeight()>0.01;
     }
 
     @Override
@@ -33,7 +32,7 @@ public class RectangleBoundingBox implements BoundingBox{
             case LEFT:
                 return new Coord((float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getWidth(),0);
             case RIGHT:
-                return new Coord(-(float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getWidth() , 0);
+                return new Coord((float)-fisicsBox.createIntersection(bBox.getPhysicsBox()).getWidth() , 0);
             case UP:
                 return new Coord(0 , (float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getHeight());
             case DOWN:
