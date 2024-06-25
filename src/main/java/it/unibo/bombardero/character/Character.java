@@ -202,7 +202,7 @@ public abstract class Character {
                     .filter(bomb -> bomb.getBombType().equals(BombType.BOMB_REMOTE))
                     .findFirst()
                     .get();
-            remoteBomb.update(); // Initialises the explosion process.
+            remoteBomb.update(true); // Initialises the explosion process.
             removeBombFromDeque(remoteBomb); // Removes the bomb from the deque.
             System.out.println("exploded remote bomb\n\n");
         }
