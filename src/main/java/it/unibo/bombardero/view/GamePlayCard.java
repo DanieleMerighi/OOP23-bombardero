@@ -43,8 +43,8 @@ public class GamePlayCard extends JPanel {
     private Image obstacle = resourceGetter.loadImage("obstacles/cassa_prosp3");
     private Image unbreakable = resourceGetter.loadImage("obstacles/wall_prosp2");
     private Image bombLine = resourceGetter.loadImage("powerup/line_bomb");
-    private Image bombPlusOne = resourceGetter.loadImage("powerup/bomb_minus_one");
-    private Image bombMinusOne = resourceGetter.loadImage("powerup/bomb_plus_one");
+    private Image bombPlusOne = resourceGetter.loadImage("powerup/bomb_plus_one");
+    private Image bombMinusOne = resourceGetter.loadImage("powerup/bomb_minus_one");
     private Image bombPower = resourceGetter.loadImage("powerup/bomb_power");
     private Image bombRemote = resourceGetter.loadImage("powerup/bomb_remote");
     private Image bombPierce = resourceGetter.loadImage("powerup/bomb_pierce");
@@ -54,7 +54,6 @@ public class GamePlayCard extends JPanel {
     private Image skatesPlusOne = resourceGetter.loadImage("powerup/skates_plus_one");
     private Image skateMinusOne = resourceGetter.loadImage("powerup/skates_minus_one");
     private Image skull = resourceGetter.loadImage("powerup/skull");
-    /* TODO: KICK MANCANTE, DECIDERE SE FARLO */
 
     /* References to model components: */
     private final BombarderoGraphics graphics;
@@ -150,7 +149,6 @@ public class GamePlayCard extends JPanel {
                                 case MAX_FLAME_RANGE -> fireMax;
                                 case PLUS_ONE_SKATES -> skatesPlusOne;
                                 case MINUS_ONE_SKATES -> skateMinusOne;
-                                case KICK -> unbreakable;
                                 case SKULL -> skull;
                                 default -> throw new IllegalArgumentException("texture not present for \"" + pu.getType() + "\"");
                             };
