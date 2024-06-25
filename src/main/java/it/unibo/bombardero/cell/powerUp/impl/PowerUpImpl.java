@@ -31,7 +31,7 @@ public class PowerUpImpl extends AbstractCell implements PowerUp {
     @Override
     public void applyEffect(final Character character) {
         effect.accept(character);
-        System.out.println(this.type);
+        // System.out.println(this.type);
     }
 
     //how to stop the forEach from placing bomb after placebomb returns flase?
