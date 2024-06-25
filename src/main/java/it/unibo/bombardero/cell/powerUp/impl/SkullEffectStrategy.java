@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
-import org.apache.commons.math3.util.Pair;
 
 public class SkullEffectStrategy implements PowerUpEffectStrategy {
 
