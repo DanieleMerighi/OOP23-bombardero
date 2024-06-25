@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.JPanel;
 
@@ -74,7 +73,6 @@ public class GamePlayCard extends JPanel {
 
     /* Static positions for quicker access: */
     private final Dimension mapPlacingPoint;
-    private final Dimension entityPlacingPoint;
 
 
     public GamePlayCard(final BombarderoGraphics graphics) {
@@ -83,7 +81,6 @@ public class GamePlayCard extends JPanel {
         this.setLayout(new BorderLayout());
 
         mapPlacingPoint = graphics.getResizingEngine().getMapPlacingPoint();
-        entityPlacingPoint = graphics.getResizingEngine().getEntityPlacingPoint();
 
         cells = graphics.getController().getMap(); 
         player = graphics.getController().getMainPlayer();
@@ -119,7 +116,7 @@ public class GamePlayCard extends JPanel {
             mapPlacingPoint.height,
             null
         );
-        /* Drawing the breakable obstacles, the bombs and the power ups (TODO: not done yet) */
+        /* Drawing the breakable obstacles, the bombs and the power ups */
         for (int i = 0; i < Utils.MAP_ROWS; i++) {
             for (int j = 0; j < Utils.MAP_COLS; j++) {
                 if (cells.containsKey(new Pair(i, j))) {
