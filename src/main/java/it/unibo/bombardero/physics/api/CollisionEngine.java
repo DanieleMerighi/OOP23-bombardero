@@ -8,7 +8,7 @@ public interface CollisionEngine {
      * Check if character is in the same cell of flames
      * @param character
      */
-    void checkFlameCollision(Character character);
+    void checkFlameAndPowerUpCollision(Character character);
 
     /**
      * check collision for the character with the cells in front of him

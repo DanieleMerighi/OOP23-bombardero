@@ -33,9 +33,13 @@ public class BombarderoCollision implements CollisionEngine{
     }
 
     @Override
-    public void checkFlameCollision(Character character) {
-        if( character!=null && gMap.isFlame(character.getIntCoordinate())) {
+    public void checkFlameAndPowerUpCollision(Character character) {
+        if(gMap.isFlame(character.getIntCoordinate())) {
             character.kill();
+        } else if(gMap.isPowerUp(character.getIntCoordinate())) {
+            PowerUp p = (PowerUp)gMap.getMap().get(character.getIntCoordinate());
+            p.applyEffect(character);
+            mgr.removePowerUp(character.getIntCoordinate());
         }
     }
 
@@ -45,42 +49,22 @@ public class BombarderoCollision implements CollisionEngine{
         map=gMap.getMap();
         List<Pair> cells = getDirectionCell(character.getFacingDirection() , character.getIntCoordinate());
         if(!cells.isEmpty()) {
-            Optional<Cell> collidingCell= cells
-                .stream().filter(p -> map.containsKey(p))
+            Optional<Cell> collidingCell= cells.stream()
+                .filter(p -> map.containsKey(p))
                 .map( p -> map.get(p))
                 .filter(c-> c.getBoundingBox().isColliding(character.getBoundingBox()) && c.getBoundingCollision())
                 .findFirst();
-
-            CellCollision(character, collidingCell);
+            SolidCellCollision(character, collidingCell);
         } else {
             checkCoolisionWithMapWall(character);
         }
     }
 
-    private void SolidCellCollision(Character character, Cell collidingCell) {
-        character.setCharacterPosition(character.getCharacterPosition()
-            .sum(character.getBoundingBox()
-                .computeCollision(collidingCell.getBoundingBox(), character.getFacingDirection())));
-    }
-
-    private void pickUpCollision(Character character, Cell collidingCell) {
-        ((PowerUp)collidingCell).applyEffect(character);
-    }
-
-    private void CellCollision(Character character , Optional<Cell> collidingCell) {
+    private void SolidCellCollision(Character character, Optional<Cell> collidingCell) {
         if(collidingCell.isPresent()) {
-            switch (collidingCell.get().getCellType()) {
-                case WALL_BREAKABLE:
-                case WALL_UNBREAKABLE:
-                case BOMB:
-                    SolidCellCollision(character, collidingCell.get());
-                    return;
-                case POWERUP:
-                    pickUpCollision(character, collidingCell.get());
-                    return;   
-                default:
-                    return;
-            }
+            character.setCharacterPosition(character.getCharacterPosition()
+                .sum(character.getBoundingBox()
+                    .computeCollision(collidingCell.get().getBoundingBox(), character.getFacingDirection())));
         }
     }
 

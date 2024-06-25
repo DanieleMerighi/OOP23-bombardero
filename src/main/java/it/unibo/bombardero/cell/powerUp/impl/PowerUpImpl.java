@@ -20,7 +20,7 @@ public class PowerUpImpl extends AbstractCell implements PowerUp {
     // private List<Pair<Direction, Bomb>> kickBombList = new ArrayList<>();
 
     public PowerUpImpl(final PowerUpType type, Pair pos, final PowerUpEffectStrategy strategy) {
-        super(CellType.POWERUP, pos, true);
+        super(CellType.POWERUP, pos, false);
         this.type = type;
         this.effect = strategy.getEffect();
     }
