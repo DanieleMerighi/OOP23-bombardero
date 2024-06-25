@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JPanel;
 
@@ -22,7 +23,6 @@ import it.unibo.bombardero.view.sprites.impl.BombarderoFlameSprite;
 import it.unibo.bombardero.view.sprites.impl.BombarderoOrientedSprite;
 import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
 import it.unibo.bombardero.view.sprites.impl.TimedBombarderoSprite;
-import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
@@ -70,7 +70,8 @@ public class GamePlayCard extends JPanel {
     private final BombarderoFlameSprite flamesSprite;
     private final Sprite normalBomb;
     private Image bomb_image;
-    private final Map<Character, TimedBombarderoSprite> dyingCharacters = new HashMap<>(); // dead characters are stored here to be displayed 
+    private final Map<Character, TimedBombarderoSprite> dyingCharacters = new HashMap<>(); // dead characters are stored here to be displayed
+    private List<String> colorCodes = List.of("red", "blue", "black");
 
     /* Static positions for quicker access: */
     private final Dimension mapPlacingPoint;
@@ -94,7 +95,7 @@ public class GamePlayCard extends JPanel {
         flamesSprite = new BombarderoFlameSprite(500, 6, graphics.getResizingEngine()::getScaledCellImage, resourceGetter);
         OrientedSprite playerSprite = new BombarderoOrientedSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
         Image playerImage = playerSprite.getStandingImage();
-        characterImages.put(player, new SpriteImageCombo(playerSprite, playerImage));
+        characterImages.put(player, new SpriteImageCombo(playerSprite, playerImage, "main"));
         normalBomb = new SimpleBombarderoSprite("bomb", resourceGetter, graphics.getResizingEngine()::getScaledBombImage, 4);
         bomb_image = normalBomb.getImage();
 
@@ -218,7 +219,7 @@ public class GamePlayCard extends JPanel {
             }
             characterImages.put(
                 character.getKey(),
-                new SpriteImageCombo(sprite, image)
+                new SpriteImageCombo(sprite, image, "main")
             );
         });
         /* Update bomb sprites: */
@@ -253,17 +254,21 @@ public class GamePlayCard extends JPanel {
         enemiesList.stream()
             .filter(enemy -> !characterImages.keySet().contains(enemy))
             .forEach(enemy -> {
-                OrientedSprite sprite = new BombarderoOrientedSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
+                String colorCode = colorCodes.get(0);
+                colorCodes = colorCodes.subList(1, colorCode.length());
+                OrientedSprite sprite = new BombarderoOrientedSprite("character/" + colorCode + "/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
                 characterImages.put(
                     enemy,
                     new SpriteImageCombo(
                         sprite,
-                        sprite.getStandingImage()
+                        sprite.getStandingImage(),
+                        colorCode
                     )
                 );
             });
     }
 
+    /* I had to do it in separates for-loops because of ConcurrentModificationException(s) */
     private void updateDeadCharacters() {
         for (Entry<Character, TimedBombarderoSprite> entry : dyingCharacters.entrySet()) {
             entry.getValue().update();
@@ -271,17 +276,17 @@ public class GamePlayCard extends JPanel {
                 dyingCharacters.remove(entry.getKey());
             }
         };
-        characterImages.keySet().forEach(character -> {
-            if (!character.isAlive()) {
+        characterImages.entrySet().forEach(entry -> {
+            if (!entry.getKey().isAlive()) {
                 Image[] dyingAsset = SimpleBombarderoSprite.importAssets(
                     "dying",
-                    "character/main/dying",
+                    "character/" + entry.getValue().colorCode() + "/dying",
                     resourceGetter,
                     graphics.getResizingEngine()::getScaledCharacterImage,
                     4
                 );
                 dyingCharacters.put(
-                    character,
+                    entry.getKey(),
                     new TimedBombarderoSprite(dyingAsset, 4, 4)
                 );
             }
@@ -289,6 +294,6 @@ public class GamePlayCard extends JPanel {
         dyingCharacters.keySet().forEach(characterImages::remove);
     }
 
-    private record SpriteImageCombo (OrientedSprite sprite, Image displayedImage) {
+    private record SpriteImageCombo (OrientedSprite sprite, Image displayedImage, String colorCode) {
     }
 }
