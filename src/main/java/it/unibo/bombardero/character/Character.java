@@ -90,7 +90,7 @@ public abstract class Character {
      * 
      * @param elapsedTime the time elapsed since the last update
      */
-    public abstract void update(long elapsedTime);
+    public abstract void update(final long elapsedTime);
 
     /**
      * Updates the skeleton's effects.
@@ -543,7 +543,7 @@ public abstract class Character {
 
     // TODO: write better javadoc
     /**
-     * Gets the reset effect
+     * Gets the reset effect.
      * 
      * @return the reset effect
      */
