@@ -202,7 +202,7 @@ public class TestEnemy {
         }
 
         @Override
-        public Bomb getBomb(Pair pos) {
+        public Optional<Bomb> getBomb(Pair pos) {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'getBomb'");
         }

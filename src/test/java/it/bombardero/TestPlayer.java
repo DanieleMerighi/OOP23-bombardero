@@ -19,6 +19,7 @@ import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 public class TestPlayer {
@@ -154,7 +155,7 @@ public class TestPlayer {
         }
 
         @Override
-        public Bomb getBomb(Pair pos) {
+        public Optional<Bomb> getBomb(Pair pos) {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'getBomb'");
         }

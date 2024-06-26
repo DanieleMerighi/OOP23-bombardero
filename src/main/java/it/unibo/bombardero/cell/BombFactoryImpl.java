@@ -19,9 +19,9 @@ public class BombFactoryImpl implements BombFactory{
         switch (character.getBombType().get()) {
             case PIERCING_BOMB:
                 return createPiercingBomb(character, character.getIntCoordinate());
-            case POWER_BOMB:
-                return createRemoteBomb(character, character.getIntCoordinate());
             case REMOTE_BOMB:
+                return createRemoteBomb(character, character.getIntCoordinate());
+            case POWER_BOMB:
                 return createPowerBomb(character, character.getIntCoordinate());
             default :
                 return null;
