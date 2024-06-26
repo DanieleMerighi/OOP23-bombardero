@@ -1,6 +1,7 @@
 package it.unibo.bombardero.core.api;
 
 import java.util.List;
+import java.util.Optional;
 
 import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Bomb;
@@ -25,7 +26,7 @@ public interface GameManager {
     
     void removeBomb(Pair pos);
 
-    Bomb getBomb(Pair pos);
+    Optional<Bomb> getBomb(Pair pos);
 
     void addFlame(FlameType type,Pair pos);
 
