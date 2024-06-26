@@ -68,7 +68,8 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
         return StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(bfsIterator, Spliterator.ORDERED), false)
                 .takeWhile(cell -> bfsIterator.getDepth(cell) <= explRadius) // Limit traversal to explosion radius
-                .anyMatch(cell -> (map.isBomb(cell) || map.isFlame(cell)) && (enemyCoord.x() == cell.x() || enemyCoord.y() == cell.y())
+                .anyMatch(cell -> (map.isBomb(cell) || map.isFlame(cell))
+                        && (enemyCoord.x() == cell.x() || enemyCoord.y() == cell.y())
                         && !isPathBlockedByWalls(enemyCoord, cell));
     }
 
@@ -120,49 +121,61 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      *         or an empty list if no path exists
      */
     public List<Pair> findShortestPathToPlayer(Pair enemyCoord, Pair playerCoord) {
+        if (enemyCoord.equals(playerCoord)) {
+            return Collections.emptyList();
+        }
+
         // Use Dijkstra's algorithm to find the shortest path to the player
         DijkstraShortestPath<Pair, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<>(
                 graph);
-        GraphPath<Pair, DefaultWeightedEdge> path = dijkstra.getPath(enemyCoord, playerCoord);
-        // return path == null ? Collections.emptyList()
-        // : path.getVertexList().size() == 1 ? path.getVertexList()
-        // : path.getVertexList().subList(1, path.getVertexList().size());
+        GraphPath<Pair, DefaultWeightedEdge> path = null;
+        try {
+            path = dijkstra.getPath(enemyCoord, playerCoord);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
         return path == null ? Collections.emptyList()
                 : path.getVertexList().subList(1, path.getVertexList().size());
     }
 
     public Optional<Pair> findNearestSafeCell(Pair enemyCoord, int explRad) {
-        Optional<Pair> safeCell = Optional.empty();
+        return findNearestSafeCellRecursive(enemyCoord, explRad, new HashSet<>());
+    }
 
-        List<Pair> grass = EnumSet.allOf(Direction.class)
+    private Optional<Pair> findNearestSafeCellRecursive(Pair enemyCoord, int explRad, Set<Pair> visited) {
+        List<Pair> adjacentCells = EnumSet.allOf(Direction.class)
                 .stream()
                 .filter(d -> d != Direction.DEFAULT)
                 .map(d -> new Pair(enemyCoord.x() + d.x(), enemyCoord.y() + d.y()))
-                .filter(cell -> isValidCell(cell) && map.isEmpty(cell))
+                .filter(cell -> isValidCell(cell) && map.isEmpty(cell) && !visited.contains(cell))
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        safeCell = grass.stream().filter(c -> !isInDangerZone(c, explRad)).findFirst();
-        return safeCell.isEmpty() && !grass.isEmpty() ? Optional.of(grass.get(0)) : safeCell;
-    }
+        Optional<Pair> safeCell = adjacentCells.stream()
+                .filter(c -> !isInDangerZone(c, explRad))
+                .findFirst();
 
-    public boolean canPlaceBomb(Pair enemyCoord, int explRad) {
-        final BreadthFirstIterator<Pair, DefaultWeightedEdge> bfsIterator = new BreadthFirstIterator<>(
-                graph,
-                enemyCoord);
-        List<Pair> target = StreamSupport.stream(
-                Spliterators.spliteratorUnknownSize(bfsIterator, Spliterator.ORDERED), false)
-                .takeWhile(cell -> bfsIterator.getDepth(cell) <= explRad) // Limit traversal to explosion radius
-                .filter(cell -> map.isEmpty(cell))
-                .collect(Collectors.toCollection(ArrayList::new));
-
-        for (var c : target) {
-            List<Pair> path = findShortestPathToPlayer(enemyCoord, c);
-            if (path.stream().filter(cell -> map.isEmpty(cell)).count() == (long) path.size()) {
-                return true;
+        if (safeCell.isPresent()) {
+            return safeCell;
+        } else {
+            visited.addAll(adjacentCells);
+            for (Pair cell : adjacentCells) {
+                Optional<Pair> recursiveResult = findNearestSafeCellRecursive(cell, explRad, visited);
+                if (recursiveResult.isPresent()) {
+                    return recursiveResult;
+                }
             }
         }
+        return Optional.empty();
+    }
 
-        return false;
+    private List<Pair> possibleSafeCell(Pair initialPos) {
+        return EnumSet.allOf(Direction.class)
+                .stream()
+                .filter(d -> d != Direction.DEFAULT)
+                .map(d -> new Pair(initialPos.x() + d.x(), initialPos.y() + d.y()))
+                .filter(cell -> isValidCell(cell) && map.isEmpty(cell))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     private boolean isValidCell(Pair cell) {

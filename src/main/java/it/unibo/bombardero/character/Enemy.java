@@ -28,7 +28,7 @@ public class Enemy extends Character {
     Optional<Pair> nextMove = Optional.empty();
     private State currentState = State.PATROL; // Initial state
     private EnemyGraphReasonerImpl graph;
-    private List<Pair> path = new ArrayList<>();
+    private int waitTimer = -1;
 
     /*
      * Constructs a new Enemy with the specified parameters.
@@ -70,6 +70,15 @@ public class Enemy extends Character {
                 .filter(coord -> !coord.equals(enemyCoord))
                 .min((coord1, coord2) -> Integer.compare(calculateDistance(enemyCoord, coord1),
                         calculateDistance(enemyCoord, coord2)));
+    }
+
+    private Optional<Character> getClosestEntity(Pair enemy) {
+        List<Character> allEntities = new ArrayList<>(super.manager.getEnemies());
+        allEntities.add(super.manager.getPlayer());
+
+        return allEntities.stream()
+                .filter(e -> e.getIntCoordinate().equals(getIntCoordinate()))
+                .findAny();
     }
 
     // when the enemy doesn't know where to move he choose randomly
@@ -128,6 +137,25 @@ public class Enemy extends Character {
         GameMap gameMap = super.manager.getGameMap();
         graph = GraphManagerImpl.getGraphReasoner(gameMap, time);
         currentState.execute(this); // Delegate behavior to current state
+        if (nextMove.isPresent()) {
+            if (gameMap.isBreakableWall(nextMove.get())
+                    && graph.findNearestSafeCell(getIntCoordinate(), getFlameRange()).isPresent()) {
+                placeBomb();
+            } else if (calculateDistance(getIntCoordinate(), nextMove.get()) > 1) {
+                List<Pair> l = graph.findShortestPathToPlayer(getIntCoordinate(), nextMove.get());
+                if(l.isEmpty()) {
+                    moveRandomly();
+                } else {
+                    nextMove = Optional.of(l.getFirst());
+                }
+            }
+        } else {
+            waitTimer++;
+            if(waitTimer >= Utils.MAX_WAITING_TIME) {
+                moveRandomly();
+            }
+        }
+
     }
 
     /**
@@ -158,7 +186,7 @@ public class Enemy extends Character {
             } else {
                 setCharacterPosition(newPos);
             }
-        } else{
+        } else {
             nextMove = Optional.empty();
         }
     }
@@ -168,16 +196,15 @@ public class Enemy extends Character {
         if (this.manager.getGameMap().isEmpty(cell)) {
             return true;
         }
-    
+
         // Check if the cell has a bomb, but the enemy is currently on it
         if (this.manager.getGameMap().isBomb(cell) && getIntCoordinate().equals(cell)) {
             return true;
         }
-    
+
         // In all other cases, the enemy cannot move to the cell
         return false;
     }
-    
 
     private boolean isReachedTarget(Coord currentPos, Coord target) {
         double distance = currentPos.distanceTo(target);
@@ -219,13 +246,7 @@ public class Enemy extends Character {
                 } else if (enemy.isEnemyClose()) { // Detected player
                     enemy.currentState = State.CHASE;
                 } else {
-                    enemy.moveToClosestEntity(); // Keep patrolling
-                    if (enemy.manager.getGameMap().isBreakableWall(enemy.nextMove.get())) {
-                        if (enemy.graph.canPlaceBomb(enemy.getIntCoordinate(), enemy.getFlameRange())) {
-                            enemy.placeBomb();
-                        }
-                        enemy.nextMove = Optional.empty();
-                    }
+                    enemy.moveToClosestEntity();
                 }
             }
         },
@@ -239,28 +260,20 @@ public class Enemy extends Character {
             @Override
             void execute(Enemy enemy) {
                 if (enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) { // Detected bomb
-                    enemy.currentState = State.ESCAPE;
+                    enemy.currentState = ESCAPE;
                 } else if (!enemy.isEnemyClose()) { // Lost sight of player
-                    enemy.currentState = State.PATROL;
+                    enemy.currentState = PATROL;
                 } else {
-                    if(enemy.path.isEmpty()) {
-                        enemy.path = enemy.graph.findShortestPathToPlayer(enemy.getIntCoordinate(),
-                        enemy.manager.getPlayer().getIntCoordinate());
-                    }
-                    enemy.nextMove = Optional.of(enemy.path.removeFirst());
-                    if (enemy.manager.getGameMap().isBreakableWall(enemy.nextMove.get())) {
-                        if (enemy.graph.canPlaceBomb(enemy.getIntCoordinate(), enemy.getFlameRange())) {
+                    Pair closeEnemy = enemy.getClosestEntity().get();
+                    Pair currPos = enemy.getIntCoordinate();
+                    if ((closeEnemy.x() == currPos.x() || closeEnemy.y() == currPos.y())) {
+                        if(enemy.calculateDistance(currPos, closeEnemy) <= enemy.getFlameRange()) {
                             enemy.placeBomb();
+                        } else {
+                            enemy.moveRandomly();
                         }
                     } else {
-                        Pair closeEnemy = enemy.getClosestEntity().get();
-                        Pair currPos = enemy.getIntCoordinate();
-                        if ((closeEnemy.x() == currPos.x() || closeEnemy.y() == currPos.y())
-                                && !enemy.graph.isPathBlockedByWalls(closeEnemy, currPos)
-                                && enemy.calculateDistance(currPos, closeEnemy) <= enemy.getFlameRange()) {
-                            enemy.placeBomb();
-                            enemy.currentState = ESCAPE;
-                        }
+                        enemy.moveToClosestEntity();
                     }
 
                 }
@@ -276,10 +289,25 @@ public class Enemy extends Character {
             @Override
             void execute(Enemy enemy) {
                 if (!enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) { // Safe now
-                    enemy.currentState = State.WAITING;
+                    if(!enemy.getBombQueue().isEmpty()) {
+                        enemy.currentState = WAITING;
+                    } else {
+                        if(enemy.isEnemyClose()) {
+                            Pair closeEnemy = enemy.getClosestEntity().get();
+                            Optional<Character> c = enemy.getClosestEntity(closeEnemy);
+                            if(c.isPresent()) {
+                                Pair newdir = new Pair(-c.get().getFacingDirection().x(), -c.get().getFacingDirection().y());
+                                Pair currPos = enemy.getIntCoordinate();
+                                enemy.nextMove = Optional.of(currPos.sum(newdir));
+                            }
+                        } else {
+                            enemy.currentState = PATROL;
+                        }
+                    }
                 } else {
-                    enemy.nextMove = enemy.graph.findNearestSafeCell(enemy.getIntCoordinate(), enemy.getFlameRange());
-                    if(enemy.nextMove.isEmpty()) {
+                    enemy.nextMove = enemy.graph.findNearestSafeCell(enemy.getIntCoordinate(),
+                            enemy.getFlameRange());
+                    if (enemy.nextMove.isEmpty()) {
                         enemy.currentState = WAITING;
                     }
                 }
@@ -288,9 +316,11 @@ public class Enemy extends Character {
         WAITING {
             @Override
             void execute(Enemy enemy) {
-                enemy.nextMove = Optional.empty(); // da cambiare, quando la bomba esplode allora ti muovi
-                if (enemy.graph.findNearestBomb(enemy.getIntCoordinate()).isEmpty()) {
+                enemy.setStationary(true);
+                enemy.nextMove = Optional.empty();
+                if (enemy.getBombQueue().isEmpty()) {
                     enemy.currentState = PATROL;
+                    enemy.setStationary(false);
                 }
             }
         };

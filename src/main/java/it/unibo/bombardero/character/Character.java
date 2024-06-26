@@ -63,6 +63,10 @@ public abstract class Character {
      * far esplodere una remote bomb
      */
 
+    public Deque<BasicBomb> getBombQueue() {
+        return new ArrayDeque<>(bombQueue);
+    }
+
     // Update related
     private boolean hasToPlaceBomb;
     private boolean hasToPlaceLineBomb;
