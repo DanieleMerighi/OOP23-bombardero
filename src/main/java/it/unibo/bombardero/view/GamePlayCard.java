@@ -69,7 +69,7 @@ public class GamePlayCard extends JPanel {
     private final Sprite normalBomb;
     private Image bomb_image;
     private final Map<Character, TimedBombarderoSprite> dyingCharacters = new HashMap<>(); // dead characters are stored here to be displayed
-    private List<String> colorCodes = List.of("red", "blue", "black");
+    private List<String> colorCodes = List.of("main", "main", "main");
 
     /* Static positions for quicker access: */
     private final Dimension mapPlacingPoint;
@@ -250,7 +250,7 @@ public class GamePlayCard extends JPanel {
             .filter(enemy -> !characterImages.keySet().contains(enemy))
             .forEach(enemy -> {
                 String colorCode = colorCodes.get(0);
-                colorCodes = colorCodes.subList(1, colorCode.length());
+                colorCodes = colorCodes.subList(1, colorCode.length() - 1);
                 OrientedSprite sprite = new BombarderoOrientedSprite("character/" + colorCode + "/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
                 characterImages.put(
                     enemy,
