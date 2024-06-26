@@ -122,8 +122,9 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
 
     private boolean isBomb(Pair pos) { 
         if(map.isBomb(pos)) {
-            if(!mgr.getBomb(pos).isExploded()) {
-                mgr.getBomb(pos).update(true);
+            Bomb bomb = mgr.getBomb(pos).get();
+            if(!bomb.isExploded()) {
+                bomb.update(true);
             }
         }
         return true;

@@ -3,6 +3,7 @@ package it.unibo.bombardero.core.api;
 import java.util.List;
 
 import it.unibo.bombardero.cell.BasicBomb;
+import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
@@ -23,6 +24,8 @@ public interface GameManager {
     boolean addBomb(BasicBomb bomb);
     
     void removeBomb(Pair pos);
+
+    Bomb getBomb(Pair pos);
 
     void addFlame(FlameType type,Pair pos);
 

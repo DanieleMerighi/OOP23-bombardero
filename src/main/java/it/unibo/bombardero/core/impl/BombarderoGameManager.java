@@ -115,15 +115,18 @@ public class BombarderoGameManager implements GameManager {
 
     @Override
     public boolean addBomb(final BasicBomb bomb) {
-        if(!bomb.getBombType().equals(BombType.BOMB_REMOTE)) {
-            boombs.add(bomb);
-        }
+        boombs.add(bomb);
         return map.addBomb(bomb, bomb.getPos());
     }
 
     @Override
     public void removeBomb(final Pair pos) {
         map.removeBomb(pos);
+    }
+
+    @Override
+    public Bomb getBomb(Pair pos) {
+        return boombs.stream().filter(b-> b.getPos().equals(pos)).findAny().get();
     }
 
     @Override
