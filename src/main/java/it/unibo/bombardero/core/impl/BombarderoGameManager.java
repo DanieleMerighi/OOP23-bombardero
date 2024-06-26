@@ -115,8 +115,11 @@ public class BombarderoGameManager implements GameManager {
 
     @Override
     public boolean addBomb(final BasicBomb bomb) {
-        boombs.add(bomb);
-        return map.addBomb(bomb, bomb.getPos());
+        if (map.addBomb(bomb, bomb.getPos())) { // If the bomb is added to the map
+            boombs.add(bomb); // The bomb is added to the list
+            return true;
+        }
+        return false;
     }
 
     @Override
