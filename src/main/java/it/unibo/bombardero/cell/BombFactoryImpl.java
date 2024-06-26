@@ -53,12 +53,19 @@ public class BombFactoryImpl implements BombFactory{
         return new BasicBomb(mgr , character, character.getFlameRange(), pos) {
             public boolean isBreckableWall(Pair pos) {
                 if(mgr.getGameMap().isBreakableWall(pos)) {
-                    if(pos.equals(this.getPos().sum(new Pair(this.getRange(),0))) || pos.equals(this.getPos().sum(new Pair(0,this.getRange())))) {
+                    if(isLastWall(pos)) {
                         mgr.removeWall(pos);
                         return true;
                     }
                 }
                 return false;
+            }
+
+            private boolean isLastWall(Pair pos) {
+                return pos.equals(this.getPos().sum(new Pair(this.getRange(),0))) 
+                    || pos.equals(this.getPos().sum(new Pair(0,this.getRange())))
+                    || pos.equals(this.getPos().sum(new Pair(-this.getRange(),0))) 
+                    || pos.equals(this.getPos().sum(new Pair(0,-this.getRange())));
             }
         };
     }
