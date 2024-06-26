@@ -193,7 +193,7 @@ public class Enemy extends Character {
 
     private boolean canMoveOn(Pair cell) {
         // Check if the cell is empty
-        if (this.manager.getGameMap().isEmpty(cell)) {
+        if (this.manager.getGameMap().isEmpty(cell) || this.manager.getGameMap().isPowerUp(cell)) {
             return true;
         }
 

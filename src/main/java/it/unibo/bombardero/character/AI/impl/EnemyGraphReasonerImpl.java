@@ -148,7 +148,7 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
                 .stream()
                 .filter(d -> d != Direction.DEFAULT)
                 .map(d -> new Pair(enemyCoord.x() + d.x(), enemyCoord.y() + d.y()))
-                .filter(cell -> isValidCell(cell) && map.isEmpty(cell) && !visited.contains(cell))
+                .filter(cell -> isValidCell(cell) && (map.isEmpty(cell) || map.isPowerUp(cell)) && !visited.contains(cell))
                 .collect(Collectors.toCollection(ArrayList::new));
 
         Optional<Pair> safeCell = adjacentCells.stream()
@@ -167,15 +167,6 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
             }
         }
         return Optional.empty();
-    }
-
-    private List<Pair> possibleSafeCell(Pair initialPos) {
-        return EnumSet.allOf(Direction.class)
-                .stream()
-                .filter(d -> d != Direction.DEFAULT)
-                .map(d -> new Pair(initialPos.x() + d.x(), initialPos.y() + d.y()))
-                .filter(cell -> isValidCell(cell) && map.isEmpty(cell))
-                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     private boolean isValidCell(Pair cell) {
