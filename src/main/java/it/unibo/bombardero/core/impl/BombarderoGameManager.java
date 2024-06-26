@@ -67,8 +67,7 @@ public class BombarderoGameManager implements GameManager {
     @Override
     public void updateGame(final long elapsed) {
         gameTime += elapsed;
-        /* TODO: CAPIRE COME FARE A FARE COLLASSO DELLA MAPPA IN GAME MA NON IN GUIDE */
-        map.update();
+        map.update(getTimeLeft());
         if (player.isAlive()) {
             player.update(elapsed);
             ce.checkCharacterCollision(player);
