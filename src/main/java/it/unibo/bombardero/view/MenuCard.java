@@ -1,14 +1,8 @@
 package it.unibo.bombardero.view;
 
 import javax.swing.JPanel;
-import javax.swing.OverlayLayout;
-
-import it.unibo.bombardero.Bombardero;
 import it.unibo.bombardero.core.api.Controller;
-import it.unibo.bombardero.utils.Utils;
-
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 
 import java.awt.Dimension;
 import java.awt.Graphics;

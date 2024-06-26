@@ -2,17 +2,22 @@ package it.unibo.bombardero.character.AI.impl;
 
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
+import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.SingleSourcePaths;
+import org.jgrapht.alg.shortestpath.AllDirectedPaths;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
+import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.traverse.BreadthFirstIterator;
 
 import java.util.*;
 import java.util.stream.*;
 
-import it.unibo.bombardero.character.Direction;
+import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.character.AI.api.EnemyGraphReasoner;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.utils.Utils;
+import it.unibo.bombardero.character.Direction;
 
 /**
  * This class provides pathfinding and danger zone analysis functionalities for
@@ -63,7 +68,8 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
         return StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(bfsIterator, Spliterator.ORDERED), false)
                 .takeWhile(cell -> bfsIterator.getDepth(cell) <= explRadius) // Limit traversal to explosion radius
-                .anyMatch(cell -> map.isBomb(cell) && (enemyCoord.x() == cell.x() || enemyCoord.y() == cell.y())
+                .anyMatch(cell -> (map.isBomb(cell) || map.isFlame(cell))
+                        && (enemyCoord.x() == cell.x() || enemyCoord.y() == cell.y())
                         && !isPathBlockedByWalls(enemyCoord, cell));
     }
 
@@ -115,37 +121,62 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      *         or an empty list if no path exists
      */
     public List<Pair> findShortestPathToPlayer(Pair enemyCoord, Pair playerCoord) {
+        if (enemyCoord.equals(playerCoord)) {
+            return Collections.emptyList();
+        }
+
         // Use Dijkstra's algorithm to find the shortest path to the player
         DijkstraShortestPath<Pair, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<>(
                 graph);
-        GraphPath<Pair, DefaultWeightedEdge> path = dijkstra.getPath(enemyCoord, playerCoord);
-        return path == null ? Collections.emptyList() : path.getVertexList().size() == 1 ? path.getVertexList() : path.getVertexList().subList(1, path.getVertexList().size());
+        GraphPath<Pair, DefaultWeightedEdge> path = null;
+        try {
+            path = dijkstra.getPath(enemyCoord, playerCoord);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return path == null ? Collections.emptyList()
+                : path.getVertexList().subList(1, path.getVertexList().size());
     }
 
     public Optional<Pair> findNearestSafeCell(Pair enemyCoord, int explRad) {
-        Optional<Pair> safeCell = Optional.empty();
-        final BreadthFirstIterator<Pair, DefaultWeightedEdge> bfsIterator = new BreadthFirstIterator<>(
-                GraphBuilderImpl.buildFromMap(map),
-                enemyCoord);
-        List<Pair> grassCells = StreamSupport.stream(
-                Spliterators.spliteratorUnknownSize(bfsIterator, Spliterator.ORDERED), false)
-                .takeWhile(cell -> bfsIterator.getDepth(cell) <= explRad+1)
-                .sorted(Comparator.comparingDouble(cell -> calculateDistance(enemyCoord, cell)))
-                .filter(cell -> map.isEmpty(cell))
+        return findNearestSafeCellRecursive(enemyCoord, explRad, new HashSet<>());
+    }
+
+    private Optional<Pair> findNearestSafeCellRecursive(Pair enemyCoord, int explRad, Set<Pair> visited) {
+        List<Pair> adjacentCells = EnumSet.allOf(Direction.class)
+                .stream()
+                .filter(d -> d != Direction.DEFAULT)
+                .map(d -> new Pair(enemyCoord.x() + d.x(), enemyCoord.y() + d.y()))
+                .filter(cell -> isValidCell(cell) && (map.isEmpty(cell) || map.isPowerUp(cell)) && !visited.contains(cell))
                 .collect(Collectors.toCollection(ArrayList::new));
-        while(!grassCells.isEmpty() && safeCell.isEmpty()) {
-            safeCell = grassCells.stream().filter(c -> !isInDangerZone(c, explRad)).findFirst();
-            if(safeCell.isPresent() && !grassCells.isEmpty() && isPathBlockedByWalls(enemyCoord, safeCell.get())) {
-                grassCells.remove(safeCell.get());
+
+        Optional<Pair> safeCell = adjacentCells.stream()
+                .filter(c -> !isInDangerZone(c, explRad))
+                .findFirst();
+
+        if (safeCell.isPresent()) {
+            return safeCell;
+        } else {
+            visited.addAll(adjacentCells);
+            for (Pair cell : adjacentCells) {
+                Optional<Pair> recursiveResult = findNearestSafeCellRecursive(cell, explRad, visited);
+                if (recursiveResult.isPresent()) {
+                    return recursiveResult;
+                }
             }
         }
-        return safeCell.isEmpty() ? Optional.empty() : Optional.of(findShortestPathToPlayer(enemyCoord, safeCell.get()).get(0));
+        return Optional.empty();
+    }
+
+    private boolean isValidCell(Pair cell) {
+        return cell.x() >= 0 && cell.y() >= 0 && cell.x() < Utils.MAP_COLS && cell.y() < Utils.MAP_ROWS;
     }
 
     private double calculateDistance(Pair p1, Pair p2) {
         int dx = p2.x() - p1.x();
         int dy = p2.y() - p1.y();
-        return Math.sqrt(dx*dx + dy*dy);
+        return Math.sqrt(dx * dx + dy * dy);
     }
 
     /**
@@ -169,14 +200,14 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
 
         return StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(bfsIterator, Spliterator.ORDERED), false)
-                .filter(cell -> map.isBomb(cell) && !isPathBlockedByWalls(enemyCoord, cell)) // Find reachable bombs
+                .filter(cell -> map.isBomb(cell)) // Find reachable bombs
                 .findFirst();
     }
 
     public void updateGraph(GameMap newMap) {
         List<Pair> oldWalls = map.getMap().keySet().stream().filter(c -> map.isBreakableWall(c)).toList();
         List<Pair> newWalls = newMap.getMap().keySet().stream().filter(c -> newMap.isBreakableWall(c)).toList();
-        if(oldWalls.size() != newWalls.size()) {
+        if (oldWalls.size() != newWalls.size()) {
             oldWalls.stream().filter(c -> !newWalls.contains(c)).forEach(c -> updateEdges(c));
         }
         this.map = newMap;
@@ -185,21 +216,4 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
     private void updateEdges(Pair cell) {
         graph.edgesOf(cell).forEach(e -> graph.setEdgeWeight(e, 1));
     }
-
-    // private Direction getDirectionToCell(Pair fromCell, Pair toCell) {
-    //     int dx = toCell.x() - fromCell.x();
-    //     int dy = toCell.y() - fromCell.y();
-    //     // Check for horizontal or vertical movement
-    //     if (dx != 0 && dy == 0) {
-    //         return dx > 0 ? Direction.RIGHT : Direction.LEFT;
-    //     } else if (dx == 0 && dy != 0) {
-    //         return dy > 0 ? Direction.DOWN : Direction.UP;
-    //     }
-
-    //     return null;
-    // }
-
-    // private boolean isValidCell(Pair cell) {
-    //     return cell.x() >= 0 && cell.x() < Utils.MAP_ROWS && cell.y() >= 0 && cell.y() < Utils.MAP_COLS;
-    // }
 }

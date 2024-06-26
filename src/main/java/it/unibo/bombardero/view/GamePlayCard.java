@@ -6,12 +6,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JPanel;
 
-import it.unibo.bombardero.cell.AbstractCell;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
@@ -21,6 +21,7 @@ import it.unibo.bombardero.view.sprites.api.Sprite;
 import it.unibo.bombardero.view.sprites.impl.BombarderoFlameSprite;
 import it.unibo.bombardero.view.sprites.impl.BombarderoOrientedSprite;
 import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
+import it.unibo.bombardero.view.sprites.impl.TimedBombarderoSprite;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
@@ -44,8 +45,8 @@ public class GamePlayCard extends JPanel {
     private Image obstacle = resourceGetter.loadImage("obstacles/cassa_prosp3");
     private Image unbreakable = resourceGetter.loadImage("obstacles/wall_prosp2");
     private Image bombLine = resourceGetter.loadImage("powerup/line_bomb");
-    private Image bombPlusOne = resourceGetter.loadImage("powerup/bomb_minus_one");
-    private Image bombMinusOne = resourceGetter.loadImage("powerup/bomb_plus_one");
+    private Image bombPlusOne = resourceGetter.loadImage("powerup/bomb_plus_one");
+    private Image bombMinusOne = resourceGetter.loadImage("powerup/bomb_minus_one");
     private Image bombPower = resourceGetter.loadImage("powerup/bomb_power");
     private Image bombRemote = resourceGetter.loadImage("powerup/bomb_remote");
     private Image bombPierce = resourceGetter.loadImage("powerup/bomb_pierce");
@@ -55,25 +56,23 @@ public class GamePlayCard extends JPanel {
     private Image skatesPlusOne = resourceGetter.loadImage("powerup/skates_plus_one");
     private Image skateMinusOne = resourceGetter.loadImage("powerup/skates_minus_one");
     private Image skull = resourceGetter.loadImage("powerup/skull");
-    /* TODO: KICK MANCANTE, DECIDERE SE FARLO */
 
     /* References to model components: */
     private final BombarderoGraphics graphics;
     private Map<Pair, Cell> cells;
     private final Character player;
-    private final Map<Character, EnemyImage> enemiesImages = new HashMap<>(); // every enemy is linked to its own sprite
+    private final Map<Character, SpriteImageCombo> characterImages = new HashMap<>(); // every enemy is linked to its own sprite
     private List<Character> enemiesList;
 
     /* Sprites and images: */
-    private OrientedSprite playerSprite;
     private final BombarderoFlameSprite flamesSprite;
-    private Image playerImage;
     private final Sprite normalBomb;
     private Image bomb_image;
+    private final Map<Character, TimedBombarderoSprite> dyingCharacters = new HashMap<>(); // dead characters are stored here to be displayed
+    private List<String> colorCodes = List.of("main", "main", "main");
 
     /* Static positions for quicker access: */
     private final Dimension mapPlacingPoint;
-    private final Dimension entityPlacingPoint;
 
 
     public GamePlayCard(final BombarderoGraphics graphics) {
@@ -82,7 +81,6 @@ public class GamePlayCard extends JPanel {
         this.setLayout(new BorderLayout());
 
         mapPlacingPoint = graphics.getResizingEngine().getMapPlacingPoint();
-        entityPlacingPoint = graphics.getResizingEngine().getEntityPlacingPoint();
 
         cells = graphics.getController().getMap(); 
         player = graphics.getController().getMainPlayer();
@@ -91,8 +89,9 @@ public class GamePlayCard extends JPanel {
         checkForNewEnemies();
 
         flamesSprite = new BombarderoFlameSprite(500, 6, graphics.getResizingEngine()::getScaledCellImage, resourceGetter);
-        playerSprite = new BombarderoOrientedSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
-        playerImage = playerSprite.getStandingImage();
+        OrientedSprite playerSprite = new BombarderoOrientedSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
+        Image playerImage = playerSprite.getStandingImage();
+        characterImages.put(player, new SpriteImageCombo(playerSprite, playerImage, "main"));
         normalBomb = new SimpleBombarderoSprite("bomb", resourceGetter, graphics.getResizingEngine()::getScaledBombImage, 4);
         bomb_image = normalBomb.getImage();
 
@@ -117,7 +116,7 @@ public class GamePlayCard extends JPanel {
             mapPlacingPoint.height,
             null
         );
-        /* Drawing the breakable obstacles, the bombs and the power ups (TODO: not done yet) */
+        /* Drawing the breakable obstacles, the bombs and the power ups */
         for (int i = 0; i < Utils.MAP_ROWS; i++) {
             for (int j = 0; j < Utils.MAP_COLS; j++) {
                 if (cells.containsKey(new Pair(i, j))) {
@@ -151,7 +150,6 @@ public class GamePlayCard extends JPanel {
                                 case MAX_FLAME_RANGE -> fireMax;
                                 case PLUS_ONE_SKATES -> skatesPlusOne;
                                 case MINUS_ONE_SKATES -> skateMinusOne;
-                                case KICK -> unbreakable;
                                 case SKULL -> skull;
                                 default -> throw new IllegalArgumentException("texture not present for \"" + pu.getType() + "\"");
                             };
@@ -178,19 +176,17 @@ public class GamePlayCard extends JPanel {
             }
         }
         /* Drawing the player and the enemies */
-        Dimension playerPosition = graphics.getResizingEngine().getCharacterPlacingPoint(graphics.getController().getMainPlayer().getCharacterPosition());
-        g2d.drawImage(playerImage,
-            playerPosition.width, playerPosition.height,
-            null
-        );
-        /*
-        for(int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
-            Dimension enemyPos = graphics.getResizingEngine().getCharacterPlacingPoint(graphics.getController().getEnemies().get(i).getCharacterPosition());
-            g2d.drawImage(enemiesImages[i], enemyPos.width, enemyPos.height, null);
-        } */
-        enemiesImages.entrySet().forEach(enemy -> {
+        characterImages.entrySet().forEach(enemy -> {
             Dimension enemyPos = graphics.getResizingEngine().getCharacterPlacingPoint(enemy.getKey().getCharacterPosition());
             g2d.drawImage(enemy.getValue().displayedImage(), enemyPos.width, enemyPos.height, null);
+        });
+        dyingCharacters.entrySet().forEach(entry -> {
+            Dimension pos = graphics.getResizingEngine().getCharacterPlacingPoint(entry.getKey().getCharacterPosition());
+            g2d.drawImage(
+                entry.getValue().getImage(),
+                pos.width, pos.height,
+                null
+            );
         });
     }
 
@@ -200,54 +196,32 @@ public class GamePlayCard extends JPanel {
     }
 
     public void updateSprites() {
-        /* Update player sprites: */
-        playerSprite.update();
-        if (player.isStationary()) {
-            playerImage = playerSprite.getStandingImage();
-        }
-        else if (playerSprite.getCurrentFacingDirection().equals(player.getFacingDirection())) {
-            playerImage = playerSprite.getImage();
-        }
-        else {
-            playerSprite = playerSprite.getNewSprite(player.getFacingDirection());
-            playerImage = playerSprite.getImage();
-        }
-
         checkForNewEnemies();
 
-        enemiesImages.entrySet().forEach(enemy -> {
-            enemy.getValue().sprite.update();
-            OrientedSprite sprite = enemy.getValue().sprite();
-            Image image = enemy.getValue().displayedImage();
-            if(enemy.getKey().isStationary()) {
-                image = enemy.getValue().sprite().getStandingImage();
+        characterImages.entrySet().forEach(character -> {
+            character.getValue().sprite.update();
+            OrientedSprite sprite = character.getValue().sprite();
+            Image image = character.getValue().displayedImage();
+            if(character.getKey().isStationary()) {
+                image = character.getValue().sprite().getStandingImage();
             }
-            if(enemy.getValue().sprite().getCurrentFacingDirection().equals(enemy.getKey().getFacingDirection())) {
-                image = enemy.getValue().sprite().getImage();
+            else if(character.getValue().sprite().getCurrentFacingDirection().equals(character.getKey().getFacingDirection())) {
+                image = character.getValue().sprite().getImage();
             }
             else {
-                sprite = enemy.getValue().sprite().getNewSprite(enemy.getKey().getFacingDirection());
+                sprite = character.getValue().sprite().getNewSprite(character.getKey().getFacingDirection());
                 image = sprite.getImage();
             }
-            enemiesImages.put(
-                enemy.getKey(),
-                new EnemyImage(sprite, image)
+            characterImages.put(
+                character.getKey(),
+                new SpriteImageCombo(sprite, image, "main")
             );
         });
-        /* Update enemy sprites: 
-        for (int i = 0; i < Utils.NUM_OF_ENEMIES; i++) {
-            enemySprite[i].update();
-            if(enemies.get(i).getFacingDirection().equals(Direction.DEFAULT)) {
-                enemiesImages[i] = enemySprite[i].getStandingImage();
-            }
-            else {
-                enemySprite[i] = enemySprite[i].getNewSprite(enemies.get(i).getFacingDirection());
-                enemiesImages[i] = enemySprite[i].getStandingImage();
-            }
-        } */
         /* Update bomb sprites: */
         normalBomb.update();
         bomb_image = normalBomb.getImage();
+        /* Update dying characters: */
+        updateDeadCharacters();
     }
 
 
@@ -273,19 +247,48 @@ public class GamePlayCard extends JPanel {
     private void checkForNewEnemies() {
         enemiesList = graphics.getController().getEnemies();
         enemiesList.stream()
-            .filter(enemy -> !enemiesImages.keySet().contains(enemy))
+            .filter(enemy -> !characterImages.keySet().contains(enemy))
             .forEach(enemy -> {
-                OrientedSprite sprite = new BombarderoOrientedSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
-                enemiesImages.put(
+                String colorCode = colorCodes.get(0);
+                colorCodes = colorCodes.subList(1, colorCode.length() - 1);
+                OrientedSprite sprite = new BombarderoOrientedSprite("character/" + colorCode + "/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
+                characterImages.put(
                     enemy,
-                    new EnemyImage(
+                    new SpriteImageCombo(
                         sprite,
-                        sprite.getStandingImage()
+                        sprite.getStandingImage(),
+                        colorCode
                     )
                 );
             });
     }
 
-    private record EnemyImage (OrientedSprite sprite, Image displayedImage) {
+    /* I had to do it in separates for-loops because of ConcurrentModificationException(s) */
+    private void updateDeadCharacters() {
+        for (Entry<Character, TimedBombarderoSprite> entry : dyingCharacters.entrySet()) {
+            entry.getValue().update();
+            if (entry.getValue().isOver()) {
+                dyingCharacters.remove(entry.getKey());
+            }
+        };
+        characterImages.entrySet().forEach(entry -> {
+            if (!entry.getKey().isAlive()) {
+                Image[] dyingAsset = SimpleBombarderoSprite.importAssets(
+                    "dying",
+                    "character/" + entry.getValue().colorCode() + "/dying",
+                    resourceGetter,
+                    graphics.getResizingEngine()::getScaledCharacterImage,
+                    4
+                );
+                dyingCharacters.put(
+                    entry.getKey(),
+                    new TimedBombarderoSprite(dyingAsset, 4, 4)
+                );
+            }
+        });
+        dyingCharacters.keySet().forEach(characterImages::remove);
+    }
+
+    private record SpriteImageCombo (OrientedSprite sprite, Image displayedImage, String colorCode) {
     }
 }

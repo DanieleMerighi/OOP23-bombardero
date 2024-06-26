@@ -12,16 +12,6 @@ public class Utils {
     public static final double WALL_PRESENCE_RATE = 0.8;
     public static final int MAX_RANGE_BOMB = 13;
 
-
-    //valori per mappa
-    public static final int GRASS = 1;
-    public static final int UNBREAKABLE_WALL = 2;
-    public static final int WALL = 3;
-    public static final int PLAYER = 4;
-    public static final int ENEMY = 5;
-    public static final int BOMB = 6;
-    public static final int EXPLOSION = 7;
-
     public static final Coord PLAYER_SPAWNPOINT = new Coord(0.5f, 0.5f);
     public static final List<Coord> ENEMIES_SPAWNPOINT = List.of(
         new Coord(12.5f, 12.5f),
@@ -30,12 +20,11 @@ public class Utils {
         );
     // Valori per il timer
     public final static long GAME_TIME = 120000l;
+    public final static int MAX_WAITING_TIME = 4000;
 
     // Valori per l'esplosione
-    public static final int EXPLOSION_RADIUS = 4;
     public static final int ENEMY_DETECTION_RADIUS = 4;
     public static final int ENEMY_STARTING_BOMBS = 1;
-    public static final int ENEMY_SPEED = 1;
 
     // PARAMETRI PER LA VIEW
     public static int MAP_WIDTH = 524; // the original map image's width

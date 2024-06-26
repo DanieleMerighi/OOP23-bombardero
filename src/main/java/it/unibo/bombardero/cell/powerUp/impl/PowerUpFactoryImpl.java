@@ -19,7 +19,7 @@ import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 public class PowerUpFactoryImpl implements PowerUpFactory {
 
     /* A map that stores the powerUp implementation as the value */
-    private final Map<PowerUpType, Supplier<PowerUpEffectStrategy>> powerUpMap;
+    private final Map<PowerUpType, Supplier<PowerUpEffectStrategy>> powerUpEffectMap;
     /*
      * Generate a list of power-ups with their weights
      * (the probability mass function enumeration, pmf)
@@ -31,31 +31,30 @@ public class PowerUpFactoryImpl implements PowerUpFactory {
     private static final EnumeratedDistribution<PowerUpType> WEIGHTED_POWERUP_DISTRIBUTION = new EnumeratedDistribution<>(WEIGHTED_POWERUP_LIST);
 
     public PowerUpFactoryImpl() {
-        this.powerUpMap = new HashMap<>();
+        this.powerUpEffectMap = new HashMap<>();
         initializePowerUps();
     }
 
     // Initializes the map 
     private void initializePowerUps() {
-        powerUpMap.put(PowerUpType.REMOTE_BOMB, () -> new RemoteBombEffectStrategy());
-        powerUpMap.put(PowerUpType.PIERCING_BOMB, () -> new PiercingBombEffectStrategy());
-        powerUpMap.put(PowerUpType.POWER_BOMB, () -> new PowerBombEffectStrategy());
-        powerUpMap.put(PowerUpType.PLUS_ONE_BOMB, () -> new PlusOneBombEffectStrategy());
-        powerUpMap.put(PowerUpType.MINUS_ONE_BOMB, () -> new MinusOneBombEffectStrategy());
-        powerUpMap.put(PowerUpType.PLUS_ONE_FLAME_RANGE, () -> new PlusOneFlameEffectStrategy());
-        powerUpMap.put(PowerUpType.MINUS_ONE_FLAME_RANGE, () -> new MinusOneFlameEffectStrategy());
-        powerUpMap.put(PowerUpType.MAX_FLAME_RANGE, () -> new MaxFlameRangeEffectStrategy());
-        powerUpMap.put(PowerUpType.PLUS_ONE_SKATES, () -> new PlusOneSkateEffectStrategy());
-        powerUpMap.put(PowerUpType.MINUS_ONE_SKATES, () -> new MinusOneSkateEffectStrategy());
-        powerUpMap.put(PowerUpType.LINE_BOMB, () -> new LineBombEffectStrategy());
-        powerUpMap.put(PowerUpType.KICK, () -> new KickEffectStrategy());
-        powerUpMap.put(PowerUpType.SKULL, () -> new SkullEffectStrategy());
+        powerUpEffectMap.put(PowerUpType.REMOTE_BOMB, () -> new RemoteBombEffectStrategy());
+        powerUpEffectMap.put(PowerUpType.PIERCING_BOMB, () -> new PiercingBombEffectStrategy());
+        powerUpEffectMap.put(PowerUpType.POWER_BOMB, () -> new PowerBombEffectStrategy());
+        powerUpEffectMap.put(PowerUpType.PLUS_ONE_BOMB, () -> new PlusOneBombEffectStrategy());
+        powerUpEffectMap.put(PowerUpType.MINUS_ONE_BOMB, () -> new MinusOneBombEffectStrategy());
+        powerUpEffectMap.put(PowerUpType.PLUS_ONE_FLAME_RANGE, () -> new PlusOneFlameEffectStrategy());
+        powerUpEffectMap.put(PowerUpType.MINUS_ONE_FLAME_RANGE, () -> new MinusOneFlameEffectStrategy());
+        powerUpEffectMap.put(PowerUpType.MAX_FLAME_RANGE, () -> new MaxFlameRangeEffectStrategy());
+        powerUpEffectMap.put(PowerUpType.PLUS_ONE_SKATES, () -> new PlusOneSkateEffectStrategy());
+        powerUpEffectMap.put(PowerUpType.MINUS_ONE_SKATES, () -> new MinusOneSkateEffectStrategy());
+        powerUpEffectMap.put(PowerUpType.LINE_BOMB, () -> new LineBombEffectStrategy());
+        powerUpEffectMap.put(PowerUpType.SKULL, () -> new SkullEffectStrategy());
     }
 
     @Override
     public PowerUp createPowerUp(it.unibo.bombardero.map.api.Pair pos) {
         final PowerUpType powerUpType = WEIGHTED_POWERUP_DISTRIBUTION.sample(); // Extract a random weighted PowerUp
-        final Supplier<PowerUpEffectStrategy> supplier = powerUpMap.get(powerUpType); // Get the power-Up effect
+        final Supplier<PowerUpEffectStrategy> supplier = powerUpEffectMap.get(powerUpType); // Get the power-Up effect
         if (supplier == null) { // Checks if the effect is null
             throw new IllegalArgumentException("Unknown power-up effect for: " + powerUpType);
         }

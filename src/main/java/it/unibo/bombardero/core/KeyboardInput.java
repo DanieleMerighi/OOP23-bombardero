@@ -60,12 +60,12 @@ public class KeyboardInput implements KeyListener {
             // calls powerup method to use line bomb powerup
             case 'l', 'L' -> {
                 controller.getMainPlayer().setHasToPlaceLineBomb(true);
-                System.out.println("l");
+                // System.out.println("l");
             }
             // calls player method to explode remote bomb powerup
             case 'p', 'P' -> {
                 controller.getMainPlayer().setHasToExplodeRemoteBomb(true);
-                System.out.println("p");
+                // System.out.println("p");
             }
             default -> {
             }

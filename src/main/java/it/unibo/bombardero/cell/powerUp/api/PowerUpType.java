@@ -24,8 +24,6 @@ public enum PowerUpType {
     MINUS_ONE_SKATES(15),
     // Botton-related P.U.
     LINE_BOMB(15),
-    // Bomb movement-related P.U.
-    KICK(10),
     // Debuff P.U.
     SKULL(25);
 

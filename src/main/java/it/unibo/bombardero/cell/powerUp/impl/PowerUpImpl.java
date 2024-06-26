@@ -16,8 +16,6 @@ import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 public class PowerUpImpl extends AbstractCell implements PowerUp {
     final private PowerUpType type;
     final private Consumer<Character> effect;
-    // private float kickBombSpeed;
-    // private List<Pair<Direction, Bomb>> kickBombList = new ArrayList<>();
 
     public PowerUpImpl(final PowerUpType type, Pair pos, final PowerUpEffectStrategy strategy) {
         super(CellType.POWERUP, pos, false);
@@ -33,6 +31,7 @@ public class PowerUpImpl extends AbstractCell implements PowerUp {
     @Override
     public void applyEffect(final Character character) {
         effect.accept(character);
+        // System.out.println(this.type);
     }
 
     //how to stop the forEach from placing bomb after placebomb returns flase?
@@ -63,34 +62,5 @@ public class PowerUpImpl extends AbstractCell implements PowerUp {
                 );
         }
     }
-
-    /*
-     * public void kick(Character character, Bomb bomb){
-     * if (character.hasKick()) {
-     * kickBombList.add(new Pair<>(character.getFacingDirection(), bomb));
-     * /*
-     * aggiungo alla lista la bomba con la direction. All'update scorro la lista
-     * se non è empty. muovo di kickBombSpeed (da mettere a costante)
-     * continua finché non ha collition. con player se ha il kick la ricalcia nella
-     * direzione che guarda ?
-     * lo rimuovo dall'array dalla collition a meno che non stia guardando nella
-     * direzione opposta il player
-     * se hitta altro rimuovo. Oppure a tempo, dopo 3 secondi tanto esplode
-     *
-     * }
-     * }
-     */
-
-    /*
-     * public void update(){
-     * kickBombList.forEach(bomb -> {
-     * Coord coord = bomb.getSecond().getPos();
-     * coord = new it.unibo.bombardero.map.api.Pair((int) (bomb.getFirst().getDy() *
-     * kickBombSpeed), (int) (bomb.getFirst().getDx() * kickBombSpeed));
-     * bomb.getSecond().setPos(bomb.getSecond().getPos().sum(coord));
-     * bomb.getSecond().getPos();
-     * });
-     * }
-     */
 
 }
