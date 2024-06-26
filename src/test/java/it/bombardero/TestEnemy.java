@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.unibo.bombardero.cell.BasicBomb;
+import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.BombFactoryImpl;
 import it.unibo.bombardero.cell.Flame.FlameType;
@@ -198,6 +199,12 @@ public class TestEnemy {
         public void removePowerUp(Pair pos) {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'removePowerUp'");
+        }
+
+        @Override
+        public Bomb getBomb(Pair pos) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'getBomb'");
         }
 
     }
