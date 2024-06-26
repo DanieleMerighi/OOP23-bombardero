@@ -2,6 +2,7 @@ package it.unibo.bombardero.core.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.OverrideMustInvoke;
@@ -125,8 +126,8 @@ public class BombarderoGameManager implements GameManager {
     }
 
     @Override
-    public Bomb getBomb(Pair pos) {
-        return boombs.stream().filter(b-> b.getPos().equals(pos)).findAny().get();
+    public Optional<Bomb> getBomb(Pair pos) {
+        return boombs.stream().filter(b-> b.getPos().equals(pos)).findAny();
     }
 
     @Override
