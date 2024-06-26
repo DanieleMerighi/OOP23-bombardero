@@ -11,8 +11,10 @@ import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.BombFactoryImpl;
 import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.Flame;
+import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
+import it.unibo.bombardero.guide.api.GuideManager;
 import it.unibo.bombardero.guide.impl.BombarderoGuideManager;
 import it.unibo.bombardero.map.api.BombarderoTimer;
 import it.unibo.bombardero.map.api.Coord;
@@ -48,7 +50,8 @@ public class BombarderoGameManager implements GameManager {
         ce = new BombarderoCollision(this);
         bombFactory = new BombFactoryImpl(this);
         this.player = new Player(this, Utils.PLAYER_SPAWNPOINT, bombFactory);
-        Utils.ENEMIES_SPAWNPOINT.forEach(enemyCoord -> enemies.add(new Enemy(this, enemyCoord, bombFactory)));
+        enemies.add(new Enemy(this, Utils.ENEMIES_SPAWNPOINT.get(0), bombFactory));
+        //Utils.ENEMIES_SPAWNPOINT.forEach(enemyCoord -> enemies.add(new Enemy(this, enemyCoord, bombFactory)));
     }
 
     public BombarderoGameManager(final Controller controller, final boolean guideMode) {
@@ -56,10 +59,8 @@ public class BombarderoGameManager implements GameManager {
         map = new GameMapImpl(false);
         ce = new BombarderoCollision(this);
         bombFactory = new BombFactoryImpl(this);
-        /* TODO: CHANGE PLAYER SPAWNPOINT IN MIDDLE OF MAP */
-        this.player = new Player(this, BombarderoGuideManager.PLAYER_GUIDE_SPAWNPOINT, bombFactory);
-        this.map.addBreakableWall(BombarderoGuideManager.CRATE_GUIDE_SPAWNPOINT);
-        /* TODO: enemies.add(new Player(this, , bombFactory)); */ 
+        this.player = new Player(this, GuideManager.PLAYER_GUIDE_SPAWNPOINT, bombFactory);
+        this.map.addBreakableWall(GuideManager.CRATE_GUIDE_SPAWNPOINT);
     }
 
     @Override
@@ -69,6 +70,8 @@ public class BombarderoGameManager implements GameManager {
         map.update();
         if (player.isAlive()) {
             player.update(elapsed);
+            ce.checkCharacterCollision(player);
+            ce.checkFlameCollision(player);
         }
         if(!boombs.isEmpty()) {
             boombs.forEach(b->b.update());
@@ -78,20 +81,16 @@ public class BombarderoGameManager implements GameManager {
             flames.forEach(f->f.update(elapsed));
             flames.removeIf(f->f.isExpired());
         }
-        // enemies.forEach(enemy -> {
-        //     if (enemy.isAlive()) {
-        //         enemy.update(elapsed);
-        //     } else {
-        //         enemies.remove(enemy);
-        //     }
-        // });
-        if(enemies.get(0).isAlive()){
+        enemies.forEach(enemy -> {
+             if (enemy.isAlive()) {
+                 enemy.update(elapsed);
+                 ce.checkCharacterCollision(enemy);
+                 ce.checkCharacterCollision(enemy);
+             }
+        });
+        /*if(enemies.get(0).isAlive()){
             enemies.get(0).update(elapsed);
-        } else {
-            System.out.println("ma ciao");
-        }
-        ce.checkFlameCollision();
-        ce.checkCharacterCollision(player);
+        }*/
     }
 
     @Override
@@ -116,13 +115,20 @@ public class BombarderoGameManager implements GameManager {
 
     @Override
     public boolean addBomb(final BasicBomb bomb) {
-        boombs.add(bomb);
+        if(!bomb.getBombType().equals(BombType.BOMB_REMOTE)) {
+            boombs.add(bomb);
+        }
         return map.addBomb(bomb, bomb.getPos());
     }
 
     @Override
     public void removeBomb(final Pair pos) {
         map.removeBomb(pos);
+    }
+
+    @Override
+    public void removePowerUp(final Pair pos) {
+        map.removePowerUp(pos);
     }
 
     @Override

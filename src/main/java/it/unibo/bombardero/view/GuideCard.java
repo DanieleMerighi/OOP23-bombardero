@@ -3,8 +3,13 @@ package it.unibo.bombardero.view;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.BorderLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -23,9 +28,15 @@ import it.unibo.bombardero.core.api.Controller;
  */
 public final class GuideCard extends GamePlayCard {
 
+    private Image startImage;
+    private Image backImage;
+
     private String message = "";
     private Image messageBoxImage;
     private final Font font;
+
+    private JButton back;
+    private JButton start;
 
     private final Dimension messageBoxPlacingPoint;
 
@@ -35,21 +46,22 @@ public final class GuideCard extends GamePlayCard {
         // CHECKSTYLE: MagicNumber OFF
         font = resourceGetter.loadFont("mono");
         messageBoxImage = resourceGetter.loadImage("overlay/dialog");
+        startImage = resourceGetter.loadImage("menu/play");
+        backImage = resourceGetter.loadImage("menu/play");
         // CHECKSTYLE: MagicNumber ON
         
         messageBoxPlacingPoint = graphics.getResizingEngine().getMessageBoxPosition();
-        JButton back = new JButton("back");
-        JButton start = new JButton("start");
 
-        /*
-        this.add(back);
-        this.add(start);
+        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        back = new JButton(new ImageIcon(backImage));
+        start = new JButton(new ImageIcon(startImage));
+        back.setBorder(null);
+        start.setBorder(null);
         
         back.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // controller.endGuide(); or some kind of thing
                 graphics.showCard(BombarderoGraphics.MENU_CARD);
             }
             
@@ -62,12 +74,12 @@ public final class GuideCard extends GamePlayCard {
                 controller.startGame();
             }
             
-        }); */
+        });
     }
 
     @Override 
-    public void paint(Graphics g) {
-        super.paint(g);
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         Graphics2D g2d = (Graphics2D)g;
         g2d.drawString(message, messageBoxPlacingPoint.width, messageBoxPlacingPoint.height);
         g2d.drawImage(messageBoxImage, messageBoxPlacingPoint.width, messageBoxPlacingPoint.height, null);
@@ -75,6 +87,11 @@ public final class GuideCard extends GamePlayCard {
 
     public void showMessage(final BombarderoViewMessages message) {
         this.message = message.getMessage();
+    }
+
+    public void displayEndGuide() {
+        this.add(back);
+        this.add(start);
     }
     
 }

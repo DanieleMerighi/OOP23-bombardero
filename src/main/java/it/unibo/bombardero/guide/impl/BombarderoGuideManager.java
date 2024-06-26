@@ -1,19 +1,12 @@
 package it.unibo.bombardero.guide.impl;
 
 import java.util.Stack;
-import java.util.function.BiPredicate;
-import java.util.function.BiConsumer;
-
-import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.core.api.Controller;
-import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.core.impl.BombarderoGameManager;
 import it.unibo.bombardero.guide.api.GuideManager;
 import it.unibo.bombardero.guide.api.GuideStep;
 import it.unibo.bombardero.map.api.Coord;
-import it.unibo.bombardero.map.api.GameMap;
-import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.view.BombarderoViewMessages;
 
 /**
@@ -26,10 +19,6 @@ import it.unibo.bombardero.view.BombarderoViewMessages;
  * @author Federico Bagattoni
  */
 public final class BombarderoGuideManager extends BombarderoGameManager implements GuideManager {
-
-    public final static Coord PLAYER_GUIDE_SPAWNPOINT = new Coord(4.5f, 6.5f);
-    public final static Pair CRATE_GUIDE_SPAWNPOINT = new Pair(8, 6);
-    public final static Coord DUMMY_GUIDE_SPAWNPOINT = new Coord(7.5f, 5.5f);
 
     private final Stack<GuideStep> guideProcedures = new Stack<>();
 
@@ -50,9 +39,8 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
 
     @Override
     public void updateGame(final long elapsed) {
-        this.getGameMap().update();
-        this.getPlayer().update(elapsed);
-        if(guideProcedures.peek().condition().test(getGameMap(), this)) {
+        super.updateGame(elapsed);
+        if(!guideProcedures.isEmpty() && guideProcedures.peek().condition().test(getGameMap(), this)) {
             guideProcedures.pop().action().accept(this, getController());
         }
     }
@@ -64,12 +52,11 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
 
     private void initialiseProcedures() {
         guideProcedures.add(new GuideStep(
-            (map, manager) -> true,
-            (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.PLACE_BOMB)
-        ));
-        guideProcedures.add(new GuideStep(
-            (map, manager) -> map.isEmpty(CRATE_GUIDE_SPAWNPOINT),
-            (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.EXPLAIN_POWERUP)
+            (map, manager) -> true /* manager.getEnemies().stream().allMatch(enemy -> !enemy.isAlive())*/,
+            (manager, controller) -> {
+                controller.toggleMessage(BombarderoViewMessages.END_GUIDE);
+                controller.endGuide();
+            }
         ));
         guideProcedures.add(new GuideStep(
             (map, manager) -> map.isEmpty(CRATE_GUIDE_SPAWNPOINT),
@@ -79,8 +66,13 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
             }
         ));
         guideProcedures.add(new GuideStep(
-            (map, manager) -> manager.getEnemies().stream().allMatch(enemy -> !enemy.isAlive()),
-            (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.END_GUIDE)
+            (map, manager) -> map.isEmpty(CRATE_GUIDE_SPAWNPOINT),
+            (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.EXPLAIN_POWERUP)
+        ));
+        /* TODO: capire assieme a turchi come fare a capire che il player si è mosso in tutte le direzioni */
+        guideProcedures.add(new GuideStep(
+            (map, manager) -> true,
+            (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.PLACE_BOMB)
         ));
     } 
 

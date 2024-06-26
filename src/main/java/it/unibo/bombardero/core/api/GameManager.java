@@ -25,6 +25,8 @@ public interface GameManager {
     void removeBomb(Pair pos);
 
     void addFlame(FlameType type,Pair pos);
+
+    void removePowerUp(final Pair pos);
     
     void removeFlame(Pair pos);
     

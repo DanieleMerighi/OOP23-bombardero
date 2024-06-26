@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.Set;
 
-import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.Character;
@@ -28,15 +27,13 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
     private final Character character;
     private final GameManager mgr;
     private Pair pos;
-    private long elapsedTime = 0;
     protected GameMap map;
-    private Optional<PowerUpType> bombType;
-    private int coutBreckable;
+    private final Optional<PowerUpType> bombType;
 
-    public BasicBomb(GameManager mgr, Character character) {
+    public BasicBomb(GameManager mgr, Character character, Pair pos) {
         super(CellType.BOMB , character.getIntCoordinate(), true);
         this.mgr = mgr;
-        this.pos = character.getIntCoordinate();
+        this.pos = pos;
         this.range = character.getFlameRange();
         this.map=mgr.getGameMap();
         this.character = character;
@@ -47,7 +44,7 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
         if(bombType.isPresent()){
             return bombType.get().toBombType();
         }
-        return null;
+        return BombType.BOMB_BASIC;
     }
 
     @Override
@@ -62,7 +59,7 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
 
     public void update(boolean condition) {
         if(condition){
-            this.explode();
+            this.explode(); 
         }
     }
 
@@ -99,7 +96,6 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
     }
     
     private Set<Entry<Pair , FlameType>> checkDirection(Direction dir , int range , Pair pos) {
-        coutBreckable = 0;
         return IntStream.iterate(1 , i->i <= range , i->i+1)
             .mapToObj(i->pos.sum(dir.getPair().multipy(i)))
             .takeWhile(stopFlamePropagation())
@@ -112,14 +108,15 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
     }
 
     protected Predicate<? super Pair> stopFlamePropagation() {
-        return p-> (map.isEmpty(p) && coutBreckable < 1) || !map.isUnbreakableWall(p) && !map.isBomb(p) && isFirstBreckableWall(p);
+        return p-> map.isEmpty(p) || !map.isUnbreakableWall(p) && !isBreckableWall(p);
     }
 
-    private boolean isFirstBreckableWall(Pair pos) {
+    private boolean isBreckableWall(Pair pos) {
         if(map.isBreakableWall(pos)) {
-            coutBreckable++;
+            mgr.removeWall(pos);
+            return true;
         }
-        return map.isBreakableWall(pos) && coutBreckable <= 1 ;
+        return false;
     }
 
 }

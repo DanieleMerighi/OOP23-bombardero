@@ -132,6 +132,10 @@ public class BombarderoGraphics {
         guideCard.showMessage(message);
     }
 
+    public void displayEndGuide() {
+        guideCard.displayEndGuide();
+    }
+
     public Controller getController() {
         return this.controller;
     }

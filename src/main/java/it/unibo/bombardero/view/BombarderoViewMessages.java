@@ -3,7 +3,7 @@ package it.unibo.bombardero.view;
 public enum BombarderoViewMessages {
 
     EXPLAIN_MOVEMENT("To move, press the W, A, S and D"),
-    PLACE_BOMB("Everyone starts with one bomb, press the space bar to place it"),
+    PLACE_BOMB("Everyone starts with one bomb, press the space bar to place it near the crate and brake"),
     EXPLAIN_POWERUP("Under the crates you can find powerups to enhance your abilities"),
     KILL_ENEMY("Bombs have a certain range, place a bomb near an enemy to kill him"),
     END_GUIDE("Good! The guide has endend, you can go back to the menu or start a new game!");
