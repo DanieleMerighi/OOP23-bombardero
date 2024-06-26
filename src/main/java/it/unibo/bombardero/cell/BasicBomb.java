@@ -31,7 +31,7 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
     private final BombType bombType;
 
     public BasicBomb(GameManager mgr, Character character, int range, Pair pos) {
-        super(CellType.BOMB , character.getIntCoordinate(), true);
+        super(CellType.BOMB , pos, true);
         this.mgr = mgr;
         this.position = pos;
         this.range = character.getFlameRange();
