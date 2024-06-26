@@ -491,7 +491,10 @@ public abstract class Character {
      *                       otherwise
      */
     public void setHasToPlaceLineBomb(final boolean hasToPlaceLineBomb) {
-        this.hasToPlaceLineBomb = hasToPlaceLineBomb;
+        // Checks if the character has the line-bomb PowerUp
+        if (hasLineBomb()) {
+            this.hasToPlaceLineBomb = hasToPlaceLineBomb;
+        }
     }
 
     /**
