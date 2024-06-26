@@ -53,7 +53,10 @@ public class BombFactoryImpl implements BombFactory{
         return new BasicBomb(mgr , character, character.getFlameRange(), pos) {
             public boolean isBreckableWall(Pair pos) {
                 if(mgr.getGameMap().isBreakableWall(pos)) {
-                    mgr.removeWall(pos);
+                    if(pos.equals(this.getPos().sum(new Pair(this.getRange(),0))) || pos.equals(this.getPos().sum(new Pair(0,this.getRange())))) {
+                        mgr.removeWall(pos);
+                        return true;
+                    }
                 }
                 return false;
             }
