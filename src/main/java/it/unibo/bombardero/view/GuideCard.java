@@ -3,15 +3,19 @@ package it.unibo.bombardero.view;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.LayoutManager;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import javax.swing.BoxLayout;
+import java.awt.GridLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+
+import org.jgrapht.generate.GridGraphGenerator;
+import org.jgrapht.util.SupplierException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -42,6 +46,7 @@ public final class GuideCard extends GamePlayCard {
     private final JLabel messageBox;
 
     private final Dimension messageBoxPlacingPoint;
+    private final Dimension messageBoxSize = null;
 
     public GuideCard(final JFrame parentFrame, final Controller controller, final BombarderoGraphics graphics, final ResourceGetter resourceGetter, final ResizingEngine resizingEngine) {
         super(graphics);
@@ -53,8 +58,8 @@ public final class GuideCard extends GamePlayCard {
         backImage = resourceGetter.loadImage("menu/play");
         // CHECKSTYLE: MagicNumber ON
         
-        messageBoxPlacingPoint = graphics.getResizingEngine().getMessageBoxPosition();
-        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        messageBoxPlacingPoint = graphics.getResizingEngine().getMessageBoxPosition(); 
+        this.setLayout(new GridLayout(5, 1));
         back = new JButton(new ImageIcon(backImage));
         start = new JButton(new ImageIcon(startImage));
         messageBox = new JLabel(new ImageIcon(messageBoxImage));
@@ -65,8 +70,15 @@ public final class GuideCard extends GamePlayCard {
 
         back.setBorder(null);
         start.setBorder(null);
+        back.setBorderPainted(false);
+        start.setBorderPainted(false);
+        start.setContentAreaFilled(false);
+        back.setContentAreaFilled(false);
+        start.setFocusPainted(false);
+        back.setFocusPainted(false);
+        this.add(new JLabel());
         this.add(messageBox);
-        
+
         back.addActionListener(new ActionListener() {
 
             @Override
@@ -91,7 +103,11 @@ public final class GuideCard extends GamePlayCard {
     }
 
     public void displayEndGuide() {
-        this.add(back);
+        this.remove(messageBox);
+        this.add(new JLabel());
         this.add(start);
+        this.add(back);
+        this.revalidate();
+        this.repaint();
     }
 }
