@@ -146,7 +146,6 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
     private Optional<Pair> findNearestSafeCellRecursive(Pair enemyCoord, int explRad, Set<Pair> visited) {
         List<Pair> adjacentCells = EnumSet.allOf(Direction.class)
                 .stream()
-                .filter(d -> d != Direction.DEFAULT)
                 .map(d -> new Pair(enemyCoord.x() + d.x(), enemyCoord.y() + d.y()))
                 .filter(cell -> isValidCell(cell) && (map.isEmpty(cell) || map.isPowerUp(cell)) && !visited.contains(cell))
                 .collect(Collectors.toCollection(ArrayList::new));
