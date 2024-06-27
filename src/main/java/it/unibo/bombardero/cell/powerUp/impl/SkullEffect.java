@@ -59,7 +59,7 @@ public final class SkullEffect implements PowerUpEffect {
             skull.get(new Random().nextInt(skull.size())).accept(character);
 
              // Set the effect duration and reset logic
-             character.setSkeletonEffectDuration(EFFECT_DURATION_IN_SECONDS * SECONDS_TO_MILLISECONDS); // 10 seconds in milliseconds
+             character.setSkeletonEffectDuration(EFFECT_DURATION_IN_SECONDS * SECONDS_TO_MILLISECONDS);
              character.setResetEffect(() -> { // Restores all stats modified by the skull
                  character.setSpeed(previousSpeed);
                  character.setFlameRange(previousFlameRange);
