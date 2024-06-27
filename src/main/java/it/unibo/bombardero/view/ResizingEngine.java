@@ -2,6 +2,7 @@ package it.unibo.bombardero.view;
 
 import javax.swing.JFrame;
 
+import it.unibo.bombardero.guide.api.GuideManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.utils.Utils;
@@ -30,7 +31,8 @@ public class ResizingEngine {
     private final Dimension entityPlacingPoint;
     private final Dimension imageClockPosition;
     private final Dimension timerPosition;
-    private final Dimension messageBoxPosition;
+    private final Dimension wasdGuidePosition;
+    private final Dimension spaceGuidePosition;
 
     public ResizingEngine(final BombarderoGraphics graphics) {
         this.graphics = graphics;
@@ -46,7 +48,8 @@ public class ResizingEngine {
         entityPlacingPoint = initEntityPlacingPoint();
         imageClockPosition = initImageClockPosition();
         timerPosition = initTimerPosition();
-        messageBoxPosition = initMessageBoxPosition();
+        wasdGuidePosition = initWASDPosition();
+        spaceGuidePosition = initSpacePosition();
     }  
 
     /* FRAME-RELATED METHODS */
@@ -126,6 +129,14 @@ public class ResizingEngine {
     public Image getScaledClockImage(final Image clockImage) {
         return clockImage.getScaledInstance(getScaledCellSize(), getScaledCellSize(), Image.SCALE_SMOOTH);
     }
+
+    public Image getScaledWASDImage(final Image wasdImage) {
+        return wasdImage.getScaledInstance((int)Math.floor(39 * 2.5 * getScale()), (int)Math.floor(24 * 2.5 * getScale()), Image.SCALE_SMOOTH);
+    }
+
+    public Image getScaledSpaceImage(final Image wasdImage) {
+        return wasdImage.getScaledInstance((int)Math.floor(30 * 2 * getScale()), (int)Math.floor(12 * 2 * getScale()), Image.SCALE_SMOOTH);
+    }
     
     /* GAME-RELATED METHODS: */
     
@@ -179,8 +190,12 @@ public class ResizingEngine {
         return timerPosition;
     }
 
-    public Dimension getMessageBoxPosition() {
-        return messageBoxPosition;
+    public Dimension getWasdGuidePosition() {
+        return wasdGuidePosition;
+    }
+
+    public Dimension getSpaceGuidePosition() {
+        return spaceGuidePosition;
     }
 
     private Dimension initMapPlacingPoint() {
@@ -226,10 +241,19 @@ public class ResizingEngine {
         );
     }
 
-    private Dimension initMessageBoxPosition() {
+    private Dimension initWASDPosition() {
+        Dimension cell = getCharacterPlacingPoint(GuideManager.PLAYER_GUIDE_SPAWNPOINT);
         return new Dimension(
-            100,
-            100
+            cell.width - 39,
+            cell.height + 2 * getScaledCellSize()
+        );
+    }
+
+    private Dimension initSpacePosition() {
+        Dimension cell = getCellPlacingPoint(GuideManager.CRATE_GUIDE_SPAWNPOINT);
+        return new Dimension(
+            cell.width - getScaledCellSize(),
+            (int)Math.floor(cell.height + 1.5 * getScaledCellSize())
         );
     }
     
