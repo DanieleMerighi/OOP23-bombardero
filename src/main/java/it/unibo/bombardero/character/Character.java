@@ -26,14 +26,14 @@ public abstract class Character {
     private static final float BOUNDING_BOX_WIDTH = 0.700f;
     private static final float BOUNDING_BOX_Y_OFFSET = 0.2f;
     private static final float BOUNDING_BOX_X_OFFSET = 0.3f;
-    public static final float STARTING_SPEED = 0.05f;
+    private static final float STARTING_SPEED = 0.05f;
     private static final float INCREASE_SPEED = 0.005f;
-    public static final int STARTING_FLAME_RANGE = 1;
+    private static final int STARTING_FLAME_RANGE = 1;
     private static final int STARTING_BOMBS = 1;
 
     // Constants for controls
-    public static final float MAX_SPEED = 0.09f;
-    public static final int MAX_FLAME_RANGE = 8;
+    private static final float MAX_SPEED = 0.09f;
+    private static final int MAX_FLAME_RANGE = 8;
     private static final int MAX_BOMBS = 8;
 
     // Game manager reference
@@ -94,7 +94,7 @@ public abstract class Character {
      * 
      * @param elapsedTime the time elapsed since the last update
      */
-    public abstract void update(final long elapsedTime);
+    public abstract void update(long elapsedTime);
 
     /**
      * Updates the skeleton's effects.
@@ -131,7 +131,7 @@ public abstract class Character {
     }
 
     /**
-     * Gets the integer coordinates of the character
+     * Gets the integer coordinates of the character.
      * 
      * @return the map's corrisponding integer coordinates of the character
      */
@@ -376,6 +376,22 @@ public abstract class Character {
     }
 
     /**
+     * Gets the starting flame range of the character.
+     * @return the starting flame range
+     */
+    public static int getStartingFlameRange() {
+        return STARTING_FLAME_RANGE;
+    }
+
+     /**
+     * Gets the max flame range of the character.
+     * @return the max flame range
+     */
+    public static int getMaxFlameRange() {
+        return MAX_FLAME_RANGE;
+    }
+
+    /**
      * Gets the flame range of the bombs placed by the character.
      * 
      * @return the flame range
@@ -411,6 +427,22 @@ public abstract class Character {
         if (this.flameRange > STARTING_FLAME_RANGE) {
             this.flameRange--;
         }
+    }
+
+    /**
+     * Gets the starting speed of the character.
+     * @return the starting speed
+     */
+    public static float getStartingSpeed() {
+        return STARTING_SPEED;
+    }
+
+    /**
+     * Gets the max speed of the character.
+     * @return the max speed
+     */
+    public static float getMaxSpeed() {
+        return MAX_SPEED;
     }
 
     /**
@@ -500,7 +532,7 @@ public abstract class Character {
     /**
      * Sets whether the character should place a line bomb.
      * 
-     * @param hasToPlaceBomb true to cause the character to place a line bomb, false
+     * @param hasToPlaceLineBomb true to cause the character to place a line bomb, false
      *                       otherwise
      */
     public void setHasToPlaceLineBomb(final boolean hasToPlaceLineBomb) {

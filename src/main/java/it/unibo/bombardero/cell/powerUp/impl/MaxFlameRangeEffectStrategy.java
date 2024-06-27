@@ -8,6 +8,6 @@ public class MaxFlameRangeEffectStrategy implements PowerUpEffectStrategy {
 
     @Override
     public Consumer<Character> getEffect() {
-        return character -> character.setFlameRange(Character.MAX_FLAME_RANGE);
+        return character -> character.setFlameRange(Character.getMaxFlameRange());
     }
 }

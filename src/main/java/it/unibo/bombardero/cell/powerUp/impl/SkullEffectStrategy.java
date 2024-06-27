@@ -17,11 +17,11 @@ public class SkullEffectStrategy implements PowerUpEffectStrategy {
     @Override
     public Consumer<Character> getEffect() {
         List<Consumer<Character>> skull = new ArrayList<>();
-        skull.add(character -> character.setSpeed(Character.STARTING_SPEED / DECREASE_SPEED_FACTOR)); // Slownes
-        skull.add(character -> character.setSpeed(Character.MAX_SPEED * INCREASE_SPEED_FACTOR)); // Hyperactivity
+        skull.add(character -> character.setSpeed(Character.getStartingSpeed() / DECREASE_SPEED_FACTOR)); // Slownes
+        skull.add(character -> character.setSpeed(Character.getMaxSpeed() * INCREASE_SPEED_FACTOR)); // Hyperactivity
         skull.add(character -> character.setConstipation(true)); // Constipation: unables to lay down bomb
         skull.add(character -> character.setButterfingers(true)); // Butterfinger: constantly lays down bombs in his cell
-        skull.add(character -> character.setFlameRange(Character.STARTING_FLAME_RANGE)); // Weakness
+        skull.add(character -> character.setFlameRange(Character.getStartingFlameRange())); // Weakness
 
         return character -> {
             // Checks if the character already had a skeleton effect applied
