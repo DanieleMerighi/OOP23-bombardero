@@ -18,7 +18,7 @@ public class PowerUpImpl extends AbstractCell implements PowerUp {
     final private Consumer<Character> effect;
 
     public PowerUpImpl(final PowerUpType type, Pair pos, final PowerUpEffectStrategy strategy) {
-        super(CellType.POWERUP, pos, true);
+        super(CellType.POWERUP, pos, false);
         this.type = type;
         this.effect = strategy.getEffect();
     }
@@ -31,7 +31,6 @@ public class PowerUpImpl extends AbstractCell implements PowerUp {
     @Override
     public void applyEffect(final Character character) {
         effect.accept(character);
-        // System.out.println(this.type);
     }
 
     //how to stop the forEach from placing bomb after placebomb returns flase?

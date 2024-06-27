@@ -10,6 +10,8 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -31,12 +33,13 @@ public final class GuideCard extends GamePlayCard {
     private Image startImage;
     private Image backImage;
 
-    private String message = "";
+    //private String message = "";
     private Image messageBoxImage;
     private final Font font;
 
     private JButton back;
     private JButton start;
+    private final JLabel messageBox;
 
     private final Dimension messageBoxPlacingPoint;
 
@@ -51,12 +54,18 @@ public final class GuideCard extends GamePlayCard {
         // CHECKSTYLE: MagicNumber ON
         
         messageBoxPlacingPoint = graphics.getResizingEngine().getMessageBoxPosition();
-
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         back = new JButton(new ImageIcon(backImage));
         start = new JButton(new ImageIcon(startImage));
+        messageBox = new JLabel(new ImageIcon(messageBoxImage));
+        
+        messageBox.setHorizontalTextPosition(SwingConstants.CENTER);
+        messageBox.setVerticalTextPosition(SwingConstants.CENTER);
+        messageBox.setFont(font.deriveFont( 10.0f));
+
         back.setBorder(null);
         start.setBorder(null);
+        this.add(messageBox);
         
         back.addActionListener(new ActionListener() {
 
@@ -77,21 +86,12 @@ public final class GuideCard extends GamePlayCard {
         });
     }
 
-    @Override 
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D)g;
-        g2d.drawString(message, messageBoxPlacingPoint.width, messageBoxPlacingPoint.height);
-        g2d.drawImage(messageBoxImage, messageBoxPlacingPoint.width, messageBoxPlacingPoint.height, null);
-    }
-
     public void showMessage(final BombarderoViewMessages message) {
-        this.message = message.getMessage();
+        messageBox.setText(message.getMessage());
     }
 
     public void displayEndGuide() {
         this.add(back);
         this.add(start);
     }
-    
 }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.unibo.bombardero.cell.BasicBomb;
+import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.cell.powerup.api.PowerUpFactory;
@@ -21,6 +22,8 @@ import it.unibo.bombardero.map.impl.GameMapImpl;
 
 import java.util.List;
 import java.util.stream.IntStream;
+import java.util.Optional;
+
 
 public class TestPowerUp {
 
@@ -126,6 +129,12 @@ public class TestPowerUp {
         public void removePowerUp(Pair pos) {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'removePowerUp'");
+        }
+
+        @Override
+        public Optional<Bomb> getBomb(Pair pos) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'getBomb'");
         }
     }
 

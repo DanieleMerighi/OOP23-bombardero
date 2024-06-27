@@ -66,7 +66,7 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
             }
         ));
         guideProcedures.add(new GuideStep(
-            (map, manager) -> map.isEmpty(CRATE_GUIDE_SPAWNPOINT),
+            (map, manager) -> map.isPowerUp(CRATE_GUIDE_SPAWNPOINT),
             (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.EXPLAIN_POWERUP)
         ));
         /* TODO: capire assieme a turchi come fare a capire che il player si è mosso in tutte le direzioni */

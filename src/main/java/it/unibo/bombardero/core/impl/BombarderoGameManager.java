@@ -2,6 +2,7 @@ package it.unibo.bombardero.core.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.OverrideMustInvoke;
@@ -66,12 +67,11 @@ public class BombarderoGameManager implements GameManager {
     @Override
     public void updateGame(final long elapsed) {
         gameTime += elapsed;
-        /* TODO: CAPIRE COME FARE A FARE COLLASSO DELLA MAPPA IN GAME MA NON IN GUIDE */
-        map.update();
+        map.update(getTimeLeft());
         if (player.isAlive()) {
             player.update(elapsed);
             ce.checkCharacterCollision(player);
-            ce.checkFlameCollision(player);
+            ce.checkFlameAndPowerUpCollision(player);
         }
         if(!boombs.isEmpty()) {
             boombs.forEach(b->b.update());
@@ -115,15 +115,21 @@ public class BombarderoGameManager implements GameManager {
 
     @Override
     public boolean addBomb(final BasicBomb bomb) {
-        if(!bomb.getBombType().equals(BombType.BOMB_REMOTE)) {
-            boombs.add(bomb);
+        if (map.addBomb(bomb, bomb.getPos())) { // If the bomb is added to the map
+            boombs.add(bomb); // The bomb is added to the list
+            return true;
         }
-        return map.addBomb(bomb, bomb.getPos());
+        return false;
     }
 
     @Override
     public void removeBomb(final Pair pos) {
         map.removeBomb(pos);
+    }
+
+    @Override
+    public Optional<Bomb> getBomb(Pair pos) {
+        return boombs.stream().filter(b-> b.getPos().equals(pos)).findAny();
     }
 
     @Override

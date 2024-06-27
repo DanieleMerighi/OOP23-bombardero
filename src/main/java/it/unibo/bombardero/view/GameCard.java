@@ -2,13 +2,10 @@ package it.unibo.bombardero.view;
 
 import javax.swing.JButton;
 
-import it.unibo.bombardero.view.sprites.impl.BombarderoFlameSprite;
-
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.geom.Rectangle2D;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.BoxLayout;

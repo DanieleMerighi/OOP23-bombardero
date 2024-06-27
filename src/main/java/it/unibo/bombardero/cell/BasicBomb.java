@@ -26,25 +26,26 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
     private int countTick=0;
     private final Character character;
     private final GameManager mgr;
-    private Pair pos;
-    protected GameMap map;
-    private final Optional<PowerUpType> bombType;
+    private Pair position;
+    private GameMap map;
+    private final BombType bombType;
 
-    public BasicBomb(GameManager mgr, Character character, Pair pos) {
-        super(CellType.BOMB , character.getIntCoordinate(), true);
+    public BasicBomb(GameManager mgr, Character character, int range, Pair pos) {
+        super(CellType.BOMB , pos, true);
         this.mgr = mgr;
-        this.pos = pos;
+        this.position = pos;
         this.range = character.getFlameRange();
         this.map=mgr.getGameMap();
         this.character = character;
-        this.bombType = character.getBombType();
+        if(character.getBombType().isPresent()) {
+            this.bombType = character.getBombType().get().toBombType();
+        } else {
+            this.bombType = BombType.BOMB_BASIC;
+        }
     }
 
     public BombType getBombType(){
-        if(bombType.isPresent()){
-            return bombType.get().toBombType();
-        }
-        return BombType.BOMB_BASIC;
+        return this.bombType;
     }
 
     @Override
@@ -72,11 +73,11 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
     }
 
     private void explode() {
+        exploded = true;
         computeFlame(this);
         character.increaseNumBomb();
         character.removeBombFromDeque(this);
-        exploded = true;
-        mgr.removeBomb(pos);
+        mgr.removeBomb(position);
     }
 
     public int getRange(){
@@ -84,7 +85,7 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
     }
     
     public Pair getPos(){
-        return pos;
+        return position;
     }
 
     public void computeFlame(Bomb bomb) {
@@ -107,11 +108,11 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
             .entrySet();
     }
 
-    protected Predicate<? super Pair> stopFlamePropagation() {
-        return p-> map.isEmpty(p) || !map.isUnbreakableWall(p) && !isBreckableWall(p);
+    private Predicate<? super Pair> stopFlamePropagation() {
+        return p-> map.isEmpty(p) || (isBomb(p) && !map.isUnbreakableWall(p) && !isBreckableWall(p));
     }
 
-    private boolean isBreckableWall(Pair pos) {
+    public boolean isBreckableWall(Pair pos) {//TODO check 
         if(map.isBreakableWall(pos)) {
             mgr.removeWall(pos);
             return true;
@@ -119,4 +120,13 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
         return false;
     }
 
+    private boolean isBomb(Pair pos) { 
+        if(map.isBomb(pos)) {
+            Bomb bomb = mgr.getBomb(pos).get();
+            if(!bomb.isExploded()) {
+                bomb.update(true);
+            }
+        }
+        return true;
+    }
 }

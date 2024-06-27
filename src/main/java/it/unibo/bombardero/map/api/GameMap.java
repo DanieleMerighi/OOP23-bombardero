@@ -17,7 +17,7 @@ public interface GameMap {
      * Updates the dynamic aspect of the map, calling the {@code update()} method of
      * {@link MapManager}.
      */
-    void update();
+    void update(final long timeLeft);
  
     /** 
      * Starts collapsing the map adding one wall at a time,

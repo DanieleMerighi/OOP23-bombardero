@@ -56,8 +56,8 @@ public final class GameMapImpl implements GameMap {
     }
 
     @Override
-    public void update() {
-        mapManager.update();
+    public void update(final long timeLeft) {
+        mapManager.update(timeLeft);
     }
 
     @Override
