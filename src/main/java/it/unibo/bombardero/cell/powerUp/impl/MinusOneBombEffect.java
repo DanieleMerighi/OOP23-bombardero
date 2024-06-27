@@ -1,10 +1,10 @@
 package it.unibo.bombardero.cell.powerup.impl;
 
-import it.unibo.bombardero.cell.powerup.api.PowerUpEffectStrategy;
+import it.unibo.bombardero.cell.powerup.api.PowerUpEffect;
 import it.unibo.bombardero.character.Character;
 import java.util.function.Consumer;
 
-public class MinusOneBombEffectStrategy implements PowerUpEffectStrategy {
+public final class MinusOneBombEffect implements PowerUpEffect {
 
     @Override
     public Consumer<Character> getEffect() {

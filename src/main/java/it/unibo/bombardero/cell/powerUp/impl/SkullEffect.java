@@ -1,13 +1,13 @@
 package it.unibo.bombardero.cell.powerup.impl;
 
-import it.unibo.bombardero.cell.powerup.api.PowerUpEffectStrategy;
+import it.unibo.bombardero.cell.powerup.api.PowerUpEffect;
 import it.unibo.bombardero.character.Character;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 
-public class SkullEffectStrategy implements PowerUpEffectStrategy {
+public final class SkullEffect implements PowerUpEffect {
 
     private static final int EFFECT_DURATION_IN_SECONDS = 10;
     private static final int SECONDS_TO_MILLISECONDS = 1000;

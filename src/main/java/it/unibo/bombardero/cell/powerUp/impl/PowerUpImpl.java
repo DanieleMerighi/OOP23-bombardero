@@ -10,7 +10,7 @@ import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.cell.AbstractCell;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
-import it.unibo.bombardero.cell.powerup.api.PowerUpEffectStrategy;
+import it.unibo.bombardero.cell.powerup.api.PowerUpEffect;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 
 /**
@@ -27,7 +27,7 @@ public final class PowerUpImpl extends AbstractCell implements PowerUp {
      * @param position  the position of the PowerUp in the map
      * @param strategy  the effect of the PowerUp
      */
-    public PowerUpImpl(final PowerUpType type, final Pair position, final PowerUpEffectStrategy strategy) {
+    public PowerUpImpl(final PowerUpType type, final Pair position, final PowerUpEffect strategy) {
         super(CellType.POWERUP, position, false);
         this.type = type;
         this.effect = strategy.getEffect();
