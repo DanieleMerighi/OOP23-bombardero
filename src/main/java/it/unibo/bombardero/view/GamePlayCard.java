@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.JPanel;
 
@@ -68,7 +69,7 @@ public class GamePlayCard extends JPanel {
     private final BombarderoFlameSprite flamesSprite;
     private final Sprite normalBomb;
     private Image bomb_image;
-    private final Map<Character, TimedBombarderoSprite> dyingCharacters = new HashMap<>(); // dead characters are stored here to be displayed
+    private Map<Character, TimedBombarderoSprite> dyingCharacters = new HashMap<>(); // dead characters are stored here to be displayed
     private List<String> colorCodes = List.of("blue", "red", "main");
 
     /* Static positions for quicker access: */
@@ -267,10 +268,10 @@ public class GamePlayCard extends JPanel {
     private void updateDeadCharacters() {
         for (Entry<Character, TimedBombarderoSprite> entry : dyingCharacters.entrySet()) {
             entry.getValue().update();
-            if (entry.getValue().isOver()) {
-                dyingCharacters.remove(entry.getKey());
-            }
         };
+        dyingCharacters = dyingCharacters.entrySet().stream()
+            .filter(entry -> !entry.getValue().isOver())
+            .collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
         characterImages.entrySet().forEach(entry -> {
             if (!entry.getKey().isAlive()) {
                 Image[] dyingAsset = SimpleBombarderoSprite.importAssets(
