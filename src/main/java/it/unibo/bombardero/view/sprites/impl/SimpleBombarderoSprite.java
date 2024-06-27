@@ -34,6 +34,12 @@ public class SimpleBombarderoSprite implements Sprite {
         this.framesPerSprite = framesPerSprite;
         ticksPerFrame = (framesPerSprite == 2 ? 16 : 7);
     }
+
+    public SimpleBombarderoSprite(final Image[] asset, final int framesPerSprite,  final int ticksPerFrame)  {
+        this.asset = asset;
+        this.framesPerSprite = framesPerSprite;
+        this.ticksPerFrame = ticksPerFrame;
+    }
     /**
      * Creates a new {@link SimpleBombarderoSprite} importin the asset using 
      * the objects and parameters passed as arugments.
