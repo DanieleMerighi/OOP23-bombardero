@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JComponent;
 import javax.swing.SwingConstants;
 
+import org.apache.http.impl.auth.SPNegoScheme;
 import org.jgrapht.Graph;
 import org.jgrapht.generate.GridGraphGenerator;
 import org.jgrapht.util.SupplierException;
@@ -22,7 +23,9 @@ import org.jgrapht.util.SupplierException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-import java.util.List;
+import java.util.List; 
+import java.util.Map; 
+import java.util.HashMap; 
 
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.view.sprites.api.Sprite;
@@ -52,11 +55,11 @@ public final class GuideCard extends GamePlayCard {
     private final JLabel messageBox;
 
     private final Dimension messageBoxSize = null;
-    private final Sprite wasd_sprite;
+    private final Sprite wasdSprite;
     private final Sprite spaceSprite;
+    private Sprite currentShowedSprite;
 
-    private final Dimension wasdSpritePlacingPoint;
-    private final Dimension spaceSpritePlacingPoint;
+    private final Map<Sprite, Dimension> spritesPlacingPoint = new HashMap<>();
 
     public GuideCard(final JFrame parentFrame, final Controller controller, final BombarderoGraphics graphics, final ResourceGetter resourceGetter, final ResizingEngine resizingEngine) {
         super(graphics);
@@ -66,7 +69,7 @@ public final class GuideCard extends GamePlayCard {
         messageBoxImage = resourceGetter.loadImage("overlay/dialog");
         startImage = resourceGetter.loadImage("menu/play");
         backImage = resourceGetter.loadImage("menu/play");
-        wasd_sprite = new SimpleBombarderoSprite(
+        wasdSprite = new SimpleBombarderoSprite(
             SimpleBombarderoSprite.importAssets("WASD", "overlay/buttons/WASD", resourceGetter, graphics.getResizingEngine()::getScaledWASDImage, 8),
             8, 12);
         spaceSprite = new SimpleBombarderoSprite(
@@ -74,8 +77,9 @@ public final class GuideCard extends GamePlayCard {
             2, 32);
         // CHECKSTYLE: MagicNumber ON
         
-        wasdSpritePlacingPoint = graphics.getResizingEngine().getWasdGuidePosition();
-        spaceSpritePlacingPoint = graphics.getResizingEngine().getSpaceGuidePosition();
+        currentShowedSprite = wasdSprite;
+        spritesPlacingPoint.put(wasdSprite, graphics.getResizingEngine().getWasdGuidePosition());
+        spritesPlacingPoint.put(spaceSprite, graphics.getResizingEngine().getSpaceGuidePosition());
         this.setLayout(new GridLayout(5, 1));
         back = new JButton(new ImageIcon(backImage));
         start = new JButton(new ImageIcon(startImage));
@@ -118,19 +122,19 @@ public final class GuideCard extends GamePlayCard {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(wasd_sprite.getImage(), wasdSpritePlacingPoint.width, wasdSpritePlacingPoint.height, null);
-        g.drawImage(spaceSprite.getImage(), spaceSpritePlacingPoint.width, spaceSpritePlacingPoint.height, null);
+        g.drawImage(currentShowedSprite.getImage(), spritesPlacingPoint.get(currentShowedSprite).width, spritesPlacingPoint.get(currentShowedSprite).height, null);
     }
 
     @Override
     public void updateSprites() {
         super.updateSprites();
-        wasd_sprite.update();
+        wasdSprite.update();
         spaceSprite.update();
     }
 
     public void showMessage(final BombarderoViewMessages message) {
         messageBox.setText(message.getMessage());
+        showAnimatedKeys(message);
     }
 
     public void displayEndGuide() {
@@ -141,5 +145,16 @@ public final class GuideCard extends GamePlayCard {
         this.add(back);
         this.revalidate();
         this.repaint();
+    }
+
+    private void showAnimatedKeys(final BombarderoViewMessages message) {
+        currentShowedSprite = switch(message) {
+            case END_GUIDE -> null;
+            case EXPLAIN_MOVEMENT -> wasdSprite;
+            case EXPLAIN_POWERUP -> null;
+            case KILL_ENEMY -> null;
+            case PLACE_BOMB -> spaceSprite;
+            default -> null;
+        };
     }
 }
