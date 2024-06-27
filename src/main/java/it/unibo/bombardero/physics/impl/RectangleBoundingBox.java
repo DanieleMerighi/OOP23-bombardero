@@ -10,6 +10,7 @@ import it.unibo.bombardero.physics.api.BoundingBox;
 
 
 public class RectangleBoundingBox implements BoundingBox{
+    private static final double MINIMUM_COLLISION_DISTANCE = 0.001;
     private Rectangle2D fisicsBox;
 
     public RectangleBoundingBox(Point2D charPos, float withd, float height) {
@@ -23,7 +24,9 @@ public class RectangleBoundingBox implements BoundingBox{
 
     @Override
     public boolean isColliding(BoundingBox bBox) {
-        return fisicsBox.intersects(bBox.getPhysicsBox()) && (float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getWidth()>0.01 && (float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getHeight()>0.01;
+        return fisicsBox.intersects(bBox.getPhysicsBox()) 
+            && (float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getWidth()>MINIMUM_COLLISION_DISTANCE 
+            && (float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getHeight()>MINIMUM_COLLISION_DISTANCE;
     }
 
     @Override
@@ -38,7 +41,7 @@ public class RectangleBoundingBox implements BoundingBox{
             case DOWN:
                 return new Coord(0, -(float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getHeight());
             default:
-                return new Coord(0, 0);//TODO not sure about that
+                return new Coord(0, 0);
         }
     }
 
@@ -58,9 +61,9 @@ public class RectangleBoundingBox implements BoundingBox{
             case LEFT:
                 return new Coord((float)(mapOutline.getX1()-fisicsBox.getMinX()) , 0);
             case RIGHT:
-                return new Coord((float)(mapOutline.getX1()-fisicsBox.getMaxY()) , 0);
+                return new Coord((float)(mapOutline.getX1()-fisicsBox.getMaxX()) , 0);
             default:
-                return new Coord(0, 0);//TODO not sure about that
+                return new Coord(0, 0);
         }
     }
 
