@@ -146,7 +146,7 @@ public class Enemy extends Character {
                 if(l.isEmpty()) {
                     moveRandomly();
                 } else {
-                    nextMove = Optional.of(l.getFirst());
+                    nextMove = Optional.of(l.get(0));
                 }
             }
         } else {
