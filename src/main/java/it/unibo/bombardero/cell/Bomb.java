@@ -1,11 +1,8 @@
 package it.unibo.bombardero.cell;
 
-import java.util.Map;
-
-import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.map.api.Pair;
 
-public interface Bomb { 
+public interface Bomb extends Cell{ 
 
     public enum BombType {
 

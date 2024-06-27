@@ -90,7 +90,7 @@ public class TestPowerUp {
         }
 
         @Override
-        public boolean addBomb(BasicBomb bomb) {
+        public boolean addBomb(Bomb bomb) {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'addBomb'");
         }

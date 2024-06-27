@@ -12,7 +12,7 @@ public class BombFactoryImpl implements BombFactory{
     }
 
     @Override
-    public BasicBomb CreateBomb(Character character) {
+    public Bomb CreateBomb(Character character) {
         if(!character.getBombType().isPresent()){
             return createBasicBomb(character, character.getIntCoordinate());
         }
@@ -29,7 +29,7 @@ public class BombFactoryImpl implements BombFactory{
     }
 
     @Override
-    public BasicBomb CreateBomb(Character character, Pair pos) {
+    public Bomb CreateBomb(Character character, Pair pos) {
         if(!character.getBombType().isPresent()){
             return createBasicBomb(character, pos);
         }
@@ -45,11 +45,11 @@ public class BombFactoryImpl implements BombFactory{
         }
     }
     
-    private BasicBomb createBasicBomb(Character character, Pair pos) {
+    private Bomb createBasicBomb(Character character, Pair pos) {
         return new BasicBomb(mgr, character, character.getFlameRange(), pos) {};
     }
 
-    private BasicBomb createPiercingBomb(Character character, Pair pos) {
+    private Bomb createPiercingBomb(Character character, Pair pos) {
         return new BasicBomb(mgr , character, character.getFlameRange(), pos) {
             public boolean isBreckableWall(Pair pos) {
                 if(mgr.getGameMap().isBreakableWall(pos)) {
@@ -70,11 +70,11 @@ public class BombFactoryImpl implements BombFactory{
         };
     }
 
-    private BasicBomb createPowerBomb(Character character, Pair pos) {
+    private Bomb createPowerBomb(Character character, Pair pos) {
         return new BasicBomb(mgr , character, BasicBomb.MAX_RANGE, pos) {};
     }
 
-    private BasicBomb createRemoteBomb(Character character, Pair pos) {
+    private Bomb createRemoteBomb(Character character, Pair pos) {
         return new BasicBomb(mgr, character, character.getFlameRange(), pos) {
 
             @Override

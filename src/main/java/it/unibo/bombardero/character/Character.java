@@ -6,6 +6,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayDeque;
 
 import it.unibo.bombardero.cell.BasicBomb;
+import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
@@ -58,9 +59,9 @@ public abstract class Character {
     private float speed = STARTING_SPEED;
     private Optional<PowerUpType> bombType = Optional.empty();
     private boolean lineBomb;   // False by default
-    private final Deque<BasicBomb> bombQueue = new ArrayDeque<>();
+    private final Deque<Bomb> bombQueue = new ArrayDeque<>();
 
-    public Deque<BasicBomb> getBombQueue() {
+    public Deque<Bomb> getBombQueue() {
         return new ArrayDeque<>(bombQueue);
     }
 
@@ -171,7 +172,7 @@ public abstract class Character {
         return placeBombImpl(this.bombFactory.CreateBomb(this, coordinate));
     }
 
-    private boolean placeBombImpl(final BasicBomb bomb) {
+    private boolean placeBombImpl(final Bomb bomb) {
         if (hasBombsLeft() && !this.constipation && this.manager
                 .addBomb(bomb)) {
             this.numBomb--;
@@ -206,7 +207,7 @@ public abstract class Character {
     public void explodeRemoteBomb() {
         if (hasPlacedRemoteBomb()) { // Checks if there's a remote bomb to explode.
             // Finds the first remote bomb occurrence.
-            final BasicBomb remoteBomb = bombQueue.stream()
+            final Bomb remoteBomb = bombQueue.stream()
                     .filter(bomb -> bomb.getBombType().equals(BombType.BOMB_REMOTE))
                     .findFirst()
                     .get();
@@ -221,7 +222,7 @@ public abstract class Character {
      * 
      * @param explodedBomb the exploded bomb that needs to be removed
      */
-    public void removeBombFromDeque(final BasicBomb explodedBomb) {
+    public void removeBombFromDeque(final Bomb explodedBomb) {
         if (!bombQueue.isEmpty()) {
             // System.out.println("removed bomb\n\n");
             bombQueue.removeFirstOccurrence(explodedBomb);

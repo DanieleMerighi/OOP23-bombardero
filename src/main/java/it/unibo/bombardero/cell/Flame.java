@@ -2,7 +2,6 @@ package it.unibo.bombardero.cell;
 
 import java.util.Map;
 
-import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;

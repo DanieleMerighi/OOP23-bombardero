@@ -22,7 +22,7 @@ public interface GameManager {
 
     GameMap getGameMap();
 
-    boolean addBomb(BasicBomb bomb);
+    boolean addBomb(Bomb bomb);
     
     void removeBomb(Pair pos);
 

@@ -1,7 +1,6 @@
 package it.unibo.bombardero.cell;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -9,7 +8,6 @@ import java.util.stream.IntStream;
 import java.util.Set;
 
 import it.unibo.bombardero.cell.Flame.FlameType;
-import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.GameManager;

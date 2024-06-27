@@ -165,7 +165,7 @@ public class TestEnemy {
         }
 
         @Override
-        public boolean addBomb(BasicBomb b) {
+        public boolean addBomb(Bomb b) {
             return map.addBomb(b, b.getPos());
         }
 
@@ -206,7 +206,6 @@ public class TestEnemy {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'getBomb'");
         }
-
     }
 
 }
