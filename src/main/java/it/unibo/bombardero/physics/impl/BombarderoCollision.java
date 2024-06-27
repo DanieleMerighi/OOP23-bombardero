@@ -1,5 +1,6 @@
 package it.unibo.bombardero.physics.impl;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,8 @@ import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.character.Character;
 
 public class BombarderoCollision implements CollisionEngine{
+    private static final int MIN_NUM_CELL = 0;
+    private static final int MAX_NUM_CELL = 12;
     private final GameManager mgr;
     private GameMap gMap;
     private Map<Pair,Cell> map;
@@ -47,7 +50,7 @@ public class BombarderoCollision implements CollisionEngine{
     public void checkCharacterCollision(Character character) {
         gMap=mgr.getGameMap();
         map=gMap.getMap();
-        List<Pair> cells = getDirectionCell(character.getFacingDirection() , character.getIntCoordinate());
+        List<Pair> cells = getDirectionCell(character);
         if(!cells.isEmpty()) {
             Optional<Cell> collidingCell= cells.stream()
                 .filter(p -> map.containsKey(p))
@@ -78,12 +81,26 @@ public class BombarderoCollision implements CollisionEngine{
         }
     }
 
-    private List<Pair> getDirectionCell(Direction dir , Pair cPos) {//TODO brutto
-        List<Pair> l = dir.getDiagonals(dir,cPos);
-        List<Pair> l2 = new LinkedList <> (l);
-        if(cPos.sum(dir.getPair()).x() >= 0 && cPos.sum(dir.getPair()).y() >= 0 && cPos.sum(dir.getPair()).x() < 13 && cPos.sum(dir.getPair()).y() < 13) {
-            l2.add(cPos.sum(dir.getPair()));
-        } 
-        return l2;
+    private List<Pair> getDirectionCell(Character character) {
+        Direction dir = character.getFacingDirection();
+        List<Pair> l = new ArrayList<>();
+        l.add(character.getIntCoordinate().sum(dir.getPair()));
+        if(dir.equals(Direction.RIGHT) || dir.equals(Direction.LEFT)) {
+            l.add(new Pair (character.getIntCoordinate().x(),
+                getAdjacent(character.getCharacterPosition().y(), character.getIntCoordinate().y())).sum(dir.getPair()));
+        } else {
+            l.add(new Pair (getAdjacent(character.getCharacterPosition().x(), character.getIntCoordinate().x()),
+                character.getIntCoordinate().y()).sum(dir.getPair()));
+        }
+        l.removeIf(p -> isOutOfBound(p));
+        return l;
+    }
+
+    private int getAdjacent(float n1, int n2) {
+        return n1 - n2 > 0.5 ? n2+1 : n2-1;
+    }
+
+    private boolean isOutOfBound(Pair p) {
+        return p.x() < MIN_NUM_CELL || p.y() < MIN_NUM_CELL || p.x() > MAX_NUM_CELL || p.y() > MAX_NUM_CELL;
     }
 }
