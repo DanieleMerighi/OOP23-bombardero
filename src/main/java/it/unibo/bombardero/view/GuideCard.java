@@ -12,15 +12,24 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JComponent;
 import javax.swing.SwingConstants;
 
+import org.apache.http.impl.auth.SPNegoScheme;
+import org.jgrapht.Graph;
 import org.jgrapht.generate.GridGraphGenerator;
 import org.jgrapht.util.SupplierException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+import java.util.List; 
+import java.util.Map; 
+import java.util.HashMap; 
+
 import it.unibo.bombardero.core.api.Controller;
+import it.unibo.bombardero.view.sprites.api.Sprite;
+import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
 
 /**
  * This class contains the panel for the Guide of
@@ -45,8 +54,12 @@ public final class GuideCard extends GamePlayCard {
     private JButton start;
     private final JLabel messageBox;
 
-    private final Dimension messageBoxPlacingPoint;
     private final Dimension messageBoxSize = null;
+    private final Sprite wasdSprite;
+    private final Sprite spaceSprite;
+    private Sprite currentShowedSprite;
+
+    private final Map<Sprite, Dimension> spritesPlacingPoint = new HashMap<>();
 
     public GuideCard(final JFrame parentFrame, final Controller controller, final BombarderoGraphics graphics, final ResourceGetter resourceGetter, final ResizingEngine resizingEngine) {
         super(graphics);
@@ -56,9 +69,17 @@ public final class GuideCard extends GamePlayCard {
         messageBoxImage = resourceGetter.loadImage("overlay/dialog");
         startImage = resourceGetter.loadImage("menu/play");
         backImage = resourceGetter.loadImage("menu/play");
+        wasdSprite = new SimpleBombarderoSprite(
+            SimpleBombarderoSprite.importAssets("WASD", "overlay/buttons/WASD", resourceGetter, graphics.getResizingEngine()::getScaledWASDImage, 8),
+            8, 12);
+        spaceSprite = new SimpleBombarderoSprite(
+            SimpleBombarderoSprite.importAssets("SPACE", "overlay/buttons/SPACEBAR", resourceGetter, graphics.getResizingEngine()::getScaledSpaceImage, 2),
+            2, 32);
         // CHECKSTYLE: MagicNumber ON
         
-        messageBoxPlacingPoint = graphics.getResizingEngine().getMessageBoxPosition(); 
+        currentShowedSprite = wasdSprite;
+        spritesPlacingPoint.put(wasdSprite, graphics.getResizingEngine().getWasdGuidePosition());
+        spritesPlacingPoint.put(spaceSprite, graphics.getResizingEngine().getSpaceGuidePosition());
         this.setLayout(new GridLayout(5, 1));
         back = new JButton(new ImageIcon(backImage));
         start = new JButton(new ImageIcon(startImage));
@@ -98,16 +119,42 @@ public final class GuideCard extends GamePlayCard {
         });
     }
 
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(currentShowedSprite.getImage(), spritesPlacingPoint.get(currentShowedSprite).width, spritesPlacingPoint.get(currentShowedSprite).height, null);
+    }
+
+    @Override
+    public void updateSprites() {
+        super.updateSprites();
+        wasdSprite.update();
+        spaceSprite.update();
+    }
+
     public void showMessage(final BombarderoViewMessages message) {
         messageBox.setText(message.getMessage());
+        showAnimatedKeys(message);
     }
 
     public void displayEndGuide() {
         this.remove(messageBox);
         this.add(new JLabel());
+        this.add(new JLabel());
         this.add(start);
         this.add(back);
         this.revalidate();
         this.repaint();
+    }
+
+    private void showAnimatedKeys(final BombarderoViewMessages message) {
+        currentShowedSprite = switch(message) {
+            case END_GUIDE -> null;
+            case EXPLAIN_MOVEMENT -> wasdSprite;
+            case EXPLAIN_POWERUP -> null;
+            case KILL_ENEMY -> null;
+            case PLACE_BOMB -> spaceSprite;
+            default -> null;
+        };
     }
 }
