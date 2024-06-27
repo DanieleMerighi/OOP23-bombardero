@@ -42,6 +42,7 @@ public class Enemy extends Character {
     public Enemy(GameManager manager, Coord coord, BombFactory bombFactory) {
         super(manager, coord, bombFactory);
         GraphManagerImpl.initialize(manager.getGameMap());
+        setStationary(true);
     }
 
     private int calculateDistance(Pair coord1, Pair coord2) {
@@ -138,16 +139,17 @@ public class Enemy extends Character {
         graph = GraphManagerImpl.getGraphReasoner(gameMap, time);
         currentState.execute(this); // Delegate behavior to current state
         if (nextMove.isPresent()) {
-            if (gameMap.isBreakableWall(nextMove.get())
-                    && graph.findNearestSafeCell(getIntCoordinate(), getFlameRange()).isPresent()) {
-                placeBomb();
-            } else if (calculateDistance(getIntCoordinate(), nextMove.get()) > 1) {
+            if (calculateDistance(getIntCoordinate(), nextMove.get()) > 1) {
                 List<Pair> l = graph.findShortestPathToPlayer(getIntCoordinate(), nextMove.get());
                 if(l.isEmpty()) {
                     moveRandomly();
                 } else {
                     nextMove = Optional.of(l.getFirst());
                 }
+            }
+            if (gameMap.isBreakableWall(nextMove.get())
+                    && graph.findNearestSafeCell(getIntCoordinate(), getFlameRange()).isPresent()) {
+                placeBomb();
             }
         } else {
             waitTimer++;
@@ -318,9 +320,28 @@ public class Enemy extends Character {
             void execute(Enemy enemy) {
                 enemy.setStationary(true);
                 enemy.nextMove = Optional.empty();
-                if (enemy.getBombQueue().isEmpty()) {
+                if(enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) {
+                    enemy.currentState = ESCAPE;
+                    enemy.setStationary(false);
+                } else if(enemy.graph.findNearestPowerUp(enemy.getIntCoordinate()).isPresent()) {
+                    enemy.currentState = EXPlORING;
+                    enemy.setStationary(false);
+                } else if (enemy.getBombQueue().isEmpty()) {
                     enemy.currentState = PATROL;
                     enemy.setStationary(false);
+                }
+            }
+        }, 
+        EXPlORING {
+            @Override
+            void execute(Enemy enemy) {
+                Optional<Pair> powerUp = enemy.graph.findNearestPowerUp(enemy.getIntCoordinate());
+                if(enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) {
+                    enemy.currentState = ESCAPE;
+                } else if(powerUp.isPresent()) {
+                    enemy.nextMove = powerUp;
+                } else {
+                    enemy.currentState = PATROL;
                 }
             }
         };

@@ -204,6 +204,18 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
                 .findFirst();
     }
 
+    public Optional<Pair> findNearestPowerUp(Pair enemyCoord) {
+        final BreadthFirstIterator<Pair, DefaultWeightedEdge> bfsIterator = new BreadthFirstIterator<>(
+                graph,
+                enemyCoord);
+
+        return StreamSupport.stream(
+                Spliterators.spliteratorUnknownSize(bfsIterator, Spliterator.ORDERED), false)
+                .takeWhile(cell -> bfsIterator.getDepth(cell) <= 3) // Limit traversal to explosion radius
+                .filter(cell -> map.isPowerUp(cell))
+                .min((cell1, cell2) -> Double.compare(calculateDistance(enemyCoord, cell1), calculateDistance(enemyCoord, cell2)));
+    }
+
     public void updateGraph(GameMap newMap) {
         List<Pair> oldWalls = map.getMap().keySet().stream().filter(c -> map.isBreakableWall(c)).toList();
         List<Pair> newWalls = newMap.getMap().keySet().stream().filter(c -> newMap.isBreakableWall(c)).toList();
