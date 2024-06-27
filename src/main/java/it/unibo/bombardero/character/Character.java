@@ -5,7 +5,6 @@ import java.util.Deque;
 import java.awt.geom.Point2D;
 import java.util.ArrayDeque;
 
-import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.Bomb.BombType;
@@ -60,10 +59,6 @@ public abstract class Character {
     private Optional<PowerUpType> bombType = Optional.empty();
     private boolean lineBomb;   // False by default
     private final Deque<Bomb> bombQueue = new ArrayDeque<>();
-
-    public Deque<Bomb> getBombQueue() {
-        return new ArrayDeque<>(bombQueue);
-    }
 
     // Update related
     private boolean hasToPlaceBomb;
@@ -227,6 +222,15 @@ public abstract class Character {
             // System.out.println("removed bomb\n\n");
             bombQueue.removeFirstOccurrence(explodedBomb);
         }
+    }
+
+    /**
+     * Gets the bomb deque.
+     * 
+     * @return the bomb deque
+     */
+    public Deque<Bomb> getBombQueue() {
+        return new ArrayDeque<>(bombQueue);
     }
 
     /**
