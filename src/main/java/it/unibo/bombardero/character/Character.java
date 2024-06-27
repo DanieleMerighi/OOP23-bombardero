@@ -22,6 +22,10 @@ import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 public abstract class Character {
 
     // Constants for default settings
+    private static final float BOUNDING_BOX_HEIGHT = 0.75f;
+    private static final float BOUNDING_BOX_WIDTH = 0.700f;
+    private static final float BOUNDING_BOX_Y_OFFSET = 0.2f;
+    private static final float BOUNDING_BOX_X_OFFSET = 0.3f;
     public static final float STARTING_SPEED = 0.05f;
     private static final float INCREASE_SPEED = 0.005f;
     public static final int STARTING_FLAME_RANGE = 1;
@@ -84,7 +88,7 @@ public abstract class Character {
         this.manager = manager; // TODO: Solve manager, a copy?
         this.coordinate = coord;
         this.bombFactory = bombFactory;
-        this.bBox = new RectangleBoundingBox(new Point2D.Float(0.1562f, 0.0625f), 0.700f, 0.75f);
+        this.bBox = new RectangleBoundingBox(new Point2D.Float(0, 0), BOUNDING_BOX_WIDTH, BOUNDING_BOX_HEIGHT);
     }
 
     /**
@@ -289,7 +293,7 @@ public abstract class Character {
      */
     public void setCharacterPosition(final Coord coordinates) {
         this.coordinate = coordinates;
-        bBox.move(new Point2D.Float(coordinates.x() - (float) (0.781 / 2), coordinates.y() - (float) (0.875 / 2)));
+        bBox.move(new Point2D.Float(coordinates.x() - (float) BOUNDING_BOX_X_OFFSET, coordinates.y() - BOUNDING_BOX_Y_OFFSET));
     }
 
     /**
