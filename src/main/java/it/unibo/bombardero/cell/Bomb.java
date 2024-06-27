@@ -2,7 +2,7 @@ package it.unibo.bombardero.cell;
 
 import it.unibo.bombardero.map.api.Pair;
 
-public interface Bomb extends Cell{ 
+public interface Bomb extends Cell {
 
     public enum BombType {
 
