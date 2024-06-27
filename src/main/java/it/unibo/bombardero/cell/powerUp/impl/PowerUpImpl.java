@@ -25,12 +25,12 @@ public final class PowerUpImpl extends AbstractCell implements PowerUp {
      * 
      * @param type      the type of PowerUp
      * @param position  the position of the PowerUp in the map
-     * @param strategy  the effect of the PowerUp
+     * @param effect  the effect of the PowerUp
      */
-    public PowerUpImpl(final PowerUpType type, final Pair position, final PowerUpEffect strategy) {
+    public PowerUpImpl(final PowerUpType type, final Pair position, final PowerUpEffect effect) {
         super(CellType.POWERUP, position, false);
         this.type = type;
-        this.effect = strategy.getEffect();
+        this.effect = effect.getEffect();
     }
 
     @Override
