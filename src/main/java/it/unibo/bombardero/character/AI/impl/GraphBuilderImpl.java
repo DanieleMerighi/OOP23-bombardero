@@ -19,7 +19,15 @@ import java.util.EnumSet;
  * representation
  * from a game map.
  */
-public class GraphBuilderImpl {
+public final class GraphBuilderImpl {
+
+    private static final double BREAKABLEWALL_WEIGHT = 2.5;
+    private static final int STANDARD_WEIGHT = 1;
+
+    // Private constructor to prevent instantiation
+    private GraphBuilderImpl() {
+        throw new UnsupportedOperationException("Utility class");
+    }
 
     /**
      * Constructs a weighted graph representing the game map.
@@ -34,7 +42,7 @@ public class GraphBuilderImpl {
      *            cells
      * @return a weighted graph representing the game map
      */
-    public static Graph<Pair, DefaultWeightedEdge> buildFromMap(GameMap map) {
+    public static Graph<Pair, DefaultWeightedEdge> buildFromMap(final GameMap map) {
         Graph<Pair, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
 
         Stream<Pair> validcells = IntStream.range(0, Utils.MAP_ROWS)
@@ -56,7 +64,8 @@ public class GraphBuilderImpl {
      * @param p     the current cell to connect with neighbors
      * @param map   the game map object used to identify walkable cells and walls
      */
-    private static void connectWithNeighbors(Graph<Pair, DefaultWeightedEdge> graph, Pair p, GameMap map) {
+    private static void connectWithNeighbors(final Graph<Pair, DefaultWeightedEdge> graph, final Pair p,
+            final GameMap map) {
         EnumSet.allOf(Direction.class)
                 .stream()
                 .forEach(direction -> {
@@ -65,15 +74,15 @@ public class GraphBuilderImpl {
                             && graph.containsVertex(newCoord)) {
                         DefaultWeightedEdge e = graph.addEdge(p, newCoord);
                         if (map.isBreakableWall(newCoord) || map.isBreakableWall(p)) {
-                            graph.setEdgeWeight(e, 2.5);
+                            graph.setEdgeWeight(e, BREAKABLEWALL_WEIGHT);
                         } else {
-                            graph.setEdgeWeight(e, 1);
+                            graph.setEdgeWeight(e, STANDARD_WEIGHT);
                         }
                     }
                 });
     }
 
-    private static boolean isValidCell(int x, int y) {
+    private static boolean isValidCell(final int x, final int y) {
         return x >= 0 && x < Utils.MAP_ROWS && y >= 0 && y < Utils.MAP_COLS;
     }
 }
