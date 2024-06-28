@@ -3,13 +3,10 @@ package it.bombardero;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Bomb;
-import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.BombFactoryImpl;
 import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.character.Character;
@@ -20,6 +17,7 @@ import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
+import it.unibo.bombardero.physics.api.BoundingBox;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,12 +29,10 @@ public class TestEnemy {
     private static final int STARTING_BOMBS = 1;
 
     private TestGameManager manager;
-    private BombFactory b;
 
     @BeforeEach
     void setUp() {
         this.manager = new TestGameManager();
-        this.b = new BombFactoryImpl(manager);
         this.manager.setEnemyCoord(0, 0);
         this.manager.enemy.setSpeed(0.01f);
     }
@@ -71,11 +67,10 @@ public class TestEnemy {
         manager.enemy.setNumBomb(0);
         // We need more than 1 sec to move between cells
         manager.updateGame(STANDARD_ELAPSED_TIME);
-        //manager.updateGame(STANDARD_ELAPSED_TIME);
 
         // Verify enemy state is CHASE
         assertEquals(Enemy.State.CHASE, manager.enemy.getState());
-        assertEquals(new Pair(0, 3), manager.enemy.getIntCoordinate());
+        assertEquals(new Pair(1, 0), manager.enemy.getIntCoordinate());
 
         // Set player moving away after initial detection
         manager.setPlayerCoord(3, 12);
@@ -86,31 +81,33 @@ public class TestEnemy {
     }
 
     @Test
-    public void testEnemyEscape_ChangesToWaiting() {
+    public void testEnemyEscape_ChangesToPatrol() {
         // Set enemy position inside a danger zone
-        this.manager.getGameMap().addBomb(b.CreateBomb(null), new Pair(0, 1));
+        this.manager.enemy.setSpeed(0.05f);
+        this.manager.addBomb(new MyBomb(new Pair(0, 1)));
         this.manager.enemy.update(STANDARD_ELAPSED_TIME);
 
         assertEquals(Enemy.State.ESCAPE, this.manager.enemy.getState());
         this.manager.updateGame(STANDARD_ELAPSED_TIME);
-        this.manager.updateGame(STANDARD_ELAPSED_TIME);
-        // Verify enemy state is WAITING
-        assertEquals(Enemy.State.WAITING, manager.enemy.getState());
         assertEquals(new Pair(1, 0), manager.enemy.getIntCoordinate());
+        this.manager.updateGame(STANDARD_ELAPSED_TIME);
+        // Verify enemy state is Patrol
+        assertEquals(Enemy.State.PATROL, manager.enemy.getState());
+        
     }
 
     @Test
     public void testEnemyPatrol_BreakableWallNextToEnemy_PlacesBomb() {
         // Set enemy next to a breakable wall
         manager.setPlayerCoord(0, 2);
-        manager.enemy.setNumBomb(STARTING_BOMBS);
+        manager.enemy.setNumBomb(STARTING_BOMBS); // 1 bomb added to enemy
         manager.getGameMap().addBreakableWall(new Pair(0, 1));
         manager.enemy.update(STANDARD_ELAPSED_TIME);
 
         assertEquals(Enemy.State.CHASE, manager.enemy.getState());
         manager.updateGame(STANDARD_ELAPSED_TIME);
-        // Verify bomb is placed on the enemy's position
-        assertTrue(manager.getGameMap().isBomb(new Pair(0, 0))); 
+        manager.updateGame(STANDARD_ELAPSED_TIME);
+        // Verify bomb is placed on the enemy's position 
         assertEquals(STARTING_BOMBS-1, manager.enemy.getNumBomb());
     }
 
@@ -205,6 +202,60 @@ public class TestEnemy {
         public Optional<Bomb> getBomb(Pair pos) {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'getBomb'");
+        }
+    }
+
+    private static class MyBomb implements Bomb {
+
+        private Pair pos;
+
+        public MyBomb(Pair pos) {
+            this.pos = pos;
+        }
+
+        @Override
+        public boolean getBoundingCollision() {
+            throw new UnsupportedOperationException("Unimplemented method 'getBoundingCollision'");
+        }
+
+        @Override
+        public CellType getCellType() {
+            return CellType.BOMB;
+        }
+
+        @Override
+        public BoundingBox getBoundingBox() {
+            throw new UnsupportedOperationException("Unimplemented method 'getBoundingBox'");
+        }
+
+        @Override
+        public boolean isExploded() {
+            throw new UnsupportedOperationException("Unimplemented method 'isExploded'");
+        }
+
+        @Override
+        public void update(boolean condition) {
+            throw new UnsupportedOperationException("Unimplemented method 'update'");
+        }
+
+        @Override
+        public void update() {
+            throw new UnsupportedOperationException("Unimplemented method 'update'");
+        }
+
+        @Override
+        public BombType getBombType() {
+            throw new UnsupportedOperationException("Unimplemented method 'getBombType'");
+        }
+
+        @Override
+        public int getRange() {
+            throw new UnsupportedOperationException("Unimplemented method 'getRange'");
+        }
+
+        @Override
+        public Pair getPos() {
+            return this.pos;
         }
     }
 

@@ -166,10 +166,13 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
                 .filter(cell -> isValidCell(cell) && (map.isEmpty(cell) || map.isPowerUp(cell))
                         && !visited.contains(cell))
                 .collect(Collectors.toCollection(ArrayList::new));
+        
+        adjacentCells.add(enemyCoord);
 
         Optional<Pair> safeCell = adjacentCells.stream()
                 .filter(c -> !isInDangerZone(c, explRad))
-                .findFirst();
+                .min((cell1, cell2) -> Double.compare(calculateDistance(enemyCoord, cell1),
+                        calculateDistance(enemyCoord, cell2)));
 
         if (safeCell.isPresent()) {
             return safeCell;

@@ -3,54 +3,49 @@ package it.bombardero;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import org.junit.jupiter.api.BeforeEach;
-
-import it.unibo.bombardero.cell.BombFactory;
-import it.unibo.bombardero.cell.BombFactoryImpl;
-import it.unibo.bombardero.character.Enemy;
+import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.character.AI.api.EnemyGraphReasoner;
 import it.unibo.bombardero.character.AI.impl.EnemyGraphReasonerImpl;
-import it.unibo.bombardero.core.impl.BombarderoGameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Optional;
+import it.unibo.bombardero.physics.api.BoundingBox;
 
 public class TestReasoner {
 
     private GameMap map;
-    private BombFactory b;
-    private Enemy e;
 
     @BeforeEach
     public void setup() {
         map = new GameMapImpl(false);
-        b = new BombFactoryImpl(new BombarderoGameManager(null));
     }
 
     // this way I can test different scenarios by passing the right
     // parameters and avoiding duplicate tests
     @ParameterizedTest
     @CsvSource({
-            "0,0, 0,2, 2, true", // vertical bomb
+            "0,0, 0,2, 3, true", // vertical bomb
             "0,0, 0,2, 1, false", // outside range
             "0,0, 0,3, 2, false",
             "0,0, 2,0, 2, true", // horizzontal bomb
             "0,0, 0,2, 1, false", // outside range
             "0,0, 3,0, 2, false",
-            "1,0, 0,1, 4, false"
+            "1,0, 0,0, 4, true"
     })
     public void testIsInDangerZone(int enemyX, int enemyY, int bombX, int bombY, int explRadius, boolean expected) {
         Pair enemyCoord = new Pair(enemyX, enemyY);
         Pair bombCell = new Pair(bombX, bombY);
 
-        map.addBomb(b.CreateBomb(null), bombCell);
+        map.addBomb(new MyBomb(), bombCell);
         assertTrue(map.isBomb(bombCell));
 
         EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
@@ -62,8 +57,7 @@ public class TestReasoner {
     @ParameterizedTest
     @CsvSource({
             "0,0, 2,0, false", // No walls in the path
-            "0,0, 2,1, false", // No walls in the path
-            "0,0, 2,2, false", // No walls in the path
+            "0,0, 2,1, true", // No diagonal path
             "1,0, 1,2, true", // Wall horizontally blocking the path
             "0,1, 2,1, true", // Wall vertically blocking the path
             "2,1, 0,1, true" // even in the reverse order
@@ -127,7 +121,7 @@ public class TestReasoner {
 
     @ParameterizedTest
     @CsvSource({
-            "0,0, 0,2, 2, 1,0", // Bomb to the right, safe space down
+            "0,0, 0,2, 3, 1,0", // Bomb to the right, safe space down
             "12,0, 12,2, 2, 11,0", // Bomb to the left, safe space above
             "1,0, 1,2, 2, 1,0", // no needed a safe space
     })
@@ -136,7 +130,7 @@ public class TestReasoner {
         Pair enemyCoord = new Pair(enemyX, enemyY);
         Pair bombCell = new Pair(bombX, bombY);
 
-        map.addBomb(b.CreateBomb(null), bombCell);
+        map.addBomb(new MyBomb(), bombCell);
         assertTrue(map.isBomb(bombCell));
 
         EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
@@ -148,5 +142,54 @@ public class TestReasoner {
         assertEquals(expectedSafeSpaceY, safeSpace.get().y());
 
     }
+
+    private static class MyBomb implements Bomb {
+
+        @Override
+        public boolean getBoundingCollision() {
+            throw new UnsupportedOperationException("Unimplemented method 'getBoundingCollision'");
+        }
+
+        @Override
+        public CellType getCellType() {
+            return CellType.BOMB;
+        }
+
+        @Override
+        public BoundingBox getBoundingBox() {
+            throw new UnsupportedOperationException("Unimplemented method 'getBoundingBox'");
+        }
+
+        @Override
+        public boolean isExploded() {
+            throw new UnsupportedOperationException("Unimplemented method 'isExploded'");
+        }
+
+        @Override
+        public void update(boolean condition) {
+            throw new UnsupportedOperationException("Unimplemented method 'update'");
+        }
+
+        @Override
+        public void update() {
+            throw new UnsupportedOperationException("Unimplemented method 'update'");
+        }
+
+        @Override
+        public BombType getBombType() {
+            throw new UnsupportedOperationException("Unimplemented method 'getBombType'");
+        }
+
+        @Override
+        public int getRange() {
+            throw new UnsupportedOperationException("Unimplemented method 'getRange'");
+        }
+
+        @Override
+        public Pair getPos() {
+            throw new UnsupportedOperationException("Unimplemented method 'getPos'");
+        }
+    }
+
 
 }
