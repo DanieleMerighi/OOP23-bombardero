@@ -34,6 +34,15 @@ public final class SkullEffect implements PowerUpEffect {
     private static final float INCREASE_SPEED_FACTOR = 2f;
 
     /**
+     * Gets the skull effect duration in seconds
+     * 
+     * @return the skull effect duration
+     */
+    public static int getEffectDurationInSeconds() {
+        return EFFECT_DURATION_IN_SECONDS;
+    }
+
+    /**
      * Returns a {@link Consumer} that applies a random effect of the Skull power-up to the character.
      * 
      * @return a {@link Consumer} representing the effect of the Skull power-up on a {@link Character}

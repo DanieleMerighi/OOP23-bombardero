@@ -82,7 +82,7 @@ public class TestPlayer {
         // Setting the number of update and calling them
         final int updateNumeber = FPS; // Number of updates done
         IntStream.range(0, updateNumeber).forEach(n -> this.manager.getPlayer().update(STANDARD_ELAPSED_TIME));
-        
+
         roundPlayerCoordinateToThreeDecimal();
         // Sums the spawn coordinates with the movement done
         expectedCoord = expectedCoord.sum(calculateExpectedDeltaMovement(updateNumeber));

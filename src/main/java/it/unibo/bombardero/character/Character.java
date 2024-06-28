@@ -143,6 +143,7 @@ public abstract class Character {
         if (this.skeletonEffectDuration > 0) { // Continues until the duration reaches zero
             this.skeletonEffectDuration -= elapsedTime;
             if (this.skeletonEffectDuration <= 0) { // When the effect ends the character's stats get resetted
+                setSkeletonEffectDuration(0);
                 this.resetEffect.ifPresent(Runnable::run); // If there's a effect to reset, it runs the reset effect
                 this.resetEffect = Optional.empty(); // Clear the reset effect after it has run
             }
@@ -567,6 +568,15 @@ public abstract class Character {
      */
     public void setButterfingers(final boolean butterfingers) {
         this.butterfingers = butterfingers;
+    }
+
+    /**
+     * Gets the duration of the skeleton effect.
+     * 
+     * @return the skeletonEffectDuration
+     */
+    public long getSkeletonEffectDuration() {
+        return skeletonEffectDuration;
     }
 
     /**
