@@ -1,7 +1,8 @@
 package it.unibo.bombardero.cell.powerup.api;
 
-import it.unibo.bombardero.character.Character;
 import java.util.function.Consumer;
+
+import it.unibo.bombardero.character.Character;
 
 /**
  * Interface representing the effect of a PowerUp in the game.

@@ -24,9 +24,6 @@ import it.unibo.bombardero.cell.powerup.api.PowerUpType;
  */
 public final class PowerUpFactoryImpl implements PowerUpFactory {
 
-    /** A map that stores the power-up types and their corresponding effect.*/
-    private final Map<PowerUpType, Supplier<PowerUpEffect>> powerUpEffectMap;
-
     /**
      * Generate a list of power-ups with their weights (the probability mass function enumeration, pmf).
      */
@@ -38,31 +35,15 @@ public final class PowerUpFactoryImpl implements PowerUpFactory {
     private static final EnumeratedDistribution<PowerUpType> WEIGHTED_POWERUP_DISTRIBUTION = new EnumeratedDistribution<>(
             WEIGHTED_POWERUP_LIST);
 
+    /** A map that stores the power-up types and their corresponding effect.*/
+    private final Map<PowerUpType, Supplier<PowerUpEffect>> powerUpEffectMap;
+
     /**
      * Constructs a new PowerUpFactoryImpl and initializes the power-up effect map.
      */
     public PowerUpFactoryImpl() {
         this.powerUpEffectMap = new HashMap<>();
         initializePowerUps();
-    }
-
-    /**
-     * Initializes the map with power-up types and their corresponding effect.
-     * This method is called in the constructor to populate the powerUpEffectMap.
-     */
-    private void initializePowerUps() {
-        powerUpEffectMap.put(PowerUpType.REMOTE_BOMB, () -> new RemoteBombEffect());
-        powerUpEffectMap.put(PowerUpType.PIERCING_BOMB, () -> new PiercingBombEffect());
-        powerUpEffectMap.put(PowerUpType.POWER_BOMB, () -> new PowerBombEffect());
-        powerUpEffectMap.put(PowerUpType.PLUS_ONE_BOMB, () -> new PlusOneBombEffect());
-        powerUpEffectMap.put(PowerUpType.MINUS_ONE_BOMB, () -> new MinusOneBombEffect());
-        powerUpEffectMap.put(PowerUpType.PLUS_ONE_FLAME_RANGE, () -> new PlusOneFlameEffect());
-        powerUpEffectMap.put(PowerUpType.MINUS_ONE_FLAME_RANGE, () -> new MinusOneFlameEffect());
-        powerUpEffectMap.put(PowerUpType.MAX_FLAME_RANGE, () -> new MaxFlameRangeEffect());
-        powerUpEffectMap.put(PowerUpType.PLUS_ONE_SKATES, () -> new PlusOneSkateEffect());
-        powerUpEffectMap.put(PowerUpType.MINUS_ONE_SKATES, () -> new MinusOneSkateEffect());
-        powerUpEffectMap.put(PowerUpType.LINE_BOMB, () -> new LineBombEffect());
-        powerUpEffectMap.put(PowerUpType.SKULL, () -> new SkullEffect());
     }
 
     /**
@@ -84,5 +65,24 @@ public final class PowerUpFactoryImpl implements PowerUpFactory {
             throw new IllegalArgumentException("Unknown power-up effect for: " + powerUpType);
         }
         return new PowerUpImpl(powerUpType, position, supplier.get());
+    }
+
+    /**
+     * Initializes the map with power-up types and their corresponding effect.
+     * This method is called in the constructor to populate the powerUpEffectMap.
+     */
+    private void initializePowerUps() {
+        powerUpEffectMap.put(PowerUpType.REMOTE_BOMB, () -> new RemoteBombEffect());
+        powerUpEffectMap.put(PowerUpType.PIERCING_BOMB, () -> new PiercingBombEffect());
+        powerUpEffectMap.put(PowerUpType.POWER_BOMB, () -> new PowerBombEffect());
+        powerUpEffectMap.put(PowerUpType.PLUS_ONE_BOMB, () -> new PlusOneBombEffect());
+        powerUpEffectMap.put(PowerUpType.MINUS_ONE_BOMB, () -> new MinusOneBombEffect());
+        powerUpEffectMap.put(PowerUpType.PLUS_ONE_FLAME_RANGE, () -> new PlusOneFlameEffect());
+        powerUpEffectMap.put(PowerUpType.MINUS_ONE_FLAME_RANGE, () -> new MinusOneFlameEffect());
+        powerUpEffectMap.put(PowerUpType.MAX_FLAME_RANGE, () -> new MaxFlameRangeEffect());
+        powerUpEffectMap.put(PowerUpType.PLUS_ONE_SKATES, () -> new PlusOneSkateEffect());
+        powerUpEffectMap.put(PowerUpType.MINUS_ONE_SKATES, () -> new MinusOneSkateEffect());
+        powerUpEffectMap.put(PowerUpType.LINE_BOMB, () -> new LineBombEffect());
+        powerUpEffectMap.put(PowerUpType.SKULL, () -> new SkullEffect());
     }
 }

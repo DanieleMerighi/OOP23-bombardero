@@ -38,7 +38,7 @@ public class KeyboardInput implements KeyListener {
      * 
      * ESC is used to access the game menu and pause the game
      * SPACE is used to place the bomb under the player
-     * L is used for the line bomb (punch?)
+     * L is used for the line bomb
      * P is used for the remote bomb to explode it
      */
     /**
@@ -119,10 +119,6 @@ public class KeyboardInput implements KeyListener {
         }
     }
 
-    /*
-     * If all the movement key get relased the direcion is set to default
-     * and the player stops moving
-     */
     /**
      * Invoked when a key has been released.
      * Resets the movement direction when movement keys are released.
@@ -147,14 +143,24 @@ public class KeyboardInput implements KeyListener {
             default -> {
             }
         }
-        // If all the movement key get released, stationary is set to true
+        checkIfStationary();
+        checkIfAnotherDirectionIsPressed();
+    }
+
+    /**
+     * If all the movement keys get released, stationary is set to true
+     */
+    private void checkIfStationary() {
         if (!up && !left && !down && !right) {
             controller.getMainPlayer().setStationary(true);
         }
-        /*
-         * When a key get released, it checks if a key was being pressed before
-         * sets the facing to that direction
-         */
+    }
+
+    /**
+     * When a key get released, it checks if a key was being pressed before
+     * and sets the facing to that corrisponding direction
+     */
+    private void checkIfAnotherDirectionIsPressed() {
         if (up) {
             controller.getMainPlayer().setFacingDirection(Direction.UP);
         }
