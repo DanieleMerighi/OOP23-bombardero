@@ -15,18 +15,28 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
 import it.unibo.bombardero.cell.Flame;
+import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.character.AI.impl.GraphBuilderImpl;
 
+/**
+ * Unit tests for the GraphBuilderImpl class.
+ */
 public class TestGraphBuilder {
 
     private GameMap map;
     private Graph<Pair, DefaultWeightedEdge> graph;
 
+    /**
+     * Setup method executed before each test.
+     */
     @BeforeEach
     public void setup() {
         map = new GameMapImpl(false);
     }
 
+    /**
+     * Test case to verify base map size and structure.
+     */
     @Test
     public void testBaseMapSize() {
         this.graph = GraphBuilderImpl.buildFromMap(map);
@@ -45,18 +55,23 @@ public class TestGraphBuilder {
         assertEquals(168, this.graph.edgeSet().size());
     }
 
+    /**
+     * Test case to verify map size and structure with obstacles.
+     */
     @Test
     public void testMapSizeWithObastacles() {
         GameMap baseMap = new GameMapImpl(true);
-        //baseMap.addFlame(new Flame(CellType.FLAME, Flame.FlameType.FLAME_BODY_HORIZONTAL, new Pair(0, 2)), new Pair(0, 2));
-        //baseMap.addFlame(new Flame(CellType.FLAME, Flame.FlameType.FLAME_BODY_HORIZONTAL, new Pair(0, 3)), new Pair(0, 3));
-        //baseMap.addFlame(new Flame(CellType.FLAME, Flame.FlameType.FLAME_BODY_HORIZONTAL, new Pair(0, 4)), new Pair(0, 4));
-        //baseMap.addBomb(new Bomb(null, CellType.BOMB_BASIC, 0), new Pair(5, 0));
+        baseMap.addFlame(new Flame(CellType.FLAME, null, new Pair(0, 2), null), new Pair(0, 2));
+        baseMap.addFlame(new Flame(CellType.FLAME, null, new Pair(0, 4), null), new Pair(0, 4));
+        baseMap.addFlame(new Flame(CellType.FLAME, null, new Pair(5, 6), null), new Pair(5, 6));
         this.graph = GraphBuilderImpl.buildFromMap(baseMap);
         assertEquals(133, this.graph.vertexSet().size());
         assertEquals(168, this.graph.edgeSet().size());
     }
 
+    /**
+     * Test case to verify edge weights in the graph.
+     */
     @Test
     public void testEdgeWeights() {
         map.addBreakableWall(new Pair(1, 2));

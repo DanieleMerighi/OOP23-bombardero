@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Arrays;
 
+/**
+ * Test class for Enemy behavior testing.
+ */
 public class TestEnemy {
 
     private static final int STANDARD_ELAPSED_TIME = 100;
@@ -30,15 +33,21 @@ public class TestEnemy {
 
     private TestGameManager manager;
 
+    /**
+     * Setup method executed before each test.
+     */
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         this.manager = new TestGameManager();
         this.manager.setEnemyCoord(0, 0);
         this.manager.enemy.setSpeed(0.01f);
     }
 
+    /**
+     * Test case: Enemy moves randomly when player is not in detection radius.
+     */
     @Test
-    public void testEnemyPatrol_PlayerNotInDetectionRadius_MovesRandomly() {
+    public void testEnemyPatrolPlayerNotInDetectionRadiusMovesRandomly() {
         // outside ENEMY_DETECTION_RADIUS
         manager.setPlayerCoord(0, 5);
         manager.enemy.update(STANDARD_ELAPSED_TIME);
@@ -50,8 +59,11 @@ public class TestEnemy {
         assertTrue(manager.enemy.getNextMove().isPresent());
     }
 
+    /**
+     * Test case: Enemy changes to CHASE state when player is in detection radius.
+     */
     @Test
-    public void testEnemyPatrol_PlayerInDetectionRadius_ChangesToChaseState() {
+    public void testEnemyPatrolPlayerInDetectionRadiusChangesToChaseState() {
         // Set player position within detection radius in TestGameManager
         manager.setPlayerCoord(0, 4);
         manager.updateGame(STANDARD_ELAPSED_TIME);
@@ -60,8 +72,11 @@ public class TestEnemy {
         assertEquals(Enemy.State.CHASE, manager.enemy.getState());
     }
 
+    /**
+     * Test case: Enemy changes back to PATROL state when losing the player.
+     */
     @Test
-    public void testEnemyChase_LosesPlayer_ChangesToPatrolState() {
+    public void testEnemyChaseLosesPlayerChangesToPatrolState() {
         // Set initial player position within detection radius in TestGameManager
         manager.setPlayerCoord(2, 1);
         manager.enemy.setNumBomb(0);
@@ -80,8 +95,11 @@ public class TestEnemy {
         assertEquals(Enemy.State.PATROL, manager.enemy.getState());
     }
 
+    /**
+     * Test case: Enemy escapes and then returns to PATROL state.
+     */
     @Test
-    public void testEnemyEscape_ChangesToPatrol() {
+    public void testEnemyEscapeChangesToPatrol() {
         // Set enemy position inside a danger zone
         this.manager.enemy.setSpeed(0.05f);
         this.manager.addBomb(new MyBomb(new Pair(0, 1)));
@@ -93,11 +111,14 @@ public class TestEnemy {
         this.manager.updateGame(STANDARD_ELAPSED_TIME);
         // Verify enemy state is Patrol
         assertEquals(Enemy.State.PATROL, manager.enemy.getState());
-        
+
     }
 
+    /**
+     * Test case: Enemy places bomb when next to a breakable wall.
+     */
     @Test
-    public void testEnemyPatrol_BreakableWallNextToEnemy_PlacesBomb() {
+    public void testEnemyPatrolBreakableWallNextToEnemyPlacesBomb() {
         // Set enemy next to a breakable wall
         manager.setPlayerCoord(1, 2);
         manager.enemy.setNumBomb(STARTING_BOMBS); // 1 bomb added to enemy
@@ -107,31 +128,33 @@ public class TestEnemy {
         assertEquals(Enemy.State.CHASE, manager.enemy.getState());
         manager.updateGame(STANDARD_ELAPSED_TIME);
         manager.updateGame(STANDARD_ELAPSED_TIME);
-        // Verify bomb is placed on the enemy's position 
-        assertEquals(STARTING_BOMBS-1, manager.enemy.getNumBomb());
+        // Verify bomb is placed on the enemy's position
+        assertEquals(STARTING_BOMBS - 1, manager.enemy.getNumBomb());
     }
 
     @SuppressWarnings("CPD-START")
 
-    // is a class for simulating some aspects of the GameManager
+    /**
+     * is a class for simulating some aspects of the GameManager
+     */
     private static class TestGameManager implements GameManager {
 
         private Player player;
         private Enemy enemy;
         private GameMap map;
 
-        public TestGameManager() {
+        TestGameManager() {
             this.map = new GameMapImpl(false);
             this.enemy = new Enemy(this, new Coord(0, 0), new BombFactoryImpl(this));
             this.player = new Player(this, new Coord(0, 12), new BombFactoryImpl(this));
         }
 
-        public void setPlayerCoord(int x, int y) {
-            player.setCharacterPosition(new Coord(x+0.5f, y+0.5f));
+        public void setPlayerCoord(final int x, final int y) {
+            player.setCharacterPosition(new Coord(x + 0.5f, y + 0.5f));
         }
 
-        public void setEnemyCoord(int x, int y) {
-            enemy.setCharacterPosition(new Coord(x+0.5f, y+0.5f));
+        public void setEnemyCoord(final int x, final int y) {
+            enemy.setCharacterPosition(new Coord(x + 0.5f, y + 0.5f));
         }
 
         @Override
@@ -140,7 +163,7 @@ public class TestEnemy {
         }
 
         @Override
-        public void updateGame(long elapsed) {
+        public void updateGame(final long elapsed) {
             // 60 fps
             for (int i = 0; i < 59; i++) {
                 enemy.update(STANDARD_ELAPSED_TIME);
@@ -164,27 +187,27 @@ public class TestEnemy {
         }
 
         @Override
-        public boolean addBomb(Bomb b) {
+        public boolean addBomb(final Bomb b) {
             return map.addBomb(b, b.getPos());
         }
 
         @Override
-        public void removeBomb(Pair pos) {
+        public void removeBomb(final Pair pos) {
             throw new UnsupportedOperationException("Unimplemented method 'removeBomb'");
         }
 
         @Override
-        public void addFlame(FlameType type, Pair pos) {
+        public void addFlame(final FlameType type, final Pair pos) {
             throw new UnsupportedOperationException("Unimplemented method 'addFlame'");
         }
 
         @Override
-        public void removeFlame(Pair pos) {
+        public void removeFlame(final Pair pos) {
             throw new UnsupportedOperationException("Unimplemented method 'removeFlame'");
         }
 
         @Override
-        public boolean removeWall(Pair pos) {
+        public boolean removeWall(final Pair pos) {
             throw new UnsupportedOperationException("Unimplemented method 'removeWall'");
         }
 
@@ -195,13 +218,13 @@ public class TestEnemy {
         }
 
         @Override
-        public void removePowerUp(Pair pos) {
+        public void removePowerUp(final Pair pos) {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'removePowerUp'");
         }
 
         @Override
-        public Optional<Bomb> getBomb(Pair pos) {
+        public Optional<Bomb> getBomb(final Pair pos) {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'getBomb'");
         }
@@ -211,7 +234,7 @@ public class TestEnemy {
 
         private Pair pos;
 
-        public MyBomb(Pair pos) {
+        MyBomb(final Pair pos) {
             this.pos = pos;
         }
 
@@ -236,7 +259,7 @@ public class TestEnemy {
         }
 
         @Override
-        public void update(boolean condition) {
+        public void update(final boolean condition) {
             throw new UnsupportedOperationException("Unimplemented method 'update'");
         }
 
