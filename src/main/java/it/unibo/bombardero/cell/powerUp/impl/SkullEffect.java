@@ -34,7 +34,7 @@ public final class SkullEffect implements PowerUpEffect {
     private static final float INCREASE_SPEED_FACTOR = 2f;
 
     /**
-     * Gets the skull effect duration in seconds
+     * Gets the skull effect duration in seconds.
      * 
      * @return the skull effect duration
      */
