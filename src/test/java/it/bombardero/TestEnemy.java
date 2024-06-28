@@ -111,6 +111,8 @@ public class TestEnemy {
         assertEquals(STARTING_BOMBS-1, manager.enemy.getNumBomb());
     }
 
+    @SuppressWarnings("CPD-START")
+
     // is a class for simulating some aspects of the GameManager
     private static class TestGameManager implements GameManager {
 

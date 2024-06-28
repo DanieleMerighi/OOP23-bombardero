@@ -53,6 +53,8 @@ public class TestPowerUp {
     //     });
     // }
 
+    @SuppressWarnings("CPD-START")
+
     private static class TestGameManager implements GameManager {
 
         private Player player;

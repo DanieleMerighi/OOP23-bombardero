@@ -72,6 +72,8 @@ public class TestPlayer {
     //             manager.getPlayer().getCharacterPosition());
     // }
 
+    @SuppressWarnings("CPD-START")
+
     private static class TestGameManager implements GameManager {
 
         private Player player;
