@@ -1,5 +1,7 @@
 package it.unibo.bombardero.cell;
 
+import java.util.Optional;
+
 import it.unibo.bombardero.physics.api.BoundingBox;
 
 /**
@@ -17,10 +19,22 @@ public interface Cell {
         POWERUP;
     }
 
+    /**
+     * 
+     * @return if this Cell needs the boundinding box if is colliding 
+     */
     boolean haveBoundingCollision();
 
+    /**
+     * 
+     * @return the CellType of this Cell
+     */
     CellType getCellType();
 
-    BoundingBox getBoundingBox();
+    /**
+     * 
+     * @return return the BoundingBox of this Cell 
+     * */
+    Optional<BoundingBox> getBoundingBox();
 
 }
