@@ -88,7 +88,6 @@ public class Enemy extends Character {
         Pair currentCoord = getIntCoordinate();
         List<Direction> dirs = EnumSet.allOf(Direction.class)
                 .stream()
-                .filter(d -> d != Direction.DEFAULT)
                 .filter(d -> !nextMove.map(move -> move.equals(currentCoord.sum(new Pair(d.x(), d.y())))).orElse(false))
                 .collect(Collectors.toList());
         while (!dirs.isEmpty()) {

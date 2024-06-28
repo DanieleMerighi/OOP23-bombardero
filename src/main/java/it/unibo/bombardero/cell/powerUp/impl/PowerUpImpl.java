@@ -10,17 +10,27 @@ import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.cell.AbstractCell;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
-import it.unibo.bombardero.cell.powerup.api.PowerUpEffectStrategy;
+import it.unibo.bombardero.cell.powerup.api.PowerUpEffect;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 
-public class PowerUpImpl extends AbstractCell implements PowerUp {
-    final private PowerUpType type;
-    final private Consumer<Character> effect;
+/**
+ * Implementation of the PowerUp interface representing a power-up in the game.
+ */
+public final class PowerUpImpl extends AbstractCell implements PowerUp {
+    private final PowerUpType type;
+    private final Consumer<Character> effect;
 
-    public PowerUpImpl(final PowerUpType type, Pair pos, final PowerUpEffectStrategy strategy) {
-        super(CellType.POWERUP, pos, false);
+    /**
+     * Constructs a new implementation of PowerUp with the specified parameters.
+     * 
+     * @param type      the type of PowerUp
+     * @param position  the position of the PowerUp in the map
+     * @param effect  the effect of the PowerUp
+     */
+    public PowerUpImpl(final PowerUpType type, final Pair position, final PowerUpEffect effect) {
+        super(CellType.POWERUP, position, false);
         this.type = type;
-        this.effect = strategy.getEffect();
+        this.effect = effect.getEffect();
     }
 
     @Override
@@ -33,7 +43,13 @@ public class PowerUpImpl extends AbstractCell implements PowerUp {
         effect.accept(character);
     }
 
-    //how to stop the forEach from placing bomb after placebomb returns flase?
+    /**
+     * Places a line of bombs in the direction the character is facing.
+     * 
+     * @param character the character placing the bombs
+     * @param map the map of cells
+     * @param facingDirection the direction the character is facing
+     */
     public static void placeLineBomb(final Character character, final Map<Pair, Cell> map, final Direction facingDirection) {
         if (character.hasLineBomb()) {
             // Lo stream continua finché non ha piazzato tutte le bombe o finché incontra un ostacolo

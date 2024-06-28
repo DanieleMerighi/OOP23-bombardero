@@ -3,25 +3,17 @@ package it.unibo.bombardero.core.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
-import edu.umd.cs.findbugs.annotations.OverrideMustInvoke;
-import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.BombFactoryImpl;
 import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.Flame;
-import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.guide.api.GuideManager;
-import it.unibo.bombardero.guide.impl.BombarderoGuideManager;
-import it.unibo.bombardero.map.api.BombarderoTimer;
-import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
-import it.unibo.bombardero.map.impl.BombarderoTimerImpl;
 import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.physics.impl.BombarderoCollision;
@@ -114,7 +106,7 @@ public class BombarderoGameManager implements GameManager {
     }
 
     @Override
-    public boolean addBomb(final BasicBomb bomb) {
+    public boolean addBomb(final Bomb bomb) {
         if (map.addBomb(bomb, bomb.getPos())) { // If the bomb is added to the map
             boombs.add(bomb); // The bomb is added to the list
             return true;

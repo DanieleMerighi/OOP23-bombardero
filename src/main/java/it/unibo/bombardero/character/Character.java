@@ -5,7 +5,7 @@ import java.util.Deque;
 import java.awt.geom.Point2D;
 import java.util.ArrayDeque;
 
-import it.unibo.bombardero.cell.BasicBomb;
+import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
@@ -22,14 +22,18 @@ import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 public abstract class Character {
 
     // Constants for default settings
-    public static final float STARTING_SPEED = 0.05f;
+    private static final float BOUNDING_BOX_HEIGHT = 0.75f;
+    private static final float BOUNDING_BOX_WIDTH = 0.700f;
+    private static final float BOUNDING_BOX_Y_OFFSET = 0.2f;
+    private static final float BOUNDING_BOX_X_OFFSET = 0.3f;
+    private static final float STARTING_SPEED = 0.05f;
     private static final float INCREASE_SPEED = 0.005f;
-    public static final int STARTING_FLAME_RANGE = 1;
+    private static final int STARTING_FLAME_RANGE = 1;
     private static final int STARTING_BOMBS = 1;
 
     // Constants for controls
-    public static final float MAX_SPEED = 0.09f;
-    public static final int MAX_FLAME_RANGE = 8;
+    private static final float MAX_SPEED = 0.09f;
+    private static final int MAX_FLAME_RANGE = 8;
     private static final int MAX_BOMBS = 8;
 
     // Game manager reference
@@ -54,11 +58,7 @@ public abstract class Character {
     private float speed = STARTING_SPEED;
     private Optional<PowerUpType> bombType = Optional.empty();
     private boolean lineBomb;   // False by default
-    private final Deque<BasicBomb> bombQueue = new ArrayDeque<>();
-
-    public Deque<BasicBomb> getBombQueue() {
-        return new ArrayDeque<>(bombQueue);
-    }
+    private final Deque<Bomb> bombQueue = new ArrayDeque<>();
 
     // Update related
     private boolean hasToPlaceBomb;
@@ -84,7 +84,7 @@ public abstract class Character {
         this.manager = manager; // TODO: Solve manager, a copy?
         this.coordinate = coord;
         this.bombFactory = bombFactory;
-        this.bBox = new RectangleBoundingBox(new Point2D.Float(0.1562f, 0.0625f), 0.700f, 0.75f);
+        this.bBox = new RectangleBoundingBox(new Point2D.Float(0, 0), BOUNDING_BOX_WIDTH, BOUNDING_BOX_HEIGHT);
     }
 
     /**
@@ -94,7 +94,7 @@ public abstract class Character {
      * 
      * @param elapsedTime the time elapsed since the last update
      */
-    public abstract void update(final long elapsedTime);
+    public abstract void update(long elapsedTime);
 
     /**
      * Updates the skeleton's effects.
@@ -131,7 +131,7 @@ public abstract class Character {
     }
 
     /**
-     * Gets the integer coordinates of the character
+     * Gets the integer coordinates of the character.
      * 
      * @return the map's corrisponding integer coordinates of the character
      */
@@ -167,7 +167,7 @@ public abstract class Character {
         return placeBombImpl(this.bombFactory.CreateBomb(this, coordinate));
     }
 
-    private boolean placeBombImpl(final BasicBomb bomb) {
+    private boolean placeBombImpl(final Bomb bomb) {
         if (hasBombsLeft() && !this.constipation && this.manager
                 .addBomb(bomb)) {
             this.numBomb--;
@@ -202,7 +202,7 @@ public abstract class Character {
     public void explodeRemoteBomb() {
         if (hasPlacedRemoteBomb()) { // Checks if there's a remote bomb to explode.
             // Finds the first remote bomb occurrence.
-            final BasicBomb remoteBomb = bombQueue.stream()
+            final Bomb remoteBomb = bombQueue.stream()
                     .filter(bomb -> bomb.getBombType().equals(BombType.BOMB_REMOTE))
                     .findFirst()
                     .get();
@@ -217,11 +217,20 @@ public abstract class Character {
      * 
      * @param explodedBomb the exploded bomb that needs to be removed
      */
-    public void removeBombFromDeque(final BasicBomb explodedBomb) {
+    public void removeBombFromDeque(final Bomb explodedBomb) {
         if (!bombQueue.isEmpty()) {
             // System.out.println("removed bomb\n\n");
             bombQueue.removeFirstOccurrence(explodedBomb);
         }
+    }
+
+    /**
+     * Gets the bomb deque.
+     * 
+     * @return the bomb deque
+     */
+    public Deque<Bomb> getBombQueue() {
+        return new ArrayDeque<>(bombQueue);
     }
 
     /**
@@ -289,7 +298,7 @@ public abstract class Character {
      */
     public void setCharacterPosition(final Coord coordinates) {
         this.coordinate = coordinates;
-        bBox.move(new Point2D.Float(coordinates.x() - (float) (0.781 / 2), coordinates.y() - (float) (0.875 / 2)));
+        bBox.move(new Point2D.Float(coordinates.x() - (float) BOUNDING_BOX_X_OFFSET, coordinates.y() - BOUNDING_BOX_Y_OFFSET));
     }
 
     /**
@@ -367,6 +376,22 @@ public abstract class Character {
     }
 
     /**
+     * Gets the starting flame range of the character.
+     * @return the starting flame range
+     */
+    public static int getStartingFlameRange() {
+        return STARTING_FLAME_RANGE;
+    }
+
+     /**
+     * Gets the max flame range of the character.
+     * @return the max flame range
+     */
+    public static int getMaxFlameRange() {
+        return MAX_FLAME_RANGE;
+    }
+
+    /**
      * Gets the flame range of the bombs placed by the character.
      * 
      * @return the flame range
@@ -402,6 +427,22 @@ public abstract class Character {
         if (this.flameRange > STARTING_FLAME_RANGE) {
             this.flameRange--;
         }
+    }
+
+    /**
+     * Gets the starting speed of the character.
+     * @return the starting speed
+     */
+    public static float getStartingSpeed() {
+        return STARTING_SPEED;
+    }
+
+    /**
+     * Gets the max speed of the character.
+     * @return the max speed
+     */
+    public static float getMaxSpeed() {
+        return MAX_SPEED;
     }
 
     /**
@@ -491,7 +532,7 @@ public abstract class Character {
     /**
      * Sets whether the character should place a line bomb.
      * 
-     * @param hasToPlaceBomb true to cause the character to place a line bomb, false
+     * @param hasToPlaceLineBomb true to cause the character to place a line bomb, false
      *                       otherwise
      */
     public void setHasToPlaceLineBomb(final boolean hasToPlaceLineBomb) {
