@@ -105,11 +105,11 @@ public enum PowerUpType {
      */
     SKULL(25);
 
-    private double weight;
     private static final Map<PowerUpType, BombType> TO_BOMB_TYPE = Map.of(
             PowerUpType.REMOTE_BOMB, BombType.BOMB_REMOTE,
             PowerUpType.PIERCING_BOMB, BombType.BOMB_PIERCING,
             PowerUpType.POWER_BOMB, BombType.BOMB_POWER);
+    private final double weight;
 
     /**
      * Constructor for PowerUpType.
