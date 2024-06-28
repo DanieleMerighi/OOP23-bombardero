@@ -1,9 +1,11 @@
 package it.unibo.bombardero.character;
 
-import java.util.Optional;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.character.AI.impl.EnemyGraphReasonerImpl;
@@ -14,9 +16,6 @@ import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.utils.Utils;
 
-import java.util.EnumSet;
-import java.util.stream.*;
-
 /**
  * Represents an enemy character within the game environment.
  * Enemies are intelligent entities that can move around the map, detect dangers
@@ -25,26 +24,31 @@ import java.util.stream.*;
  */
 public class Enemy extends Character {
 
-    Optional<Pair> nextMove = Optional.empty();
+    private Optional<Pair> nextMove = Optional.empty();
     private State currentState = State.PATROL; // Initial state
     private EnemyGraphReasonerImpl graph;
     private int waitTimer = -1;
+    private boolean attemptedPowerUp; // flag to indicate if power-up attempt failed
 
-    /*
+    private static final float TOLERANCE = 0.0001f; // A small tolerance value
+
+    /**
      * Constructs a new Enemy with the specified parameters.
      * 
-     * @param manager the game manager that controls the game state
+     * @param manager     the game manager that controls the game state
      * 
-     * @param coord the initial coordinates where the enemy is spawned
+     * @param coord       the initial coordinates where the enemy is spawned
      * 
      * @param bombFactory the factory to create bombs
      */
-    public Enemy(GameManager manager, Coord coord, BombFactory bombFactory) {
+    public Enemy(final GameManager manager, final Coord coord, final BombFactory bombFactory) {
         super(manager, coord, bombFactory);
         GraphManagerImpl.initialize(manager.getGameMap());
+        setStationary(true);
+        setFacingDirection(Direction.UP);
     }
 
-    private int calculateDistance(Pair coord1, Pair coord2) {
+    private int calculateDistance(final Pair coord1, final Pair coord2) {
         return Math.abs(coord1.x() - coord2.x()) + Math.abs(coord1.y() - coord2.y());
     }
 
@@ -72,7 +76,7 @@ public class Enemy extends Character {
                         calculateDistance(enemyCoord, coord2)));
     }
 
-    private Optional<Character> getClosestEntity(Pair enemy) {
+    private Optional<Character> getClosestEntity(final Pair enemy) {
         List<Character> allEntities = new ArrayList<>(super.manager.getEnemies());
         allEntities.add(super.manager.getPlayer());
 
@@ -122,7 +126,7 @@ public class Enemy extends Character {
      * @param cell the cell to be checked
      * @return true if the cell is within map boundaries, false otherwise.
      */
-    private boolean isValidCell(Pair cell) {
+    private boolean isValidCell(final Pair cell) {
         return cell.x() >= 0 && cell.y() >= 0 && cell.x() < Utils.MAP_COLS && cell.y() < Utils.MAP_ROWS;
     }
 
@@ -131,26 +135,29 @@ public class Enemy extends Character {
      * This method delegates the behavior to the current state's `execute` method
      * and potentially updates the `nextMove` target based on danger zone detection
      * or pathfinding results.
+     * 
+     * @param time the elapsed time
      */
-    private void computeNextDir(long time) {
+    private void computeNextDir(final long time) {
         GameMap gameMap = super.manager.getGameMap();
         graph = GraphManagerImpl.getGraphReasoner(gameMap, time);
         currentState.execute(this); // Delegate behavior to current state
         if (nextMove.isPresent()) {
-            if (gameMap.isBreakableWall(nextMove.get())
-                    && graph.findNearestSafeCell(getIntCoordinate(), getFlameRange()).isPresent()) {
-                placeBomb();
-            } else if (calculateDistance(getIntCoordinate(), nextMove.get()) > 1) {
+            if (calculateDistance(getIntCoordinate(), nextMove.get()) > 1) {
                 List<Pair> l = graph.findShortestPathToPlayer(getIntCoordinate(), nextMove.get());
-                if(l.isEmpty()) {
+                if (l.isEmpty()) {
                     moveRandomly();
                 } else {
                     nextMove = Optional.of(l.get(0));
                 }
             }
+            if (gameMap.isBreakableWall(nextMove.get())
+                    && graph.findNearestSafeCell(getIntCoordinate(), getFlameRange()).isPresent()) {
+                placeBomb();
+            }
         } else {
             waitTimer++;
-            if(waitTimer >= Utils.MAX_WAITING_TIME) {
+            if (waitTimer >= Utils.MAX_WAITING_TIME) {
                 moveRandomly();
             }
         }
@@ -167,6 +174,7 @@ public class Enemy extends Character {
         if (nextMove.isEmpty()) {
             computeNextDir(elapsedTime);
         } else if (canMoveOn(nextMove.get())) {
+            setStationary(false);
             Coord target = new Coord(nextMove.get().x() + 0.5f, nextMove.get().y() + 0.5f);
             Coord currentPos = getCharacterPosition();
 
@@ -181,16 +189,18 @@ public class Enemy extends Character {
 
             // Check if reached the target cell using a small tolerance
             if (isReachedTarget(newPos, target)) {
+                setCharacterPosition(target);
                 nextMove = Optional.empty(); // Clear target if reached
             } else {
                 setCharacterPosition(newPos);
             }
         } else {
             nextMove = Optional.empty();
+            setStationary(true);
         }
     }
 
-    private boolean canMoveOn(Pair cell) {
+    private boolean canMoveOn(final Pair cell) {
         // Check if the cell is empty
         if (this.manager.getGameMap().isEmpty(cell) || this.manager.getGameMap().isPowerUp(cell)) {
             return true;
@@ -205,13 +215,13 @@ public class Enemy extends Character {
         return false;
     }
 
-    private boolean isReachedTarget(Coord currentPos, Coord target) {
-        double distance = currentPos.distanceTo(target);
+    private boolean isReachedTarget(final Coord currentPos, final Coord target) {
+        float distance = currentPos.distanceTo(target);
         // Use a small fixed tolerance value for the distance check
-        return distance <= getSpeed();
+        return distance <= getSpeed() + TOLERANCE;
     }
 
-    private Coord restrictToGridDirections(Coord direction) {
+    private Coord restrictToGridDirections(final Coord direction) {
         Direction newDirection;
         // Limita il movimento alle direzioni principali (orizzontale o verticale)
         if (Math.abs(direction.x()) > Math.abs(direction.y())) {
@@ -239,7 +249,7 @@ public class Enemy extends Character {
          */
         PATROL {
             @Override
-            void execute(Enemy enemy) {
+            void execute(final Enemy enemy) {
                 if (enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) { // Detected bomb
                     enemy.currentState = State.ESCAPE;
                 } else if (enemy.isEnemyClose()) { // Detected player
@@ -257,7 +267,7 @@ public class Enemy extends Character {
          */
         CHASE {
             @Override
-            void execute(Enemy enemy) {
+            void execute(final Enemy enemy) {
                 if (enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) { // Detected bomb
                     enemy.currentState = ESCAPE;
                 } else if (!enemy.isEnemyClose()) { // Lost sight of player
@@ -266,7 +276,7 @@ public class Enemy extends Character {
                     Pair closeEnemy = enemy.getClosestEntity().get();
                     Pair currPos = enemy.getIntCoordinate();
                     if ((closeEnemy.x() == currPos.x() || closeEnemy.y() == currPos.y())) {
-                        if(enemy.calculateDistance(currPos, closeEnemy) <= enemy.getFlameRange()) {
+                        if (enemy.calculateDistance(currPos, closeEnemy) <= enemy.getFlameRange()) {
                             enemy.placeBomb();
                         } else {
                             enemy.moveRandomly();
@@ -286,16 +296,17 @@ public class Enemy extends Character {
          */
         ESCAPE {
             @Override
-            void execute(Enemy enemy) {
+            void execute(final Enemy enemy) {
                 if (!enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) { // Safe now
-                    if(!enemy.getBombQueue().isEmpty()) {
+                    if (!enemy.getBombQueue().isEmpty()) {
                         enemy.currentState = WAITING;
                     } else {
-                        if(enemy.isEnemyClose()) {
+                        if (enemy.isEnemyClose()) {
                             Pair closeEnemy = enemy.getClosestEntity().get();
                             Optional<Character> c = enemy.getClosestEntity(closeEnemy);
-                            if(c.isPresent()) {
-                                Pair newdir = new Pair(-c.get().getFacingDirection().x(), -c.get().getFacingDirection().y());
+                            if (c.isPresent()) {
+                                Pair newdir = new Pair(-c.get().getFacingDirection().x(),
+                                        -c.get().getFacingDirection().y());
                                 Pair currPos = enemy.getIntCoordinate();
                                 enemy.nextMove = Optional.of(currPos.sum(newdir));
                             }
@@ -312,14 +323,59 @@ public class Enemy extends Character {
                 }
             }
         },
+        /**
+         * Represents the WAITING state of the enemy where it evaluates its surroundings
+         * and decides the next course of action.
+         */
         WAITING {
             @Override
-            void execute(Enemy enemy) {
+            void execute(final Enemy enemy) {
                 enemy.setStationary(true);
                 enemy.nextMove = Optional.empty();
-                if (enemy.getBombQueue().isEmpty()) {
+
+                Pair currentCoord = enemy.getIntCoordinate();
+                int flameRange = enemy.getFlameRange();
+
+                if (enemy.graph.isInDangerZone(currentCoord, flameRange)) {
+                    enemy.currentState = ESCAPE;
+                } else if (!enemy.attemptedPowerUp && enemy.graph.findNearestPowerUp(currentCoord).isPresent()) {
+                    enemy.currentState = EXPLORING;
+                } else if (enemy.getBombQueue().isEmpty()) {
                     enemy.currentState = PATROL;
+                }
+
+                if (enemy.currentState != WAITING) {
                     enemy.setStationary(false);
+                }
+
+            }
+        },
+        /**
+         * Represents the EXPLORING state of the enemy where it seeks out the nearest
+         * power-up
+         * while avoiding danger zones.
+         */
+        EXPLORING {
+            @Override
+            void execute(final Enemy enemy) {
+                Optional<Pair> powerUp = enemy.graph.findNearestPowerUp(enemy.getIntCoordinate());
+                if (powerUp.isPresent()
+                        && !enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) {
+                    enemy.nextMove = powerUp;
+                    List<Pair> l = enemy.graph.findShortestPathToPlayer(enemy.getIntCoordinate(), enemy.nextMove.get());
+                    if (l.stream().anyMatch(c -> enemy.graph.isInDangerZone(c, enemy.getFlameRange())
+                            || enemy.manager.getGameMap().isBreakableWall(c))) {
+                        enemy.currentState = WAITING;
+                        enemy.attemptedPowerUp = true;
+                        enemy.nextMove = Optional.empty();
+                    } else {
+                        enemy.attemptedPowerUp = false;
+                    }
+
+                } else if (enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) {
+                    enemy.currentState = ESCAPE;
+                } else {
+                    enemy.currentState = PATROL;
                 }
             }
         };

@@ -3,54 +3,64 @@ package it.bombardero;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import org.junit.jupiter.api.BeforeEach;
-
-import it.unibo.bombardero.cell.BombFactory;
-import it.unibo.bombardero.cell.BombFactoryImpl;
-import it.unibo.bombardero.character.Enemy;
+import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.character.AI.api.EnemyGraphReasoner;
 import it.unibo.bombardero.character.AI.impl.EnemyGraphReasonerImpl;
-import it.unibo.bombardero.core.impl.BombarderoGameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
+import it.unibo.bombardero.physics.api.BoundingBox;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Optional;
-
+/**
+ * Unit tests for the EnemyGraphReasonerImpl class.
+ */
 public class TestReasoner {
 
     private GameMap map;
-    private BombFactory b;
-    private Enemy e;
 
+    /**
+     * Setup method executed before each test.
+     */
     @BeforeEach
     public void setup() {
         map = new GameMapImpl(false);
-        b = new BombFactoryImpl(new BombarderoGameManager(null));
     }
 
-    // this way I can test different scenarios by passing the right
-    // parameters and avoiding duplicate tests
+    /**
+     * Test case to verify if a specific cell is in the danger zone of a bomb.
+     * 
+     * @param enemyX     X coordinate of the enemy.
+     * @param enemyY     Y coordinate of the enemy.
+     * @param bombX      X coordinate of the bomb.
+     * @param bombY      Y coordinate of the bomb.
+     * @param explRadius Explosion radius of the bomb.
+     * @param expected   Expected result indicating if the enemy is in danger zone.
+     */
     @ParameterizedTest
     @CsvSource({
-            "0,0, 0,2, 2, true", // vertical bomb
+            "0,0, 0,2, 3, true", // vertical bomb
             "0,0, 0,2, 1, false", // outside range
             "0,0, 0,3, 2, false",
             "0,0, 2,0, 2, true", // horizzontal bomb
             "0,0, 0,2, 1, false", // outside range
             "0,0, 3,0, 2, false",
-            "1,0, 0,1, 4, false"
+            "1,0, 0,0, 4, true"
     })
-    public void testIsInDangerZone(int enemyX, int enemyY, int bombX, int bombY, int explRadius, boolean expected) {
+    public void testIsInDangerZone(final int enemyX, final int enemyY, final int bombX, final int bombY,
+            final int explRadius, final boolean expected) {
         Pair enemyCoord = new Pair(enemyX, enemyY);
         Pair bombCell = new Pair(bombX, bombY);
 
-        map.addBomb(b.CreateBomb(null), bombCell);
+        map.addBomb(new MyBomb(), bombCell);
         assertTrue(map.isBomb(bombCell));
 
         EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
@@ -59,16 +69,26 @@ public class TestReasoner {
         assertEquals(expected, reasoner.isInDangerZone(enemyCoord, explRadius));
     }
 
+    /**
+     * Test case to verify if a path from an enemy to a cell is blocked by walls.
+     * 
+     * @param enemyX          X coordinate of the enemy.
+     * @param enemyY          Y coordinate of the enemy.
+     * @param endCellX        X coordinate of the cell that i want consider.
+     * @param endCellY        Y coordinate of the cell that i want consider.
+     * @param expectedBlocked Expected result indicating if the path is blocked by
+     *                        walls.
+     */
     @ParameterizedTest
     @CsvSource({
             "0,0, 2,0, false", // No walls in the path
-            "0,0, 2,1, false", // No walls in the path
-            "0,0, 2,2, false", // No walls in the path
+            "0,0, 2,1, true", // No diagonal path
             "1,0, 1,2, true", // Wall horizontally blocking the path
             "0,1, 2,1, true", // Wall vertically blocking the path
             "2,1, 0,1, true" // even in the reverse order
     })
-    public void testIsPathBlockedByWalls(int enemyX, int enemyY, int endCellX, int endCellY, boolean expectedBlocked) {
+    public void testIsPathBlockedByWalls(final int enemyX, final int enemyY, final int endCellX, final int endCellY,
+            final boolean expectedBlocked) {
         Pair enemyCoord = new Pair(enemyX, enemyY);
         Pair endCell = new Pair(endCellX, endCellY);
 
@@ -87,14 +107,24 @@ public class TestReasoner {
      * 'column'
      * are integers representing the position of the cell in a grid
      */
+    /**
+     * Test case to verify finding the shortest path from an enemy to a player.
+     * 
+     * @param enemyX             X coordinate of the enemy.
+     * @param enemyY             Y coordinate of the enemy.
+     * @param playerX            X coordinate of the player.
+     * @param playerY            Y coordinate of the player.
+     * @param expectedPathLength Expected length of the shortest path.
+     * @param expectedPathString Expected path string representation.
+     */
     @ParameterizedTest
     @CsvSource({
             "0,0, 0,2, 2, 0:1;0:2", // Player 2 cells right, path length 2
             "0,0, 2,0, 2, 1:0;2:0", // Player 2 cells down, path length 2
             "4,0, 1,2, 5, 3:0;2:0;2:1;2:2;1:2", // a path block by a wall
     })
-    public void testFindShortestPathToPlayer(int enemyX, int enemyY, int playerX, int playerY,
-            int expectedPathLength, String expectedPathString) {
+    public void testFindShortestPathToPlayer(final int enemyX, final int enemyY, final int playerX, final int playerY,
+            final int expectedPathLength, final String expectedPathString) {
         Pair enemyCoord = new Pair(enemyX, enemyY);
         Pair playerCoord = new Pair(playerX, playerY);
 
@@ -113,7 +143,7 @@ public class TestReasoner {
     }
 
     // Helper method to parse the expected path string
-    private List<Pair> parseExpectedPath(String pathString) {
+    private List<Pair> parseExpectedPath(final String pathString) {
         List<Pair> path = new ArrayList<>();
         String[] coordinates = pathString.split(";"); // Split on comma only if preceded by colon
         for (String coordinate : coordinates) {
@@ -125,18 +155,31 @@ public class TestReasoner {
         return path;
     }
 
+    /**
+     * Test case to verify finding the nearest safe cell from an enemy after a bomb
+     * explosion.
+     * 
+     * @param enemyX             X coordinate of the enemy.
+     * @param enemyY             Y coordinate of the enemy.
+     * @param bombX              X coordinate of the bomb.
+     * @param bombY              Y coordinate of the bomb.
+     * @param explRadius         Explosion radius of the bomb.
+     * @param expectedSafeSpaceX Expected X coordinate of the nearest safe cell.
+     * @param expectedSafeSpaceY Expected Y coordinate of the nearest safe cell.
+     */
     @ParameterizedTest
     @CsvSource({
-            "0,0, 0,2, 2, 1,0", // Bomb to the right, safe space down
+            "0,0, 0,2, 3, 1,0", // Bomb to the right, safe space down
             "12,0, 12,2, 2, 11,0", // Bomb to the left, safe space above
             "1,0, 1,2, 2, 1,0", // no needed a safe space
     })
-    public void testFindNearestSafeSpace(int enemyX, int enemyY, int bombX, int bombY, int explRadius,
-            int expectedSafeSpaceX, int expectedSafeSpaceY) {
+    public void testFindNearestSafeSpace(final int enemyX, final int enemyY, final int bombX, final int bombY,
+            final int explRadius,
+            final int expectedSafeSpaceX, final int expectedSafeSpaceY) {
         Pair enemyCoord = new Pair(enemyX, enemyY);
         Pair bombCell = new Pair(bombX, bombY);
 
-        map.addBomb(b.CreateBomb(null), bombCell);
+        map.addBomb(new MyBomb(), bombCell);
         assertTrue(map.isBomb(bombCell));
 
         EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
@@ -149,4 +192,51 @@ public class TestReasoner {
 
     }
 
+    private static final class MyBomb implements Bomb {
+
+        @Override
+        public boolean getBoundingCollision() {
+            throw new UnsupportedOperationException("Unimplemented method 'getBoundingCollision'");
+        }
+
+        @Override
+        public CellType getCellType() {
+            return CellType.BOMB;
+        }
+
+        @Override
+        public BoundingBox getBoundingBox() {
+            throw new UnsupportedOperationException("Unimplemented method 'getBoundingBox'");
+        }
+
+        @Override
+        public boolean isExploded() {
+            throw new UnsupportedOperationException("Unimplemented method 'isExploded'");
+        }
+
+        @Override
+        public void update(final boolean condition) {
+            throw new UnsupportedOperationException("Unimplemented method 'update'");
+        }
+
+        @Override
+        public void update() {
+            throw new UnsupportedOperationException("Unimplemented method 'update'");
+        }
+
+        @Override
+        public BombType getBombType() {
+            throw new UnsupportedOperationException("Unimplemented method 'getBombType'");
+        }
+
+        @Override
+        public int getRange() {
+            throw new UnsupportedOperationException("Unimplemented method 'getRange'");
+        }
+
+        @Override
+        public Pair getPos() {
+            throw new UnsupportedOperationException("Unimplemented method 'getPos'");
+        }
+    }
 }

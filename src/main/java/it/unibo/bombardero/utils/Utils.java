@@ -20,7 +20,7 @@ public class Utils {
         );
     // Valori per il timer
     public final static long GAME_TIME = 120000l;
-    public final static int MAX_WAITING_TIME = 4000;
+    public final static int MAX_WAITING_TIME = 2000;
 
     // Valori per l'esplosione
     public static final int ENEMY_DETECTION_RADIUS = 4;

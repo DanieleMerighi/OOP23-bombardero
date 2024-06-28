@@ -18,7 +18,7 @@ public record Coord(float x, float y) {
         return new Coord(x * scale, y * scale);
     }
 
-    public double distanceTo(Coord other) {
-        return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
+    public float distanceTo(Coord other) {
+        return (float)Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
     }
 }
