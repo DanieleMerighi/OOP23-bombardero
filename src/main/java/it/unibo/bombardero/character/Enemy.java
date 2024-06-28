@@ -43,6 +43,7 @@ public class Enemy extends Character {
         super(manager, coord, bombFactory);
         GraphManagerImpl.initialize(manager.getGameMap());
         setStationary(true);
+        setFacingDirection(Direction.UP);
     }
 
     private int calculateDistance(Pair coord1, Pair coord2) {
@@ -144,7 +145,7 @@ public class Enemy extends Character {
                 if(l.isEmpty()) {
                     moveRandomly();
                 } else {
-                    nextMove = Optional.of(l.getFirst());
+                    nextMove = Optional.of(l.get(0));
                 }
             }
             if (gameMap.isBreakableWall(nextMove.get())
@@ -170,6 +171,7 @@ public class Enemy extends Character {
         if (nextMove.isEmpty()) {
             computeNextDir(elapsedTime);
         } else if (canMoveOn(nextMove.get())) {
+            setStationary(false);
             Coord target = new Coord(nextMove.get().x() + 0.5f, nextMove.get().y() + 0.5f);
             Coord currentPos = getCharacterPosition();
 
@@ -190,6 +192,7 @@ public class Enemy extends Character {
             }
         } else {
             nextMove = Optional.empty();
+            setStationary(true);
         }
     }
 
@@ -211,7 +214,7 @@ public class Enemy extends Character {
     private boolean isReachedTarget(Coord currentPos, Coord target) {
         double distance = currentPos.distanceTo(target);
         // Use a small fixed tolerance value for the distance check
-        return distance <= getSpeed();
+        return distance <= getSpeed() / 2;
     }
 
     private Coord restrictToGridDirections(Coord direction) {
@@ -320,26 +323,39 @@ public class Enemy extends Character {
             void execute(Enemy enemy) {
                 enemy.setStationary(true);
                 enemy.nextMove = Optional.empty();
-                if(enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) {
+        
+                Pair currentCoord = enemy.getIntCoordinate();
+                int flameRange = enemy.getFlameRange();
+        
+                if (enemy.graph.isInDangerZone(currentCoord, flameRange)) {
                     enemy.currentState = ESCAPE;
-                    enemy.setStationary(false);
-                } else if(enemy.graph.findNearestPowerUp(enemy.getIntCoordinate()).isPresent()) {
-                    enemy.currentState = EXPlORING;
-                    enemy.setStationary(false);
-                } else if (enemy.getBombQueue().isEmpty()) {
+                } 
+                else if (enemy.graph.findNearestPowerUp(currentCoord).isPresent()) {
+                    enemy.currentState = EXPLORING;
+                } 
+                else if (enemy.getBombQueue().isEmpty()) {
                     enemy.currentState = PATROL;
+                }
+        
+                if(enemy.currentState != WAITING) {
                     enemy.setStationary(false);
                 }
+                
             }
         }, 
-        EXPlORING {
+        EXPLORING {
             @Override
             void execute(Enemy enemy) {
                 Optional<Pair> powerUp = enemy.graph.findNearestPowerUp(enemy.getIntCoordinate());
-                if(enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) {
-                    enemy.currentState = ESCAPE;
-                } else if(powerUp.isPresent()) {
+                if(powerUp.isPresent() && !enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) {
                     enemy.nextMove = powerUp;
+                    List<Pair> l = enemy.graph.findShortestPathToPlayer(enemy.getIntCoordinate(), enemy.nextMove.get());
+                    if(l.stream().anyMatch(c -> enemy.graph.isInDangerZone(c, enemy.getFlameRange()))) {
+                        enemy.currentState = ESCAPE;
+                        enemy.nextMove = Optional.empty();
+                    }
+                } else if (enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) {
+                    enemy.currentState = ESCAPE;
                 } else {
                     enemy.currentState = PATROL;
                 }

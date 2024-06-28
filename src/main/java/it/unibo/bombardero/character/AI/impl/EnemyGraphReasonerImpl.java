@@ -2,17 +2,13 @@ package it.unibo.bombardero.character.AI.impl;
 
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
-import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.SingleSourcePaths;
-import org.jgrapht.alg.shortestpath.AllDirectedPaths;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
-import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.traverse.BreadthFirstIterator;
 
 import java.util.*;
 import java.util.stream.*;
 
-import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.character.AI.api.EnemyGraphReasoner;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
