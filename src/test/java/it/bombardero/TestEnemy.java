@@ -63,7 +63,7 @@ public class TestEnemy {
     @Test
     public void testEnemyChase_LosesPlayer_ChangesToPatrolState() {
         // Set initial player position within detection radius in TestGameManager
-        manager.setPlayerCoord(0, 4);
+        manager.setPlayerCoord(2, 1);
         manager.enemy.setNumBomb(0);
         // We need more than 1 sec to move between cells
         manager.updateGame(STANDARD_ELAPSED_TIME);
@@ -99,7 +99,7 @@ public class TestEnemy {
     @Test
     public void testEnemyPatrol_BreakableWallNextToEnemy_PlacesBomb() {
         // Set enemy next to a breakable wall
-        manager.setPlayerCoord(0, 2);
+        manager.setPlayerCoord(1, 2);
         manager.enemy.setNumBomb(STARTING_BOMBS); // 1 bomb added to enemy
         manager.getGameMap().addBreakableWall(new Pair(0, 1));
         manager.enemy.update(STANDARD_ELAPSED_TIME);
