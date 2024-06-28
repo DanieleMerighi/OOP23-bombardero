@@ -12,13 +12,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.character.AI.api.EnemyGraphReasoner;
 import it.unibo.bombardero.character.AI.impl.EnemyGraphReasonerImpl;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
-import it.unibo.bombardero.physics.api.BoundingBox;
 
 /**
  * Unit tests for the EnemyGraphReasonerImpl class.
@@ -60,7 +58,7 @@ public class TestReasoner {
         Pair enemyCoord = new Pair(enemyX, enemyY);
         Pair bombCell = new Pair(bombX, bombY);
 
-        map.addBomb(new MyBomb(), bombCell);
+        map.addBomb(new MyBomb(enemyCoord), bombCell);
         assertTrue(map.isBomb(bombCell));
 
         EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
@@ -179,7 +177,7 @@ public class TestReasoner {
         Pair enemyCoord = new Pair(enemyX, enemyY);
         Pair bombCell = new Pair(bombX, bombY);
 
-        map.addBomb(new MyBomb(), bombCell);
+        map.addBomb(new MyBomb(enemyCoord), bombCell);
         assertTrue(map.isBomb(bombCell));
 
         EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
@@ -190,53 +188,5 @@ public class TestReasoner {
         assertEquals(expectedSafeSpaceX, safeSpace.get().x());
         assertEquals(expectedSafeSpaceY, safeSpace.get().y());
 
-    }
-
-    private static final class MyBomb implements Bomb {
-
-        @Override
-        public boolean getBoundingCollision() {
-            throw new UnsupportedOperationException("Unimplemented method 'getBoundingCollision'");
-        }
-
-        @Override
-        public CellType getCellType() {
-            return CellType.BOMB;
-        }
-
-        @Override
-        public BoundingBox getBoundingBox() {
-            throw new UnsupportedOperationException("Unimplemented method 'getBoundingBox'");
-        }
-
-        @Override
-        public boolean isExploded() {
-            throw new UnsupportedOperationException("Unimplemented method 'isExploded'");
-        }
-
-        @Override
-        public void update(final boolean condition) {
-            throw new UnsupportedOperationException("Unimplemented method 'update'");
-        }
-
-        @Override
-        public void update() {
-            throw new UnsupportedOperationException("Unimplemented method 'update'");
-        }
-
-        @Override
-        public BombType getBombType() {
-            throw new UnsupportedOperationException("Unimplemented method 'getBombType'");
-        }
-
-        @Override
-        public int getRange() {
-            throw new UnsupportedOperationException("Unimplemented method 'getRange'");
-        }
-
-        @Override
-        public Pair getPos() {
-            throw new UnsupportedOperationException("Unimplemented method 'getPos'");
-        }
     }
 }
