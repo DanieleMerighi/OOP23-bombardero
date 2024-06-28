@@ -9,7 +9,7 @@ import it.unibo.bombardero.physics.api.BoundingBox;
  */
 public interface Cell {
 
-    public enum CellType {
+    enum CellType {
         WALL_BREAKABLE,
         WALL_UNBREAKABLE,
         BOMB,
@@ -17,7 +17,7 @@ public interface Cell {
         POWERUP;
     }
 
-    boolean getBoundingCollision();
+    boolean haveBoundingCollision();
 
     CellType getCellType();
 

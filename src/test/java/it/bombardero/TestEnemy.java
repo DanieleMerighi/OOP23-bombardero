@@ -88,7 +88,7 @@ public class TestEnemy {
     @Test
     public void testEnemyEscape_ChangesToWaiting() {
         // Set enemy position inside a danger zone
-        this.manager.getGameMap().addBomb(b.CreateBomb(null), new Pair(0, 1));
+        this.manager.getGameMap().addBomb(b.createBomb(null), new Pair(0, 1));
         this.manager.enemy.update(STANDARD_ELAPSED_TIME);
 
         assertEquals(Enemy.State.ESCAPE, this.manager.enemy.getState());

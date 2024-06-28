@@ -5,7 +5,17 @@ import it.unibo.bombardero.map.api.Pair;
 
 public interface BombFactory {
 
-    Bomb CreateBomb(Character character, Pair pos);
+    /**
+     * @param character
+     * @param pos
+     * @return a Bomb in the given position with character's caratteristics 
+     */
+    Bomb createBomb(Character character, Pair pos);
 
-    Bomb CreateBomb(Character character);
+    /**
+     * @param character
+     * @param pos
+     * @return a Bomb in the character's position with character's caratteristics 
+     */
+    Bomb createBomb(Character character);
 }

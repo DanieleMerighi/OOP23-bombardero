@@ -21,20 +21,23 @@ public abstract class AbstractCell implements Cell {
     private final CellType type;
     private final boolean boundingCollision;
 
-    public AbstractCell(final CellType type , Pair pos , boolean boundingCollision) {
+    public AbstractCell(final CellType type , final Pair pos , final boolean boundingCollision) {
         this.type = type;
         this.bBox = new RectangleBoundingBox(new Point2D.Float(pos.x(), pos.y()), 1.0f , 1.0f);
         this.boundingCollision=boundingCollision;
     }
 
-    public boolean getBoundingCollision() {
+    @Override
+    public boolean haveBoundingCollision() {
         return boundingCollision;
     }
 
+    @Override
     public CellType getCellType() {
         return this.type;
     }
 
+    @Override
     public BoundingBox getBoundingBox() {
         return bBox;
     }

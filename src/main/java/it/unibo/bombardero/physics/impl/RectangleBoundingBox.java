@@ -11,57 +11,57 @@ import it.unibo.bombardero.physics.api.BoundingBox;
 
 public class RectangleBoundingBox implements BoundingBox{
     private static final double MINIMUM_COLLISION_DISTANCE = 0.001;
-    private Rectangle2D fisicsBox;
+    private final Rectangle2D fisicsBox;
 
-    public RectangleBoundingBox(Point2D charPos, float withd, float height) {
+    public RectangleBoundingBox(final Point2D charPos, final float withd, final float height) {
         fisicsBox = new Rectangle2D.Float((float)charPos.getX(), (float)charPos.getY(), withd, height);
     }
 
     @Override
-    public void move(Point2D newPos) {
-        fisicsBox.setFrame(newPos.getX(), newPos.getY(), fisicsBox.getWidth(), fisicsBox.getHeight());
+    public void move(final Point2D newPos) {
+        this.fisicsBox.setFrame(newPos.getX(), newPos.getY(), fisicsBox.getWidth(), fisicsBox.getHeight());
     }
 
     @Override
-    public boolean isColliding(BoundingBox bBox) {
-        return fisicsBox.intersects(bBox.getPhysicsBox()) 
+    public boolean isColliding(final BoundingBox bBox) {
+        return this.fisicsBox.intersects(bBox.getPhysicsBox()) 
             && (float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getWidth()>MINIMUM_COLLISION_DISTANCE 
             && (float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getHeight()>MINIMUM_COLLISION_DISTANCE;
     }
 
     @Override
-    public Coord computeCollision(BoundingBox bBox ,Direction dir) {
+    public Coord computeCollision(final BoundingBox bBox, final Direction dir) {
         switch (dir) {
             case LEFT:
-                return new Coord((float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getWidth(),0);
+                return new Coord((float)this.fisicsBox.createIntersection(bBox.getPhysicsBox()).getWidth(),0);
             case RIGHT:
-                return new Coord((float)-fisicsBox.createIntersection(bBox.getPhysicsBox()).getWidth() , 0);
+                return new Coord((float)-this.fisicsBox.createIntersection(bBox.getPhysicsBox()).getWidth() , 0);
             case UP:
-                return new Coord(0 , (float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getHeight());
+                return new Coord(0 , (float)this.fisicsBox.createIntersection(bBox.getPhysicsBox()).getHeight());
             case DOWN:
-                return new Coord(0, -(float)fisicsBox.createIntersection(bBox.getPhysicsBox()).getHeight());
+                return new Coord(0, -(float)this.fisicsBox.createIntersection(bBox.getPhysicsBox()).getHeight());
             default:
                 return new Coord(0, 0);
         }
     }
 
     @Override
-    public boolean isColliding(Line2D.Float mapOutline) {
-        return fisicsBox.intersectsLine(mapOutline);
+    public boolean isColliding(final Line2D.Float mapOutline) {
+        return this.fisicsBox.intersectsLine(mapOutline);
         
     }
 
     @Override
-    public Coord computeCollision(Line2D.Float mapOutline ,Direction dir) {
+    public Coord computeCollision(final Line2D.Float mapOutline ,final Direction dir) {
         switch (dir) {
             case UP:
-                return new Coord(0 , (float)(mapOutline.getY1()-fisicsBox.getMinY()));
+                return new Coord(0 , (float)(mapOutline.getY1()-this.fisicsBox.getMinY()));
             case DOWN:
-                return new Coord(0 , (float)(mapOutline.getY1()-fisicsBox.getMaxY()));
+                return new Coord(0 , (float)(mapOutline.getY1()-this.fisicsBox.getMaxY()));
             case LEFT:
-                return new Coord((float)(mapOutline.getX1()-fisicsBox.getMinX()) , 0);
+                return new Coord((float)(mapOutline.getX1()-this.fisicsBox.getMinX()) , 0);
             case RIGHT:
-                return new Coord((float)(mapOutline.getX1()-fisicsBox.getMaxX()) , 0);
+                return new Coord((float)(mapOutline.getX1()-this.fisicsBox.getMaxX()) , 0);
             default:
                 return new Coord(0, 0);
         }
@@ -69,6 +69,6 @@ public class RectangleBoundingBox implements BoundingBox{
 
     @Override
     public Rectangle2D getPhysicsBox() {
-        return fisicsBox;
+        return this.fisicsBox;
     }
 }

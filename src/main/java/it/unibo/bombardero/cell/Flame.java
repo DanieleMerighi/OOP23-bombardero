@@ -18,7 +18,7 @@ public class Flame extends AbstractCell {
         FLAME_END_RIGHT("explosion/end/right"),
         FLAME_END_LEFT("explosion/end/left");
 
-        private String typeString;
+        private final String typeString;
 
         private static final Map<Direction, FlameType> FLAME_BODY_TYPES_MAP = Map.of(
                 Direction.LEFT, FlameType.FLAME_BODY_HORIZONTAL,
@@ -32,7 +32,7 @@ public class Flame extends AbstractCell {
                 Direction.UP, FlameType.FLAME_END_TOP,
                 Direction.DOWN, FlameType.FLAME_END_BOTTOM);
 
-        private FlameType(final String typeString) {
+        FlameType(final String typeString) {
             this.typeString = typeString;
         }
 
@@ -40,23 +40,23 @@ public class Flame extends AbstractCell {
             return this.typeString;
         }
 
-        public static FlameType getFlameBodyType(Direction dir) {
+        public static FlameType getFlameBodyType(final Direction dir) {
             return FLAME_BODY_TYPES_MAP.get(dir);
         }
 
-        public static FlameType getFlameEndType(Direction dir) {
+        public static FlameType getFlameEndType(final Direction dir) {
             return FLAME_END_TYPES_MAP.get(dir);
         }
 
     }
 
-    private boolean expired = false;
+    private boolean expired;
     private final GameManager mgr;
     private final FlameType specificFlameType;
     private final Pair pos;
-    private long countTime = 0;
+    private long countTime;
 
-    public Flame(CellType type, FlameType specfiFlameType, Pair pos, GameManager mgr) {
+    public Flame(final CellType type, final FlameType specfiFlameType, final Pair pos, final GameManager mgr) {
         super(type, pos, false);
         this.specificFlameType = specfiFlameType;
         this.mgr = mgr;

@@ -30,12 +30,13 @@ public class BombarderoCollision implements CollisionEngine{
         Direction.RIGHT , new Line2D.Float(new Point2D.Float(13, 0) , new Point2D.Float(13, 13))
     );
 
-    public BombarderoCollision(GameManager mgr){
+    public BombarderoCollision(final GameManager mgr){
         this.mgr=mgr;
     }
 
     @Override
-    public void checkFlameAndPowerUpCollision(Character character) {
+    public void checkFlameAndPowerUpCollision(final Character character) {
+        mgr.getGameMap();
         if(gMap.isFlame(character.getIntCoordinate())) {
             character.kill();
         } else if(gMap.isPowerUp(character.getIntCoordinate())) {
@@ -46,23 +47,23 @@ public class BombarderoCollision implements CollisionEngine{
     }
 
     @Override
-    public void checkCharacterCollision(Character character) {
+    public void checkCharacterCollision(final Character character) {
         gMap=mgr.getGameMap();
         map=gMap.getMap();
-        List<Pair> cells = getDirectionCell(character);
+        final List<Pair> cells = getDirectionCell(character);
         if(!cells.isEmpty()) {
-            Optional<Cell> collidingCell= cells.stream()
+            final Optional<Cell> collidingCell= cells.stream()
                 .filter(p -> map.containsKey(p))
                 .map( p -> map.get(p))
-                .filter(c-> c.getBoundingBox().isColliding(character.getBoundingBox()) && c.getBoundingCollision())
+                .filter(c-> c.getBoundingBox().isColliding(character.getBoundingBox()) && c.haveBoundingCollision())
                 .findFirst();
-            SolidCellCollision(character, collidingCell);
+            solidCellCollision(character, collidingCell);
         } else {
             checkCoolisionWithMapWall(character);
         }
     }
 
-    private void SolidCellCollision(Character character, Optional<Cell> collidingCell) {
+    private void solidCellCollision(final Character character, final Optional<Cell> collidingCell) {
         if(collidingCell.isPresent()) {
             character.setCharacterPosition(character.getCharacterPosition()
                 .sum(character.getBoundingBox()
@@ -70,9 +71,9 @@ public class BombarderoCollision implements CollisionEngine{
         }
     }
 
-    private void checkCoolisionWithMapWall(Character character) {
-        BoundingBox bBox = character.getBoundingBox();
-        Line2D.Float outerLine = MAP_OUTLINES.get(character.getFacingDirection());
+    private void checkCoolisionWithMapWall(final Character character) {
+        final BoundingBox bBox = character.getBoundingBox();
+        final Line2D.Float outerLine = MAP_OUTLINES.get(character.getFacingDirection());
         if(bBox.isColliding(outerLine)) {
             character.setCharacterPosition(
                 character.getCharacterPosition()
@@ -80,8 +81,8 @@ public class BombarderoCollision implements CollisionEngine{
         }
     }
 
-    private List<Pair> getDirectionCell(Character character) {
-        Direction dir = character.getFacingDirection();
+    private List<Pair> getDirectionCell(final Character character) {
+        final Direction dir = character.getFacingDirection();
         List<Pair> l = new ArrayList<>();
         l.add(character.getIntCoordinate().sum(dir.getPair()));
         if(dir.equals(Direction.RIGHT) || dir.equals(Direction.LEFT)) {
@@ -95,11 +96,11 @@ public class BombarderoCollision implements CollisionEngine{
         return l;
     }
 
-    private int getAdjacent(float n1, int n2) {
+    private int getAdjacent(final float n1, final int n2) {
         return n1 - n2 > 0.5 ? n2+1 : n2-1;
     }
 
-    private boolean isOutOfBound(Pair p) {
+    private boolean isOutOfBound(final Pair p) {
         return p.x() < MIN_NUM_CELL || p.y() < MIN_NUM_CELL || p.x() > MAX_NUM_CELL || p.y() > MAX_NUM_CELL;
     }
 }

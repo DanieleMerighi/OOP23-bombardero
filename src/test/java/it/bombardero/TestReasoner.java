@@ -50,7 +50,7 @@ public class TestReasoner {
         Pair enemyCoord = new Pair(enemyX, enemyY);
         Pair bombCell = new Pair(bombX, bombY);
 
-        map.addBomb(b.CreateBomb(null), bombCell);
+        map.addBomb(b.createBomb(null), bombCell);
         assertTrue(map.isBomb(bombCell));
 
         EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
@@ -136,7 +136,7 @@ public class TestReasoner {
         Pair enemyCoord = new Pair(enemyX, enemyY);
         Pair bombCell = new Pair(bombX, bombY);
 
-        map.addBomb(b.CreateBomb(null), bombCell);
+        map.addBomb(b.createBomb(null), bombCell);
         assertTrue(map.isBomb(bombCell));
 
         EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);

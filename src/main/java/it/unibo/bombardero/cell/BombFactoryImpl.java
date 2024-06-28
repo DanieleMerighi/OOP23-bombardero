@@ -5,14 +5,14 @@ import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.map.api.Pair;
 
 public class BombFactoryImpl implements BombFactory {
-    private GameManager mgr;
+    private final GameManager mgr;
 
-    public BombFactoryImpl(GameManager mgr) {
+    public BombFactoryImpl(final GameManager mgr) {
         this.mgr = mgr;
     }
 
     @Override
-    public Bomb CreateBomb(Character character) {
+    public Bomb createBomb(final Character character) {
         if (!character.getBombType().isPresent()) {
             return createBasicBomb(character, character.getIntCoordinate());
         }
@@ -29,7 +29,7 @@ public class BombFactoryImpl implements BombFactory {
     }
 
     @Override
-    public Bomb CreateBomb(Character character, Pair pos) {
+    public Bomb createBomb(final Character character, final Pair pos) {
         if (!character.getBombType().isPresent()) {
             return createBasicBomb(character, pos);
         }
@@ -45,24 +45,24 @@ public class BombFactoryImpl implements BombFactory {
         }
     }
 
-    private Bomb createBasicBomb(Character character, Pair pos) {
+    private Bomb createBasicBomb(final Character character, final Pair pos) {
         return new BasicBomb(mgr, character, character.getFlameRange(), pos) {
         };
     }
 
-    private Bomb createPiercingBomb(Character character, Pair pos) {
+    private Bomb createPiercingBomb(final Character character, final Pair pos) {
         return new BasicBomb(mgr, character, character.getFlameRange(), pos) {
-            public boolean isBreckableWall(Pair pos) {
-                if (mgr.getGameMap().isBreakableWall(pos)) {
-                    if (isLastWall(pos)) {
-                        mgr.removeWall(pos);
-                        return true;
-                    }
+
+            @Override
+            public boolean isBreckableWall(final Pair pos) {
+                if (mgr.getGameMap().isBreakableWall(pos) && isLastWall(pos)) {
+                    mgr.removeWall(pos);
+                    return true;
                 }
                 return false;
             }
 
-            private boolean isLastWall(Pair pos) {
+            private boolean isLastWall(final Pair pos) {
                 return pos.equals(this.getPos().sum(new Pair(this.getRange(), 0)))
                         || pos.equals(this.getPos().sum(new Pair(0, this.getRange())))
                         || pos.equals(this.getPos().sum(new Pair(-this.getRange(), 0)))
@@ -71,12 +71,12 @@ public class BombFactoryImpl implements BombFactory {
         };
     }
 
-    private Bomb createPowerBomb(Character character, Pair pos) {
+    private Bomb createPowerBomb(final Character character, final Pair pos) {
         return new BasicBomb(mgr, character, BasicBomb.MAX_RANGE, pos) {
         };
     }
 
-    private Bomb createRemoteBomb(Character character, Pair pos) {
+    private Bomb createRemoteBomb(final Character character, final Pair pos) {
         return new BasicBomb(mgr, character, character.getFlameRange(), pos) {
 
             @Override
@@ -84,7 +84,7 @@ public class BombFactoryImpl implements BombFactory {
             }
 
             @Override
-            public void update(boolean condition) {
+            public void update(final boolean condition) {
                 super.update(condition);
                 character.removeBombFromDeque(this);
             }
