@@ -148,7 +148,7 @@ public class KeyboardInput implements KeyListener {
     }
 
     /**
-     * If all the movement keys get released, stationary is set to true
+     * If all the movement keys get released, stationary is set to true.
      */
     private void checkIfStationary() {
         if (!up && !left && !down && !right) {
@@ -158,7 +158,7 @@ public class KeyboardInput implements KeyListener {
 
     /**
      * When a key get released, it checks if a key was being pressed before
-     * and sets the facing to that corrisponding direction
+     * and sets the facing to that corrisponding direction.
      */
     private void checkIfAnotherDirectionIsPressed() {
         if (up) {
