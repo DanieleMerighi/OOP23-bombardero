@@ -32,7 +32,7 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
         this.mgr = mgr;
         this.position = pos;
         this.range = range;
-        this.map=mgr.getGameMap();
+        this.map = mgr.getGameMap();
         this.character = character;
         if(character.getBombType().isPresent()) {
             this.bombType = character.getBombType().get().toBombType();
@@ -66,12 +66,11 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
         }
     }
 
-    private void explode() {
+    private void explode() {//TODO ritornare delle fiammeà o in update o in explode e provare a tenere la logica del character
         exploded = true;
         computeFlame(this);
         character.increaseNumBomb();
-        character.removeBombFromDeque(this);
-        mgr.removeBomb(position);
+        character.removeBombFromDeque(this);//TODO cavare mgr e character 
     }
 
     @Override
@@ -85,14 +84,14 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
     }
 
     public void computeFlame(final Bomb bomb) {
-        final List<Direction> allDirection = List.of(Direction.LEFT,Direction.RIGHT,Direction.UP,Direction.DOWN);
+        final List<Direction> allDirection = List.of(Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.DOWN);
         allDirection.stream()
-            .map(dir->checkDirection(dir, bomb.getRange(), bomb.getPos()))
-            .forEach((set)->set.forEach((e)->mgr.addFlame(e.getValue() , e.getKey() )));
+            .map(dir -> checkDirection(dir, bomb.getRange(), bomb.getPos()))
+            .forEach((set) -> set.forEach((e)->mgr.addFlame(e.getValue() , e.getKey())));
         mgr.addFlame(FlameType.FLAME_CROSS, bomb.getPos());
     }
     
-    private Set<Entry<Pair , FlameType>> checkDirection(final Direction dir , final int range , final Pair pos) {
+    private Set<Entry<Pair , FlameType>> checkDirection(final Direction dir, final int range, final Pair pos) {
         return IntStream.iterate(1 , i->i <= range , i->i+1)
             .mapToObj(i->pos.sum(dir.getPair().multipy(i)))
             .takeWhile(p->stopFlamePropagation(p))
@@ -105,7 +104,7 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
     }
 
     private boolean stopFlamePropagation(Pair pos) {
-        return map.isEmpty(pos) || (isBomb(pos) && !map.isUnbreakableWall(pos) && !isBreckableWall(pos));
+        return this.map.isEmpty(pos) || (isBomb(pos) && !map.isUnbreakableWall(pos) && !isBreckableWall(pos));
     }
 
     public boolean isBreckableWall(final Pair pos) {  
