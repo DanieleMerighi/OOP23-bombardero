@@ -25,7 +25,7 @@ public class MapManagerImpl implements MapManager {
     /* This number and List represent the twelve cells on which nothing can spawn except the player: */
     /* NOTE: the number "12" does NOT depend from the arena's size, however the "MAP_CORNERS" Set does. */
     private static final int MAP_CORNERS_NUMBER = 12;
-    private final Set<Pair> MAP_CORNERS = new HashSet<>();
+    private final Set<Pair> mapCorners = new HashSet<>();
     private static final int COLLAPSE_RATE = 5;
 
     private final GameMap map;
@@ -60,8 +60,8 @@ public class MapManagerImpl implements MapManager {
     public void placeBreakableWalls() {
         final int totalWallsToGenerate = (int) Math.floor(
             (Utils.MAP_COLS * Utils.MAP_ROWS
-                - (Math.floorDiv(Utils.MAP_COLS, 2)
-                * Math.floorDiv(Utils.MAP_ROWS, 2))
+                - Math.floorDiv(Utils.MAP_COLS, 2)
+                * Math.floorDiv(Utils.MAP_ROWS, 2)
                 - MAP_CORNERS_NUMBER
             ) * Utils.WALL_PRESENCE_RATE
         );
@@ -111,7 +111,7 @@ public class MapManagerImpl implements MapManager {
         while (counter != 0) {
             do {
                 coordinate = new Pair(rnd.nextInt(Utils.MAP_COLS), rnd.nextInt(Utils.MAP_ROWS));
-            } while (!map.isEmpty(coordinate) || this.MAP_CORNERS.contains(coordinate) || walls.contains(coordinate));
+            } while (!map.isEmpty(coordinate) || this.mapCorners.contains(coordinate) || walls.contains(coordinate));
             walls.add(coordinate);
             counter--;
         }
@@ -158,21 +158,21 @@ public class MapManagerImpl implements MapManager {
      * on which nothing can spawn except the player
      */
     private void computeMapCorners() {
-        this.MAP_CORNERS.add(new Pair(0, 0));
-        this.MAP_CORNERS.add(new Pair(0, 1));
-        this.MAP_CORNERS.add(new Pair(1, 0));
+        this.mapCorners.add(new Pair(0, 0));
+        this.mapCorners.add(new Pair(0, 1));
+        this.mapCorners.add(new Pair(1, 0));
 
-        this.MAP_CORNERS.add(new Pair(Utils.MAP_ROWS - 1, Utils.MAP_COLS - 1));
-        this.MAP_CORNERS.add(new Pair(Utils.MAP_ROWS - 1, Utils.MAP_COLS - 2));
-        this.MAP_CORNERS.add(new Pair(Utils.MAP_ROWS - 2, Utils.MAP_COLS - 1));
+        this.mapCorners.add(new Pair(Utils.MAP_ROWS - 1, Utils.MAP_COLS - 1));
+        this.mapCorners.add(new Pair(Utils.MAP_ROWS - 1, Utils.MAP_COLS - 2));
+        this.mapCorners.add(new Pair(Utils.MAP_ROWS - 2, Utils.MAP_COLS - 1));
 
-        this.MAP_CORNERS.add(new Pair(Utils.MAP_ROWS - 1, 0));
-        this.MAP_CORNERS.add(new Pair(Utils.MAP_ROWS - 1, 1));
-        this.MAP_CORNERS.add(new Pair(Utils.MAP_ROWS - 2, 0));
+        this.mapCorners.add(new Pair(Utils.MAP_ROWS - 1, 0));
+        this.mapCorners.add(new Pair(Utils.MAP_ROWS - 1, 1));
+        this.mapCorners.add(new Pair(Utils.MAP_ROWS - 2, 0));
 
-        this.MAP_CORNERS.add(new Pair(0, Utils.MAP_COLS - 1));
-        this.MAP_CORNERS.add(new Pair(1, Utils.MAP_COLS - 1));
-        this.MAP_CORNERS.add(new Pair(0, Utils.MAP_COLS - 2));
+        this.mapCorners.add(new Pair(0, Utils.MAP_COLS - 1));
+        this.mapCorners.add(new Pair(1, Utils.MAP_COLS - 1));
+        this.mapCorners.add(new Pair(0, Utils.MAP_COLS - 2));
 
     }
 }
