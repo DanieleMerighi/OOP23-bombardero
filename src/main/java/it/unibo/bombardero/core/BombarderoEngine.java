@@ -1,18 +1,16 @@
 package it.unibo.bombardero.core;
 
-import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.Engine;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.core.impl.BombarderoGameManager;
 import it.unibo.bombardero.view.BombarderoGraphics;
 
 public class BombarderoEngine extends Thread implements Engine {
 
-    private final static long sleepTime = 16L; // Time during which the thread sleeps, equivalent to about 60FPS
+    private final static long SLEEP_TIME = 16L; // Time during which the thread sleeps, equivalent to about 60FPS
     
-    private GameManager manager;
-    private BombarderoGraphics graphics;
+    private final GameManager manager;
+    private final BombarderoGraphics graphics;
     private Controller controller;
     private boolean isGameInterrupted = false;
     private boolean isGameOver = false;
@@ -77,9 +75,9 @@ public class BombarderoEngine extends Thread implements Engine {
 
     private void waitForNextFrame(long currentCycleStartTime) {
         long currentCycleElapsedTime = System.currentTimeMillis() - currentCycleStartTime;
-        if(currentCycleElapsedTime < BombarderoEngine.sleepTime) {
+        if(currentCycleElapsedTime < BombarderoEngine.SLEEP_TIME) {
             try {
-                Thread.sleep(BombarderoEngine.sleepTime - currentCycleElapsedTime);
+                Thread.sleep(BombarderoEngine.SLEEP_TIME - currentCycleElapsedTime);
             } catch (IllegalArgumentException | InterruptedException e) {
                 System.out.println("Exception in thread sleeping: " + e.getMessage());
             }
