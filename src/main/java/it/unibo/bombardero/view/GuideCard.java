@@ -3,29 +3,20 @@ package it.unibo.bombardero.view;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.LayoutManager;
-import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Dimension;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JComponent;
 import javax.swing.SwingConstants;
-
-import org.apache.http.impl.auth.SPNegoScheme;
-import org.jgrapht.Graph;
-import org.jgrapht.generate.GridGraphGenerator;
-import org.jgrapht.util.SupplierException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-import java.util.List; 
 import java.util.Map; 
 import java.util.HashMap; 
+import java.util.Optional; 
 
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.view.sprites.api.Sprite;
@@ -56,8 +47,8 @@ public final class GuideCard extends GamePlayCard {
 
     private final Dimension messageBoxSize = null;
     private final Sprite wasdSprite;
-    private final Sprite spaceSprite;
-    private Sprite currentShowedSprite;
+    private final Sprite spacebarSprite;
+    private Optional<Sprite> currentShowedSprite;
 
     private final Map<Sprite, Dimension> spritesPlacingPoint = new HashMap<>();
 
@@ -72,14 +63,14 @@ public final class GuideCard extends GamePlayCard {
         wasdSprite = new SimpleBombarderoSprite(
             SimpleBombarderoSprite.importAssets("WASD", "overlay/buttons/WASD", resourceGetter, graphics.getResizingEngine()::getScaledWASDImage, 8),
             8, 12);
-        spaceSprite = new SimpleBombarderoSprite(
+        spacebarSprite = new SimpleBombarderoSprite(
             SimpleBombarderoSprite.importAssets("SPACE", "overlay/buttons/SPACEBAR", resourceGetter, graphics.getResizingEngine()::getScaledSpaceImage, 2),
             2, 32);
         // CHECKSTYLE: MagicNumber ON
         
-        currentShowedSprite = wasdSprite;
+        currentShowedSprite = Optional.of(wasdSprite);
         spritesPlacingPoint.put(wasdSprite, graphics.getResizingEngine().getWasdGuidePosition());
-        spritesPlacingPoint.put(spaceSprite, graphics.getResizingEngine().getSpaceGuidePosition());
+        spritesPlacingPoint.put(spacebarSprite, graphics.getResizingEngine().getSpaceGuidePosition());
         this.setLayout(new GridLayout(5, 1));
         back = new JButton(new ImageIcon(backImage));
         start = new JButton(new ImageIcon(startImage));
@@ -122,14 +113,16 @@ public final class GuideCard extends GamePlayCard {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(currentShowedSprite.getImage(), spritesPlacingPoint.get(currentShowedSprite).width, spritesPlacingPoint.get(currentShowedSprite).height, null);
+        if (currentShowedSprite.isPresent()) {
+            g.drawImage(currentShowedSprite.get().getImage(), spritesPlacingPoint.get(currentShowedSprite.get()).width, spritesPlacingPoint.get(currentShowedSprite.get()).height, null);
+        }
     }
 
     @Override
     public void updateSprites() {
         super.updateSprites();
         wasdSprite.update();
-        spaceSprite.update();
+        spacebarSprite.update();
     }
 
     public void showMessage(final BombarderoViewMessages message) {
@@ -149,12 +142,12 @@ public final class GuideCard extends GamePlayCard {
 
     private void showAnimatedKeys(final BombarderoViewMessages message) {
         currentShowedSprite = switch(message) {
-            case END_GUIDE -> null;
-            case EXPLAIN_MOVEMENT -> wasdSprite;
-            case EXPLAIN_POWERUP -> null;
-            case KILL_ENEMY -> null;
-            case PLACE_BOMB -> spaceSprite;
-            default -> null;
+            case END_GUIDE -> Optional.empty();
+            case EXPLAIN_MOVEMENT -> Optional.of(wasdSprite);
+            case EXPLAIN_POWERUP -> Optional.empty();
+            case KILL_ENEMY -> Optional.empty();
+            case PLACE_BOMB -> Optional.of(spacebarSprite);
+            default -> Optional.empty();
         };
     }
 }
