@@ -89,12 +89,12 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
          * Creates a new dummy at the passed coordinate.
          * @param coord where to spawn the dummy
          */
-        public Dummy(Coord coord) {
+        public Dummy(final Coord coord) {
             super(BombarderoGuideManager.this, coord, BombarderoGuideManager.this.getBombFactory());
         }
 
         @Override
-        public void update(long elapsedTime) {
+        public void update(final long elapsedTime) {
 
         }
         
