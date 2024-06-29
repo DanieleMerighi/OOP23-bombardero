@@ -18,7 +18,13 @@ import it.unibo.bombardero.cell.powerup.impl.SkullEffect;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.map.api.Pair;
 
-
+/**
+ * Unit tests for the {@link PowerUp} class.
+ * <p>
+ * This class contains tests to verify the behavior of the PowerUp, including
+ * creation and effects.
+ * </p>
+ */
 public class TestPowerUp {
 
     private static final int FPS = 60;
@@ -30,12 +36,19 @@ public class TestPowerUp {
     private Pair powerUpSpawn;
     private PowerUp powerUP;
 
+    /**
+     * Sets up the test environment before each test.
+     * Initializes the game manager and the spawn coordinates of the PowerUp.
+     */
     @BeforeEach
     void setUp() {
         this.manager = new MyGameManager();
         powerUpSpawn = new Pair(SPAWN_INT_COORDINATES, SPAWN_INT_COORDINATES);
     }
 
+    /**
+     * Tests that the PowerUp gets created correctly.
+     */
     @Test
     public void testCreating100PowerUp() {
         IntStream.range(0, 100)
@@ -51,6 +64,9 @@ public class TestPowerUp {
         }
     }
 
+    /**
+     * Tests the skull effect.
+     */
     @Test
     public void testRandomSkullEffect() {
         // Create skull powerup
@@ -67,7 +83,7 @@ public class TestPowerUp {
         }
 
         // Asserts the skull duration is 0
-        assertEquals(0l, this.manager.getPlayer().getSkeletonEffectDuration());
+        assertEquals(0L, this.manager.getPlayer().getSkeletonEffectDuration());
         // Asserts there is no Reset effect to run
         assertEquals(Optional.empty(), this.manager.getPlayer().getResetEffect());
         // Asserts the initial stats are resetted
