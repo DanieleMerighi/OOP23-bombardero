@@ -24,18 +24,18 @@ import it.unibo.bombardero.character.Player;
 
 public class BombarderoGameManager implements GameManager {
 
-    public final static long TOTAL_GAME_TIME = 120000L;
+    public final static long TOTAL_GAME_TIME = 120_000L;
     public final static long GAME_OVER_TIME = 0L;
     
     private final GameMap map;
-    private List<Bomb> boombs = new ArrayList<>();
-    private List<Flame> flames = new ArrayList<>();
+    private final List<Bomb> boombs = new ArrayList<>();
+    private final List<Flame> flames = new ArrayList<>();
     private final List<Character> enemies = new ArrayList<>();
     private final Character player;
     private final Controller controller;
     private final CollisionEngine ce;
     private final BombFactory bombFactory;
-    private long gameTime = 0;
+    private long gameTime;
 
     public BombarderoGameManager(final Controller ctrl){
         this.controller = ctrl;
@@ -120,7 +120,7 @@ public class BombarderoGameManager implements GameManager {
     }
 
     @Override
-    public Optional<Bomb> getBomb(Pair pos) {
+    public Optional<Bomb> getBomb(final Pair pos) {
         return boombs.stream().filter(b-> b.getPos().equals(pos)).findAny();
     }
 
@@ -131,7 +131,7 @@ public class BombarderoGameManager implements GameManager {
 
     @Override
     public void addFlame(final Flame.FlameType type, final Pair pos) {
-        Flame f = new Flame(CellType.FLAME, type, pos , this);
+        final Flame f = new Flame(CellType.FLAME, type, pos , this);
         flames.add(f);
         map.addFlame(f, pos);
     }
