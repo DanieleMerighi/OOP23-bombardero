@@ -12,20 +12,21 @@ public class BombarderoEngine extends Thread implements Engine {
     private final GameManager manager;
     private final BombarderoGraphics graphics;
     private Controller controller;
-    private boolean isGameInterrupted = false;
-    private boolean isGameOver = false;
+    private boolean isGameInterrupted;
+    private boolean isGameOver;
 
-    public BombarderoEngine(Controller controller, BombarderoGraphics graphics, GameManager manager) {
+    public BombarderoEngine(final Controller controller, final BombarderoGraphics graphics, final GameManager manager) {
         this.controller = controller;
         this.graphics = graphics;
         this.manager = manager;
     }
     
+    @Override
     public void run() {
         long previousCycleStartTime = System.currentTimeMillis();
         while (!isGameOver) {
-            long currentCycleStartTime = System.currentTimeMillis();
-            long elapsed = currentCycleStartTime - previousCycleStartTime;
+            final long currentCycleStartTime = System.currentTimeMillis();
+            final long elapsed = currentCycleStartTime - previousCycleStartTime;
             if(!isGameInterrupted) {
                 manager.updateGame(elapsed);
                 graphics.update();
@@ -63,9 +64,7 @@ public class BombarderoEngine extends Thread implements Engine {
 
     @Override
     public void endGameLoop() {
-        System.out.println("Inizio end");
         isGameOver = true;
-        System.out.println("Join fatta");
     }
 
     @Override
@@ -73,8 +72,8 @@ public class BombarderoEngine extends Thread implements Engine {
         return this.isGameInterrupted;
     }
 
-    private void waitForNextFrame(long currentCycleStartTime) {
-        long currentCycleElapsedTime = System.currentTimeMillis() - currentCycleStartTime;
+    private void waitForNextFrame(final long currentCycleStartTime) {
+        final long currentCycleElapsedTime = System.currentTimeMillis() - currentCycleStartTime;
         if(currentCycleElapsedTime < BombarderoEngine.SLEEP_TIME) {
             try {
                 Thread.sleep(BombarderoEngine.SLEEP_TIME - currentCycleElapsedTime);
