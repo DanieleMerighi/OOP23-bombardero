@@ -49,11 +49,6 @@ public class TimedBombarderoSprite extends SimpleBombarderoSprite {
         }
     }
 
-    @Override
-    public Image getImage() {
-        return super.getImage();
-    }
-
     public boolean isOver() {
         return counter >= lifetime || counter >= framesPerSprite;
     }
