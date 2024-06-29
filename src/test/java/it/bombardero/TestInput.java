@@ -24,7 +24,7 @@ import it.unibo.bombardero.view.BombarderoViewMessages;
 /**
  * Test class for KeyboardInput to verify the handling of keyboard events.
  */
-public class TestInput {
+class TestInput {
 
     private KeyboardInput keyboardInput;
     private Controller controller;

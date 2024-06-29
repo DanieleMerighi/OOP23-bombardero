@@ -19,7 +19,7 @@ import it.unibo.bombardero.map.api.Coord;
  * direction facing and movement mechanics.
  * </p>
  */
-public class TestPlayer {
+class TestPlayer {
 
     private static final int FPS = 60;
     private static final float STARTING_COORD = 5.0f;
@@ -36,7 +36,7 @@ public class TestPlayer {
      * Initializes the game manager, spawn coordinates, and player position.
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         this.manager = new MyGameManager();
         spawnX = STARTING_COORD;
         spawnY = STARTING_COORD;
@@ -49,7 +49,7 @@ public class TestPlayer {
      * Tests that the player correctly faces each direction.
      */
     @Test
-    public void testPlayerLookingDirections() {
+    void testPlayerLookingDirections() {
         this.manager.getPlayer().setCharacterPosition(spawnCoord);
         for (final Direction dir : Direction.values()) {
             this.manager.getPlayer().setFacingDirection(dir);
@@ -62,7 +62,7 @@ public class TestPlayer {
      * Tests the player's movement in the right direction over a series of updates.
      */
     @Test
-    public void testPlayerMovingDirections() {
+    void testPlayerMovingDirections() {
         // Setting player direction
         this.manager.getPlayer().setFacingDirection(Direction.RIGHT);
         // Setting player to not stationary

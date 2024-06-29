@@ -25,7 +25,7 @@ import it.unibo.bombardero.map.api.Pair;
  * creation and effects.
  * </p>
  */
-public class TestPowerUp {
+class TestPowerUp {
 
     private static final int FPS = 60;
     private static final int SPAWN_INT_COORDINATES = 0;
@@ -50,7 +50,7 @@ public class TestPowerUp {
      * Tests that the PowerUp gets created correctly.
      */
     @Test
-    public void testCreating100PowerUp() {
+    void testCreating100PowerUp() {
         IntStream.range(0, 100)
             .forEach(n -> {
                 this.manager = new MyGameManager(); // Reset character
@@ -68,7 +68,7 @@ public class TestPowerUp {
      * Tests the skull effect.
      */
     @Test
-    public void testRandomSkullEffect() {
+    void testRandomSkullEffect() {
         // Create skull powerup
         powerUP = new PowerUpImpl(PowerUpType.SKULL, powerUpSpawn, new SkullEffect());
         // Apply skull effect to the player
