@@ -55,6 +55,7 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
             (map, manager) -> true /* manager.getEnemies().stream().allMatch(enemy -> !enemy.isAlive())*/,
             (manager, controller) -> {
                 controller.toggleMessage(BombarderoViewMessages.END_GUIDE);
+                controller.displayEndGuide();
             }
         ));
         guideProcedures.add(new GuideStep(
