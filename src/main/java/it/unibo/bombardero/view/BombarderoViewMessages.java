@@ -10,7 +10,7 @@ public enum BombarderoViewMessages {
 
     private String message;
 
-    private BombarderoViewMessages(final String message) {
+    BombarderoViewMessages(final String message) {
         this.message = message;
     }
 
