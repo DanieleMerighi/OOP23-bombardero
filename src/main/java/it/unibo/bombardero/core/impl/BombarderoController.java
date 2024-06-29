@@ -52,10 +52,15 @@ public class BombarderoController implements Controller {
 
     @Override
     public void endGuide() {
-        graphics.displayEndGuide();
         engine.endGameLoop();
         graphics.update();
     }
+
+    @Override
+    public void displayEndGuide() {
+        graphics.displayEndGuide();
+    }
+    
 
     @Override
     public void escape() {
@@ -98,5 +103,5 @@ public class BombarderoController implements Controller {
     public long getTimeLeft() {
         return manager.getTimeLeft();
     }
-    
+
 }

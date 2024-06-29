@@ -20,7 +20,9 @@ public interface Controller {
     void startGuide();
 
     void endGuide();
-    
+
+    void displayEndGuide();
+
     void escape();
 
     void toggleMessage(BombarderoViewMessages message);
