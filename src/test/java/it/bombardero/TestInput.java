@@ -111,6 +111,12 @@ public class TestInput {
                 throw new UnsupportedOperationException("Unimplemented method 'getTimeLeft'");
             }
 
+            @Override
+            public void displayEndGuide() {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'displayEndGuide'");
+            }
+
         };
         // Initialize KeyboardInput with the test controller
         this.keyboardInput = new KeyboardInput(controller);
