@@ -28,8 +28,8 @@ import it.unibo.bombardero.character.Character;
  */
 public final class SkullEffect implements PowerUpEffect {
 
-    private static final int EFFECT_DURATION_IN_SECONDS = 10;
-    private static final int SECONDS_TO_MILLISECONDS = 1000;
+    private static final long EFFECT_DURATION_IN_SECONDS = 10;
+    private static final long SECONDS_TO_MILLISECONDS = 1000;
     private static final float DECREASE_SPEED_FACTOR = 2.5f;
     private static final float INCREASE_SPEED_FACTOR = 2f;
 
@@ -38,7 +38,7 @@ public final class SkullEffect implements PowerUpEffect {
      * 
      * @return the skull effect duration
      */
-    public static int getEffectDurationInSeconds() {
+    public static long getEffectDurationInSeconds() {
         return EFFECT_DURATION_IN_SECONDS;
     }
 

@@ -30,7 +30,7 @@ class TestPowerUp {
     private static final int FPS = 60;
     private static final int SPAWN_INT_COORDINATES = 0;
     private static final int STANDARD_ELAPSED_TIME = 100;
-    private static final int SECONDS_TO_MILLISECONDS = 1000;
+    private static final long SECONDS_TO_MILLISECONDS = 1000;
     private MyGameManager manager;
     private final PowerUpFactory factory = new PowerUpFactoryImpl();
     private Pair powerUpSpawn;
