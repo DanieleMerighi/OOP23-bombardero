@@ -7,7 +7,6 @@ package it.unibo.bombardero.core.api;
  * <p>
  * The game engine has to have the following functionalities:
  * <ul>
- *  <li> Initialise the game model
  *  <li> Start the game loop
  *  <li> Pause the game loop 
  *  <li> Resume the game loop
