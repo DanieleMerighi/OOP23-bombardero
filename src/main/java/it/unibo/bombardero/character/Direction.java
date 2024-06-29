@@ -1,6 +1,5 @@
 package it.unibo.bombardero.character;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import it.unibo.bombardero.map.api.Pair;
@@ -77,7 +76,6 @@ public enum Direction {
      */
     public List<Pair> getDiagonals(final Direction dir, final Pair characterPos) {
         List<Pair> cells;
-        List<Pair> aCell = new ArrayList<>();
         switch (dir) {
             case UP:
                 cells = List.of(new Pair(characterPos.x() - 1, characterPos.y() - 1),
@@ -98,9 +96,7 @@ public enum Direction {
             default:
                 return null;
         }
-        aCell = cells.stream().filter(c -> c.x() >= 0 && c.y() >= 0 && c.x() < Utils.MAP_COLS && c.y() < Utils.MAP_ROWS).toList();
-        return aCell;
-
+        return cells.stream().filter(c -> c.x() >= 0 && c.y() >= 0 && c.x() < Utils.MAP_COLS && c.y() < Utils.MAP_ROWS).toList();
     }
 
 }
