@@ -30,13 +30,15 @@ public class SimpleBombarderoSprite implements Sprite {
      * @param framesPerSprite the number of frames contained in the asset
      */
     public SimpleBombarderoSprite(final Image[] asset, final int framesPerSprite) {
-        this.asset = copyAsset(asset, framesPerSprite);
+        this.asset = new Image[framesPerSprite];
+        System.arraycopy(asset, 0, this.asset, 0, framesPerSprite);
         this.framesPerSprite = framesPerSprite;
         ticksPerFrame = framesPerSprite == 2 ? 16 : 7;
     }
 
     public SimpleBombarderoSprite(final Image[] asset, final int framesPerSprite,  final int ticksPerFrame)  {
-        this.asset = copyAsset(asset, framesPerSprite);
+        this.asset = new Image[framesPerSprite];
+        System.arraycopy(asset, 0, this.asset, 0, framesPerSprite);
         this.framesPerSprite = framesPerSprite;
         this.ticksPerFrame = ticksPerFrame;
     }
@@ -149,14 +151,6 @@ public class SimpleBombarderoSprite implements Sprite {
             case RIGHT -> "right";
             default -> throw new IllegalArgumentException();
         };
-    }
-
-    private Image[] copyAsset(final Image[] asset, final int framesPerSprite) {
-        final Image[] copyAsset = new Image[framesPerSprite];
-        for(int i = 0; i < framesPerSprite; i++) {
-            copyAsset[i] = asset[i];
-        }
-        return copyAsset;
     }
 
 }
