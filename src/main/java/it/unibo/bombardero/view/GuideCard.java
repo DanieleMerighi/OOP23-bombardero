@@ -95,6 +95,7 @@ public final class GuideCard extends GamePlayCard {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                controller.endGuide();
                 graphics.showCard(BombarderoGraphics.MENU_CARD);
             }
             
@@ -104,6 +105,7 @@ public final class GuideCard extends GamePlayCard {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                controller.endGuide();
                 controller.startGame();
             }
             
