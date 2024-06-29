@@ -2,24 +2,15 @@ package it.bombardero;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.stream.IntStream;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import it.unibo.bombardero.cell.Bomb;
-import it.unibo.bombardero.cell.BombFactoryImpl;
-import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.character.Player;
-import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
-import it.unibo.bombardero.map.api.GameMap;
-import it.unibo.bombardero.map.api.Pair;
-import it.unibo.bombardero.map.impl.GameMapImpl;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.IntStream;
 
 /**
  * Unit tests for the {@link Player} class.
@@ -33,7 +24,7 @@ public class TestPlayer {
     private static final int FPS = 60;
     private static final float STARTING_COORD = 5.0f;
     private static final int STANDARD_ELAPSED_TIME = 100;
-    private TestGameManager manager;
+    private MyGameManager manager;
 
     private float spawnX;
     private float spawnY;
@@ -45,8 +36,8 @@ public class TestPlayer {
      * Initializes the game manager, spawn coordinates, and player position.
      */
     @BeforeEach
-    void setUp() {
-        this.manager = new TestGameManager();
+    public void setUp() {
+        this.manager = new MyGameManager();
         spawnX = STARTING_COORD;
         spawnY = STARTING_COORD;
         spawnCoord  = new Coord(spawnX, spawnY);
@@ -114,90 +105,4 @@ public class TestPlayer {
                 Math.round(this.manager.getPlayer().getCharacterPosition().y() * 1000.0f) / 1000.0f
             ));
     }
-
-    @SuppressWarnings("CPD-START")
-
-    /**
-     * A test implementation of the {@link GameManager} interface for use in tests.
-     */
-    private static class TestGameManager implements GameManager {
-
-        private Player player;
-        private final GameMap map;
-
-        /**
-         * Constructs a new {@link TestGameManager}.
-         * Initializes the game map and player.
-         */
-        TestGameManager() {
-            this.map = new GameMapImpl(false);
-            this.player = new Player(this, new Coord(STARTING_COORD, STARTING_COORD), new BombFactoryImpl(this));
-        }
-
-        @Override
-        public Player getPlayer() {
-            return this.player;
-        }
-
-        @Override
-        public void updateGame(final long elapsed) {
-            throw new UnsupportedOperationException("Unimplemented method 'updateGame'");
-        }
-
-        @Override
-        public void endGame() {
-            throw new UnsupportedOperationException("Unimplemented method 'endGame'");
-        }
-
-        @Override
-        public List<Character> getEnemies() {
-            throw new UnsupportedOperationException("Unimplemented method 'getEnemies'");
-        }
-
-        @Override
-        public GameMap getGameMap() {
-            return this.map;
-        }
-
-        @Override
-        public boolean addBomb(final Bomb bomb) {
-            throw new UnsupportedOperationException("Unimplemented method 'addBomb'");
-        }
-
-        @Override
-        public void removeBomb(final Pair pos) {
-            throw new UnsupportedOperationException("Unimplemented method 'removeBomb'");
-        }
-
-        @Override
-        public void addFlame(final FlameType type, final Pair pos) {
-            throw new UnsupportedOperationException("Unimplemented method 'addFlame'");
-        }
-
-        @Override
-        public void removeFlame(final Pair pos) {
-            throw new UnsupportedOperationException("Unimplemented method 'removeFlame'");
-        }
-
-        @Override
-        public boolean removeWall(final Pair pos) {
-            throw new UnsupportedOperationException("Unimplemented method 'removeWall'");
-        }
-
-        @Override
-        public long getTimeLeft() {
-            throw new UnsupportedOperationException("Unimplemented method 'getTimeLeft'");
-        }
-
-        @Override
-        public void removePowerUp(final Pair pos) {
-            throw new UnsupportedOperationException("Unimplemented method 'removePowerUp'");
-        }
-
-        @Override
-        public Optional<Bomb> getBomb(final Pair pos) {
-            throw new UnsupportedOperationException("Unimplemented method 'getBomb'");
-        }
-    }
-
 }

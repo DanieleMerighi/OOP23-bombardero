@@ -23,6 +23,10 @@ public class MyGameManager implements GameManager {
     private Enemy enemy;
     private GameMap map;
 
+    /**
+     * Constructs a new {@link MyGameManager}.
+     * Initializes the game map, player and enemy.
+     */
     MyGameManager() {
         this.map = new GameMapImpl(false);
         this.enemy = new Enemy(this, new Coord(0, 0), new BombFactoryImpl(this));
