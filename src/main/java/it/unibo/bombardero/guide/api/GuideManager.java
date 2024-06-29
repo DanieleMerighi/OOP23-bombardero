@@ -1,8 +1,6 @@
 package it.unibo.bombardero.guide.api;
 
-import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.guide.impl.BombarderoGuideManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;
 
@@ -13,9 +11,9 @@ import it.unibo.bombardero.map.api.Pair;
 */
 public interface GuideManager extends GameManager {
 
-    public final static Coord PLAYER_GUIDE_SPAWNPOINT = new Coord(4.5f, 6.5f);
-    public final static Pair CRATE_GUIDE_SPAWNPOINT = new Pair(8, 6);
-    public final static Coord DUMMY_GUIDE_SPAWNPOINT = new Coord(8.5f, 6.5f);
+    Coord PLAYER_GUIDE_SPAWNPOINT = new Coord(4.5f, 6.5f);
+    Pair CRATE_GUIDE_SPAWNPOINT = new Pair(8, 6);
+    Coord DUMMY_GUIDE_SPAWNPOINT = new Coord(8.5f, 6.5f);
     
     /**
      * Spawns a dummy {@link Character} in the game. The
