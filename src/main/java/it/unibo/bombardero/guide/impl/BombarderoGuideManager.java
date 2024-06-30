@@ -16,8 +16,9 @@ import it.unibo.bombardero.view.BombarderoViewMessages;
  * it is a slightly modified {@link BasicBombarderoGameManager} that 
  * doesn't spawn neither enemies nor crates regularly.
  * <p>
+ * <p>
  * It spawns just a crate and the player and the game proceeds at 
- * stages, dictated by the Controller. 
+ * stages, dictated by the state of the game.
  * @author Federico Bagattoni
  */
 public final class BombarderoGuideManager extends BasicBombarderoGameManager implements GuideManager {
