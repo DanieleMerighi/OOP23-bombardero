@@ -39,8 +39,7 @@ public class MapGeneratorImpl implements MapGenerator {
     public int getTotalWallsToGenerate(final double wallSpawnRate) {
         return (int) Math.floor(
             (Utils.MAP_COLS * Utils.MAP_ROWS
-                - Math.floorDiv(Utils.MAP_COLS, 2)
-                * Math.floorDiv(Utils.MAP_ROWS, 2)
+                - Math.floorDiv(Utils.MAP_COLS, 2) * Math.floorDiv(Utils.MAP_ROWS, 2)
                 - MAP_CORNERS_NUMBER
             ) * wallSpawnRate
         );
@@ -69,13 +68,18 @@ public class MapGeneratorImpl implements MapGenerator {
     @Override
     public Set<Pair> generateBreakableWalls(final GameMap map, final int totalWallsToGenerate) {
         final Random rnd = new Random();
+        final Set<Pair> unbreakableWalls = generateUnbreakableWalls();
         Pair coordinate;
         final Set<Pair> walls = new HashSet<>();
         int counter = totalWallsToGenerate;
-        while (counter != 0) {
+        while (counter > 0) {
             do {
                 coordinate = new Pair(rnd.nextInt(Utils.MAP_COLS), rnd.nextInt(Utils.MAP_ROWS));
-            } while (!map.isEmpty(coordinate) || this.mapCorners.contains(coordinate) || walls.contains(coordinate));
+            } while (
+                !map.isEmpty(coordinate) ||
+                this.mapCorners.contains(coordinate) ||
+                walls.contains(coordinate) ||
+                unbreakableWalls.contains(coordinate));
             walls.add(coordinate);
             counter--;
         }
