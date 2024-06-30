@@ -35,8 +35,8 @@ public final class GameMapImpl implements GameMap {
      */
     public GameMapImpl() {
         this.mapGenerator = new MapGeneratorImpl();
-        placeBreakableWalls();
         placeUnbreakableWalls();
+        placeBreakableWalls();
         collapseOrder = mapGenerator.generateCollapseOrder();
     }
 
@@ -170,7 +170,8 @@ public final class GameMapImpl implements GameMap {
     private void placeBreakableWalls() {
         mapGenerator.generateBreakableWalls(
             this,
-            mapGenerator.getTotalWallsToGenerate(Utils.WALL_PRESENCE_RATE)).forEach(wallPosition -> addBreakableWall(wallPosition));
+            mapGenerator.getTotalWallsToGenerate(Utils.WALL_PRESENCE_RATE)
+        ).forEach(wallPosition -> addBreakableWall(wallPosition));
     }
  
 }
