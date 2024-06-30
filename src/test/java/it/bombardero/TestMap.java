@@ -10,13 +10,9 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.List;
-import java.util.ArrayList;
 
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.impl.GameMapImpl;
-import it.unibo.bombardero.map.api.MapManager;
-import it.unibo.bombardero.map.impl.MapManagerImpl;
 import it.unibo.bombardero.utils.Utils;
 import it.unibo.bombardero.map.api.Pair;
 
@@ -200,7 +196,7 @@ public class TestMap {
         this.MAP_CORNERS.add(new Pair(0, Utils.MAP_COLS - 2));
     }
 
-    private void computeMatrixTraversal() { /*
+    private void computeMatrixTraversal() {
         String[][] matrixTraversal = new String[Utils.MAP_ROWS][Utils.MAP_COLS];
         int top = 0, left = 0, bottom = Utils.MAP_COLS - 1, right = Utils.MAP_ROWS - 1, count = 0;
         while (top <= bottom && left <= right) {
@@ -223,13 +219,14 @@ public class TestMap {
             }
             
             if (left <= right) {
-                for (int i = bottom; i >= top; i--)
-                    ans.add(mat[i][left]);
-
+                for (int i = bottom; i >= top; i--) {
+                    matrixTraversal[i][left] = Integer.toString(count);
+                    count++;
+                }
                 left++;
             }
         }
-        printPlain2DArray(matrixTraversal); */
+        printPlain2DArray(matrixTraversal);
     } 
 
 }
