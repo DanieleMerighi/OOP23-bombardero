@@ -19,6 +19,7 @@ import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.traverse.BreadthFirstIterator;
 
+import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.character.AI.api.EnemyGraphReasoner;
 import it.unibo.bombardero.map.api.GameMap;
@@ -160,14 +161,13 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
 
     private Optional<Pair> findNearestSafeCellRecursive(final Pair enemyCoord, final int explRad,
             final Set<Pair> visited) {
-        List<Pair> adjacentCells = EnumSet.allOf(Direction.class)
+                List<Pair> adjacentCells = EnumSet.allOf(Direction.class)
                 .stream()
                 .map(d -> new Pair(enemyCoord.x() + d.x(), enemyCoord.y() + d.y()))
-                .filter(cell -> isValidCell(cell) && (map.isEmpty(cell) || map.isPowerUp(cell))
-                        && !visited.contains(cell))
+                .filter(cell -> isValidCell(cell) && (map.isEmpty(cell) || 
+                         (map.isPowerUp(cell) && map.whichPowerUpType(cell).filter(type -> type != PowerUpType.SKULL).isPresent())) 
+                         && !visited.contains(cell))
                 .collect(Collectors.toCollection(ArrayList::new));
-        
-        adjacentCells.add(enemyCoord);
 
         Optional<Pair> safeCell = adjacentCells.stream()
                 .filter(c -> !isInDangerZone(c, explRad))

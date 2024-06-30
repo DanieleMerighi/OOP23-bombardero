@@ -2,12 +2,15 @@ package it.unibo.bombardero.map.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Wall;
 import it.unibo.bombardero.cell.Cell.CellType;
+import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.cell.powerup.api.PowerUpFactory;
+import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.cell.powerup.impl.PowerUpFactoryImpl;
 import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.map.api.GameMap;
@@ -154,6 +157,15 @@ public final class GameMapImpl implements GameMap {
     @Override
     public boolean isPowerUp(final Pair coordinate) {
         return this.map.containsKey(coordinate) && this.map.get(coordinate).getCellType().equals(CellType.POWERUP);
+    }
+
+    @Override
+    public Optional<PowerUpType> whichPowerUpType(final Pair coordinate) {
+        if(this.isPowerUp(coordinate)) {
+            PowerUp powerup = (PowerUp)this.map.get(coordinate);
+            return Optional.of(powerup.getType());
+        }
+        return Optional.empty();
     }
  
 }

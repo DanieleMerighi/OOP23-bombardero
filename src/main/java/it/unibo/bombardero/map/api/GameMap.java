@@ -1,10 +1,12 @@
 package it.unibo.bombardero.map.api;
 
 import java.util.Map;
+import java.util.Optional;
 
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Flame;
+import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 
 /**
  * The main class for managing all the aspects of the game arena.
@@ -74,6 +76,12 @@ public interface GameMap {
      * @return if the Cell with this coordinates is a PowerUp
      */
     boolean isPowerUp(Pair coordinate);
+
+    /**
+     * @param coordinate
+     * @return which type of PowerUp the Cell is
+     */
+    Optional<PowerUpType> whichPowerUpType(Pair coordinate);
 
     /**
      * remove the falme at the given coordinate

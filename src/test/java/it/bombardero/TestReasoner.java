@@ -169,7 +169,6 @@ public class TestReasoner {
     @CsvSource({
             "0,0, 0,2, 3, 1,0", // Bomb to the right, safe space down
             "12,0, 12,2, 2, 11,0", // Bomb to the left, safe space above
-            "1,0, 1,2, 2, 1,0", // no needed a safe space
     })
     public void testFindNearestSafeSpace(final int enemyX, final int enemyY, final int bombX, final int bombY,
             final int explRadius,

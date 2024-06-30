@@ -19,7 +19,7 @@ public final class GraphManagerImpl {
      *
      * @param gameMap the game map to initialize the graph reasoner with
      */
-    public static synchronized void initialize(final GameMap gameMap) {
+    public static void initialize(final GameMap gameMap) {
         if (graphReasoner == null) {
             graphReasoner = new EnemyGraphReasonerImpl(gameMap);
         }
