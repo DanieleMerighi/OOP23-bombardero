@@ -12,9 +12,11 @@ import it.unibo.bombardero.cell.Flame;
  */
 public interface GameMap {
 
+    static int COLLAPSE_RATE = 5;
+
     /**
      * Updates the dynamic aspect of the map, calling the {@code update()} method of
-     * {@link MapManager}.
+     * {@link MapGenerator}.
      */
     void update(long timeLeft);
  
