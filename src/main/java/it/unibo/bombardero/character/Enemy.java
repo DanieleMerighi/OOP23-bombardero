@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 import it.unibo.bombardero.cell.BombFactory;
+import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.AI.impl.EnemyGraphReasonerImpl;
 import it.unibo.bombardero.character.AI.impl.GraphManagerImpl;
 import it.unibo.bombardero.core.api.GameManager;
@@ -28,9 +29,10 @@ public class Enemy extends Character {
     private State currentState = State.PATROL; // Initial state
     private EnemyGraphReasonerImpl graph;
     private int waitTimer = -1;
-    private boolean attemptedPowerUp; // flag to indicate if power-up attempt failed
+    private boolean attemptedPowerUp = false; // flag to indicate if power-up attempt failed
 
     private static final float TOLERANCE = 0.0001f; // A small tolerance value
+    private static final Random RANDOM = new Random();
 
     /**
      * Constructs a new Enemy with the specified parameters.
@@ -93,7 +95,7 @@ public class Enemy extends Character {
                 .filter(d -> !nextMove.map(move -> move.equals(currentCoord.sum(new Pair(d.x(), d.y())))).orElse(false))
                 .collect(Collectors.toList());
         while (!dirs.isEmpty()) {
-            Direction randomDirection = dirs.remove(new Random().nextInt(dirs.size()));
+            Direction randomDirection = dirs.remove(RANDOM.nextInt(dirs.size()));
             Pair p = currentCoord.sum(new Pair(randomDirection.x(), randomDirection.y()));
             if (isValidCell(p)
                     && (super.manager.getGameMap().isEmpty(p) || super.manager.getGameMap().isBreakableWall(p))) {
@@ -107,17 +109,14 @@ public class Enemy extends Character {
     }
 
     private void moveToClosestEntity() {
-        Optional<Pair> closestEntityOpt = getClosestEntity();
-        if (closestEntityOpt.isPresent()) {
-            Pair closestEntity = closestEntityOpt.get();
-            List<Pair> path = graph.findShortestPathToPlayer(getIntCoordinate(), closestEntity);
-            if (!path.isEmpty()) {
-                nextMove = Optional.of(path.get(0));
-            }
-        } else {
-            // If no entity is found, fallback to random movement or patrol
-            moveRandomly();
-        }
+        getClosestEntity().ifPresentOrElse(
+                closestEntity -> {
+                    List<Pair> path = graph.findShortestPathToPlayer(getIntCoordinate(), closestEntity);
+                    if (!path.isEmpty()) {
+                        nextMove = Optional.of(path.get(0));
+                    }
+                },
+                this::moveRandomly);
     }
 
     /**
@@ -151,9 +150,14 @@ public class Enemy extends Character {
                     nextMove = Optional.of(l.get(0));
                 }
             }
-            if (gameMap.isBreakableWall(nextMove.get())
+            if (currentState != State.ESCAPE
+                    && gameMap.whichPowerUpType(nextMove.get()).map(c -> c == PowerUpType.SKULL).orElse(false)) {
+                placeBomb();
+                nextMove = Optional.empty();
+            } else if (gameMap.isBreakableWall(nextMove.get())
                     && graph.findNearestSafeCell(getIntCoordinate(), getFlameRange()).isPresent()) {
                 placeBomb();
+
             }
         } else {
             waitTimer++;
@@ -201,18 +205,9 @@ public class Enemy extends Character {
     }
 
     private boolean canMoveOn(final Pair cell) {
-        // Check if the cell is empty
-        if (this.manager.getGameMap().isEmpty(cell) || this.manager.getGameMap().isPowerUp(cell)) {
-            return true;
-        }
-
-        // Check if the cell has a bomb, but the enemy is currently on it
-        if (this.manager.getGameMap().isBomb(cell) && getIntCoordinate().equals(cell)) {
-            return true;
-        }
-
-        // In all other cases, the enemy cannot move to the cell
-        return false;
+        GameMap gameMap = this.manager.getGameMap();
+        return gameMap.isEmpty(cell) || gameMap.isPowerUp(cell) ||
+                (gameMap.isBomb(cell) && getIntCoordinate().equals(cell));
     }
 
     private boolean isReachedTarget(final Coord currentPos, final Coord target) {
@@ -222,15 +217,9 @@ public class Enemy extends Character {
     }
 
     private Coord restrictToGridDirections(final Coord direction) {
-        Direction newDirection;
-        // Limita il movimento alle direzioni principali (orizzontale o verticale)
-        if (Math.abs(direction.x()) > Math.abs(direction.y())) {
-            // Movimento orizzontale
-            newDirection = direction.x() > 0 ? Direction.RIGHT : Direction.LEFT;
-        } else {
-            // Movimento verticale
-            newDirection = direction.y() > 0 ? Direction.DOWN : Direction.UP;
-        }
+        Direction newDirection = (Math.abs(direction.x()) > Math.abs(direction.y())) ?
+                (direction.x() > 0 ? Direction.RIGHT : Direction.LEFT) :
+                (direction.y() > 0 ? Direction.DOWN : Direction.UP);
         setFacingDirection(newDirection);
         return new Coord(newDirection.x(), newDirection.y());
     }
@@ -339,6 +328,7 @@ public class Enemy extends Character {
                 if (enemy.graph.isInDangerZone(currentCoord, flameRange)) {
                     enemy.currentState = ESCAPE;
                 } else if (!enemy.attemptedPowerUp && enemy.graph.findNearestPowerUp(currentCoord).isPresent()) {
+                    enemy.attemptedPowerUp = true;
                     enemy.currentState = EXPLORING;
                 } else if (enemy.getBombQueue().isEmpty()) {
                     enemy.currentState = PATROL;
@@ -364,11 +354,12 @@ public class Enemy extends Character {
                     enemy.nextMove = powerUp;
                     List<Pair> l = enemy.graph.findShortestPathToPlayer(enemy.getIntCoordinate(), enemy.nextMove.get());
                     if (l.stream().anyMatch(c -> enemy.graph.isInDangerZone(c, enemy.getFlameRange())
-                            || enemy.manager.getGameMap().isBreakableWall(c))) {
+                            || enemy.manager.getGameMap().isBreakableWall(c) || enemy.manager.getGameMap()
+                                    .whichPowerUpType(c).map(PowerUpType.SKULL::equals).orElse(false))) {
                         enemy.currentState = WAITING;
-                        enemy.attemptedPowerUp = true;
                         enemy.nextMove = Optional.empty();
                     } else {
+                        enemy.nextMove = Optional.of(l.get(0));
                         enemy.attemptedPowerUp = false;
                     }
 
