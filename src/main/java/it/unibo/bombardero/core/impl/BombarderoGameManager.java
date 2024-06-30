@@ -22,6 +22,13 @@ import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;
 
+/**
+ * This class implements the concepts expressed in the 
+ * {@link GameManager} interface. It serves as the main
+ * class of the model, coordinating everything that happens
+ * within the model such as the end of the game and the end of
+ * the time. 
+ */
 public class BombarderoGameManager implements GameManager {
 
     public final static long TOTAL_GAME_TIME = 120_000L;
@@ -37,7 +44,7 @@ public class BombarderoGameManager implements GameManager {
     private final BombFactory bombFactory;
     private long gameTime;
 
-    public BombarderoGameManager(final Controller ctrl){
+    public BombarderoGameManager(final Controller ctrl) {
         this.controller = ctrl;
         map = new GameMapImpl();
         ce = new BombarderoCollision(this);
@@ -56,6 +63,19 @@ public class BombarderoGameManager implements GameManager {
         this.map.addBreakableWall(GuideManager.CRATE_GUIDE_SPAWNPOINT);
     }
 
+    /**
+     * Updates the synchronous and asynchronous objects of the game, namely:
+     * <ul>
+     *  <li> The map
+     *  <li> The main character
+     *  <li> The bombs
+     *  <li> The flames
+     *  <li> The enemies 
+     * </ul> 
+     * The argument passed can be passed to the synchronous entities
+     * to synchronize them to the game's time.
+     * @param elapsed the time passed since the last update. 
+     */
     @Override
     public void updateGame(final long elapsed) {
         gameTime += elapsed;
@@ -65,13 +85,13 @@ public class BombarderoGameManager implements GameManager {
             ce.checkCharacterCollision(player);
             ce.checkFlameAndPowerUpCollision(player);
         }
-        if(!boombs.isEmpty()) {
-            boombs.forEach(b->b.update());
-            boombs.removeIf(b->b.isExploded());
+        if (!boombs.isEmpty()) {
+            boombs.forEach(b -> b.update());
+            boombs.removeIf(b -> b.isExploded());
         }
-        if(!flames.isEmpty()) {
-            flames.forEach(f->f.update(elapsed));
-            flames.removeIf(f->f.isExpired());
+        if (!flames.isEmpty()) {
+            flames.forEach(f -> f.update(elapsed));
+            flames.removeIf(f -> f.isExpired());
         }
         enemies.forEach(enemy -> {
              if (enemy.isAlive()) {
@@ -80,9 +100,6 @@ public class BombarderoGameManager implements GameManager {
                  ce.checkFlameAndPowerUpCollision(enemy);
              }
         });
-        /*if(enemies.get(0).isAlive()){
-            enemies.get(0).update(elapsed);
-        }*/
     }
 
     @Override
@@ -121,7 +138,7 @@ public class BombarderoGameManager implements GameManager {
 
     @Override
     public Optional<Bomb> getBomb(final Pair pos) {
-        return boombs.stream().filter(b-> b.getPos().equals(pos)).findAny();
+        return boombs.stream().filter(b -> b.getPos().equals(pos)).findAny();
     }
 
     @Override
@@ -143,13 +160,16 @@ public class BombarderoGameManager implements GameManager {
 
     @Override
     public boolean removeWall(final Pair pos) {
-        if(map.isBreakableWall(pos)) {
+        if (map.isBreakableWall(pos)) {
             map.removeBreakableWall(pos);
             return true;
         }
         return false;
     }
 
+    /**
+     * If the time is being kept it returns the time passed. 
+     */
     @Override
     public long getTimeLeft() {
         return gameTime < TOTAL_GAME_TIME ? TOTAL_GAME_TIME - gameTime : GAME_OVER_TIME;
