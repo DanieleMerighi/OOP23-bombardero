@@ -17,6 +17,11 @@ import it.unibo.bombardero.map.api.Pair;
  * Implementation of the PowerUp interface representing a power-up in the game.
  */
 public final class PowerUpImpl extends AbstractCell implements PowerUp {
+
+    private final PowerUpType type;
+
+    private final Consumer<Character> effect;
+    
     /**
      * Places a line of bombs in the direction the character is facing.
      * 
@@ -51,10 +56,6 @@ public final class PowerUpImpl extends AbstractCell implements PowerUp {
                 );
         }
     }
-
-    private final PowerUpType type;
-
-    private final Consumer<Character> effect;
 
     /**
      * Constructs a new implementation of PowerUp with the specified parameters.

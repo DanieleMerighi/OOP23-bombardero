@@ -36,42 +36,6 @@ public abstract class Character {
     private static final int MAX_FLAME_RANGE = 8;
     private static final int MAX_BOMBS = 8;
 
-    /**
-     * Gets the starting flame range of the character.
-     * 
-     * @return the starting flame range
-     */
-    public static int getStartingFlameRange() {
-        return STARTING_FLAME_RANGE;
-    }
-
-    /**
-     * Gets the max flame range of the character.
-     * 
-     * @return the max flame range
-     */
-    public static int getMaxFlameRange() {
-        return MAX_FLAME_RANGE;
-    }
-
-    /**
-     * Gets the starting speed of the character.
-     * 
-     * @return the starting speed
-     */
-    public static float getStartingSpeed() {
-        return STARTING_SPEED;
-    }
-
-    /**
-     * Gets the max speed of the character.
-     * 
-     * @return the max speed
-     */
-    public static float getMaxSpeed() {
-        return MAX_SPEED;
-    }
-
     // Game manager reference
     protected final GameManager manager;
 
@@ -110,6 +74,42 @@ public abstract class Character {
     private long skeletonEffectDuration; // Indicates the duration of the skull effect
 
     private Optional<Runnable> resetEffect = Optional.empty(); // Restores all stats modified by the skull
+
+    /**
+     * Gets the starting flame range of the character.
+     * 
+     * @return the starting flame range
+     */
+    public static int getStartingFlameRange() {
+        return STARTING_FLAME_RANGE;
+    }
+
+    /**
+     * Gets the max flame range of the character.
+     * 
+     * @return the max flame range
+     */
+    public static int getMaxFlameRange() {
+        return MAX_FLAME_RANGE;
+    }
+
+    /**
+     * Gets the starting speed of the character.
+     * 
+     * @return the starting speed
+     */
+    public static float getStartingSpeed() {
+        return STARTING_SPEED;
+    }
+
+    /**
+     * Gets the max speed of the character.
+     * 
+     * @return the max speed
+     */
+    public static float getMaxSpeed() {
+        return MAX_SPEED;
+    }
 
     /**
      * Constructs a new Character with the specified parameters.
