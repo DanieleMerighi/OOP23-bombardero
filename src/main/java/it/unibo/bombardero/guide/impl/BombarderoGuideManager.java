@@ -1,6 +1,8 @@
 package it.unibo.bombardero.guide.impl;
 
 import java.util.Stack;
+import java.util.List;
+
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.impl.BasicBombarderoGameManager;
@@ -32,7 +34,7 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
      * @param controller the reference to the game's {@link Controller}.
      */
     public BombarderoGuideManager(final Controller controller) {
-        super(controller, true);
+        super(controller, GuideManager.PLAYER_GUIDE_SPAWNPOINT, List.of(), false);
         this.getGameMap().addBreakableWall(CRATE_GUIDE_SPAWNPOINT);
         initialiseProcedures();
     }
