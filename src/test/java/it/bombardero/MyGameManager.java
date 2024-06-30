@@ -100,7 +100,7 @@ public class MyGameManager implements GameManager {
     }
 
     @Override
-    public long getTimeLeft() {
+    public Optional<Long> getTimeLeft() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getTimeLeft'");
     }
