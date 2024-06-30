@@ -60,12 +60,14 @@ public final class GameCard extends GamePlayCard {
     public void setPausedView() {
         this.add(quitButton);
         this.add(resumeButton);
+        this.revalidate();
         this.repaint(0);
     }
 
     public void setUnpausedView() {
         this.remove(quitButton);
         this.remove(resumeButton);
+        this.revalidate();
         this.repaint(0);
     }
 
