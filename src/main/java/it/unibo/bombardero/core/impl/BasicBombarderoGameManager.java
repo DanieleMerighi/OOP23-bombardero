@@ -23,10 +23,9 @@ import it.unibo.bombardero.character.Player;
 
 /**
  * This class implements the concepts expressed in the 
- * {@link GameManager} interface. It serves as the main
- * class of the model, coordinating everything that happens
- * within the model such as the end of the game and the end of
- * the time. 
+ * {@link GameManager} interface. This class is designed to
+ * be extended, adding further capabilities such as time-keeping and 
+ * advanced game dynamics.
  */
 public class BasicBombarderoGameManager implements GameManager {
 
@@ -42,6 +41,16 @@ public class BasicBombarderoGameManager implements GameManager {
     private final CollisionEngine ce;
     private final BombFactory bombFactory;
 
+    /**
+     * Creates a new Game Manager, creating all the model's entities. Spawning 
+     * the player and the enemies in the request positions.
+     * <p>
+     * A enemy for each element of the list will be spawned.  
+     * @param controller the game's controller 
+     * @param playerSpawnPoint the main player's spawnpoint
+     * @param enemiesSpawnpoint a list of the enemies spawnpoints
+     * @param generateWalls wether the breakable walls have to be generated or not
+     */
     public BasicBombarderoGameManager(
             final Controller controller,
             final Coord playerSpawnPoint, 
