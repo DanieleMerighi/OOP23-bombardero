@@ -25,7 +25,7 @@ public interface GuideManager extends GameManager {
      * The coordinate where the dummy character have to be spawned.
      */
     Coord DUMMY_GUIDE_SPAWNPOINT = new Coord(8.5f, 6.5f);
-   
+
     /**
      * Spawns a dummy {@link Character} in the game. The
      * character must do nothing and serves as target for the
