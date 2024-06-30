@@ -23,7 +23,7 @@ public final class FullBombarderoGameManager extends BasicBombarderoGameManager 
     }
 
     @Override
-    public void updateGame(long elapsed) {
+    public void updateGame(final long elapsed) {
         super.updateGame(elapsed);
         gameTime += elapsed;
     }
@@ -32,5 +32,5 @@ public final class FullBombarderoGameManager extends BasicBombarderoGameManager 
     public Optional<Long> getTimeLeft() {
         return Optional.of(gameTime < TOTAL_GAME_TIME ? TOTAL_GAME_TIME - gameTime : GAME_OVER_TIME);
     }
-    
+
 }
