@@ -80,6 +80,7 @@ public final class BombarderoGraphics {
     public void showCard(final String cardName) {
         layout.show(deck, cardName);
         currentShowedCard = cardName;
+        this.frame.requestFocus();
     }
 
     public void initGameCard() {
