@@ -43,7 +43,7 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
     @Override
     public void updateGame(final long elapsed) {
         super.updateGame(elapsed);
-        if(!guideProcedures.isEmpty() && guideProcedures.peek().condition().test(getGameMap(), this)) {
+        if (!guideProcedures.isEmpty() && guideProcedures.peek().condition().test(getGameMap(), this)) {
             guideProcedures.pop().action().accept(this, getController());
         }
     }
@@ -86,12 +86,12 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
      * @author Federico Bagattoni
      */
     private final class Dummy extends Character {
-        
+
         /**
          * Creates a new dummy at the passed coordinate.
          * @param coord where to spawn the dummy
          */
-        public Dummy(final Coord coord) {
+        Dummy(final Coord coord) {
             super(BombarderoGuideManager.this, coord, BombarderoGuideManager.this.getBombFactory());
         }
 
@@ -99,7 +99,7 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
         public void update(final long elapsedTime) {
 
         }
-        
+   
     }
-    
+
 }
