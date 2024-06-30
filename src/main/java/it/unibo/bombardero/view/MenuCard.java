@@ -38,8 +38,8 @@ public final class MenuCard extends JPanel {
 
         // CHECKSTYLE: MagicNumber OFF
         logo = rg.loadImage("menu/logo");
-        playImage = rg.loadImage("menu/play");
-        guideImage = rg.loadImage("menu/guide");
+        playImage = rg.loadImage("overlay/buttons/PLAY");
+        guideImage = rg.loadImage("overlay/buttons/GUIDE");
         background = rg.loadImage("menu/background");
         // CHECKSTYLE: MagicNumber ON
 
@@ -47,8 +47,14 @@ public final class MenuCard extends JPanel {
         play = new JButton(new ImageIcon(playImage));
         guide = new JButton(new ImageIcon(guideImage));
         /* TODO: better style JButtons, in windows you can stil see the buttons highlight, in MacOS however no...  */
-        play.setBorder(null);
         guide.setBorder(null);
+        play.setBorder(null);
+        guide.setBorderPainted(false);
+        play.setBorderPainted(false);
+        play.setContentAreaFilled(false);
+        guide.setContentAreaFilled(false);
+        play.setFocusPainted(false);
+        guide.setFocusPainted(false);
 
         /* TODO: smaller logo and dynamic resizing menu (dependant on JFrame size) */
         this.add(new JLabel(new ImageIcon(logo)));
