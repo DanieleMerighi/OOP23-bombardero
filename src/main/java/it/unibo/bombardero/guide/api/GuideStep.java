@@ -14,5 +14,5 @@ import it.unibo.bombardero.map.api.GameMap;
  * @author Federico Bagattoni
  */
 public record GuideStep(BiPredicate<GameMap, GuideManager> condition, BiConsumer<GuideManager, Controller> action) {
-    
+ 
 }
