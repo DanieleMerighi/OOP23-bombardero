@@ -11,13 +11,12 @@ import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.guide.api.GuideManager;
+import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.physics.impl.BombarderoCollision;
-import it.unibo.bombardero.utils.Utils;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;
@@ -42,25 +41,18 @@ public class BasicBombarderoGameManager implements GameManager {
     private final Controller controller;
     private final CollisionEngine ce;
     private final BombFactory bombFactory;
-    private long gameTime;
 
-    public BasicBombarderoGameManager(final Controller ctrl) {
-        this.controller = ctrl;
-        map = new GameMapImpl();
-        ce = new BombarderoCollision(this);
-        bombFactory = new BombFactoryImpl(this);
-        this.player = new Player(this, Utils.PLAYER_SPAWNPOINT, bombFactory);
-        enemies.add(new Enemy(this, Utils.ENEMIES_SPAWNPOINT.get(0), bombFactory));
-        //Utils.ENEMIES_SPAWNPOINT.forEach(enemyCoord -> enemies.add(new Enemy(this, enemyCoord, bombFactory)));
-    }
-
-    public BasicBombarderoGameManager(final Controller controller, final boolean guideMode) {
+    public BasicBombarderoGameManager(
+            final Controller controller,
+            final Coord playerSpawnPoint, 
+            final List<Coord> enemiesSpawnpoint,
+            final boolean generateWalls) {
         this.controller = controller;
-        map = new GameMapImpl(false);
+        map = new GameMapImpl(generateWalls);
         ce = new BombarderoCollision(this);
         bombFactory = new BombFactoryImpl(this);
-        this.player = new Player(this, GuideManager.PLAYER_GUIDE_SPAWNPOINT, bombFactory);
-        this.map.addBreakableWall(GuideManager.CRATE_GUIDE_SPAWNPOINT);
+        this.player = new Player(this, playerSpawnPoint, bombFactory);
+        enemiesSpawnpoint.forEach(spawnpoint -> enemies.add(new Enemy(this, spawnpoint, bombFactory)));
     }
 
     /**
@@ -78,8 +70,7 @@ public class BasicBombarderoGameManager implements GameManager {
      */
     @Override
     public void updateGame(final long elapsed) {
-        gameTime += elapsed;
-        map.update(getTimeLeft());
+        //map.update(getTimeLeft());
         if (player.isAlive()) {
             player.update(elapsed);
             ce.checkCharacterCollision(player);
@@ -171,8 +162,8 @@ public class BasicBombarderoGameManager implements GameManager {
      * If the time is being kept it returns the time passed. 
      */
     @Override
-    public long getTimeLeft() {
-        return gameTime < TOTAL_GAME_TIME ? TOTAL_GAME_TIME - gameTime : GAME_OVER_TIME;
+    public Optional<Long> getTimeLeft() {
+        return Optional.empty();
     }
 
     protected void addEnemy(final Character enemy) {
