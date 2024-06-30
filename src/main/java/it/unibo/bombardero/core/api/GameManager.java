@@ -67,11 +67,6 @@ public interface GameManager {
     void removeFlame(Pair pos);
     
     boolean removeWall(Pair pos);
-
-    /**
-     * Returns the time left in the game, it the time is
-     * being kept at all, if not {@code 0} will be returned.
-     * @return the time left in the game, in milliseconds. 
-     */
-    long getTimeLeft();
+    
+    Optional<Long> getTimeLeft();
 }   
