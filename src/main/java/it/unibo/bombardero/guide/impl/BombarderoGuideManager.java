@@ -3,7 +3,7 @@ package it.unibo.bombardero.guide.impl;
 import java.util.Stack;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.core.api.Controller;
-import it.unibo.bombardero.core.impl.BombarderoGameManager;
+import it.unibo.bombardero.core.impl.BasicBombarderoGameManager;
 import it.unibo.bombardero.guide.api.GuideManager;
 import it.unibo.bombardero.guide.api.GuideStep;
 import it.unibo.bombardero.map.api.Coord;
@@ -11,14 +11,14 @@ import it.unibo.bombardero.view.BombarderoViewMessages;
 
 /**
  * This class represents a single instance of the game's guide
- * it is a slightly modified {@link BombarderoGameManager} that 
+ * it is a slightly modified {@link BasicBombarderoGameManager} that 
  * doesn't spawn neither enemies nor crates regularly.
  * <p>
  * It spawns just a crate and the player and the game proceeds at 
  * stages, dictated by the Controller. 
  * @author Federico Bagattoni
  */
-public final class BombarderoGuideManager extends BombarderoGameManager implements GuideManager {
+public final class BombarderoGuideManager extends BasicBombarderoGameManager implements GuideManager {
 
     private final Stack<GuideStep> guideProcedures = new Stack<>();
 

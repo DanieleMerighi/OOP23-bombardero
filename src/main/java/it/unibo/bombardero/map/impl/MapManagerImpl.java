@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
 import java.util.Set;
 import java.util.HashSet;
 
-import it.unibo.bombardero.core.impl.BombarderoGameManager;
+import it.unibo.bombardero.core.impl.BasicBombarderoGameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.MapManager;
 import it.unibo.bombardero.map.api.Pair;
@@ -44,7 +44,7 @@ public class MapManagerImpl implements MapManager {
 
     @Override
     public void update(final long timeLeft) {
-        if(timeLeft == BombarderoGameManager.GAME_OVER_TIME) {
+        if(timeLeft == BasicBombarderoGameManager.GAME_OVER_TIME) {
             triggerCollapse();
         }
         if (collapseStarted && !wallCollapseOrder.isEmpty()) {

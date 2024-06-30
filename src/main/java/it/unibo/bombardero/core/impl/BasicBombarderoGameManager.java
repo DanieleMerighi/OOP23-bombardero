@@ -29,7 +29,7 @@ import it.unibo.bombardero.character.Player;
  * within the model such as the end of the game and the end of
  * the time. 
  */
-public class BombarderoGameManager implements GameManager {
+public class BasicBombarderoGameManager implements GameManager {
 
     public final static long TOTAL_GAME_TIME = 120_000L;
     public final static long GAME_OVER_TIME = 0L;
@@ -44,7 +44,7 @@ public class BombarderoGameManager implements GameManager {
     private final BombFactory bombFactory;
     private long gameTime;
 
-    public BombarderoGameManager(final Controller ctrl) {
+    public BasicBombarderoGameManager(final Controller ctrl) {
         this.controller = ctrl;
         map = new GameMapImpl();
         ce = new BombarderoCollision(this);
@@ -54,7 +54,7 @@ public class BombarderoGameManager implements GameManager {
         //Utils.ENEMIES_SPAWNPOINT.forEach(enemyCoord -> enemies.add(new Enemy(this, enemyCoord, bombFactory)));
     }
 
-    public BombarderoGameManager(final Controller controller, final boolean guideMode) {
+    public BasicBombarderoGameManager(final Controller controller, final boolean guideMode) {
         this.controller = controller;
         map = new GameMapImpl(false);
         ce = new BombarderoCollision(this);

@@ -27,7 +27,7 @@ public class BombarderoController implements Controller {
 
     @Override
     public void startGame() {
-        this.manager = new BombarderoGameManager(this);
+        this.manager = new BasicBombarderoGameManager(this);
         engine = new BombarderoEngine(this, this.graphics, this.manager);
         graphics.initGameCard();
         graphics.showCard(BombarderoGraphics.GAME_CARD);
