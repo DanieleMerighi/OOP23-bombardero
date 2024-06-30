@@ -1,6 +1,7 @@
 package it.unibo.bombardero.core.api;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.List;
 
 import it.unibo.bombardero.cell.Cell;
@@ -86,6 +87,6 @@ public interface Controller {
      * will return zero.
      * @return the time left in the game, in milliseconds. 
      */
-    long getTimeLeft();
+    Optional<Long> getTimeLeft();
 
 }
