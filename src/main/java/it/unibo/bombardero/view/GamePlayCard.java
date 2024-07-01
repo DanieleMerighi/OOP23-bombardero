@@ -133,6 +133,7 @@ public class GamePlayCard extends JPanel {
                             break;
                         case BOMB: 
                             img = bomb_image;
+                            placingPoint = graphics.getResizingEngine().getBombPlacingPoint(new Pair(i, j));
                             break;
                         case POWERUP:
                             PowerUp pu = (PowerUp)entry;
