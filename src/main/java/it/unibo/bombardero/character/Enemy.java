@@ -1,21 +1,23 @@
 package it.unibo.bombardero.character;
 
-import java.util.Optional;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.List;
+import java.util.Optional;
 
 import it.unibo.bombardero.cell.BombFactory;
+import it.unibo.bombardero.cell.powerup.api.PowerUpType;
+import it.unibo.bombardero.character.AI.api.EnemyState;
 import it.unibo.bombardero.character.AI.impl.EnemyGraphReasonerImpl;
+import it.unibo.bombardero.character.AI.impl.EscapeState;
 import it.unibo.bombardero.character.AI.impl.GraphManagerImpl;
+import it.unibo.bombardero.character.AI.impl.PatrolState;
+import it.unibo.bombardero.character.AI.impl.RandomMovementStrategy;
+import it.unibo.bombardero.character.AI.impl.ShortestMovementStrategy;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.utils.Utils;
-
-import java.util.EnumSet;
-import java.util.stream.*;
 
 /**
  * Represents an enemy character within the game environment.
@@ -25,26 +27,39 @@ import java.util.stream.*;
  */
 public class Enemy extends Character {
 
-    Optional<Pair> nextMove = Optional.empty();
-    private State currentState = State.PATROL; // Initial state
+    private Optional<Pair> nextMove = Optional.empty();
+    private EnemyState currentState = new PatrolState(); // Initial state
     private EnemyGraphReasonerImpl graph;
     private int waitTimer = -1;
+    private boolean attemptedPowerUp = false; // flag to indicate if power-up attempt failed
+    private static final float TOLERANCE = 0.0001f; // A small tolerance value
 
-    /*
+    /**
      * Constructs a new Enemy with the specified parameters.
      * 
-     * @param manager the game manager that controls the game state
+     * @param manager     the game manager that controls the game state
      * 
-     * @param coord the initial coordinates where the enemy is spawned
+     * @param coord       the initial coordinates where the enemy is spawned
      * 
      * @param bombFactory the factory to create bombs
      */
-    public Enemy(GameManager manager, Coord coord, BombFactory bombFactory) {
+    public Enemy(final GameManager manager, final Coord coord, final BombFactory bombFactory) {
         super(manager, coord, bombFactory);
         GraphManagerImpl.initialize(manager.getGameMap());
+        setStationary(true);
+        setFacingDirection(Direction.UP);
     }
 
-    private int calculateDistance(Pair coord1, Pair coord2) {
+    /**
+     * Calculate distance between two cells.
+     * 
+     * @param coord1 the first coordinate
+     * 
+     * @param coord2 the second coordinate
+     * 
+     * @return the distance in integer value
+     */
+    public int calculateDistance(final Pair coord1, final Pair coord2) {
         return Math.abs(coord1.x() - coord2.x()) + Math.abs(coord1.y() - coord2.y());
     }
 
@@ -54,15 +69,22 @@ public class Enemy extends Character {
      *
      * @return true if the player is within detection radius, false otherwise.
      */
-    private boolean isEnemyClose() {
+    public boolean isEnemyClose() {
         return getClosestEntity().map(
                 closestCoord -> calculateDistance(getIntCoordinate(), closestCoord) <= Utils.ENEMY_DETECTION_RADIUS)
                 .orElse(false);
     }
 
-    private Optional<Pair> getClosestEntity() {
-        Pair enemyCoord = getIntCoordinate();
-        List<Character> allEntities = new ArrayList<>(super.manager.getEnemies());
+    /**
+     * Retrieves the closest entity (character) to the enemy's current position,
+     * excluding itself and the player character.
+     *
+     * @return An Optional containing the closest entity's coordinates as a Pair,
+     *         or empty if no other entities exist.
+     */
+    public Optional<Pair> getClosestEntity() {
+        final Pair enemyCoord = getIntCoordinate();
+        final List<Character> allEntities = new ArrayList<>(super.manager.getEnemies());
         allEntities.add(super.manager.getPlayer());
 
         return allEntities.stream()
@@ -72,48 +94,21 @@ public class Enemy extends Character {
                         calculateDistance(enemyCoord, coord2)));
     }
 
-    private Optional<Character> getClosestEntity(Pair enemy) {
-        List<Character> allEntities = new ArrayList<>(super.manager.getEnemies());
+    /**
+     * Retrieves the closest entity (character) to the specified enemy position,
+     * excluding itself and the player character.
+     *
+     * @param enemy the position of the enemy to find the closest entity to
+     * @return An Optional containing the closest entity, or empty if no other
+     *         entities exist at the specified position.
+     */
+    public Optional<Character> getClosestEntity(final Pair enemy) {
+        final List<Character> allEntities = new ArrayList<>(super.manager.getEnemies());
         allEntities.add(super.manager.getPlayer());
 
         return allEntities.stream()
                 .filter(e -> e.getIntCoordinate().equals(getIntCoordinate()))
                 .findAny();
-    }
-
-    // when the enemy doesn't know where to move he choose randomly
-    private void moveRandomly() {
-        Pair currentCoord = getIntCoordinate();
-        List<Direction> dirs = EnumSet.allOf(Direction.class)
-                .stream()
-                .filter(d -> !nextMove.map(move -> move.equals(currentCoord.sum(new Pair(d.x(), d.y())))).orElse(false))
-                .collect(Collectors.toList());
-        while (!dirs.isEmpty()) {
-            Direction randomDirection = dirs.remove(new Random().nextInt(dirs.size()));
-            Pair p = currentCoord.sum(new Pair(randomDirection.x(), randomDirection.y()));
-            if (isValidCell(p)
-                    && (super.manager.getGameMap().isEmpty(p) || super.manager.getGameMap().isBreakableWall(p))) {
-                nextMove = Optional.of(p);
-                break;
-            }
-        }
-        if (nextMove.isEmpty()) {
-            System.out.println("Enemy: Stuck! No valid random move found.");
-        }
-    }
-
-    private void moveToClosestEntity() {
-        Optional<Pair> closestEntityOpt = getClosestEntity();
-        if (closestEntityOpt.isPresent()) {
-            Pair closestEntity = closestEntityOpt.get();
-            List<Pair> path = graph.findShortestPathToPlayer(getIntCoordinate(), closestEntity);
-            if (!path.isEmpty()) {
-                nextMove = Optional.of(path.get(0));
-            }
-        } else {
-            // If no entity is found, fallback to random movement or patrol
-            moveRandomly();
-        }
     }
 
     /**
@@ -122,8 +117,19 @@ public class Enemy extends Character {
      * @param cell the cell to be checked
      * @return true if the cell is within map boundaries, false otherwise.
      */
-    private boolean isValidCell(Pair cell) {
+    public boolean isValidCell(final Pair cell) {
         return cell.x() >= 0 && cell.y() >= 0 && cell.x() < Utils.MAP_COLS && cell.y() < Utils.MAP_ROWS;
+    }
+
+    /**
+     * Checks if the current enemy state is equal to another enemy state.
+     *
+     * @param otherState The other enemy state to compare.
+     * @return true if the current state is equal to the other state, false
+     *         otherwise.
+     */
+    public boolean isStateEqualTo(final EnemyState otherState) {
+        return currentState.equals(otherState);
     }
 
     /**
@@ -131,30 +137,31 @@ public class Enemy extends Character {
      * This method delegates the behavior to the current state's `execute` method
      * and potentially updates the `nextMove` target based on danger zone detection
      * or pathfinding results.
+     * 
+     * @param time the elapsed time
      */
-    private void computeNextDir(long time) {
-        GameMap gameMap = super.manager.getGameMap();
+    private void computeNextDir(final long time) {
+        final GameMap gameMap = super.manager.getGameMap();
         graph = GraphManagerImpl.getGraphReasoner(gameMap, time);
-        currentState.execute(this); // Delegate behavior to current state
+        currentState.execute(this, gameMap);
         if (nextMove.isPresent()) {
-            if (gameMap.isBreakableWall(nextMove.get())
+            if (calculateDistance(getIntCoordinate(), nextMove.get()) > 1) {
+                nextMove = new ShortestMovementStrategy().getNextMove(this, gameMap);
+            }
+            if (!isStateEqualTo(new EscapeState())
+                    && gameMap.whichPowerUpType(nextMove.get()).map(c -> c == PowerUpType.SKULL).orElse(false)) {
+                placeBomb();
+                nextMove = Optional.empty();
+            } else if (gameMap.isBreakableWall(nextMove.get())
                     && graph.findNearestSafeCell(getIntCoordinate(), getFlameRange()).isPresent()) {
                 placeBomb();
-            } else if (calculateDistance(getIntCoordinate(), nextMove.get()) > 1) {
-                List<Pair> l = graph.findShortestPathToPlayer(getIntCoordinate(), nextMove.get());
-                if(l.isEmpty()) {
-                    moveRandomly();
-                } else {
-                    nextMove = Optional.of(l.get(0));
-                }
             }
         } else {
             waitTimer++;
-            if(waitTimer >= Utils.MAX_WAITING_TIME) {
-                moveRandomly();
+            if (waitTimer >= Utils.MAX_WAITING_TIME) {
+                nextMove = new RandomMovementStrategy().getNextMove(this, gameMap);
             }
         }
-
     }
 
     /**
@@ -167,8 +174,9 @@ public class Enemy extends Character {
         if (nextMove.isEmpty()) {
             computeNextDir(elapsedTime);
         } else if (canMoveOn(nextMove.get())) {
-            Coord target = new Coord(nextMove.get().x() + 0.5f, nextMove.get().y() + 0.5f);
-            Coord currentPos = getCharacterPosition();
+            setStationary(false);
+            final Coord target = new Coord(nextMove.get().x() + 0.5f, nextMove.get().y() + 0.5f);
+            final Coord currentPos = getCharacterPosition();
 
             // Calculate direction vector
             Coord dir = target.subtract(currentPos);
@@ -177,154 +185,39 @@ public class Enemy extends Character {
             dir = restrictToGridDirections(dir);
 
             // Aggiorna la posizione del nemico
-            Coord newPos = currentPos.sum(dir.multiply(getSpeed()));
+            final Coord newPos = currentPos.sum(dir.multiply(getSpeed()));
 
             // Check if reached the target cell using a small tolerance
             if (isReachedTarget(newPos, target)) {
+                setCharacterPosition(target);
                 nextMove = Optional.empty(); // Clear target if reached
             } else {
                 setCharacterPosition(newPos);
             }
         } else {
             nextMove = Optional.empty();
+            setStationary(true);
         }
     }
 
-    private boolean canMoveOn(Pair cell) {
-        // Check if the cell is empty
-        if (this.manager.getGameMap().isEmpty(cell) || this.manager.getGameMap().isPowerUp(cell)) {
-            return true;
-        }
-
-        // Check if the cell has a bomb, but the enemy is currently on it
-        if (this.manager.getGameMap().isBomb(cell) && getIntCoordinate().equals(cell)) {
-            return true;
-        }
-
-        // In all other cases, the enemy cannot move to the cell
-        return false;
+    private boolean canMoveOn(final Pair cell) {
+        final GameMap gameMap = this.manager.getGameMap();
+        return gameMap.isEmpty(cell) || gameMap.isPowerUp(cell) 
+        || (gameMap.isBomb(cell) && getIntCoordinate().equals(cell));
     }
 
-    private boolean isReachedTarget(Coord currentPos, Coord target) {
-        double distance = currentPos.distanceTo(target);
+    private boolean isReachedTarget(final Coord currentPos, final Coord target) {
+        final float distance = currentPos.distanceTo(target);
         // Use a small fixed tolerance value for the distance check
-        return distance <= getSpeed();
+        return distance <= getSpeed() + TOLERANCE;
     }
 
-    private Coord restrictToGridDirections(Coord direction) {
-        Direction newDirection;
-        // Limita il movimento alle direzioni principali (orizzontale o verticale)
-        if (Math.abs(direction.x()) > Math.abs(direction.y())) {
-            // Movimento orizzontale
-            newDirection = direction.x() > 0 ? Direction.RIGHT : Direction.LEFT;
-        } else {
-            // Movimento verticale
-            newDirection = direction.y() > 0 ? Direction.DOWN : Direction.UP;
-        }
+    private Coord restrictToGridDirections(final Coord direction) {
+        final Direction newDirection = (Math.abs(direction.x()) > Math.abs(direction.y()))
+                ? (direction.x() > 0 ? Direction.RIGHT : Direction.LEFT)
+                : (direction.y() > 0 ? Direction.DOWN : Direction.UP);
         setFacingDirection(newDirection);
         return new Coord(newDirection.x(), newDirection.y());
-    }
-
-    /**
-     * Represents the different behavioral states of an enemy in the game.
-     * Each state defines specific actions the enemy takes based on its current
-     * situation (e.g., danger zone, player proximity).
-     */
-    public enum State {
-        /**
-         * In patrol state, the enemy moves randomly within the map.
-         * It checks for dangers (bombs) and nearby players regularly.
-         * - Transitions to ESCAPE if it detects a bomb within its flame range.
-         * - Transitions to CHASE if it detects the player nearby.
-         */
-        PATROL {
-            @Override
-            void execute(Enemy enemy) {
-                if (enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) { // Detected bomb
-                    enemy.currentState = State.ESCAPE;
-                } else if (enemy.isEnemyClose()) { // Detected player
-                    enemy.currentState = State.CHASE;
-                } else {
-                    enemy.moveToClosestEntity();
-                }
-            }
-        },
-        /**
-         * In chase state, the enemy actively seeks the player.
-         * It finds the shortest path to the player's current position and sets it
-         * as the next move target.
-         * - Transitions back to PATROL if it loses sight of the player.
-         */
-        CHASE {
-            @Override
-            void execute(Enemy enemy) {
-                if (enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) { // Detected bomb
-                    enemy.currentState = ESCAPE;
-                } else if (!enemy.isEnemyClose()) { // Lost sight of player
-                    enemy.currentState = PATROL;
-                } else {
-                    Pair closeEnemy = enemy.getClosestEntity().get();
-                    Pair currPos = enemy.getIntCoordinate();
-                    if ((closeEnemy.x() == currPos.x() || closeEnemy.y() == currPos.y())) {
-                        if(enemy.calculateDistance(currPos, closeEnemy) <= enemy.getFlameRange()) {
-                            enemy.placeBomb();
-                        } else {
-                            enemy.moveRandomly();
-                        }
-                    } else {
-                        enemy.moveToClosestEntity();
-                    }
-
-                }
-            }
-        },
-        /**
-         * In escape state, the enemy tries to move away from a detected danger zone.
-         * It finds the nearest safe space outside the bomb's explosion radius
-         * and sets it as the next move target.
-         * - Transitions back to PATROL if it reaches a safe space.
-         */
-        ESCAPE {
-            @Override
-            void execute(Enemy enemy) {
-                if (!enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) { // Safe now
-                    if(!enemy.getBombQueue().isEmpty()) {
-                        enemy.currentState = WAITING;
-                    } else {
-                        if(enemy.isEnemyClose()) {
-                            Pair closeEnemy = enemy.getClosestEntity().get();
-                            Optional<Character> c = enemy.getClosestEntity(closeEnemy);
-                            if(c.isPresent()) {
-                                Pair newdir = new Pair(-c.get().getFacingDirection().x(), -c.get().getFacingDirection().y());
-                                Pair currPos = enemy.getIntCoordinate();
-                                enemy.nextMove = Optional.of(currPos.sum(newdir));
-                            }
-                        } else {
-                            enemy.currentState = PATROL;
-                        }
-                    }
-                } else {
-                    enemy.nextMove = enemy.graph.findNearestSafeCell(enemy.getIntCoordinate(),
-                            enemy.getFlameRange());
-                    if (enemy.nextMove.isEmpty()) {
-                        enemy.currentState = WAITING;
-                    }
-                }
-            }
-        },
-        WAITING {
-            @Override
-            void execute(Enemy enemy) {
-                enemy.setStationary(true);
-                enemy.nextMove = Optional.empty();
-                if (enemy.getBombQueue().isEmpty()) {
-                    enemy.currentState = PATROL;
-                    enemy.setStationary(false);
-                }
-            }
-        };
-
-        abstract void execute(Enemy enemy);
     }
 
     /**
@@ -341,13 +234,49 @@ public class Enemy extends Character {
     }
 
     /**
-     * Retrieves the enemy's current behavioral state.
-     * This method returns the current State enum value representing the enemy's
-     * current behavior (PATROL, CHASE, or ESCAPE).
+     * Sets the current state of the enemy.
      *
-     * @return The current State enum value of the enemy.
+     * @param newState The new state to set for the enemy.
      */
-    public State getState() {
-        return currentState;
+    public void setState(final EnemyState newState) {
+        this.currentState = newState;
+    }
+
+    /**
+     * Retrieves the enemy graph reasoner used for pathfinding and reasoning.
+     *
+     * @return The enemy graph reasoner instance.
+     */
+    public EnemyGraphReasonerImpl getGraph() {
+        return graph;
+    }
+
+    /**
+     * Sets the next move target for the enemy.
+     *
+     * @param nextMove The optional pair representing the next move target.
+     */
+    public void setNextMove(final Optional<Pair> nextMove) {
+        this.nextMove = nextMove;
+    }
+
+    /**
+     * Checks if the enemy has attempted to acquire a power-up.
+     *
+     * @return true if the enemy has attempted to acquire a power-up, false
+     *         otherwise.
+     */
+    public boolean isAttemptedPowerUp() {
+        return attemptedPowerUp;
+    }
+
+    /**
+     * Sets whether the enemy has attempted to acquire a power-up.
+     *
+     * @param attemptedPowerUp true if the enemy has attempted to acquire a
+     *                         power-up, false otherwise.
+     */
+    public void setAttemptedPowerUp(final boolean attemptedPowerUp) {
+        this.attemptedPowerUp = attemptedPowerUp;
     }
 }

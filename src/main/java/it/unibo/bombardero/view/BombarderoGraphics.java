@@ -18,23 +18,22 @@ import it.unibo.bombardero.core.impl.BombarderoController;
  * The graphics engine for the game, managing the layout and the component's update
  * @author Federico Bagattoni
  */
-public class BombarderoGraphics {
+public final class BombarderoGraphics {
 
     public final static String MENU_CARD = "menu";
     public final static String END_CARD = "end";
     public final static String GAME_CARD = "game";
     public final static String GUIDE_CARD = "guide";
 
-    private Controller controller;
+    private final Controller controller;
 
     private final ResourceGetter resourceGetter = new ResourceGetter();
     private final ResizingEngine resizingEngine; 
-    private final BufferedImage game_icon = resourceGetter.loadImage("icons/icon_happy");
+    private final BufferedImage gameIconImage = resourceGetter.loadImage("icons/icon_happy");
 
     private final JFrame frame; 
     private final JPanel deck;
     private final CardLayout layout = new CardLayout();
-    private final KeyboardInput keyInput;
 
     private GameCard gameCard;
     private GameoverCard endGameCard;
@@ -49,28 +48,19 @@ public class BombarderoGraphics {
 
         frame.pack(); // calling pack on the frame generates the insets
 
-        keyInput = new KeyboardInput(controller);
-        frame.addKeyListener(keyInput);
+        frame.addKeyListener(new KeyboardInput(controller));
 
         resizingEngine = new ResizingEngine(this);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(resizingEngine.getGameWindowSize(frame));
-        frame.setResizable(true);
+        frame.setResizable(false);
         frame.setLocationRelativeTo(null);
-        frame.setIconImage(game_icon.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
+        frame.setIconImage(gameIconImage.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
 
         this.menuCard = new MenuCard(controller, this, resourceGetter);
         deck.add(MENU_CARD, menuCard);
         layout.addLayoutComponent(menuCard, MENU_CARD);
         deck.validate();
-
-        /* This listener calls for the ResizingEngine to dinamically update the 
-        * frame's size when it is resized, see the implementation for more */
-        frame.addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
-                frame.setSize(resizingEngine.getNewWindowSize(frame));
-            }
-        });
         
         frame.add(deck);
         showCard(MENU_CARD);
@@ -80,7 +70,7 @@ public class BombarderoGraphics {
     public void showCard(final String cardName) {
         layout.show(deck, cardName);
         currentShowedCard = cardName;
-        System.out.println("\"" + cardName + "\"" + " card showed");
+        this.frame.requestFocus();
     }
 
     public void initGameCard() {
@@ -101,19 +91,19 @@ public class BombarderoGraphics {
     }
 
     public void update() {
-        if (currentShowedCard.equals(GAME_CARD)) {
-            gameCard.updateMap();
-            gameCard.setTimeLeft(controller.getTimeLeft());
+        if (GAME_CARD.equals(currentShowedCard)) {
+            gameCard.updateGameState(controller.getMap(), controller.getMainPlayer(), controller.getEnemies());
+            gameCard.setTimeLeft(controller.getTimeLeft().get());
             gameCard.repaint(0);
         }
-        else if (currentShowedCard.equals(GUIDE_CARD)) {
-            guideCard.updateMap();
+        else if (GUIDE_CARD.equals(currentShowedCard)) {
+            guideCard.updateGameState(controller.getMap(), controller.getMainPlayer(), controller.getEnemies());
             guideCard.repaint(0);
         }
     }
 
     public Dimension getFrameSize() {
-        Dimension dim = frame.getSize();
+        final Dimension dim = frame.getSize();
         return new Dimension(
             dim.width - frame.getInsets().right - frame.getInsets().left,
             dim.height - frame.getInsets().top - frame.getInsets().bottom

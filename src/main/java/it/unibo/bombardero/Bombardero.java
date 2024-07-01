@@ -1,10 +1,20 @@
 package it.unibo.bombardero;
 
 import it.unibo.bombardero.view.BombarderoGraphics;
+/**
+ * The main class of the Bombardero game.
+ */
+public final class Bombardero {
 
-public class Bombardero {
-    
-    public static void main(String[] args) {
+    private Bombardero() {
+
+    }
+
+    /** 
+     * The main method of the main class of the game.
+     * @param args the command line arguments
+     */
+    public static void main(final String[] args) {
         new BombarderoGraphics();
     }
 }

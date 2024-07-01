@@ -61,7 +61,7 @@ public final class BombarderoOrientedSprite extends SimpleBombarderoSprite imple
     }
 
     @Override
-    public OrientedSprite getNewSprite(Direction dir) {
+    public OrientedSprite getNewSprite(final Direction dir) {
         return new BombarderoOrientedSprite(resource, rg, dir, imageResizer);
     }
 

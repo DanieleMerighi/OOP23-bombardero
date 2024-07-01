@@ -2,8 +2,8 @@ package it.unibo.bombardero.core.impl;
 
 import java.util.Map;
 import java.util.List;
+import java.util.Optional;
 
-import it.unibo.bombardero.cell.AbstractCell;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.core.BombarderoEngine;
 import it.unibo.bombardero.core.api.Controller;
@@ -27,7 +27,7 @@ public class BombarderoController implements Controller {
 
     @Override
     public void startGame() {
-        this.manager = new BombarderoGameManager(this);
+        this.manager = new FullBombarderoGameManager(this);
         engine = new BombarderoEngine(this, this.graphics, this.manager);
         graphics.initGameCard();
         graphics.showCard(BombarderoGraphics.GAME_CARD);
@@ -52,10 +52,15 @@ public class BombarderoController implements Controller {
 
     @Override
     public void endGuide() {
-        graphics.displayEndGuide();
         engine.endGameLoop();
         graphics.update();
     }
+
+    @Override
+    public void displayEndGuide() {
+        graphics.displayEndGuide();
+    }
+    
 
     @Override
     public void escape() {
@@ -95,8 +100,8 @@ public class BombarderoController implements Controller {
     }
 
     @Override
-    public long getTimeLeft() {
+    public Optional<Long> getTimeLeft() {
         return manager.getTimeLeft();
     }
-    
+
 }

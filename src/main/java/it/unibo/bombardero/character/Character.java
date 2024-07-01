@@ -1,13 +1,13 @@
 package it.unibo.bombardero.character;
 
-import java.util.Optional;
-import java.util.Deque;
 import java.awt.geom.Point2D;
 import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Optional;
 
 import it.unibo.bombardero.cell.Bomb;
-import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.Bomb.BombType;
+import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
@@ -47,31 +47,69 @@ public abstract class Character {
     // Indicates where the character is looking
     private Direction facingDirection = Direction.DOWN; // Starting character facingDirection
     private boolean stationary = true;
-
     // Hit box of the Character
-    private BoundingBox bBox; // Solid area of the character
-
+    private final BoundingBox bBox; // Solid area of the character
     // Game attribute related
     private boolean isAlive = true;
     private int numBomb = STARTING_BOMBS;
     private int flameRange = STARTING_FLAME_RANGE;
+
     private float speed = STARTING_SPEED;
     private Optional<PowerUpType> bombType = Optional.empty();
-    private boolean lineBomb;   // False by default
-    private final Deque<Bomb> bombQueue = new ArrayDeque<>();
+    private boolean lineBomb; // False by default
 
+    private final Deque<Bomb> bombQueue = new ArrayDeque<>();
     // Update related
     private boolean hasToPlaceBomb;
+
     private boolean hasToPlaceLineBomb;
     private boolean hasToExplodeRemoteBomb;
 
     // Skull effects
     private boolean constipation; // The character is unable to lay down bombs
+
     private boolean butterfingers; // The character's hand becomes slippery. The character rapidly lays down bombs
 
     // Skull manager
     private long skeletonEffectDuration; // Indicates the duration of the skull effect
+
     private Optional<Runnable> resetEffect = Optional.empty(); // Restores all stats modified by the skull
+
+    /**
+     * Gets the starting flame range of the character.
+     * 
+     * @return the starting flame range
+     */
+    public static int getStartingFlameRange() {
+        return STARTING_FLAME_RANGE;
+    }
+
+    /**
+     * Gets the max flame range of the character.
+     * 
+     * @return the max flame range
+     */
+    public static int getMaxFlameRange() {
+        return MAX_FLAME_RANGE;
+    }
+
+    /**
+     * Gets the starting speed of the character.
+     * 
+     * @return the starting speed
+     */
+    public static float getStartingSpeed() {
+        return STARTING_SPEED;
+    }
+
+    /**
+     * Gets the max speed of the character.
+     * 
+     * @return the max speed
+     */
+    public static float getMaxSpeed() {
+        return MAX_SPEED;
+    }
 
     /**
      * Constructs a new Character with the specified parameters.
@@ -105,6 +143,7 @@ public abstract class Character {
         if (this.skeletonEffectDuration > 0) { // Continues until the duration reaches zero
             this.skeletonEffectDuration -= elapsedTime;
             if (this.skeletonEffectDuration <= 0) { // When the effect ends the character's stats get resetted
+                setSkeletonEffectDuration(0);
                 this.resetEffect.ifPresent(Runnable::run); // If there's a effect to reset, it runs the reset effect
                 this.resetEffect = Optional.empty(); // Clear the reset effect after it has run
             }
@@ -165,16 +204,6 @@ public abstract class Character {
      */
     public boolean placeBomb(final Pair coordinate) {
         return placeBombImpl(this.bombFactory.createBomb(this, coordinate));
-    }
-
-    private boolean placeBombImpl(final Bomb bomb) {
-        if (hasBombsLeft() && !this.constipation && this.manager
-                .addBomb(bomb)) {
-            this.numBomb--;
-            bombQueue.addLast(bomb);
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -256,14 +285,6 @@ public abstract class Character {
         }
     }
 
-    /*
-     * Checks whether the character has placed a remote bomb or not.
-     */
-    private boolean hasPlacedRemoteBomb() {
-        return bombQueue.stream()
-                .anyMatch(bomb -> bomb.getBombType().equals(BombType.BOMB_REMOTE));
-    }
-
     /**
      * Checks if the character has bombs left to place.
      * 
@@ -298,7 +319,8 @@ public abstract class Character {
      */
     public void setCharacterPosition(final Coord coordinates) {
         this.coordinate = coordinates;
-        bBox.move(new Point2D.Float(coordinates.x() - (float) BOUNDING_BOX_X_OFFSET, coordinates.y() - BOUNDING_BOX_Y_OFFSET));
+        bBox.move(new Point2D.Float(coordinates.x() - (float) BOUNDING_BOX_X_OFFSET,
+                coordinates.y() - BOUNDING_BOX_Y_OFFSET));
     }
 
     /**
@@ -376,22 +398,6 @@ public abstract class Character {
     }
 
     /**
-     * Gets the starting flame range of the character.
-     * @return the starting flame range
-     */
-    public static int getStartingFlameRange() {
-        return STARTING_FLAME_RANGE;
-    }
-
-     /**
-     * Gets the max flame range of the character.
-     * @return the max flame range
-     */
-    public static int getMaxFlameRange() {
-        return MAX_FLAME_RANGE;
-    }
-
-    /**
      * Gets the flame range of the bombs placed by the character.
      * 
      * @return the flame range
@@ -427,22 +433,6 @@ public abstract class Character {
         if (this.flameRange > STARTING_FLAME_RANGE) {
             this.flameRange--;
         }
-    }
-
-    /**
-     * Gets the starting speed of the character.
-     * @return the starting speed
-     */
-    public static float getStartingSpeed() {
-        return STARTING_SPEED;
-    }
-
-    /**
-     * Gets the max speed of the character.
-     * @return the max speed
-     */
-    public static float getMaxSpeed() {
-        return MAX_SPEED;
     }
 
     /**
@@ -532,8 +522,8 @@ public abstract class Character {
     /**
      * Sets whether the character should place a line bomb.
      * 
-     * @param hasToPlaceLineBomb true to cause the character to place a line bomb, false
-     *                       otherwise
+     * @param hasToPlaceLineBomb true to cause the character to place a line bomb,
+     *                           false otherwise
      */
     public void setHasToPlaceLineBomb(final boolean hasToPlaceLineBomb) {
         // Checks if the character has the line-bomb PowerUp
@@ -581,6 +571,15 @@ public abstract class Character {
     }
 
     /**
+     * Gets the duration of the skeleton effect.
+     * 
+     * @return the skeletonEffectDuration
+     */
+    public long getSkeletonEffectDuration() {
+        return skeletonEffectDuration;
+    }
+
+    /**
      * Sets the skeleton effect's duration.
      * 
      * @param duration the duration of the skeleton effect
@@ -606,5 +605,23 @@ public abstract class Character {
      */
     public void setResetEffect(final Runnable resetEffect) {
         this.resetEffect = Optional.of(resetEffect);
+    }
+
+    private boolean placeBombImpl(final Bomb bomb) {
+        if (hasBombsLeft() && !this.constipation && this.manager
+                .addBomb(bomb)) {
+            this.numBomb--;
+            bombQueue.addLast(bomb);
+            return true;
+        }
+        return false;
+    }
+
+    /*
+     * Checks whether the character has placed a remote bomb or not.
+     */
+    private boolean hasPlacedRemoteBomb() {
+        return bombQueue.stream()
+                .anyMatch(bomb -> bomb.getBombType().equals(BombType.BOMB_REMOTE));
     }
 }

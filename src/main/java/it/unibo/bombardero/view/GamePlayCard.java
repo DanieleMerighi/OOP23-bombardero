@@ -40,36 +40,36 @@ public class GamePlayCard extends JPanel {
     // CHECKSTYLE: MagicNumber OFF
 
     /* Game resources: */
-    private final ResourceGetter resourceGetter = new ResourceGetter();
-    private Image grass_bg_image = resourceGetter.loadImage("grass_background");
-    private Image mapImage = resourceGetter.loadImage("map_square_nowalls");
-    private Image obstacle = resourceGetter.loadImage("obstacles/cassa_prosp3");
-    private Image unbreakable = resourceGetter.loadImage("obstacles/wall_prosp2");
-    private Image bombLine = resourceGetter.loadImage("powerup/line_bomb");
-    private Image bombPlusOne = resourceGetter.loadImage("powerup/bomb_plus_one");
-    private Image bombMinusOne = resourceGetter.loadImage("powerup/bomb_minus_one");
-    private Image bombPower = resourceGetter.loadImage("powerup/bomb_power");
-    private Image bombRemote = resourceGetter.loadImage("powerup/bomb_remote");
-    private Image bombPierce = resourceGetter.loadImage("powerup/bomb_pierce");
-    private Image fireMax = resourceGetter.loadImage("powerup/fire_max");
-    private Image firePlusOne = resourceGetter.loadImage("powerup/fire_plusone");
-    private Image fireMinusOne = resourceGetter.loadImage("powerup/fire_minusone");
-    private Image skatesPlusOne = resourceGetter.loadImage("powerup/skates_plus_one");
-    private Image skateMinusOne = resourceGetter.loadImage("powerup/skates_minus_one");
-    private Image skull = resourceGetter.loadImage("powerup/skull");
+    private transient final ResourceGetter resourceGetter = new ResourceGetter();
+    private transient Image grass_bg_image = resourceGetter.loadImage("grass_background");
+    private transient Image mapImage = resourceGetter.loadImage("map_square_nowalls");
+    private transient Image obstacle = resourceGetter.loadImage("obstacles/cassa_prosp3");
+    private transient Image unbreakable = resourceGetter.loadImage("obstacles/wall_prosp2");
+    private transient Image bombLine = resourceGetter.loadImage("powerup/line_bomb");
+    private transient Image bombPlusOne = resourceGetter.loadImage("powerup/bomb_plus_one");
+    private transient Image bombMinusOne = resourceGetter.loadImage("powerup/bomb_minus_one");
+    private transient Image bombPower = resourceGetter.loadImage("powerup/bomb_power");
+    private transient Image bombRemote = resourceGetter.loadImage("powerup/bomb_remote");
+    private transient Image bombPierce = resourceGetter.loadImage("powerup/bomb_pierce");
+    private transient Image fireMax = resourceGetter.loadImage("powerup/fire_max");
+    private transient Image firePlusOne = resourceGetter.loadImage("powerup/fire_plusone");
+    private transient Image fireMinusOne = resourceGetter.loadImage("powerup/fire_minusone");
+    private transient Image skatesPlusOne = resourceGetter.loadImage("powerup/skates_plus_one");
+    private transient Image skateMinusOne = resourceGetter.loadImage("powerup/skates_minus_one");
+    private transient Image skull = resourceGetter.loadImage("powerup/skull");
 
     /* References to model components: */
-    private final BombarderoGraphics graphics;
-    private Map<Pair, Cell> cells;
-    private final Character player;
-    private final Map<Character, SpriteImageCombo> characterImages = new HashMap<>(); // every enemy is linked to its own sprite
-    private List<Character> enemiesList;
+    private transient final BombarderoGraphics graphics;
+    private transient Map<Pair, Cell> cells;
+    private transient Character player;
+    private transient final Map<Character, SpriteImageCombo> characterImages = new HashMap<>(); // every enemy is linked to its own sprite
+    private transient List<Character> enemiesList;
 
     /* Sprites and images: */
-    private final BombarderoFlameSprite flamesSprite;
-    private final Sprite normalBomb;
-    private Image bomb_image;
-    private Map<Character, TimedBombarderoSprite> dyingCharacters = new HashMap<>(); // dead characters are stored here to be displayed
+    private transient final BombarderoFlameSprite flamesSprite;
+    private transient final Sprite normalBomb;
+    private transient Image bomb_image;
+    private transient Map<Character, TimedBombarderoSprite> dyingCharacters = new HashMap<>(); // dead characters are stored here to be displayed
     private List<String> colorCodes = List.of("blue", "red", "main");
 
     /* Static positions for quicker access: */
@@ -123,15 +123,13 @@ public class GamePlayCard extends JPanel {
                 if (cells.containsKey(new Pair(i, j))) {
                     Cell entry = cells.get(new Pair(i ,j));
                     Image img = unbreakable;
-                    Dimension placingPoint;
+                    Dimension placingPoint = graphics.getResizingEngine().getCellPlacingPoint(new Pair(i, j));
                     switch (entry.getCellType()) {
                         case WALL_BREAKABLE:
                             img = obstacle;
-                            placingPoint = graphics.getResizingEngine().getCellPlacingPoint(new Pair(i, j));
                             break;
                         case WALL_UNBREAKABLE:
                             img = unbreakable;
-                            placingPoint = graphics.getResizingEngine().getCellPlacingPoint(new Pair(i, j));
                             break;
                         case BOMB: 
                             img = bomb_image;
@@ -154,16 +152,13 @@ public class GamePlayCard extends JPanel {
                                 case SKULL -> skull;
                                 default -> throw new IllegalArgumentException("texture not present for \"" + pu.getType() + "\"");
                             };
-                            placingPoint = graphics.getResizingEngine().getCellPlacingPoint(new Pair(i, j));
                             break;
                         case FLAME: 
                             Flame fl = (Flame)entry;
                             img = flamesSprite.getImage(fl.getTimePassed(), fl.getFlameType());
-                            placingPoint = graphics.getResizingEngine().getCellPlacingPoint(new Pair(i, j));
                             break;
                         default:
                             img = unbreakable;
-                            placingPoint = graphics.getResizingEngine().getCellPlacingPoint(new Pair(i, j));
                             break;
                     }
                     g2d.drawImage(
@@ -191,8 +186,10 @@ public class GamePlayCard extends JPanel {
         });
     }
 
-    public void updateMap() {
-        cells = graphics.getController().getMap();
+    public void updateGameState(final Map<Pair, Cell> map, final Character player, final List<Character> enemiesList) {
+        cells = Map.copyOf(map);
+        this.player = player;
+        this.enemiesList = List.copyOf(enemiesList);
         updateSprites();
     }
 
@@ -226,7 +223,7 @@ public class GamePlayCard extends JPanel {
     }
 
 
-    protected void scaleEverything() {
+    private final void scaleEverything() {
         mapImage = graphics.getResizingEngine().getScaledMapImage(mapImage);
         grass_bg_image = graphics.getResizingEngine().getScaledBackgroundImage(grass_bg_image);
         unbreakable = graphics.getResizingEngine().getScaledCellImage(unbreakable);
@@ -246,7 +243,6 @@ public class GamePlayCard extends JPanel {
     }
 
     private void checkForNewEnemies() {
-        enemiesList = graphics.getController().getEnemies();
         enemiesList.stream()
             .filter(enemy -> !characterImages.keySet().contains(enemy))
             .forEach(enemy -> {

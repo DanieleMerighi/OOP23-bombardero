@@ -18,7 +18,7 @@ import it.unibo.bombardero.view.sprites.api.Sprite;
 public class SimpleBombarderoSprite implements Sprite {  
 
     private final Image[] asset;
-    private int counter = 0;
+    private int counter;
     private int ticksPerFrame;
     private int currentFrame;
     private int framesPerSprite;
@@ -30,13 +30,15 @@ public class SimpleBombarderoSprite implements Sprite {
      * @param framesPerSprite the number of frames contained in the asset
      */
     public SimpleBombarderoSprite(final Image[] asset, final int framesPerSprite) {
-        this.asset = asset;
+        this.asset = new Image[framesPerSprite];
+        System.arraycopy(asset, 0, this.asset, 0, framesPerSprite);
         this.framesPerSprite = framesPerSprite;
-        ticksPerFrame = (framesPerSprite == 2 ? 16 : 7);
+        ticksPerFrame = framesPerSprite == 2 ? 16 : 7;
     }
 
     public SimpleBombarderoSprite(final Image[] asset, final int framesPerSprite,  final int ticksPerFrame)  {
-        this.asset = asset;
+        this.asset = new Image[framesPerSprite];
+        System.arraycopy(asset, 0, this.asset, 0, framesPerSprite);
         this.framesPerSprite = framesPerSprite;
         this.ticksPerFrame = ticksPerFrame;
     }

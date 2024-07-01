@@ -1,12 +1,12 @@
 package it.unibo.bombardero.map.api;
 
 import java.util.Map;
+import java.util.Optional;
 
-import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Cell;
-import it.unibo.bombardero.cell.AbstractCell;
 import it.unibo.bombardero.cell.Flame;
+import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 
 /**
  * The main class for managing all the aspects of the game arena.
@@ -14,11 +14,13 @@ import it.unibo.bombardero.cell.Flame;
  */
 public interface GameMap {
 
+    static int COLLAPSE_RATE = 5;
+
     /**
      * Updates the dynamic aspect of the map, calling the {@code update()} method of
-     * {@link MapManager}.
+     * {@link MapGenerator}.
      */
-    void update(final long timeLeft);
+    void update(long timeLeft);
  
     /** 
      * Starts collapsing the map adding one wall at a time,
@@ -69,13 +71,19 @@ public interface GameMap {
      * Removes the powerUp at the given coordinate.
      * @param coordinate the position of the wall to remove
      */
-    void removePowerUp(final Pair coordinate);
+    void removePowerUp(Pair coordinate);
 
     /**
      * @param coordinate
      * @return if the Cell with this coordinates is a PowerUp
      */
-    boolean isPowerUp(final Pair coordinate);
+    boolean isPowerUp(Pair coordinate);
+
+    /**
+     * @param coordinate
+     * @return which type of PowerUp the Cell is
+     */
+    Optional<PowerUpType> whichPowerUpType(Pair coordinate);
 
     /**
      * remove the falme at the given coordinate

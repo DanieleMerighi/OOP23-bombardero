@@ -1,11 +1,12 @@
 package it.unibo.bombardero.cell.powerup.impl;
 
-import it.unibo.bombardero.cell.powerup.api.PowerUpEffect;
-import it.unibo.bombardero.character.Character;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
+
+import it.unibo.bombardero.cell.powerup.api.PowerUpEffect;
+import it.unibo.bombardero.character.Character;
 
 /**
  * Implementation of {@link PowerUpEffect} for the Skull power-up.
@@ -27,10 +28,19 @@ import java.util.function.Consumer;
  */
 public final class SkullEffect implements PowerUpEffect {
 
-    private static final int EFFECT_DURATION_IN_SECONDS = 10;
-    private static final int SECONDS_TO_MILLISECONDS = 1000;
+    private static final long EFFECT_DURATION_IN_SECONDS = 10;
+    private static final long SECONDS_TO_MILLISECONDS = 1000;
     private static final float DECREASE_SPEED_FACTOR = 2.5f;
     private static final float INCREASE_SPEED_FACTOR = 2f;
+
+    /**
+     * Gets the skull effect duration in seconds.
+     * 
+     * @return the skull effect duration
+     */
+    public static long getEffectDurationInSeconds() {
+        return EFFECT_DURATION_IN_SECONDS;
+    }
 
     /**
      * Returns a {@link Consumer} that applies a random effect of the Skull power-up to the character.
@@ -39,7 +49,7 @@ public final class SkullEffect implements PowerUpEffect {
      */
     @Override
     public Consumer<Character> getEffect() {
-        List<Consumer<Character>> skull = new ArrayList<>();
+        final List<Consumer<Character>> skull = new ArrayList<>();
         skull.add(character -> character.setSpeed(Character.getStartingSpeed() / DECREASE_SPEED_FACTOR)); // Slownes
         skull.add(character -> character.setSpeed(Character.getMaxSpeed() * INCREASE_SPEED_FACTOR)); // Hyperactivity
         skull.add(character -> character.setConstipation(true)); // Constipation: unables to lay down bomb
@@ -52,8 +62,8 @@ public final class SkullEffect implements PowerUpEffect {
                 character.updateSkeleton(EFFECT_DURATION_IN_SECONDS * SECONDS_TO_MILLISECONDS);
             }
             // Saves the previous stats
-            float previousSpeed = character.getSpeed();
-            int previousFlameRange = character.getFlameRange();
+            final float previousSpeed = character.getSpeed();
+            final int previousFlameRange = character.getFlameRange();
 
             // Apply a random effect
             skull.get(new Random().nextInt(skull.size())).accept(character);

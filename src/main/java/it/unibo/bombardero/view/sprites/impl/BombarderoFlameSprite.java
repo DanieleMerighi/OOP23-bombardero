@@ -40,7 +40,7 @@ public final class BombarderoFlameSprite implements FlameSprite {
         final Function<Image, Image> imageResizer,
         final ResourceGetter rg
         ){
-        for (Flame.FlameType type : Flame.FlameType.values()) {
+        for (final Flame.FlameType type : Flame.FlameType.values()) {
             assets.put(type, SimpleBombarderoSprite.importAssets(getStringFromType(type), type.getTypeString(), rg, imageResizer, framesPerSprite));
         }
         this.framesPerSprite = framesPerSprite;
@@ -49,7 +49,7 @@ public final class BombarderoFlameSprite implements FlameSprite {
 
     @Override
     public Image getImage(final long elapsed, final Flame.FlameType flameType) {
-        int frameToDisplay = (int)(elapsed / coefficient);
+        final int frameToDisplay = (int)(elapsed / coefficient);
         return assets.get(flameType)[frameToDisplay == framesPerSprite ? framesPerSprite - 1 : frameToDisplay];
     }
 

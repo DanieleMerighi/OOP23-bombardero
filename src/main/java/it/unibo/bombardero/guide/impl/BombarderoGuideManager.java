@@ -1,9 +1,11 @@
 package it.unibo.bombardero.guide.impl;
 
 import java.util.Stack;
+import java.util.List;
+
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.core.api.Controller;
-import it.unibo.bombardero.core.impl.BombarderoGameManager;
+import it.unibo.bombardero.core.impl.BasicBombarderoGameManager;
 import it.unibo.bombardero.guide.api.GuideManager;
 import it.unibo.bombardero.guide.api.GuideStep;
 import it.unibo.bombardero.map.api.Coord;
@@ -11,14 +13,15 @@ import it.unibo.bombardero.view.BombarderoViewMessages;
 
 /**
  * This class represents a single instance of the game's guide
- * it is a slightly modified {@link BombarderoGameManager} that 
+ * it is a slightly modified {@link BasicBombarderoGameManager} that 
  * doesn't spawn neither enemies nor crates regularly.
  * <p>
+ * <p>
  * It spawns just a crate and the player and the game proceeds at 
- * stages, dictated by the Controller. 
+ * stages, dictated by the state of the game.
  * @author Federico Bagattoni
  */
-public final class BombarderoGuideManager extends BombarderoGameManager implements GuideManager {
+public final class BombarderoGuideManager extends BasicBombarderoGameManager implements GuideManager {
 
     private final Stack<GuideStep> guideProcedures = new Stack<>();
 
@@ -32,7 +35,7 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
      * @param controller the reference to the game's {@link Controller}.
      */
     public BombarderoGuideManager(final Controller controller) {
-        super(controller, true);
+        super(controller, GuideManager.PLAYER_GUIDE_SPAWNPOINT, List.of(), false);
         this.getGameMap().addBreakableWall(CRATE_GUIDE_SPAWNPOINT);
         initialiseProcedures();
     }
@@ -40,7 +43,7 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
     @Override
     public void updateGame(final long elapsed) {
         super.updateGame(elapsed);
-        if(!guideProcedures.isEmpty() && guideProcedures.peek().condition().test(getGameMap(), this)) {
+        if (!guideProcedures.isEmpty() && guideProcedures.peek().condition().test(getGameMap(), this)) {
             guideProcedures.pop().action().accept(this, getController());
         }
     }
@@ -55,7 +58,7 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
             (map, manager) -> true /* manager.getEnemies().stream().allMatch(enemy -> !enemy.isAlive())*/,
             (manager, controller) -> {
                 controller.toggleMessage(BombarderoViewMessages.END_GUIDE);
-                controller.endGuide();
+                controller.displayEndGuide();
             }
         ));
         guideProcedures.add(new GuideStep(
@@ -69,9 +72,8 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
             (map, manager) -> map.isPowerUp(CRATE_GUIDE_SPAWNPOINT),
             (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.EXPLAIN_POWERUP)
         ));
-        /* TODO: capire assieme a turchi come fare a capire che il player si è mosso in tutte le direzioni */
         guideProcedures.add(new GuideStep(
-            (map, manager) -> true,
+            (map, manager) -> !manager.getPlayer().isStationary(),
             (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.PLACE_BOMB)
         ));
     } 
@@ -84,20 +86,20 @@ public final class BombarderoGuideManager extends BombarderoGameManager implemen
      * @author Federico Bagattoni
      */
     private final class Dummy extends Character {
-        
+
         /**
          * Creates a new dummy at the passed coordinate.
          * @param coord where to spawn the dummy
          */
-        public Dummy(Coord coord) {
+        Dummy(final Coord coord) {
             super(BombarderoGuideManager.this, coord, BombarderoGuideManager.this.getBombFactory());
         }
 
         @Override
-        public void update(long elapsedTime) {
+        public void update(final long elapsedTime) {
 
         }
-        
+   
     }
-    
+
 }

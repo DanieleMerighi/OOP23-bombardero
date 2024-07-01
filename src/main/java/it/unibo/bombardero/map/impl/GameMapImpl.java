@@ -2,20 +2,22 @@ package it.unibo.bombardero.map.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.Optional;
 
-import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Wall;
 import it.unibo.bombardero.cell.Cell.CellType;
+import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.cell.powerup.api.PowerUpFactory;
+import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.cell.powerup.impl.PowerUpFactoryImpl;
-import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.cell.AbstractCell;
 import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.map.api.GameMap;
-import it.unibo.bombardero.map.api.MapManager;
+import it.unibo.bombardero.map.api.MapGenerator;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.utils.Utils;
 
 /**
  * This class implements the Game Map of the Bombardero game.
@@ -25,44 +27,49 @@ public final class GameMapImpl implements GameMap {
 
     /* Using an HashMap to hold the information about the map's tiles: */
     private final Map<Pair, Cell> map = new HashMap<>();
-    private final MapManager mapManager;
+    private final MapGenerator mapGenerator;
     private final PowerUpFactory powerupFactory = new PowerUpFactoryImpl();
+    private final List<Pair> collapseOrder;
+    private boolean collapseStarted;
+    private int counter;
 
     /** 
      * Constructs a new Game Map generating unbreakable walls, to skip the wall generation use {@#GameMapImpl(boolean)}.
      */
     public GameMapImpl() {
-        this.mapManager = new MapManagerImpl(this);
-        mapManager.placeUnbreakableWalls();
-        mapManager.placeBreakableWalls();
+        this.mapGenerator = new MapGeneratorImpl();
+        placeUnbreakableWalls();
+        placeBreakableWalls();
+        collapseOrder = mapGenerator.generateCollapseOrder();
     }
 
     /**
      * Creates a new Game Map with the option to opt out of the walls generation.
-     * <p>
-     * NOTE: This constructor has been created for testing purposes and allows to skip the 
-     * obstacle generation, producing a map with only unbreakable obstacles.
-     * The breakable obstacles can be generated later anyway (potential untested side effects)
-     * by calling the manager's method.
-     * </p>
      * @param wallGeneration wether the walls have to be generated or not
     */
     public GameMapImpl(final boolean wallGeneration) {
-        this.mapManager = new MapManagerImpl(this);
-        mapManager.placeUnbreakableWalls();
-        if (wallGeneration) {
-            mapManager.placeBreakableWalls();
+        this.mapGenerator = new MapGeneratorImpl();
+        placeUnbreakableWalls();
+        if (wallGeneration) { 
+            placeBreakableWalls();
         }
+        collapseOrder = mapGenerator.generateCollapseOrder();
     }
 
     @Override
     public void update(final long timeLeft) {
-        mapManager.update(timeLeft);
+        if (collapseStarted && !collapseOrder.isEmpty()) {
+            counter = (counter + 1)%GameMap.COLLAPSE_RATE;
+            if (counter == 0) {
+                addUnbreakableWall(collapseOrder.remove(0));
+            }
+        }
     }
 
     @Override
     public void triggerCollapse() {
-        mapManager.triggerCollapse();
+        collapseStarted = true;
+
     }
 
     @Override
@@ -157,6 +164,26 @@ public final class GameMapImpl implements GameMap {
     @Override
     public boolean isPowerUp(final Pair coordinate) {
         return this.map.containsKey(coordinate) && this.map.get(coordinate).getCellType().equals(CellType.POWERUP);
+    }
+
+    private void placeUnbreakableWalls() {
+        mapGenerator.generateUnbreakableWalls().forEach(wallPosition -> addUnbreakableWall(wallPosition));
+    }
+
+    private void placeBreakableWalls() {
+        mapGenerator.generateBreakableWalls(
+            this,
+            mapGenerator.getTotalWallsToGenerate(Utils.WALL_PRESENCE_RATE)
+        ).forEach(wallPosition -> addBreakableWall(wallPosition));
+    }
+
+    @Override
+    public Optional<PowerUpType> whichPowerUpType(final Pair coordinate) {
+        if(this.isPowerUp(coordinate)) {
+            PowerUp powerup = (PowerUp)this.map.get(coordinate);
+            return Optional.of(powerup.getType());
+        }
+        return Optional.empty();
     }
  
 }

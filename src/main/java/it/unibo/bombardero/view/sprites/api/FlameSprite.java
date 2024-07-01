@@ -29,6 +29,6 @@ public interface FlameSprite {
      * @param flameType the shape of flame that has to be returned
      * @return the image of the flame in the specific form and life moment 
      */
-    Image getImage(final long elapsed, final Flame.FlameType flameType);
+    Image getImage(long elapsed, Flame.FlameType flameType);
     
 }

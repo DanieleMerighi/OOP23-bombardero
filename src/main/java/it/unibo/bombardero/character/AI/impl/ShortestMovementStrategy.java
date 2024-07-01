@@ -1,0 +1,50 @@
+package it.unibo.bombardero.character.AI.impl;
+
+import java.util.Optional;
+import java.util.List;
+
+import it.unibo.bombardero.character.Enemy;
+import it.unibo.bombardero.character.AI.api.MovementStrategy;
+import it.unibo.bombardero.map.api.GameMap;
+import it.unibo.bombardero.map.api.Pair;
+
+/**
+ * The ShortestMovementStrategy class implements a movement strategy where the
+ * enemy chases nearest cell in a path.
+ */
+public class ShortestMovementStrategy implements MovementStrategy {
+
+    /**
+     * Calculates the next move for the given enemy, it tooks the first coordinate
+     * in a shortest path.
+     *
+     * @param enemy the enemy for which the next move is to be calculated
+     * @param map   the game map on which the enemy is located
+     * @return an Optional containing the next move as a Pair of coordinates, or an
+     *         empty Optional if no move is available
+     */
+    @Override
+    public Optional<Pair> getNextMove(final Enemy enemy, final GameMap map) {
+        if (enemy.getNextMove().isEmpty()) {
+            return new RandomMovementStrategy().getNextMove(enemy, map);
+        }
+        final List<Pair> l = enemy.getGraph().findShortestPathToPlayer(enemy.getIntCoordinate(), enemy.getNextMove().get());
+        if (l.isEmpty()) {
+            return new RandomMovementStrategy().getNextMove(enemy, map);
+        } else {
+            return Optional.of(l.get(0));
+        }
+    }
+
+    /**
+     * Checks if one movement strategy is equal to ShortestMovementStrategy.
+     *
+     * @param other the other movement strategy to compare with
+     * @return true if the two movement strategies are equal, false otherwise
+     */
+    @Override
+    public boolean equals(final MovementStrategy other) {
+        return other instanceof ShortestMovementStrategy;
+    }
+
+}

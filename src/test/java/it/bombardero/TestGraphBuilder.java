@@ -15,24 +15,39 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
 import it.unibo.bombardero.cell.Flame;
+import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.character.AI.impl.GraphBuilderImpl;
 
+/**
+ * Unit tests for the GraphBuilderImpl class.
+ */
 public class TestGraphBuilder {
 
     private GameMap map;
     private Graph<Pair, DefaultWeightedEdge> graph;
 
+    private static final int VERTEX_SIZE = 133;
+    private static final int NODE_SIZE = 168;
+    private static final double WALL_WEIGHT = 2.5;
+    private static final double STANDARD_WEIGHT = 1.0;
+
+    /**
+     * Setup method executed before each test.
+     */
     @BeforeEach
     public void setup() {
         map = new GameMapImpl(false);
     }
 
+    /**
+     * Test case to verify base map size and structure.
+     */
     @Test
     public void testBaseMapSize() {
         this.graph = GraphBuilderImpl.buildFromMap(map);
         // the base map (built with only unbreakable wall) have 133 vertex
-        assertEquals(133, this.graph.vertexSet().size());
-        assertEquals(168, this.graph.edgeSet().size());
+        assertEquals(VERTEX_SIZE, this.graph.vertexSet().size());
+        assertEquals(NODE_SIZE, this.graph.edgeSet().size());
         // adding (or removing) breakable wall should not change the number of vertex or
         // edges
         map.addBreakableWall(new Pair(0, 2));
@@ -41,22 +56,29 @@ public class TestGraphBuilder {
 
         this.graph = GraphBuilderImpl.buildFromMap(map);
 
-        assertEquals(133, this.graph.vertexSet().size());
-        assertEquals(168, this.graph.edgeSet().size());
+        assertEquals(VERTEX_SIZE, this.graph.vertexSet().size());
+        assertEquals(NODE_SIZE, this.graph.edgeSet().size());
     }
 
+    /**
+     * Test case to verify map size and structure with obstacles.
+     */
     @Test
     public void testMapSizeWithObastacles() {
         GameMap baseMap = new GameMapImpl(true);
-        //baseMap.addFlame(new Flame(CellType.FLAME, Flame.FlameType.FLAME_BODY_HORIZONTAL, new Pair(0, 2)), new Pair(0, 2));
-        //baseMap.addFlame(new Flame(CellType.FLAME, Flame.FlameType.FLAME_BODY_HORIZONTAL, new Pair(0, 3)), new Pair(0, 3));
-        //baseMap.addFlame(new Flame(CellType.FLAME, Flame.FlameType.FLAME_BODY_HORIZONTAL, new Pair(0, 4)), new Pair(0, 4));
-        //baseMap.addBomb(new Bomb(null, CellType.BOMB_BASIC, 0), new Pair(5, 0));
+        // CHECKSTYLE: MagicNumber OFF
+        baseMap.addFlame(new Flame(CellType.FLAME, null, new Pair(0, 2), null), new Pair(0, 2));
+        baseMap.addFlame(new Flame(CellType.FLAME, null, new Pair(0, 4), null), new Pair(0, 4));
+        baseMap.addFlame(new Flame(CellType.FLAME, null, new Pair(5, 6), null), new Pair(5, 6));
+        // CHECKSTYLE: MagicNumber ON
         this.graph = GraphBuilderImpl.buildFromMap(baseMap);
-        assertEquals(133, this.graph.vertexSet().size());
-        assertEquals(168, this.graph.edgeSet().size());
+        assertEquals(VERTEX_SIZE, this.graph.vertexSet().size());
+        assertEquals(NODE_SIZE, this.graph.edgeSet().size());
     }
 
+    /**
+     * Test case to verify edge weights in the graph.
+     */
     @Test
     public void testEdgeWeights() {
         map.addBreakableWall(new Pair(1, 2));
@@ -80,8 +102,8 @@ public class TestGraphBuilder {
         assertFalse(graph.containsEdge(p2, p5));
         assertFalse(graph.containsEdge(p1, p3));
 
-        assertEquals(2.5, graph.getEdgeWeight(graph.getEdge(p1, p2)));
-        assertEquals(2.5, graph.getEdgeWeight(graph.getEdge(p2, p3)));
-        assertEquals(1.0, graph.getEdgeWeight(graph.getEdge(p3, p4)));
+        assertEquals(WALL_WEIGHT, graph.getEdgeWeight(graph.getEdge(p1, p2)));
+        assertEquals(WALL_WEIGHT, graph.getEdgeWeight(graph.getEdge(p2, p3)));
+        assertEquals(STANDARD_WEIGHT, graph.getEdgeWeight(graph.getEdge(p3, p4)));
     }
 }

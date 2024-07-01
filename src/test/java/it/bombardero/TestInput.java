@@ -4,12 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
@@ -23,10 +24,11 @@ import it.unibo.bombardero.view.BombarderoViewMessages;
 /**
  * Test class for KeyboardInput to verify the handling of keyboard events.
  */
-public class TestInput {
+class TestInput {
 
     private KeyboardInput keyboardInput;
     private Controller controller;
+    private KeyEvent keyEvent;
 
     /**
      * Sets up the test environment before each test.
@@ -38,7 +40,7 @@ public class TestInput {
             private final Character mainPlayer = new Character(null, null, null) {
 
                 @Override
-                public void update(long elapsedTime) {
+                public void update(final long elapsedTime) {
                     // TODO Auto-generated method stub
                     throw new UnsupportedOperationException("Unimplemented method 'update'");
                 }
@@ -76,7 +78,7 @@ public class TestInput {
             }
 
             @Override
-            public void toggleMessage(BombarderoViewMessages message) {
+            public void toggleMessage(final BombarderoViewMessages message) {
                 // TODO Auto-generated method stub
                 throw new UnsupportedOperationException("Unimplemented method 'toggleMessage'");
             }
@@ -104,9 +106,15 @@ public class TestInput {
             }
 
             @Override
-            public long getTimeLeft() {
+            public Optional<Long> getTimeLeft() {
                 // TODO Auto-generated method stub
                 throw new UnsupportedOperationException("Unimplemented method 'getTimeLeft'");
+            }
+
+            @Override
+            public void displayEndGuide() {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'displayEndGuide'");
             }
 
         };
@@ -120,7 +128,7 @@ public class TestInput {
     @Test
     void testKeyTypedEscape() {
         // Simulate pressing the ESC key (Menu button)
-        KeyEvent keyEvent = new KeyEvent(new java.awt.Component() {
+        keyEvent = new KeyEvent(new java.awt.Component() {
         }, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0, KeyEvent.VK_UNDEFINED, (char) KeyEvent.VK_ESCAPE);
         keyboardInput.keyTyped(keyEvent);
         // Verify that the escape method was called on the controller
@@ -146,7 +154,7 @@ public class TestInput {
         // Set line bomb powerup to true
         controller.getMainPlayer().setLineBomb(true);
         // Simulate pressing the 'L' key (place line bomb button)
-        KeyEvent keyEvent = new KeyEvent(new java.awt.Component() {
+        keyEvent = new KeyEvent(new java.awt.Component() {
         }, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0, KeyEvent.VK_UNDEFINED, 'L');
         keyboardInput.keyTyped(keyEvent);
 
@@ -162,7 +170,7 @@ public class TestInput {
         // Set type bomb to remote bomb
         controller.getMainPlayer().setBombType(Optional.of(PowerUpType.REMOTE_BOMB));
         // Simulate pressing the 'P' key (explode remote bomb button)
-        KeyEvent keyEvent = new KeyEvent(new java.awt.Component() {
+        keyEvent = new KeyEvent(new java.awt.Component() {
         }, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0, KeyEvent.VK_UNDEFINED, 'P');
         keyboardInput.keyTyped(keyEvent);
 
@@ -287,7 +295,7 @@ public class TestInput {
      */
     private void pressW() {
         // Simulate pressing the W key (the player goes up)
-        KeyEvent keyEvent = new KeyEvent(new java.awt.Component() {
+        keyEvent = new KeyEvent(new java.awt.Component() {
         }, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_W, 'W');
         keyboardInput.keyPressed(keyEvent);
     }
@@ -297,7 +305,7 @@ public class TestInput {
      */
     private void pressA() {
         // Simulate pressing the A key (the player goes left)
-        KeyEvent keyEvent = new KeyEvent(new java.awt.Component() {
+        keyEvent = new KeyEvent(new java.awt.Component() {
         }, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_A, 'A');
         keyboardInput.keyPressed(keyEvent);
     }
@@ -307,7 +315,7 @@ public class TestInput {
      */
     private void pressS() {
         // Simulate pressing the S key (the player goes down)
-        KeyEvent keyEvent = new KeyEvent(new java.awt.Component() {
+        keyEvent = new KeyEvent(new java.awt.Component() {
         }, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_S, 'S');
         keyboardInput.keyPressed(keyEvent);
     }
@@ -317,7 +325,7 @@ public class TestInput {
      */
     private void pressD() {
         // Simulate pressing the D key (the player goes right)
-        KeyEvent keyEvent = new KeyEvent(new java.awt.Component() {
+        keyEvent = new KeyEvent(new java.awt.Component() {
         }, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_D, 'D');
         keyboardInput.keyPressed(keyEvent);
     }
@@ -327,7 +335,7 @@ public class TestInput {
      */
     private void releaseW() {
         // Simulate releasing the W key (the player stops going up)
-        KeyEvent keyEvent = new KeyEvent(new java.awt.Component() {
+        keyEvent = new KeyEvent(new java.awt.Component() {
         }, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_W, 'W');
         keyboardInput.keyReleased(keyEvent);
     }
@@ -337,7 +345,7 @@ public class TestInput {
      */
     private void releaseA() {
         // Simulate releasing the A key (the player stops going left)
-        KeyEvent keyEvent = new KeyEvent(new java.awt.Component() {
+        keyEvent = new KeyEvent(new java.awt.Component() {
         }, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_A, 'A');
         keyboardInput.keyReleased(keyEvent);
     }
@@ -347,7 +355,7 @@ public class TestInput {
      */
     private void releaseS() {
         // Simulate releasing the S key (the player stops going down)
-        KeyEvent keyEvent = new KeyEvent(new java.awt.Component() {
+        keyEvent = new KeyEvent(new java.awt.Component() {
         }, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_S, 'S');
         keyboardInput.keyReleased(keyEvent);
     }
@@ -357,17 +365,17 @@ public class TestInput {
      */
     private void releaseD() {
         // Simulate releasing the D key (the player stops going right)
-        KeyEvent keyEvent = new KeyEvent(new java.awt.Component() {
+        keyEvent = new KeyEvent(new java.awt.Component() {
         }, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_D, 'D');
         keyboardInput.keyReleased(keyEvent);
     }
 
     /**
-     * Simulates pressing the SPACE key
+     * Simulates pressing the SPACE key.
      */
     private void pressSpace() {
         // Simulates pressing the SPACE key (place bomb button)
-        KeyEvent keyEvent = new KeyEvent(new java.awt.Component() {
+        keyEvent = new KeyEvent(new java.awt.Component() {
         }, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0, KeyEvent.VK_UNDEFINED, ' ');
         keyboardInput.keyTyped(keyEvent);
     }

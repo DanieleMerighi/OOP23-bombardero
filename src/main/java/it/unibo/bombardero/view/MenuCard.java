@@ -19,27 +19,23 @@ import javax.swing.JButton;
 
 public final class MenuCard extends JPanel {
 
-    private final ResourceGetter rg;
-    private final BombarderoGraphics graphicsEngine;
-    private final JButton play;
-    private final JButton guide;
-    private final Controller controller;
+    private final transient BombarderoGraphics graphicsEngine;
+    private final transient JButton play;
+    private final transient JButton guide;
 
     /* Resources: */
-    private final Image logo;
-    private final Image playImage;
-    private final Image guideImage;
-    private final BufferedImage background;
+    private final transient Image logo;
+    private final transient Image playImage;
+    private final transient Image guideImage;
+    private final transient BufferedImage background;
 
     public MenuCard(final Controller controller, final BombarderoGraphics graphicsEngine, final ResourceGetter rg) {
-        this.rg = rg;
-        this.controller = controller;
         this.graphicsEngine = graphicsEngine;
 
         // CHECKSTYLE: MagicNumber OFF
         logo = rg.loadImage("menu/logo");
-        playImage = rg.loadImage("menu/play");
-        guideImage = rg.loadImage("menu/guide");
+        playImage = graphicsEngine.getResizingEngine().getScaledButtonImage(rg.loadImage("overlay/buttons/PLAY"));
+        guideImage = graphicsEngine.getResizingEngine().getScaledButtonImage(rg.loadImage("overlay/buttons/GUIDE"));
         background = rg.loadImage("menu/background");
         // CHECKSTYLE: MagicNumber ON
 
@@ -47,8 +43,14 @@ public final class MenuCard extends JPanel {
         play = new JButton(new ImageIcon(playImage));
         guide = new JButton(new ImageIcon(guideImage));
         /* TODO: better style JButtons, in windows you can stil see the buttons highlight, in MacOS however no...  */
-        play.setBorder(null);
         guide.setBorder(null);
+        play.setBorder(null);
+        guide.setBorderPainted(false);
+        play.setBorderPainted(false);
+        play.setContentAreaFilled(false);
+        guide.setContentAreaFilled(false);
+        play.setFocusPainted(false);
+        guide.setFocusPainted(false);
 
         /* TODO: smaller logo and dynamic resizing menu (dependant on JFrame size) */
         this.add(new JLabel(new ImageIcon(logo)));

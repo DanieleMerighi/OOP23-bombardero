@@ -1,8 +1,9 @@
 package it.unibo.bombardero.cell.powerup.impl;
 
+import java.util.function.Consumer;
+
 import it.unibo.bombardero.cell.powerup.api.PowerUpEffect;
 import it.unibo.bombardero.character.Character;
-import java.util.function.Consumer;
 
 /**
  * Implementation of {@link PowerUpEffect} for the Plus One Skate power-up.
