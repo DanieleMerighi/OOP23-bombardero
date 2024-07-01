@@ -1,5 +1,7 @@
 package it.bombardero;
 
+import java.util.Optional;
+
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.physics.api.BoundingBox;
@@ -7,7 +9,7 @@ import it.unibo.bombardero.physics.api.BoundingBox;
 /**
  * A Modified bomb for testing purpose.
  */
-public class MyBomb implements Bomb {
+public class MyBomb implements Bomb{
 
     private Pair pos;
 
@@ -19,15 +21,6 @@ public class MyBomb implements Bomb {
      */
     MyBomb(final Pair pos) {
         this.pos = pos;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @throws UnsupportedOperationException as this method is not implemented
-     */
-    @Override
-    public boolean getBoundingCollision() {
-        throw new UnsupportedOperationException("Unimplemented method 'getBoundingCollision'");
     }
 
     /**
@@ -45,7 +38,7 @@ public class MyBomb implements Bomb {
      * @throws UnsupportedOperationException as this method is not implemented
      */
     @Override
-    public BoundingBox getBoundingBox() {
+    public Optional<BoundingBox> getBoundingBox() {
         throw new UnsupportedOperationException("Unimplemented method 'getBoundingBox'");
     }
 
@@ -102,5 +95,11 @@ public class MyBomb implements Bomb {
     @Override
     public Pair getPos() {
         return this.pos;
+    }
+
+    @Override
+    public boolean haveBoundingCollision() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'haveBoundingCollision'");
     }
 }
