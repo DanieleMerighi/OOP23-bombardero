@@ -20,6 +20,8 @@ public final class ResizingEngine {
     /* A mischevious padding no one knows its reason to exist: */
     private final static int MISCHIEVOUS_PADDING = 23;
     private final static double initialMenuScale = 0.75;
+    private final static int BUTTON_WIDTH = 346;
+    private final static int BUTTON_HEIGHT = 92; 
 
     private double currentScale = 1.125; /* default scale size for every device */
     private final int scaledCellSize;
@@ -34,6 +36,8 @@ public final class ResizingEngine {
     private final Dimension timerPosition;
     private final Dimension wasdGuidePosition;
     private final Dimension spaceGuidePosition;
+
+    private final Dimension buttonSize; 
 
     public ResizingEngine(final BombarderoGraphics graphics) {
         int resolution = Toolkit.getDefaultToolkit().getScreenResolution();
@@ -50,6 +54,7 @@ public final class ResizingEngine {
         timerPosition = initTimerPosition();
         wasdGuidePosition = initWASDPosition();
         spaceGuidePosition = initSpacePosition();
+        buttonSize = initButtonSize();
     }  
 
     /* FRAME-RELATED METHODS */
@@ -142,6 +147,10 @@ public final class ResizingEngine {
 
     public Image getScaledSpaceImage(final Image wasdImage) {
         return wasdImage.getScaledInstance((int)Math.floor(30 * 2 * getScale()), (int)Math.floor(12 * 2 * getScale()), Image.SCALE_SMOOTH);
+    }
+
+    public Image getScaledButtonImage(final Image buttonImage) {
+        return buttonImage.getScaledInstance(buttonSize.width, buttonSize.height, Image.SCALE_SMOOTH);
     }
     
     /* GAME-RELATED METHODS: */
@@ -278,6 +287,13 @@ public final class ResizingEngine {
         return new Dimension(
             cell.width - getScaledCellSize(),
             (int)Math.floor(cell.height + 1.5 * getScaledCellSize())
+        );
+    }
+
+    private Dimension initButtonSize() {
+        return new Dimension(
+            (int)Math.floor(BUTTON_WIDTH / 2),
+            (int)Math.floor(BUTTON_HEIGHT / 2)
         );
     }
     
