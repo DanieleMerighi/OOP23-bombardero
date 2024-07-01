@@ -11,6 +11,7 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Insets;
+import java.awt.image.BufferedImage;
 
 /** 
  * A class to compute the scale of the game relative to the window size and display size
@@ -20,8 +21,12 @@ public final class ResizingEngine {
     /* A mischevious padding no one knows its reason to exist: */
     private final static int MISCHIEVOUS_PADDING = 23;
     private final static double initialMenuScale = 0.75;
+
+    /* Constants for resources: */
     private final static int BUTTON_WIDTH = 346;
     private final static int BUTTON_HEIGHT = 92; 
+    private final static int MENU_BACKGROUND_WIDTH = 3840;
+    private final static int MENU_BACKGROUND_HEIGHT = 2160;
 
     private double currentScale = 1.125; /* default scale size for every device */
     private final int scaledCellSize;
@@ -37,7 +42,8 @@ public final class ResizingEngine {
     private final Dimension wasdGuidePosition;
     private final Dimension spaceGuidePosition;
 
-    private final Dimension buttonSize; 
+    private final Dimension buttonSize;
+    private final Dimension menuLogoSize; 
 
     public ResizingEngine(final BombarderoGraphics graphics) {
         int resolution = Toolkit.getDefaultToolkit().getScreenResolution();
@@ -55,6 +61,7 @@ public final class ResizingEngine {
         wasdGuidePosition = initWASDPosition();
         spaceGuidePosition = initSpacePosition();
         buttonSize = initButtonSize();
+        menuLogoSize = initLogoSize();
     }  
 
     /* FRAME-RELATED METHODS */
@@ -132,6 +139,15 @@ public final class ResizingEngine {
 
     public Image getScaledButtonImage(final Image buttonImage) {
         return buttonImage.getScaledInstance(buttonSize.width, buttonSize.height, Image.SCALE_SMOOTH);
+    }
+
+    public Image getSubImageFromBackground(final BufferedImage menuBackgroundImage) {
+        final Dimension cropSize = gameWindowSize;
+        return menuBackgroundImage.getSubimage(
+            MENU_BACKGROUND_WIDTH - cropSize.width,
+            MENU_BACKGROUND_HEIGHT - cropSize.height,
+            cropSize.width,
+            cropSize.height);
     }
     
     /* GAME-RELATED METHODS: */
@@ -212,6 +228,13 @@ public final class ResizingEngine {
         );
     }
 
+    public Dimension getMenuLogoSize() {
+        return new Dimension(
+            menuLogoSize.width,
+            menuLogoSize.height
+        );
+    }
+
     private Dimension initMapPlacingPoint() {
         return new Dimension(
             gameWindowSize.width/2 - getMapSize().width/2 - (frameInsets.right + frameInsets.left),
@@ -275,6 +298,13 @@ public final class ResizingEngine {
         return new Dimension(
             (int)Math.floor(BUTTON_WIDTH / 2),
             (int)Math.floor(BUTTON_HEIGHT / 2)
+        );
+    }
+
+    private Dimension initLogoSize() {
+        return new Dimension(
+            (int)Math.floor(gameWindowSize.width / 2),
+            (int)Math.floor(gameWindowSize.height / 2)
         );
     }
     
