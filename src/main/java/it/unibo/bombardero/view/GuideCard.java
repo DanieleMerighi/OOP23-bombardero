@@ -32,25 +32,25 @@ import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
  * through appropriate methods.
  * @author Federico Bagattoni
  */
-public final class GuideCard extends GamePlayCard {
+public final class GuideCard extends GamePlayCard{
 
-    private Image startImage;
-    private Image backImage;
+    private transient Image startImage;
+    private transient Image backImage;
 
     //private String message = "";
-    private Image messageBoxImage;
+    private transient final Image messageBoxImage;
     private final Font font;
 
-    private JButton back;
-    private JButton start;
+    private final JButton back;
+    private final JButton start;
     private final JLabel messageBox;
 
-    private final Dimension messageBoxSize = null;
-    private final Sprite wasdSprite;
-    private final Sprite spacebarSprite;
-    private Optional<Sprite> currentShowedSprite;
+    private final transient Dimension messageBoxSize = null;
+    private final transient Sprite wasdSprite;
+    private final transient Sprite spacebarSprite;
+    private transient Optional<Sprite> currentShowedSprite;
 
-    private final Map<Sprite, Dimension> spritesPlacingPoint = new HashMap<>();
+    private transient final Map<Sprite, Dimension> spritesPlacingPoint = new HashMap<>();
 
     public GuideCard(final JFrame parentFrame, final Controller controller, final BombarderoGraphics graphics, final ResourceGetter resourceGetter, final ResizingEngine resizingEngine) {
         super(graphics);
@@ -69,9 +69,12 @@ public final class GuideCard extends GamePlayCard {
         // CHECKSTYLE: MagicNumber ON
         
         currentShowedSprite = Optional.of(wasdSprite);
+        
         spritesPlacingPoint.put(wasdSprite, graphics.getResizingEngine().getWasdGuidePosition());
         spritesPlacingPoint.put(spacebarSprite, graphics.getResizingEngine().getSpaceGuidePosition());
+
         this.setLayout(new GridLayout(5, 1));
+
         back = new JButton(new ImageIcon(backImage));
         start = new JButton(new ImageIcon(startImage));
         messageBox = new JLabel(new ImageIcon(messageBoxImage));
