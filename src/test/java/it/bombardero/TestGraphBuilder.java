@@ -26,6 +26,11 @@ public class TestGraphBuilder {
     private GameMap map;
     private Graph<Pair, DefaultWeightedEdge> graph;
 
+    private static final int VERTEX_SIZE = 133;
+    private static final int NODE_SIZE = 168;
+    private static final double WALL_WEIGHT = 2.5;
+    private static final double STANDARD_WEIGHT = 1.0;
+
     /**
      * Setup method executed before each test.
      */
@@ -41,8 +46,8 @@ public class TestGraphBuilder {
     public void testBaseMapSize() {
         this.graph = GraphBuilderImpl.buildFromMap(map);
         // the base map (built with only unbreakable wall) have 133 vertex
-        assertEquals(133, this.graph.vertexSet().size());
-        assertEquals(168, this.graph.edgeSet().size());
+        assertEquals(VERTEX_SIZE, this.graph.vertexSet().size());
+        assertEquals(NODE_SIZE, this.graph.edgeSet().size());
         // adding (or removing) breakable wall should not change the number of vertex or
         // edges
         map.addBreakableWall(new Pair(0, 2));
@@ -51,8 +56,8 @@ public class TestGraphBuilder {
 
         this.graph = GraphBuilderImpl.buildFromMap(map);
 
-        assertEquals(133, this.graph.vertexSet().size());
-        assertEquals(168, this.graph.edgeSet().size());
+        assertEquals(VERTEX_SIZE, this.graph.vertexSet().size());
+        assertEquals(NODE_SIZE, this.graph.edgeSet().size());
     }
 
     /**
@@ -61,12 +66,14 @@ public class TestGraphBuilder {
     @Test
     public void testMapSizeWithObastacles() {
         GameMap baseMap = new GameMapImpl(true);
+        // CHECKSTYLE: MagicNumber OFF
         baseMap.addFlame(new Flame(CellType.FLAME, null, new Pair(0, 2), null), new Pair(0, 2));
         baseMap.addFlame(new Flame(CellType.FLAME, null, new Pair(0, 4), null), new Pair(0, 4));
         baseMap.addFlame(new Flame(CellType.FLAME, null, new Pair(5, 6), null), new Pair(5, 6));
+        // CHECKSTYLE: MagicNumber ON
         this.graph = GraphBuilderImpl.buildFromMap(baseMap);
-        assertEquals(133, this.graph.vertexSet().size());
-        assertEquals(168, this.graph.edgeSet().size());
+        assertEquals(VERTEX_SIZE, this.graph.vertexSet().size());
+        assertEquals(NODE_SIZE, this.graph.edgeSet().size());
     }
 
     /**
@@ -95,8 +102,8 @@ public class TestGraphBuilder {
         assertFalse(graph.containsEdge(p2, p5));
         assertFalse(graph.containsEdge(p1, p3));
 
-        assertEquals(2.5, graph.getEdgeWeight(graph.getEdge(p1, p2)));
-        assertEquals(2.5, graph.getEdgeWeight(graph.getEdge(p2, p3)));
-        assertEquals(1.0, graph.getEdgeWeight(graph.getEdge(p3, p4)));
+        assertEquals(WALL_WEIGHT, graph.getEdgeWeight(graph.getEdge(p1, p2)));
+        assertEquals(WALL_WEIGHT, graph.getEdgeWeight(graph.getEdge(p2, p3)));
+        assertEquals(STANDARD_WEIGHT, graph.getEdgeWeight(graph.getEdge(p3, p4)));
     }
 }
