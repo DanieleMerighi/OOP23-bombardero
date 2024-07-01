@@ -53,7 +53,7 @@ public final class BombarderoGraphics {
         resizingEngine = new ResizingEngine(this);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(resizingEngine.getGameWindowSize(frame));
-        frame.setResizable(true);
+        frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setIconImage(gameIconImage.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
 
@@ -61,16 +61,6 @@ public final class BombarderoGraphics {
         deck.add(MENU_CARD, menuCard);
         layout.addLayoutComponent(menuCard, MENU_CARD);
         deck.validate();
-
-        /* This listener calls for the ResizingEngine to dinamically update the 
-        * frame's size when it is resized, see the implementation for more */
-        frame.addComponentListener(new ComponentAdapter() {
-            
-            @Override
-            public void componentResized(final ComponentEvent e) {
-                frame.setSize(resizingEngine.getNewWindowSize(frame));
-            }
-        });
         
         frame.add(deck);
         showCard(MENU_CARD);
