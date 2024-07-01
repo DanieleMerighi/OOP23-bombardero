@@ -61,7 +61,7 @@ public class GamePlayCard extends JPanel {
     /* References to model components: */
     private transient final BombarderoGraphics graphics;
     private transient Map<Pair, Cell> cells;
-    private transient final Character player;
+    private transient Character player;
     private transient final Map<Character, SpriteImageCombo> characterImages = new HashMap<>(); // every enemy is linked to its own sprite
     private transient List<Character> enemiesList;
 
@@ -186,8 +186,10 @@ public class GamePlayCard extends JPanel {
         });
     }
 
-    public void updateMap() {
-        cells = graphics.getController().getMap();
+    public void updateGameState(final Map<Pair, Cell> map, final Character player, final List<Character> enemiesList) {
+        cells = Map.copyOf(map);
+        this.player = player;
+        this.enemiesList = List.copyOf(enemiesList);
         updateSprites();
     }
 
@@ -241,7 +243,6 @@ public class GamePlayCard extends JPanel {
     }
 
     private void checkForNewEnemies() {
-        enemiesList = graphics.getController().getEnemies();
         enemiesList.stream()
             .filter(enemy -> !characterImages.keySet().contains(enemy))
             .forEach(enemy -> {
