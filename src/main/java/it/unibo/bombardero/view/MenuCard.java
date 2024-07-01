@@ -19,27 +19,23 @@ import javax.swing.JButton;
 
 public final class MenuCard extends JPanel {
 
-    private final ResourceGetter rg;
-    private final BombarderoGraphics graphicsEngine;
-    private final JButton play;
-    private final JButton guide;
-    private final Controller controller;
+    private final transient BombarderoGraphics graphicsEngine;
+    private final transient JButton play;
+    private final transient JButton guide;
 
     /* Resources: */
-    private final Image logo;
-    private final Image playImage;
-    private final Image guideImage;
-    private final BufferedImage background;
+    private final transient Image logo;
+    private final transient Image playImage;
+    private final transient Image guideImage;
+    private final transient BufferedImage background;
 
     public MenuCard(final Controller controller, final BombarderoGraphics graphicsEngine, final ResourceGetter rg) {
-        this.rg = rg;
-        this.controller = controller;
         this.graphicsEngine = graphicsEngine;
 
         // CHECKSTYLE: MagicNumber OFF
         logo = rg.loadImage("menu/logo");
-        playImage = rg.loadImage("overlay/buttons/PLAY");
-        guideImage = rg.loadImage("overlay/buttons/GUIDE");
+        playImage = graphicsEngine.getResizingEngine().getScaledButtonImage(rg.loadImage("overlay/buttons/PLAY"));
+        guideImage = graphicsEngine.getResizingEngine().getScaledButtonImage(rg.loadImage("overlay/buttons/GUIDE"));
         background = rg.loadImage("menu/background");
         // CHECKSTYLE: MagicNumber ON
 
