@@ -103,7 +103,7 @@ public enum PowerUpType {
      * Be carefull, the skull is not friendly...
      * </p>
      */
-    SKULL(25);
+    SKULL(20);
 
     private static final Map<PowerUpType, BombType> TO_BOMB_TYPE = Map.of(
             PowerUpType.REMOTE_BOMB, BombType.BOMB_REMOTE,
