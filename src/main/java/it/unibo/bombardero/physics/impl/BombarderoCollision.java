@@ -13,14 +13,15 @@ import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
-import it.unibo.bombardero.physics.api.BoundingBox;
 import it.unibo.bombardero.physics.api.CollisionEngine;
+import it.unibo.bombardero.physics.api.CollisionHandler;
 import it.unibo.bombardero.character.Character;
 
 public class BombarderoCollision implements CollisionEngine{
     private final GameManager mgr;
     private GameMap gMap;
     private Map<Pair,Cell> map;
+    private CollisionHandler cHandler = new CollisionHandlerImpl();
     private final Map<Direction, Line2D.Float> MAP_OUTLINES = Map.of(
         Direction.UP , new Line2D.Float(new Point2D.Float(0, 0) , new Point2D.Float(13, 0)),
         Direction.DOWN , new Line2D.Float(new Point2D.Float(0, 13) , new Point2D.Float(13, 13)),
@@ -35,10 +36,9 @@ public class BombarderoCollision implements CollisionEngine{
     @Override
     public void checkFlameAndPowerUpCollision(Character character) {
         if(gMap.isFlame(character.getIntCoordinate())) {
-            character.kill();
+            cHandler.applyFlameCollision(character);
         } else if(gMap.isPowerUp(character.getIntCoordinate())) {
-            PowerUp p = (PowerUp)gMap.getMap().get(character.getIntCoordinate());
-            p.applyEffect(character);
+            cHandler.applyPowerUpCollision(character, (PowerUp)gMap.getMap().get(character.getIntCoordinate()));
             mgr.removePowerUp(character.getIntCoordinate());
         }
     }
@@ -54,27 +54,9 @@ public class BombarderoCollision implements CollisionEngine{
                 .map( p -> map.get(p))
                 .filter(c-> c.getBoundingBox().isColliding(character.getBoundingBox()) && c.getBoundingCollision())
                 .findFirst();
-            SolidCellCollision(character, collidingCell);
+            cHandler.applyCharacterBoundaryCollision(character, collidingCell);
         } else {
-            checkCoolisionWithMapWall(character);
-        }
-    }
-
-    private void SolidCellCollision(Character character, Optional<Cell> collidingCell) {
-        if(collidingCell.isPresent()) {
-            character.setCharacterPosition(character.getCharacterPosition()
-                .sum(character.getBoundingBox()
-                    .computeCollision(collidingCell.get().getBoundingBox(), character.getFacingDirection())));
-        }
-    }
-
-    private void checkCoolisionWithMapWall(Character character) {
-        BoundingBox bBox = character.getBoundingBox();
-        Line2D.Float outerLine = MAP_OUTLINES.get(character.getFacingDirection());
-        if(bBox.isColliding(outerLine)) {
-            character.setCharacterPosition(
-                character.getCharacterPosition()
-                .sum(bBox.computeCollision(outerLine, character.getFacingDirection())));
+            cHandler.applyCharacterBoundaryCollision(character, MAP_OUTLINES.get(character.getFacingDirection()));
         }
     }
 
