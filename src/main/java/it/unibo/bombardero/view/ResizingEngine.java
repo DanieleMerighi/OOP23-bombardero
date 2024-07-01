@@ -59,25 +59,6 @@ public final class ResizingEngine {
 
     /* FRAME-RELATED METHODS */
 
-    /* Checks if the minimunFrameSize is satisfied */
-    public Dimension getNewWindowSize(JFrame frame) {
-        Dimension frameSize = frame.getSize();
-        if(frameSize.height < minimumFrameSize.height || frameSize.width < minimumFrameSize.width) {
-            return new Dimension(
-                minimumFrameSize.width,
-                minimumFrameSize.height
-            );
-        }
-        return frame.getSize();
-    }
-    
-    public Dimension getInitialMenuSize() {
-        return new Dimension(
-            (int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth() * initialMenuScale), 
-            (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight() * initialMenuScale)
-        );
-    }
-    
     /* The initial windows size is calculated scaling the map and adding some grass on the sides, other than the insets */
     public Dimension getGameWindowSize(JFrame frame) {       
         return new Dimension(
