@@ -58,8 +58,8 @@ public final class GuideCard extends GamePlayCard{
         // CHECKSTYLE: MagicNumber OFF
         font = resourceGetter.loadFont("mono");
         messageBoxImage = resourceGetter.loadImage("overlay/dialog");
-        startImage = resourceGetter.loadImage("overlay/buttons/PLAY");
-        backImage = resourceGetter.loadImage("overlay/buttons/BACK");
+        startImage = graphics.getResizingEngine().getScaledButtonImage(resourceGetter.loadImage("overlay/buttons/PLAY"));
+        backImage = graphics.getResizingEngine().getScaledButtonImage(resourceGetter.loadImage("overlay/buttons/BACK"));
         wasdSprite = new SimpleBombarderoSprite(
             SimpleBombarderoSprite.importAssets("WASD", "overlay/buttons/WASD", resourceGetter, graphics.getResizingEngine()::getScaledWASDImage, 8),
             8, 12);
