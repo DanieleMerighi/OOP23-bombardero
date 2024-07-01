@@ -16,7 +16,7 @@ public class CollisionHandlerImpl implements CollisionHandler{
         if(collidingCell.isPresent()) {
             character.setCharacterPosition(character.getCharacterPosition()
                 .sum(character.getBoundingBox()
-                    .computeCollision(collidingCell.get().getBoundingBox(), character.getFacingDirection())));
+                    .computeCollision(collidingCell.get().getBoundingBox().get(), character.getFacingDirection())));
         }
     }
 
