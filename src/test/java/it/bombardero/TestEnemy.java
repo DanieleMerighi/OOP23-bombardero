@@ -6,7 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import it.unibo.bombardero.character.Enemy;
+import it.unibo.bombardero.character.AI.impl.ChaseState;
+import it.unibo.bombardero.character.AI.impl.EscapeState;
+import it.unibo.bombardero.character.AI.impl.PatrolState;
 import it.unibo.bombardero.map.api.Pair;
 
 /**
@@ -16,6 +18,8 @@ public class TestEnemy {
 
     private static final int STANDARD_ELAPSED_TIME = 100;
     private static final int STARTING_BOMBS = 1;
+    private static final float SPEED = 0.01f;
+    private static final float NEWSPEED = 0.05f;
 
     private MyGameManager manager;
 
@@ -26,7 +30,7 @@ public class TestEnemy {
     public void setUp() {
         this.manager = new MyGameManager();
         this.manager.setEnemyCoord(0, 0);
-        this.manager.getEnemy().setSpeed(0.01f);
+        this.manager.getEnemy().setSpeed(SPEED);
     }
 
     /**
@@ -35,11 +39,13 @@ public class TestEnemy {
     @Test
     public void testEnemyPatrolPlayerNotInDetectionRadiusMovesRandomly() {
         // outside ENEMY_DETECTION_RADIUS
+        // CHECKSTYLE: MagicNumber OFF
         manager.setPlayerCoord(0, 5);
+        // CHECKSTYLE: MagicNumber ON
         manager.getEnemy().update(STANDARD_ELAPSED_TIME);
 
         // Verify enemy state is PATROL
-        assertEquals(Enemy.State.PATROL, manager.getEnemy().getState());
+        assertTrue(manager.getEnemy().isStateEqualTo(new PatrolState()));
         // We can't directly verify moveRandomly is called, but we can check if nextMove
         // is set through random movement
         assertTrue(manager.getEnemy().getNextMove().isPresent());
@@ -55,7 +61,7 @@ public class TestEnemy {
         manager.updateGame(STANDARD_ELAPSED_TIME);
 
         // Verify enemy state is CHASE
-        assertEquals(Enemy.State.CHASE, manager.getEnemy().getState());
+        assertTrue(manager.getEnemy().isStateEqualTo(new ChaseState()));
     }
 
     /**
@@ -70,15 +76,17 @@ public class TestEnemy {
         manager.updateGame(STANDARD_ELAPSED_TIME);
 
         // Verify enemy state is CHASE
-        assertEquals(Enemy.State.CHASE, manager.getEnemy().getState());
+        assertTrue(manager.getEnemy().isStateEqualTo(new ChaseState()));
         assertEquals(new Pair(1, 0), manager.getEnemy().getIntCoordinate());
 
         // Set player moving away after initial detection
+        // CHECKSTYLE: MagicNumber OFF
         manager.setPlayerCoord(3, 12);
+        // CHECKSTYLE: MagicNumber ON
         manager.updateGame(STANDARD_ELAPSED_TIME);
 
         // Verify enemy state is PATROL
-        assertEquals(Enemy.State.PATROL, manager.getEnemy().getState());
+        assertTrue(manager.getEnemy().isStateEqualTo(new PatrolState()));
     }
 
     /**
@@ -87,16 +95,16 @@ public class TestEnemy {
     @Test
     public void testEnemyEscapeChangesToPatrol() {
         // Set enemy position inside a danger zone
-        this.manager.getEnemy().setSpeed(0.05f);
+        this.manager.getEnemy().setSpeed(NEWSPEED);
         this.manager.addBomb(new MyBomb(new Pair(0, 1)));
         this.manager.getEnemy().update(STANDARD_ELAPSED_TIME);
 
-        assertEquals(Enemy.State.ESCAPE, this.manager.getEnemy().getState());
+        assertTrue(manager.getEnemy().isStateEqualTo(new EscapeState()));
         this.manager.updateGame(STANDARD_ELAPSED_TIME);
         assertEquals(new Pair(1, 0), manager.getEnemy().getIntCoordinate());
         this.manager.updateGame(STANDARD_ELAPSED_TIME);
         // Verify enemy state is Patrol
-        assertEquals(Enemy.State.PATROL, manager.getEnemy().getState());
+        assertTrue(manager.getEnemy().isStateEqualTo(new PatrolState()));
 
     }
 
@@ -111,7 +119,7 @@ public class TestEnemy {
         manager.getGameMap().addBreakableWall(new Pair(0, 1));
         manager.getEnemy().update(STANDARD_ELAPSED_TIME);
 
-        assertEquals(Enemy.State.CHASE, manager.getEnemy().getState());
+        assertTrue(manager.getEnemy().isStateEqualTo(new ChaseState()));
         manager.updateGame(STANDARD_ELAPSED_TIME);
         manager.updateGame(STANDARD_ELAPSED_TIME);
         // Verify bomb is placed on the enemy's position
