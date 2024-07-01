@@ -11,18 +11,23 @@ import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.guide.api.GuideManager;
+import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.physics.impl.BombarderoCollision;
-import it.unibo.bombardero.utils.Utils;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;
 
-public class BombarderoGameManager implements GameManager {
+/**
+ * This class implements the concepts expressed in the 
+ * {@link GameManager} interface. This class is designed to
+ * be extended, adding further capabilities such as time-keeping and 
+ * advanced game dynamics.
+ */
+public class BasicBombarderoGameManager implements GameManager {
 
     public final static long TOTAL_GAME_TIME = 120_000L;
     public final static long GAME_OVER_TIME = 0L;
@@ -35,43 +40,58 @@ public class BombarderoGameManager implements GameManager {
     private final Controller controller;
     private final CollisionEngine ce;
     private final BombFactory bombFactory;
-    private long gameTime;
 
-    public BombarderoGameManager(final Controller ctrl){
-        this.controller = ctrl;
-        map = new GameMapImpl();
-        ce = new BombarderoCollision(this);
-        bombFactory = new BombFactoryImpl(this);
-        this.player = new Player(this, Utils.PLAYER_SPAWNPOINT, bombFactory);
-        enemies.add(new Enemy(this, Utils.ENEMIES_SPAWNPOINT.get(0), bombFactory));
-        //Utils.ENEMIES_SPAWNPOINT.forEach(enemyCoord -> enemies.add(new Enemy(this, enemyCoord, bombFactory)));
-    }
-
-    public BombarderoGameManager(final Controller controller, final boolean guideMode) {
+    /**
+     * Creates a new Game Manager, creating all the model's entities. Spawning 
+     * the player and the enemies in the request positions.
+     * <p>
+     * A enemy for each element of the list will be spawned.  
+     * @param controller the game's controller 
+     * @param playerSpawnPoint the main player's spawnpoint
+     * @param enemiesSpawnpoint a list of the enemies spawnpoints
+     * @param generateWalls wether the breakable walls have to be generated or not
+     */
+    public BasicBombarderoGameManager(
+            final Controller controller,
+            final Coord playerSpawnPoint, 
+            final List<Coord> enemiesSpawnpoint,
+            final boolean generateWalls) {
         this.controller = controller;
-        map = new GameMapImpl(false);
+        map = new GameMapImpl(generateWalls);
         ce = new BombarderoCollision(this);
         bombFactory = new BombFactoryImpl(this);
-        this.player = new Player(this, GuideManager.PLAYER_GUIDE_SPAWNPOINT, bombFactory);
-        this.map.addBreakableWall(GuideManager.CRATE_GUIDE_SPAWNPOINT);
+        this.player = new Player(this, playerSpawnPoint, bombFactory);
+        enemiesSpawnpoint.forEach(spawnpoint -> enemies.add(new Enemy(this, spawnpoint, bombFactory)));
     }
 
+    /**
+     * Updates the synchronous and asynchronous objects of the game, namely:
+     * <ul>
+     *  <li> The map
+     *  <li> The main character
+     *  <li> The bombs
+     *  <li> The flames
+     *  <li> The enemies 
+     * </ul> 
+     * The argument passed can be passed to the synchronous entities
+     * to synchronize them to the game's time.
+     * @param elapsed the time passed since the last update. 
+     */
     @Override
     public void updateGame(final long elapsed) {
-        gameTime += elapsed;
-        map.update(getTimeLeft());
+        //map.update(getTimeLeft());
         if (player.isAlive()) {
             player.update(elapsed);
             ce.checkCharacterCollision(player);
             ce.checkFlameAndPowerUpCollision(player);
         }
-        if(!boombs.isEmpty()) {
-            boombs.forEach(b->b.update());
-            boombs.removeIf(b->b.isExploded());
+        if (!boombs.isEmpty()) {
+            boombs.forEach(b -> b.update());
+            boombs.removeIf(b -> b.isExploded());
         }
-        if(!flames.isEmpty()) {
-            flames.forEach(f->f.update(elapsed));
-            flames.removeIf(f->f.isExpired());
+        if (!flames.isEmpty()) {
+            flames.forEach(f -> f.update(elapsed));
+            flames.removeIf(f -> f.isExpired());
         }
         enemies.forEach(enemy -> {
              if (enemy.isAlive()) {
@@ -80,9 +100,6 @@ public class BombarderoGameManager implements GameManager {
                  ce.checkFlameAndPowerUpCollision(enemy);
              }
         });
-        /*if(enemies.get(0).isAlive()){
-            enemies.get(0).update(elapsed);
-        }*/
     }
 
     @Override
@@ -121,7 +138,7 @@ public class BombarderoGameManager implements GameManager {
 
     @Override
     public Optional<Bomb> getBomb(final Pair pos) {
-        return boombs.stream().filter(b-> b.getPos().equals(pos)).findAny();
+        return boombs.stream().filter(b -> b.getPos().equals(pos)).findAny();
     }
 
     @Override
@@ -143,16 +160,19 @@ public class BombarderoGameManager implements GameManager {
 
     @Override
     public boolean removeWall(final Pair pos) {
-        if(map.isBreakableWall(pos)) {
+        if (map.isBreakableWall(pos)) {
             map.removeBreakableWall(pos);
             return true;
         }
         return false;
     }
 
+    /**
+     * If the time is being kept it returns the time passed. 
+     */
     @Override
-    public long getTimeLeft() {
-        return gameTime < TOTAL_GAME_TIME ? TOTAL_GAME_TIME - gameTime : GAME_OVER_TIME;
+    public Optional<Long> getTimeLeft() {
+        return Optional.empty();
     }
 
     protected void addEnemy(final Character enemy) {

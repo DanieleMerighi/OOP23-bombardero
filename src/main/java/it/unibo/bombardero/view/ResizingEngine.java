@@ -10,22 +10,23 @@ import it.unibo.bombardero.utils.Utils;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.Insets;
 
 /** 
  * A class to compute the scale of the game relative to the window size and display size
  */
-public class ResizingEngine {
+public final class ResizingEngine {
 
     /* A mischevious padding no one knows its reason to exist: */
     private final static int MISCHIEVOUS_PADDING = 23;
     private final static double initialMenuScale = 0.75;
 
-    private final BombarderoGraphics graphics;
-
     private double currentScale = 1.125; /* default scale size for every device */
     private final int scaledCellSize;
     private Dimension minimumFrameSize;
     private final Dimension gameWindowSize;
+
+    private final Insets frameInsets;
 
     private final Dimension mapPlacingPoint;
     private final Dimension entityPlacingPoint;
@@ -35,12 +36,11 @@ public class ResizingEngine {
     private final Dimension spaceGuidePosition;
 
     public ResizingEngine(final BombarderoGraphics graphics) {
-        this.graphics = graphics;
         int resolution = Toolkit.getDefaultToolkit().getScreenResolution();
         if(resolution >= 200) {              
             currentScale = 1.25; 
         }
-
+        frameInsets = graphics.getParentFrame().getInsets();
         scaledCellSize = (int)(currentScale * Utils.CELL_SIZE);
 
         gameWindowSize = initGameWindowSize(graphics.getParentFrame());
@@ -58,7 +58,10 @@ public class ResizingEngine {
     public Dimension getNewWindowSize(JFrame frame) {
         Dimension frameSize = frame.getSize();
         if(frameSize.height < minimumFrameSize.height || frameSize.width < minimumFrameSize.width) {
-            return minimumFrameSize;
+            return new Dimension(
+                minimumFrameSize.width,
+                minimumFrameSize.height
+            );
         }
         return frame.getSize();
     }
@@ -72,7 +75,10 @@ public class ResizingEngine {
     
     /* The initial windows size is calculated scaling the map and adding some grass on the sides, other than the insets */
     public Dimension getGameWindowSize(JFrame frame) {       
-        return gameWindowSize;
+        return new Dimension(
+            gameWindowSize.width,
+            gameWindowSize.height
+        );
     }
 
     public Dimension getMapSize() {
@@ -141,14 +147,20 @@ public class ResizingEngine {
     /* GAME-RELATED METHODS: */
     
     public Dimension getMapPlacingPoint() {
-        return mapPlacingPoint;
+        return new Dimension(
+            mapPlacingPoint.width,
+            mapPlacingPoint.height
+        );
     }
 
     /** 
      * Returns the corner of the north-eastern cell of the map
      */
     public Dimension getEntityPlacingPoint() {
-        return entityPlacingPoint;
+        return new Dimension(
+            entityPlacingPoint.width,
+            entityPlacingPoint.height
+        );
     }
 
     /** 
@@ -183,25 +195,37 @@ public class ResizingEngine {
     }
 
     public Dimension getImageClockPosition() {
-        return imageClockPosition;
+        return new Dimension(
+            imageClockPosition.width,
+            imageClockPosition.height
+        );
     }
 
     public Dimension getTimerPosition() {
-        return timerPosition;
+        return new Dimension(
+            timerPosition.width,
+            timerPosition.height
+        );
     }
 
     public Dimension getWasdGuidePosition() {
-        return wasdGuidePosition;
+        return new Dimension(
+            wasdGuidePosition.width,
+            wasdGuidePosition.height
+        );
     }
 
     public Dimension getSpaceGuidePosition() {
-        return spaceGuidePosition;
+        return new Dimension(
+            spaceGuidePosition.width,
+            spaceGuidePosition.height
+        );
     }
 
     private Dimension initMapPlacingPoint() {
         return new Dimension(
-            gameWindowSize.width/2 - getMapSize().width/2 - (graphics.getParentFrame().getInsets().right + graphics.getParentFrame().getInsets().left),
-            gameWindowSize.height/2 - getMapSize().height/2 - (graphics.getParentFrame().getInsets().top + graphics.getParentFrame().getInsets().bottom)
+            gameWindowSize.width/2 - getMapSize().width/2 - (frameInsets.right + frameInsets.left),
+            gameWindowSize.height/2 - getMapSize().height/2 - (frameInsets.top + frameInsets.bottom)
         );
     }
 

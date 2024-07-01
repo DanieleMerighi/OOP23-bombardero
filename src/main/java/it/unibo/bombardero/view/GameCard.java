@@ -8,9 +8,10 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.swing.BoxLayout;
+import java.awt.GridLayout;
+import javax.swing.JLabel;
 import java.awt.Font;
-
+import javax.swing.ImageIcon;
 /** 
  * This class represents a JPanel containing a the view of some 
  * playable part of the game (e.g. guide, gameplay, sandbox... etc).
@@ -21,11 +22,13 @@ public final class GameCard extends GamePlayCard {
     private final static SimpleDateFormat format = new SimpleDateFormat("mm:ss");
 
     private final Image clockImage;
+    private final Image resumeButtonImage;
+    private final Image quitButtonImage;
     private Font clockFont;
 
     /* Pause state buttons: */
-    private final JButton resumeButton = new JButton("Resume");
-    private final JButton quitButton = new JButton("Quit");
+    private final JButton resumeButton;
+    private final JButton quitButton;
 
     private Dimension imageClockPosition;
     private Dimension timerPosition;
@@ -38,12 +41,28 @@ public final class GameCard extends GamePlayCard {
             graphics.getResourceGetter().loadImage("overlay/clock")
         );
         clockFont = graphics.getResourceGetter().loadFont("mono");
+        resumeButtonImage = graphics.getResourceGetter().loadImage("overlay/buttons/RESUME");
+        quitButtonImage = graphics.getResourceGetter().loadImage("overlay/buttons/QUIT");
 
         imageClockPosition = graphics.getResizingEngine().getImageClockPosition();
         timerPosition = graphics.getResizingEngine().getTimerPosition();
 
+        resumeButton = new JButton(new ImageIcon(resumeButtonImage));
+        quitButton = new JButton(new ImageIcon(quitButtonImage));
+
+        quitButton.setBorder(null);
+        resumeButton.setBorder(null);
+        quitButton.setBorderPainted(false);
+        resumeButton.setBorderPainted(false);
+        resumeButton.setContentAreaFilled(false);
+        quitButton.setContentAreaFilled(false);
+        resumeButton.setFocusPainted(false);
+        quitButton.setFocusPainted(false);
+        this.add(new JLabel());
+        this.add(new JLabel());
+
         this.setFont(clockFont);
-        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        this.setLayout(new GridLayout(5, 1));
     }
 
     @Override
@@ -58,14 +77,16 @@ public final class GameCard extends GamePlayCard {
 
     
     public void setPausedView() {
-        this.add(quitButton);
         this.add(resumeButton);
+        this.add(quitButton);
+        this.revalidate();
         this.repaint(0);
     }
 
     public void setUnpausedView() {
         this.remove(quitButton);
         this.remove(resumeButton);
+        this.revalidate();
         this.repaint(0);
     }
 

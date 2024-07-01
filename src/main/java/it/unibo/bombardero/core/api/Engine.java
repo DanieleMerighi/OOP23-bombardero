@@ -18,7 +18,7 @@ package it.unibo.bombardero.core.api;
  */
 public interface Engine extends Runnable {
 
-    /**  
+    /**
      * The method containing the game loop, this will be run in
      * a separate Thread. 
      */
