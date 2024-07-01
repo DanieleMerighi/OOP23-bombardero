@@ -7,7 +7,7 @@ import java.awt.geom.Rectangle2D;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.physics.api.BoundingBox;
-
+//TODO generalizzare il physicsBox fare classe astratta 
 
 public class RectangleBoundingBox implements BoundingBox{
     private Rectangle2D fisicsBox;

@@ -16,7 +16,7 @@ import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 
-
+//TODO cercare di dividere logica del character e del manager es: ritornare entryset di fiamme da aggiungere e numbob nel character 
 public abstract class BasicBomb extends AbstractCell implements Bomb{
     public final static long TIME_TO_EXPLODE=2000L;
     public final static int MAX_RANGE = 3; // TO-DO: decide the max bomb range

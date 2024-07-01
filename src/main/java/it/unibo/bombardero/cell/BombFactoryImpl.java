@@ -4,6 +4,10 @@ import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.map.api.Pair;
 
+
+//TODO dividere la logica fare una factory normale  
+//chiedere a baga del menu fare un po di grafica rendere Pair generico e magari fare due classi specifiche
+//in generale cercare di rendere il tutto piu generico
 public class BombFactoryImpl implements BombFactory{
     private GameManager mgr;
 
