@@ -58,7 +58,7 @@ public class BasicBombarderoGameManager implements GameManager {
             final boolean generateWalls) {
         this.controller = controller;
         map = new GameMapImpl(generateWalls);
-        ce = new BombarderoCollision(this);
+        ce = new BombarderoCollision();
         bombFactory = new BombFactoryImpl(this);
         this.player = new Player(this, playerSpawnPoint, bombFactory);
         enemiesSpawnpoint.forEach(spawnpoint -> enemies.add(new Enemy(this, spawnpoint, bombFactory)));
@@ -82,8 +82,8 @@ public class BasicBombarderoGameManager implements GameManager {
         //map.update(getTimeLeft());
         if (player.isAlive()) {
             player.update(elapsed);
-            ce.checkCharacterCollision(player);
-            ce.checkFlameAndPowerUpCollision(player);
+            ce.checkCharacterCollision(player, this);
+            ce.checkFlameAndPowerUpCollision(player, this);
         }
         if (!boombs.isEmpty()) {
             boombs.forEach(b -> b.update());
@@ -96,8 +96,8 @@ public class BasicBombarderoGameManager implements GameManager {
         enemies.forEach(enemy -> {
              if (enemy.isAlive()) {
                  enemy.update(elapsed);
-                 ce.checkCharacterCollision(enemy);
-                 ce.checkFlameAndPowerUpCollision(enemy);
+                 ce.checkCharacterCollision(enemy, this);
+                 ce.checkCharacterCollision(enemy, this);
              }
         });
     }
