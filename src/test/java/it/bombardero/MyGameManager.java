@@ -35,8 +35,8 @@ public class MyGameManager implements GameManager {
      */
     MyGameManager() {
         this.map = new GameMapImpl(false);
-        this.enemy = new Enemy(this, new Coord(0, 0), new BombFactoryImpl(this));
-        this.player = new Player(this, new Coord(0, PLAYERY), new BombFactoryImpl(this));
+        this.enemy = new Enemy(this, new Coord(0, 0), new BombFactoryImpl());
+        this.player = new Player(this, new Coord(0, PLAYERY), new BombFactoryImpl());
     }
 
     /**
@@ -126,7 +126,7 @@ public class MyGameManager implements GameManager {
      * @return true if the bomb was added, false otherwise
      */
     @Override
-    public boolean addBomb(final Bomb b) {
+    public boolean addBomb(final Bomb b, final Character character) {
         return map.addBomb(b, b.getPos());
     }
 

@@ -54,7 +54,7 @@ public interface GameManager {
      */
     GameMap getGameMap();
 
-    boolean addBomb(Bomb bomb);
+    boolean addBomb(Bomb bomb, Character character);
     
     void removeBomb(Pair pos);
 

@@ -1,7 +1,10 @@
 package it.unibo.bombardero.cell;
 
+import java.util.Optional;
+
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.character.Character;
+import it.unibo.bombardero.cell.powerup.api.PowerUpType;
+import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 
 
@@ -9,24 +12,19 @@ import it.unibo.bombardero.map.api.Pair;
 //chiedere a baga del menu fare un po di grafica rendere Pair generico e magari fare due classi specifiche
 //in generale cercare di rendere il tutto piu generico
 public class BombFactoryImpl implements BombFactory {
-    private final GameManager mgr;
-
-    public BombFactoryImpl(final GameManager mgr) {
-        this.mgr = mgr;
-    }
 
     @Override
-    public Bomb createBasicBomb(final Character character, final Pair pos) {
-        return new BasicBomb(mgr, character, character.getFlameRange(), pos) {
+    public Bomb createBasicBomb(final Optional<PowerUpType> BombType,final int range, final Pair pos) {
+        return new BasicBomb(BombType, range, pos) {
         };
     }
 
     @Override
-    public Bomb createPiercingBomb(final Character character, final Pair pos) {
-        return new BasicBomb(mgr, character, character.getFlameRange(), pos) {
+    public Bomb createPiercingBomb(final Optional<PowerUpType> BombType,final int range, final Pair pos) {
+        return new BasicBomb(BombType, range, pos) {
 
             @Override
-            public boolean isBreckableWall(final Pair pos) {
+            public boolean isBreckableWall(final Pair pos, GameMap map, GameManager mgr) {
                 if (mgr.getGameMap().isBreakableWall(pos) && isLastWall(pos)) {
                     mgr.removeWall(pos);
                     return true;
@@ -44,14 +42,14 @@ public class BombFactoryImpl implements BombFactory {
     }
 
     @Override
-    public Bomb createPowerBomb(final Character character, final Pair pos) {
-        return new BasicBomb(mgr, character, BasicBomb.MAX_RANGE, pos) {
+    public Bomb createPowerBomb(final Optional<PowerUpType> BombType, final Pair pos) {
+        return new BasicBomb(BombType, BasicBomb.MAX_RANGE, pos) {
         };
     }
 
     @Override
-    public Bomb createRemoteBomb(final Character character, final Pair pos) {
-        return new BasicBomb(mgr, character, character.getFlameRange(), pos) {
+    public Bomb createRemoteBomb(final Optional<PowerUpType> BombType,final int range, final Pair pos) {
+        return new BasicBomb(BombType, range, pos) {
 
             @Override
             public void update() {}
@@ -59,7 +57,6 @@ public class BombFactoryImpl implements BombFactory {
             @Override
             public void update(final boolean condition) {
                 super.update(condition);
-                character.removeBombFromDeque(this);
             }
         };
     }

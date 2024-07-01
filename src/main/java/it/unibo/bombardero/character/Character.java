@@ -208,15 +208,15 @@ public abstract class Character {
 
     private Bomb createBomb(Pair coordinate) {
         if (!getBombType().isPresent()) {
-            return bombFactory.createBasicBomb(this, this.getIntCoordinate());
+            return bombFactory.createBasicBomb(this.getBombType(), this.getFlameRange(), this.getIntCoordinate());
         }
         switch (this.getBombType().get()) {
             case PIERCING_BOMB:
-                return bombFactory.createPiercingBomb(this, this.getIntCoordinate());
+                return bombFactory.createPiercingBomb(this.getBombType(), this.getFlameRange(), this.getIntCoordinate());
             case REMOTE_BOMB:
-                return bombFactory.createRemoteBomb(this, this.getIntCoordinate());
+                return bombFactory.createRemoteBomb(this.getBombType(), this.getFlameRange(), this.getIntCoordinate());
             case POWER_BOMB:
-                return bombFactory.createPowerBomb(this, this.getIntCoordinate());
+                return bombFactory.createPowerBomb(this.getBombType(), this.getIntCoordinate());
             default:
                 return null;
         }
@@ -262,9 +262,10 @@ public abstract class Character {
      * @param explodedBomb the exploded bomb that needs to be removed
      */
     public void removeBombFromDeque(final Bomb explodedBomb) {
-        if (!bombQueue.isEmpty()) {
+        if (!bombQueue.isEmpty() && bombQueue.removeFirstOccurrence(explodedBomb)) {
             // System.out.println("removed bomb\n\n");
-            bombQueue.removeFirstOccurrence(explodedBomb);
+            this.increaseNumBomb();
+            
         }
     }
 
@@ -624,7 +625,7 @@ public abstract class Character {
 
     private boolean placeBombImpl(final Bomb bomb) {
         if (hasBombsLeft() && !this.constipation && this.manager
-                .addBomb(bomb)) {
+                .addBomb(bomb, this)) {
             this.numBomb--;
             bombQueue.addLast(bomb);
             return true;

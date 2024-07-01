@@ -1,6 +1,8 @@
 package it.unibo.bombardero.core.impl;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +35,7 @@ public class BasicBombarderoGameManager implements GameManager {
     public final static long GAME_OVER_TIME = 0L;
     
     private final GameMap map;
-    private final List<Bomb> boombs = new ArrayList<>();
+    private final Map<Bomb, Character> boombs = new HashMap<>();
     private final List<Flame> flames = new ArrayList<>();
     private final List<Character> enemies = new ArrayList<>();
     private final Character player;
@@ -59,7 +61,7 @@ public class BasicBombarderoGameManager implements GameManager {
         this.controller = controller;
         map = new GameMapImpl(generateWalls);
         ce = new BombarderoCollision();
-        bombFactory = new BombFactoryImpl(this);
+        bombFactory = new BombFactoryImpl();
         this.player = new Player(this, playerSpawnPoint, bombFactory);
         enemiesSpawnpoint.forEach(spawnpoint -> enemies.add(new Enemy(this, spawnpoint, bombFactory)));
     }
@@ -86,8 +88,8 @@ public class BasicBombarderoGameManager implements GameManager {
             ce.checkFlameAndPowerUpCollision(player, this);
         }
         if (!boombs.isEmpty()) {
-            boombs.forEach(b -> b.update());
-            boombs.removeIf(b -> b.isExploded());
+            boombs.entrySet().forEach(entry -> entry.getKey().update());
+            placeBombexplosion();
         }
         if (!flames.isEmpty()) {
             flames.forEach(f -> f.update(elapsed));
@@ -97,9 +99,18 @@ public class BasicBombarderoGameManager implements GameManager {
              if (enemy.isAlive()) {
                  enemy.update(elapsed);
                  ce.checkCharacterCollision(enemy, this);
-                 ce.checkCharacterCollision(enemy, this);
+                 ce.checkFlameAndPowerUpCollision(enemy, this);
              }
         });
+    }
+
+    private void placeBombexplosion() {
+        Map.copyOf(boombs).entrySet().stream()
+            .filter(entry -> entry.getKey().isExploded())
+            .peek(entry -> boombs.remove(entry.getKey()))
+            .peek(entry -> entry.getValue().removeBombFromDeque(entry.getKey()))
+            .map(entry -> entry.getKey().computeFlame(this))
+            .forEach(set -> set.forEach(entry -> addFlame(entry.getValue(), entry.getKey())));
     }
 
     @Override
@@ -123,9 +134,9 @@ public class BasicBombarderoGameManager implements GameManager {
     }
 
     @Override
-    public boolean addBomb(final Bomb bomb) {
+    public boolean addBomb(final Bomb bomb, final Character character) {
         if (map.addBomb(bomb, bomb.getPos())) { // If the bomb is added to the map
-            boombs.add(bomb); // The bomb is added to the list
+            boombs.put(bomb, character); // The bomb is added to the Map bombs
             return true;
         }
         return false;
@@ -138,7 +149,7 @@ public class BasicBombarderoGameManager implements GameManager {
 
     @Override
     public Optional<Bomb> getBomb(final Pair pos) {
-        return boombs.stream().filter(b -> b.getPos().equals(pos)).findAny();
+        return boombs.entrySet().stream().map(entry -> entry.getKey()).filter(b -> b.getPos().equals(pos)).findAny();
     }
 
     @Override
