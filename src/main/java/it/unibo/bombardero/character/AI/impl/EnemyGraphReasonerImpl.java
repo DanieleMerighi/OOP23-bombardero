@@ -161,12 +161,13 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
 
     private Optional<Pair> findNearestSafeCellRecursive(final Pair enemyCoord, final int explRad,
             final Set<Pair> visited) {
-                List<Pair> adjacentCells = EnumSet.allOf(Direction.class)
+        List<Pair> adjacentCells = EnumSet.allOf(Direction.class)
                 .stream()
                 .map(d -> new Pair(enemyCoord.x() + d.x(), enemyCoord.y() + d.y()))
-                .filter(cell -> isValidCell(cell) && (map.isEmpty(cell) || 
-                         (map.isPowerUp(cell) && map.whichPowerUpType(cell).filter(type -> type != PowerUpType.SKULL).isPresent())) 
-                         && !visited.contains(cell))
+                .filter(cell -> isValidCell(cell) && (map.isEmpty(cell)
+                        || (map.isPowerUp(cell)
+                                && map.whichPowerUpType(cell).filter(type -> type != PowerUpType.SKULL).isPresent()))
+                        && !visited.contains(cell))
                 .collect(Collectors.toCollection(ArrayList::new));
 
         Optional<Pair> safeCell = adjacentCells.stream()

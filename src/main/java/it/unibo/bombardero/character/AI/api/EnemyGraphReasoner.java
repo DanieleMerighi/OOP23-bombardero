@@ -104,4 +104,3 @@ public interface EnemyGraphReasoner {
      */
     Optional<Pair> findNearestPowerUp(Pair enemyCoord);
 }
-
