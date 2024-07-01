@@ -16,45 +16,13 @@ public class BombFactoryImpl implements BombFactory {
     }
 
     @Override
-    public Bomb createBomb(final Character character) {
-        if (!character.getBombType().isPresent()) {
-            return createBasicBomb(character, character.getIntCoordinate());
-        }
-        switch (character.getBombType().get()) {
-            case PIERCING_BOMB:
-                return createPiercingBomb(character, character.getIntCoordinate());
-            case REMOTE_BOMB:
-                return createRemoteBomb(character, character.getIntCoordinate());
-            case POWER_BOMB:
-                return createPowerBomb(character, character.getIntCoordinate());
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    public Bomb createBomb(final Character character, final Pair pos) {
-        if (!character.getBombType().isPresent()) {
-            return createBasicBomb(character, pos);
-        }
-        switch (character.getBombType().get()) {
-            case PIERCING_BOMB:
-                return createPiercingBomb(character, pos);
-            case REMOTE_BOMB:
-                return createRemoteBomb(character, pos);
-            case POWER_BOMB:
-                return createPowerBomb(character, pos);
-            default:
-                return null;
-        }
-    }
-
-    private Bomb createBasicBomb(final Character character, final Pair pos) {
+    public Bomb createBasicBomb(final Character character, final Pair pos) {
         return new BasicBomb(mgr, character, character.getFlameRange(), pos) {
         };
     }
 
-    private Bomb createPiercingBomb(final Character character, final Pair pos) {
+    @Override
+    public Bomb createPiercingBomb(final Character character, final Pair pos) {
         return new BasicBomb(mgr, character, character.getFlameRange(), pos) {
 
             @Override
@@ -75,17 +43,18 @@ public class BombFactoryImpl implements BombFactory {
         };
     }
 
-    private Bomb createPowerBomb(final Character character, final Pair pos) {
+    @Override
+    public Bomb createPowerBomb(final Character character, final Pair pos) {
         return new BasicBomb(mgr, character, BasicBomb.MAX_RANGE, pos) {
         };
     }
 
-    private Bomb createRemoteBomb(final Character character, final Pair pos) {
+    @Override
+    public Bomb createRemoteBomb(final Character character, final Pair pos) {
         return new BasicBomb(mgr, character, character.getFlameRange(), pos) {
 
             @Override
-            public void update() {
-            }
+            public void update() {}
 
             @Override
             public void update(final boolean condition) {

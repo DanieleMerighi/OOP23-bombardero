@@ -192,7 +192,7 @@ public abstract class Character {
      * @return true if the character has placed the bomb, false otherwise
      */
     public boolean placeBomb() {
-        return placeBombImpl(this.bombFactory.createBomb(this));
+        return placeBombImpl(createBomb(getIntCoordinate()));
     }
 
     /**
@@ -203,9 +203,24 @@ public abstract class Character {
      * @return true if the character has placed the bomb, false otherwise
      */
     public boolean placeBomb(final Pair coordinate) {
-        return placeBombImpl(this.bombFactory.createBomb(this, coordinate));
+        return placeBombImpl(createBomb(coordinate));
     }
 
+    private Bomb createBomb(Pair coordinate) {
+        if (!getBombType().isPresent()) {
+            return bombFactory.createBasicBomb(this, this.getIntCoordinate());
+        }
+        switch (this.getBombType().get()) {
+            case PIERCING_BOMB:
+                return bombFactory.createPiercingBomb(this, this.getIntCoordinate());
+            case REMOTE_BOMB:
+                return bombFactory.createRemoteBomb(this, this.getIntCoordinate());
+            case POWER_BOMB:
+                return bombFactory.createPowerBomb(this, this.getIntCoordinate());
+            default:
+                return null;
+        }
+    }
     /**
      * Checks if the character has to place a bomb.
      * 
