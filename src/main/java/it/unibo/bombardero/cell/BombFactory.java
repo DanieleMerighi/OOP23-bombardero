@@ -1,14 +1,21 @@
 package it.unibo.bombardero.cell;
 
-import java.util.Optional;
-
 import it.unibo.bombardero.character.Character;
-import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.map.api.Pair;
 
 public interface BombFactory {
 
-    BasicBomb CreateBomb(Character character, Pair pos);
+    /**
+     * @param character
+     * @param pos
+     * @return a Bomb in the given position with character's caratteristics 
+     */
+    Bomb createBomb(Character character, Pair pos);
 
-    BasicBomb CreateBomb(Character character);
+    /**
+     * @param character
+     * @param pos
+     * @return a Bomb in the character's position with character's caratteristics 
+     */
+    Bomb createBomb(Character character);
 }

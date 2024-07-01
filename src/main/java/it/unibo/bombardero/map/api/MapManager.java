@@ -32,5 +32,5 @@ public interface MapManager {
      * Updates the dynamic aspect of the mapManager, if the manager is in collapse mode then it
      * proceeds with the collapse.
      */ 
-    void update(); 
+    void update(final long timeLeft); 
 }

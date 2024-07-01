@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.BombFactoryImpl;
@@ -60,8 +59,7 @@ public class BombarderoGameManager implements GameManager {
     @Override
     public void updateGame(final long elapsed) {
         gameTime += elapsed;
-        /* TODO: CAPIRE COME FARE A FARE COLLASSO DELLA MAPPA IN GAME MA NON IN GUIDE */
-        map.update();
+        map.update(getTimeLeft());
         if (player.isAlive()) {
             player.update(elapsed);
             ce.checkCharacterCollision(player, this);
@@ -108,9 +106,12 @@ public class BombarderoGameManager implements GameManager {
     }
 
     @Override
-    public boolean addBomb(final BasicBomb bomb) {
-        boombs.add(bomb);
-        return map.addBomb(bomb, bomb.getPos());
+    public boolean addBomb(final Bomb bomb) {
+        if (map.addBomb(bomb, bomb.getPos())) { // If the bomb is added to the map
+            boombs.add(bomb); // The bomb is added to the list
+            return true;
+        }
+        return false;
     }
 
     @Override

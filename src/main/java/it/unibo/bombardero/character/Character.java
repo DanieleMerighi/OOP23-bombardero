@@ -5,7 +5,7 @@ import java.util.Deque;
 import java.awt.geom.Point2D;
 import java.util.ArrayDeque;
 
-import it.unibo.bombardero.cell.BasicBomb;
+import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
@@ -22,14 +22,18 @@ import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 public abstract class Character {
 
     // Constants for default settings
-    public static final float STARTING_SPEED = 0.05f;
+    private static final float BOUNDING_BOX_HEIGHT = 0.75f;
+    private static final float BOUNDING_BOX_WIDTH = 0.700f;
+    private static final float BOUNDING_BOX_Y_OFFSET = 0.2f;
+    private static final float BOUNDING_BOX_X_OFFSET = 0.3f;
+    private static final float STARTING_SPEED = 0.05f;
     private static final float INCREASE_SPEED = 0.005f;
-    public static final int STARTING_FLAME_RANGE = 1;
+    private static final int STARTING_FLAME_RANGE = 1;
     private static final int STARTING_BOMBS = 1;
 
     // Constants for controls
-    public static final float MAX_SPEED = 0.09f;
-    public static final int MAX_FLAME_RANGE = 8;
+    private static final float MAX_SPEED = 0.09f;
+    private static final int MAX_FLAME_RANGE = 8;
     private static final int MAX_BOMBS = 8;
 
     // Game manager reference
@@ -53,15 +57,8 @@ public abstract class Character {
     private int flameRange = STARTING_FLAME_RANGE;
     private float speed = STARTING_SPEED;
     private Optional<PowerUpType> bombType = Optional.empty();
-    private boolean kick; // False by default
-    private boolean lineBomb;
-    private final Deque<BasicBomb> bombQueue = new ArrayDeque<>();
-    /*
-     * TODO: Gestire la rimozione di una bomba se è esplosa per concatenazione con
-     * un'altra
-     * usare character.removeRemoteBomb(BasicBomb bomb); ogni volta che si sta per
-     * far esplodere una remote bomb
-     */
+    private boolean lineBomb;   // False by default
+    private final Deque<Bomb> bombQueue = new ArrayDeque<>();
 
     // Update related
     private boolean hasToPlaceBomb;
@@ -70,10 +67,10 @@ public abstract class Character {
 
     // Skull effects
     private boolean constipation; // The character is unable to lay down bombs
-    private boolean butterfingers; // The character's hand becomes slippery. The character rapidly lay down bombs
+    private boolean butterfingers; // The character's hand becomes slippery. The character rapidly lays down bombs
 
     // Skull manager
-    private long effectDuration; // Indicates the duration of the skull effect
+    private long skeletonEffectDuration; // Indicates the duration of the skull effect
     private Optional<Runnable> resetEffect = Optional.empty(); // Restores all stats modified by the skull
 
     /**
@@ -87,7 +84,7 @@ public abstract class Character {
         this.manager = manager; // TODO: Solve manager, a copy?
         this.coordinate = coord;
         this.bombFactory = bombFactory;
-        this.bBox = new RectangleBoundingBox(new Point2D.Float(0.1562f, 0.0625f), 0.700f, 0.75f);
+        this.bBox = new RectangleBoundingBox(new Point2D.Float(0, 0), BOUNDING_BOX_WIDTH, BOUNDING_BOX_HEIGHT);
     }
 
     /**
@@ -105,9 +102,9 @@ public abstract class Character {
      * @param elapsedTime the time elapsed since the last update
      */
     public void updateSkeleton(final long elapsedTime) {
-        if (this.effectDuration > 0) { // Continues until the duration reaches zero
-            this.effectDuration -= elapsedTime;
-            if (this.effectDuration <= 0) { // When the effect ends the character's stats get resetted
+        if (this.skeletonEffectDuration > 0) { // Continues until the duration reaches zero
+            this.skeletonEffectDuration -= elapsedTime;
+            if (this.skeletonEffectDuration <= 0) { // When the effect ends the character's stats get resetted
                 this.resetEffect.ifPresent(Runnable::run); // If there's a effect to reset, it runs the reset effect
                 this.resetEffect = Optional.empty(); // Clear the reset effect after it has run
             }
@@ -134,7 +131,7 @@ public abstract class Character {
     }
 
     /**
-     * Gets the integer coordinates of the character
+     * Gets the integer coordinates of the character.
      * 
      * @return the map's corrisponding integer coordinates of the character
      */
@@ -144,13 +141,11 @@ public abstract class Character {
     }
 
     /**
-     * @return bounding box of the charachters
+     * @return bounding box of the character
      */
     public BoundingBox getBoundingBox() {
         return bBox;
     }
-
-    // TODO: Change bomb factory. Add bomb pos in the input field
 
     /**
      * Places a bomb at the character's current location if he has bombs left.
@@ -158,7 +153,7 @@ public abstract class Character {
      * @return true if the character has placed the bomb, false otherwise
      */
     public boolean placeBomb() {
-        return placeBombImpl(this.bombFactory.CreateBomb(this));
+        return placeBombImpl(this.bombFactory.createBomb(this));
     }
 
     /**
@@ -169,10 +164,10 @@ public abstract class Character {
      * @return true if the character has placed the bomb, false otherwise
      */
     public boolean placeBomb(final Pair coordinate) {
-        return placeBombImpl(this.bombFactory.CreateBomb(this, coordinate));
+        return placeBombImpl(this.bombFactory.createBomb(this, coordinate));
     }
 
-    private boolean placeBombImpl(final BasicBomb bomb) {
+    private boolean placeBombImpl(final Bomb bomb) {
         if (hasBombsLeft() && !this.constipation && this.manager
                 .addBomb(bomb)) {
             this.numBomb--;
@@ -182,7 +177,6 @@ public abstract class Character {
         return false;
     }
 
-    // TODO: Cambia nome, no get
     /**
      * Checks if the character has to place a bomb.
      * 
@@ -205,15 +199,16 @@ public abstract class Character {
     /**
      * Explodes the first Remote Bomb placed by the character if present.
      */
-    public void explodeRemoteBomb() { // Checks if there's a remote bomb to explode.
-        if (hasPlacedRemoteBomb()) { // Finds the first remote bomb occurrence.
-            final BasicBomb remoteBomb = bombQueue.stream()
+    public void explodeRemoteBomb() {
+        if (hasPlacedRemoteBomb()) { // Checks if there's a remote bomb to explode.
+            // Finds the first remote bomb occurrence.
+            final Bomb remoteBomb = bombQueue.stream()
                     .filter(bomb -> bomb.getBombType().equals(BombType.BOMB_REMOTE))
                     .findFirst()
                     .get();
             remoteBomb.update(true); // Initialises the explosion process.
             removeBombFromDeque(remoteBomb); // Removes the bomb from the deque.
-            System.out.println("exploded remote bomb\n\n");
+            // System.out.println("exploded remote bomb\n\n");
         }
     }
 
@@ -222,14 +217,22 @@ public abstract class Character {
      * 
      * @param explodedBomb the exploded bomb that needs to be removed
      */
-    public void removeBombFromDeque(final BasicBomb explodedBomb) {
+    public void removeBombFromDeque(final Bomb explodedBomb) {
         if (!bombQueue.isEmpty()) {
-            System.out.println("removed remote bomb\n\n");
+            // System.out.println("removed bomb\n\n");
             bombQueue.removeFirstOccurrence(explodedBomb);
         }
     }
 
-    // TODO: Togli get, cambia nome
+    /**
+     * Gets the bomb deque.
+     * 
+     * @return the bomb deque
+     */
+    public Deque<Bomb> getBombQueue() {
+        return new ArrayDeque<>(bombQueue);
+    }
+
     /**
      * Checks if the character has to explode a remote bomb.
      * 
@@ -291,11 +294,11 @@ public abstract class Character {
     /**
      * Sets the current float position of the character.
      * 
-     * @param c the new coordinates of the character
+     * @param coordinates the new coordinates of the character
      */
-    public void setCharacterPosition(final Coord c) {
-        this.coordinate = c;
-        bBox.move(new Point2D.Float(c.x() - (float) (0.781 / 2), c.y() - (float) (0.55 / 2)));
+    public void setCharacterPosition(final Coord coordinates) {
+        this.coordinate = coordinates;
+        bBox.move(new Point2D.Float(coordinates.x() - (float) BOUNDING_BOX_X_OFFSET, coordinates.y() - BOUNDING_BOX_Y_OFFSET));
     }
 
     /**
@@ -373,6 +376,22 @@ public abstract class Character {
     }
 
     /**
+     * Gets the starting flame range of the character.
+     * @return the starting flame range
+     */
+    public static int getStartingFlameRange() {
+        return STARTING_FLAME_RANGE;
+    }
+
+     /**
+     * Gets the max flame range of the character.
+     * @return the max flame range
+     */
+    public static int getMaxFlameRange() {
+        return MAX_FLAME_RANGE;
+    }
+
+    /**
      * Gets the flame range of the bombs placed by the character.
      * 
      * @return the flame range
@@ -408,6 +427,22 @@ public abstract class Character {
         if (this.flameRange > STARTING_FLAME_RANGE) {
             this.flameRange--;
         }
+    }
+
+    /**
+     * Gets the starting speed of the character.
+     * @return the starting speed
+     */
+    public static float getStartingSpeed() {
+        return STARTING_SPEED;
+    }
+
+    /**
+     * Gets the max speed of the character.
+     * @return the max speed
+     */
+    public static float getMaxSpeed() {
+        return MAX_SPEED;
     }
 
     /**
@@ -467,24 +502,6 @@ public abstract class Character {
     }
 
     /**
-     * Checks if the character can kick bombs.
-     * 
-     * @return true if the character can kick bombs, false otherwise
-     */
-    public boolean hasKick() {
-        return kick;
-    }
-
-    /**
-     * Sets the character's ability to kick bombs.
-     * 
-     * @param kick true to enable bomb kicking, false to disable
-     */
-    public void setKick(final boolean kick) {
-        this.kick = kick;
-    }
-
-    /**
      * Checks if the character can use the power-up "line bomb".
      * 
      * @return true if the character can use the power-up "line bomb", false
@@ -503,7 +520,6 @@ public abstract class Character {
         this.lineBomb = lineBomb;
     }
 
-    // TODO: Togli get, cambia nome
     /**
      * Checks if the character has to place a line bomb.
      * 
@@ -516,11 +532,14 @@ public abstract class Character {
     /**
      * Sets whether the character should place a line bomb.
      * 
-     * @param hasToPlaceBomb true to cause the character to place a line bomb, false
+     * @param hasToPlaceLineBomb true to cause the character to place a line bomb, false
      *                       otherwise
      */
     public void setHasToPlaceLineBomb(final boolean hasToPlaceLineBomb) {
-        this.hasToPlaceLineBomb = hasToPlaceLineBomb;
+        // Checks if the character has the line-bomb PowerUp
+        if (hasLineBomb()) {
+            this.hasToPlaceLineBomb = hasToPlaceLineBomb;
+        }
     }
 
     /**
@@ -562,17 +581,17 @@ public abstract class Character {
     }
 
     /**
-     * Sets the effect's duration.
+     * Sets the skeleton effect's duration.
      * 
-     * @param duration the duration of the effect
+     * @param duration the duration of the skeleton effect
      */
-    public void setEffectDuration(final long duration) {
-        this.effectDuration = duration;
+    public void setSkeletonEffectDuration(final long duration) {
+        this.skeletonEffectDuration = duration;
     }
 
     // TODO: write better javadoc
     /**
-     * Gets the reset effect
+     * Gets the reset effect.
      * 
      * @return the reset effect
      */

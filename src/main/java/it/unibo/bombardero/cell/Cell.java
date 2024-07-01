@@ -1,17 +1,17 @@
 package it.unibo.bombardero.cell;
 
+import java.util.Optional;
+
 import it.unibo.bombardero.physics.api.BoundingBox;
 
 /**
  * This interface models an ideal cell provided with a
  * bounding box, a type and a collision
- * @author Federico Bagattoni
- * @author Luca Venturini
- * @author Jacopo Turchi 
+ * 
  */
 public interface Cell {
-    
-    public enum CellType {
+
+    enum CellType {
         WALL_BREAKABLE,
         WALL_UNBREAKABLE,
         BOMB,
@@ -19,10 +19,22 @@ public interface Cell {
         POWERUP;
     }
 
-    boolean getBoundingCollision();
+    /**
+     * 
+     * @return if this Cell needs the boundinding box if is colliding 
+     */
+    boolean haveBoundingCollision();
 
+    /**
+     * 
+     * @return the CellType of this Cell
+     */
     CellType getCellType();
 
-    BoundingBox getBoundingBox();
+    /**
+     * 
+     * @return return the BoundingBox of this Cell 
+     * */
+    Optional<BoundingBox> getBoundingBox();
 
 }

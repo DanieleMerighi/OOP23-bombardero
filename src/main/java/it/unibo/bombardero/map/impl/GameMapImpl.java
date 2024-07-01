@@ -56,8 +56,8 @@ public final class GameMapImpl implements GameMap {
     }
 
     @Override
-    public void update() {
-        mapManager.update();
+    public void update(final long timeLeft) {
+        mapManager.update(timeLeft);
     }
 
     @Override
@@ -66,7 +66,7 @@ public final class GameMapImpl implements GameMap {
     }
 
     @Override
-    public boolean addBomb(final BasicBomb bomb, final Pair coordinate) {
+    public boolean addBomb(final Bomb bomb, final Pair coordinate) {
         /* NOTA: sarebbe una ridondanza controllare anche se è vuota perché se le collisioni
          *  sono fatte bene allora l'unica cosa per cui si deve controllare è la presenza della 
          * bomba */

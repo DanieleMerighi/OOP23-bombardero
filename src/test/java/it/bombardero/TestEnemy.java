@@ -88,7 +88,7 @@ public class TestEnemy {
     @Test
     public void testEnemyEscape_ChangesToWaiting() {
         // Set enemy position inside a danger zone
-        this.manager.getGameMap().addBomb(b.CreateBomb(null), new Pair(0, 1));
+        this.manager.getGameMap().addBomb(b.createBomb(null), new Pair(0, 1));
         this.manager.enemy.update(STANDARD_ELAPSED_TIME);
 
         assertEquals(Enemy.State.ESCAPE, this.manager.enemy.getState());
@@ -165,7 +165,7 @@ public class TestEnemy {
         }
 
         @Override
-        public boolean addBomb(BasicBomb b) {
+        public boolean addBomb(Bomb b) {
             return map.addBomb(b, b.getPos());
         }
 
@@ -206,7 +206,6 @@ public class TestEnemy {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'getBomb'");
         }
-
     }
 
 }

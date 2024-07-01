@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.BombFactoryImpl;
+import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.AI.api.EnemyGraphReasoner;
 import it.unibo.bombardero.character.AI.impl.EnemyGraphReasonerImpl;
 import it.unibo.bombardero.core.impl.BombarderoGameManager;
@@ -25,6 +26,7 @@ public class TestReasoner {
 
     private GameMap map;
     private BombFactory b;
+    private Enemy e;
 
     @BeforeEach
     public void setup() {
@@ -48,7 +50,7 @@ public class TestReasoner {
         Pair enemyCoord = new Pair(enemyX, enemyY);
         Pair bombCell = new Pair(bombX, bombY);
 
-        map.addBomb(b.CreateBomb(null), bombCell);
+        map.addBomb(b.createBomb(null), bombCell);
         assertTrue(map.isBomb(bombCell));
 
         EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
@@ -134,7 +136,7 @@ public class TestReasoner {
         Pair enemyCoord = new Pair(enemyX, enemyY);
         Pair bombCell = new Pair(bombX, bombY);
 
-        map.addBomb(b.CreateBomb(null), bombCell);
+        map.addBomb(b.createBomb(null), bombCell);
         assertTrue(map.isBomb(bombCell));
 
         EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);

@@ -59,7 +59,6 @@ public class GraphBuilderImpl {
     private static void connectWithNeighbors(Graph<Pair, DefaultWeightedEdge> graph, Pair p, GameMap map) {
         EnumSet.allOf(Direction.class)
                 .stream()
-                .filter(d -> d != Direction.DEFAULT)
                 .forEach(direction -> {
                     Pair newCoord = new Pair(p.x() + direction.x(), p.y() + direction.y());
                     if (isValidCell(newCoord.x(), newCoord.y())

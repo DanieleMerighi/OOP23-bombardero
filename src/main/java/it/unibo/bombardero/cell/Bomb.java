@@ -1,13 +1,10 @@
 package it.unibo.bombardero.cell;
 
-import java.util.Map;
-
-import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.map.api.Pair;
 
-public interface Bomb { 
+public interface Bomb extends Cell {
 
-    public enum BombType {
+    enum BombType {
 
         BOMB_BASIC("bomb/basic"),
         BOMB_POWER("bomb/power"),
@@ -17,7 +14,7 @@ public interface Bomb {
 
         private String typeString;
 
-        private BombType(final String typeString) {
+        BombType(final String typeString) {
             this.typeString = typeString;
         }
 
@@ -27,15 +24,38 @@ public interface Bomb {
 
     }
 
+    /**
+     * 
+     * @return true if th ebomb is exploded
+     */
     boolean isExploded();
 
+    /**
+     * the bomb explode if the condition is true
+     * @param condition
+     */
     void update(boolean condition);
 
+    /**
+     * update the bomb
+     */
     void update();
 
+    /**
+     * 
+     * @return the BombType of this Bomb
+     */
     BombType getBombType();
 
+    /**
+     * 
+     * @return the range of this Bomb
+     */
     int getRange();
 
+    /**
+     * 
+     * @return the position of this Bomb
+     */
     Pair getPos();
 }

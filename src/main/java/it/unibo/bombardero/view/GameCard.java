@@ -1,13 +1,14 @@
 package it.unibo.bombardero.view;
 
 import javax.swing.JButton;
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.geom.Rectangle2D;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.BoxLayout;
 import java.awt.Font;
 
 /** 
@@ -42,6 +43,7 @@ public final class GameCard extends GamePlayCard {
         timerPosition = graphics.getResizingEngine().getTimerPosition();
 
         this.setFont(clockFont);
+        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
     }
 
     @Override
@@ -56,8 +58,8 @@ public final class GameCard extends GamePlayCard {
 
     
     public void setPausedView() {
-        // this.add(quitButton, BorderLayout.CENTER);
-        // this.add(resumeButton, BorderLayout.CENTER);
+        this.add(quitButton);
+        this.add(resumeButton);
         this.repaint(0);
     }
 

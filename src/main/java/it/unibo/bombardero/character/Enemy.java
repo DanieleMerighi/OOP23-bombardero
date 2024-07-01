@@ -27,8 +27,8 @@ public class Enemy extends Character {
 
     Optional<Pair> nextMove = Optional.empty();
     private State currentState = State.PATROL; // Initial state
-    private int movementTimer = 0; // Timer for movement updates
     private EnemyGraphReasonerImpl graph;
+    private int waitTimer = -1;
 
     /*
      * Constructs a new Enemy with the specified parameters.
@@ -72,12 +72,21 @@ public class Enemy extends Character {
                         calculateDistance(enemyCoord, coord2)));
     }
 
+    private Optional<Character> getClosestEntity(Pair enemy) {
+        List<Character> allEntities = new ArrayList<>(super.manager.getEnemies());
+        allEntities.add(super.manager.getPlayer());
+
+        return allEntities.stream()
+                .filter(e -> e.getIntCoordinate().equals(getIntCoordinate()))
+                .findAny();
+    }
+
     // when the enemy doesn't know where to move he choose randomly
     private void moveRandomly() {
         Pair currentCoord = getIntCoordinate();
         List<Direction> dirs = EnumSet.allOf(Direction.class)
                 .stream()
-                .filter(d -> d != Direction.DEFAULT)
+                .filter(d -> !nextMove.map(move -> move.equals(currentCoord.sum(new Pair(d.x(), d.y())))).orElse(false))
                 .collect(Collectors.toList());
         while (!dirs.isEmpty()) {
             Direction randomDirection = dirs.remove(new Random().nextInt(dirs.size()));
@@ -90,6 +99,20 @@ public class Enemy extends Character {
         }
         if (nextMove.isEmpty()) {
             System.out.println("Enemy: Stuck! No valid random move found.");
+        }
+    }
+
+    private void moveToClosestEntity() {
+        Optional<Pair> closestEntityOpt = getClosestEntity();
+        if (closestEntityOpt.isPresent()) {
+            Pair closestEntity = closestEntityOpt.get();
+            List<Pair> path = graph.findShortestPathToPlayer(getIntCoordinate(), closestEntity);
+            if (!path.isEmpty()) {
+                nextMove = Optional.of(path.get(0));
+            }
+        } else {
+            // If no entity is found, fallback to random movement or patrol
+            moveRandomly();
         }
     }
 
@@ -113,24 +136,25 @@ public class Enemy extends Character {
         GameMap gameMap = super.manager.getGameMap();
         graph = GraphManagerImpl.getGraphReasoner(gameMap, time);
         currentState.execute(this); // Delegate behavior to current state
-        if (nextMove.isPresent() &&  currentState != State.ESCAPE) {
-            Pair cell = nextMove.get();
-            if (currentState == State.CHASE) {
-                Pair closeEnemy = getClosestEntity().get();
-                Pair currPos = getIntCoordinate();
-                if ((closeEnemy.x() == currPos.x() || closeEnemy.y() == currPos.y())
-                        && !graph.isPathBlockedByWalls(closeEnemy, getIntCoordinate())
-                        && calculateDistance(currPos, closeEnemy) <= getFlameRange()) {
-                    placeBomb();
+        if (nextMove.isPresent()) {
+            if (gameMap.isBreakableWall(nextMove.get())
+                    && graph.findNearestSafeCell(getIntCoordinate(), getFlameRange()).isPresent()) {
+                placeBomb();
+            } else if (calculateDistance(getIntCoordinate(), nextMove.get()) > 1) {
+                List<Pair> l = graph.findShortestPathToPlayer(getIntCoordinate(), nextMove.get());
+                if(l.isEmpty()) {
+                    moveRandomly();
+                } else {
+                    nextMove = Optional.of(l.get(0));
                 }
             }
-            if (gameMap.isUnbreakableWall(cell)) {
-                nextMove = Optional.empty();
-            } else if (gameMap.isBreakableWall(cell)) {
-                placeBomb();
-                nextMove = Optional.empty();
+        } else {
+            waitTimer++;
+            if(waitTimer >= Utils.MAX_WAITING_TIME) {
+                moveRandomly();
             }
         }
+
     }
 
     /**
@@ -139,15 +163,10 @@ public class Enemy extends Character {
      */
     @Override
     public void update(final long elapsedTime) {
-        movementTimer += 1;
         updateSkeleton(elapsedTime);
-        // Every 60 frames (assuming 60 fps), call computeNextDir to get the next target
-        if (movementTimer >= 60 || nextMove.isEmpty()) {
-            movementTimer = movementTimer >= 60 ? 0 : movementTimer;
+        if (nextMove.isEmpty()) {
             computeNextDir(elapsedTime);
-        }
-
-        if (nextMove.isPresent()) {
+        } else if (canMoveOn(nextMove.get())) {
             Coord target = new Coord(nextMove.get().x() + 0.5f, nextMove.get().y() + 0.5f);
             Coord currentPos = getCharacterPosition();
 
@@ -156,7 +175,6 @@ public class Enemy extends Character {
 
             // Restrict movement to 4 directions (up, down, left, right)
             dir = restrictToGridDirections(dir);
-            setFacingDirection(dir);
 
             // Aggiorna la posizione del nemico
             Coord newPos = currentPos.sum(dir.multiply(getSpeed()));
@@ -167,34 +185,44 @@ public class Enemy extends Character {
             } else {
                 setCharacterPosition(newPos);
             }
+        } else {
+            nextMove = Optional.empty();
         }
+    }
+
+    private boolean canMoveOn(Pair cell) {
+        // Check if the cell is empty
+        if (this.manager.getGameMap().isEmpty(cell) || this.manager.getGameMap().isPowerUp(cell)) {
+            return true;
+        }
+
+        // Check if the cell has a bomb, but the enemy is currently on it
+        if (this.manager.getGameMap().isBomb(cell) && getIntCoordinate().equals(cell)) {
+            return true;
+        }
+
+        // In all other cases, the enemy cannot move to the cell
+        return false;
     }
 
     private boolean isReachedTarget(Coord currentPos, Coord target) {
         double distance = currentPos.distanceTo(target);
         // Use a small fixed tolerance value for the distance check
-        return distance <= 0.1;
-    }
-
-    private void setFacingDirection(Coord dir) {
-        Direction newDirection = Stream.of(Direction.values())
-                .filter(d -> !d.equals(Direction.DEFAULT))
-                .filter(d -> d.x() == Integer.signum((int) dir.x()) || d.y() == Integer.signum((int) dir.y()))
-                .findFirst()
-                .orElse(Direction.DEFAULT);
-
-        setFacingDirection(newDirection);
+        return distance <= getSpeed();
     }
 
     private Coord restrictToGridDirections(Coord direction) {
+        Direction newDirection;
         // Limita il movimento alle direzioni principali (orizzontale o verticale)
         if (Math.abs(direction.x()) > Math.abs(direction.y())) {
             // Movimento orizzontale
-            return new Coord(Math.signum(direction.x()), 0);
+            newDirection = direction.x() > 0 ? Direction.RIGHT : Direction.LEFT;
         } else {
             // Movimento verticale
-            return new Coord(0, Math.signum(direction.y()));
+            newDirection = direction.y() > 0 ? Direction.DOWN : Direction.UP;
         }
+        setFacingDirection(newDirection);
+        return new Coord(newDirection.x(), newDirection.y());
     }
 
     /**
@@ -217,7 +245,7 @@ public class Enemy extends Character {
                 } else if (enemy.isEnemyClose()) { // Detected player
                     enemy.currentState = State.CHASE;
                 } else {
-                    enemy.moveRandomly(); // Keep patrolling
+                    enemy.moveToClosestEntity();
                 }
             }
         },
@@ -230,12 +258,23 @@ public class Enemy extends Character {
         CHASE {
             @Override
             void execute(Enemy enemy) {
-                if (!enemy.isEnemyClose()) { // Lost sight of player
-                    enemy.currentState = State.PATROL;
+                if (enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) { // Detected bomb
+                    enemy.currentState = ESCAPE;
+                } else if (!enemy.isEnemyClose()) { // Lost sight of player
+                    enemy.currentState = PATROL;
                 } else {
-                    List<Pair> path = enemy.graph.findShortestPathToPlayer(enemy.getIntCoordinate(),
-                            enemy.manager.getPlayer().getIntCoordinate());
-                    enemy.nextMove = Optional.of(path.get(0));
+                    Pair closeEnemy = enemy.getClosestEntity().get();
+                    Pair currPos = enemy.getIntCoordinate();
+                    if ((closeEnemy.x() == currPos.x() || closeEnemy.y() == currPos.y())) {
+                        if(enemy.calculateDistance(currPos, closeEnemy) <= enemy.getFlameRange()) {
+                            enemy.placeBomb();
+                        } else {
+                            enemy.moveRandomly();
+                        }
+                    } else {
+                        enemy.moveToClosestEntity();
+                    }
+
                 }
             }
         },
@@ -249,16 +288,39 @@ public class Enemy extends Character {
             @Override
             void execute(Enemy enemy) {
                 if (!enemy.graph.isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) { // Safe now
-                    enemy.currentState = State.WAITING;
+                    if(!enemy.getBombQueue().isEmpty()) {
+                        enemy.currentState = WAITING;
+                    } else {
+                        if(enemy.isEnemyClose()) {
+                            Pair closeEnemy = enemy.getClosestEntity().get();
+                            Optional<Character> c = enemy.getClosestEntity(closeEnemy);
+                            if(c.isPresent()) {
+                                Pair newdir = new Pair(-c.get().getFacingDirection().x(), -c.get().getFacingDirection().y());
+                                Pair currPos = enemy.getIntCoordinate();
+                                enemy.nextMove = Optional.of(currPos.sum(newdir));
+                            }
+                        } else {
+                            enemy.currentState = PATROL;
+                        }
+                    }
                 } else {
-                    enemy.nextMove = enemy.graph.findNearestSafeCell(enemy.getIntCoordinate(), enemy.getFlameRange());
+                    enemy.nextMove = enemy.graph.findNearestSafeCell(enemy.getIntCoordinate(),
+                            enemy.getFlameRange());
+                    if (enemy.nextMove.isEmpty()) {
+                        enemy.currentState = WAITING;
+                    }
                 }
             }
         },
         WAITING {
             @Override
             void execute(Enemy enemy) {
-                enemy.nextMove = Optional.empty(); // da cambiare, quando la bomba esplode allora ti muovi
+                enemy.setStationary(true);
+                enemy.nextMove = Optional.empty();
+                if (enemy.getBombQueue().isEmpty()) {
+                    enemy.currentState = PATROL;
+                    enemy.setStationary(false);
+                }
             }
         };
 
