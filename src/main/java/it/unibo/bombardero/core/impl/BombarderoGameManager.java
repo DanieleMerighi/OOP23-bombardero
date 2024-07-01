@@ -3,25 +3,18 @@ package it.unibo.bombardero.core.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
-import edu.umd.cs.findbugs.annotations.OverrideMustInvoke;
 import it.unibo.bombardero.cell.BasicBomb;
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.BombFactoryImpl;
 import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.Flame;
-import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.guide.api.GuideManager;
-import it.unibo.bombardero.guide.impl.BombarderoGuideManager;
-import it.unibo.bombardero.map.api.BombarderoTimer;
-import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
-import it.unibo.bombardero.map.impl.BombarderoTimerImpl;
 import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.physics.impl.BombarderoCollision;
@@ -48,7 +41,7 @@ public class BombarderoGameManager implements GameManager {
     public BombarderoGameManager(final Controller ctrl){
         this.controller = ctrl;
         map = new GameMapImpl();
-        ce = new BombarderoCollision(this);
+        ce = new BombarderoCollision();
         bombFactory = new BombFactoryImpl(this);
         this.player = new Player(this, Utils.PLAYER_SPAWNPOINT, bombFactory);
         enemies.add(new Enemy(this, Utils.ENEMIES_SPAWNPOINT.get(0), bombFactory));
@@ -58,7 +51,7 @@ public class BombarderoGameManager implements GameManager {
     public BombarderoGameManager(final Controller controller, final boolean guideMode) {
         this.controller = controller;
         map = new GameMapImpl(false);
-        ce = new BombarderoCollision(this);
+        ce = new BombarderoCollision();
         bombFactory = new BombFactoryImpl(this);
         this.player = new Player(this, GuideManager.PLAYER_GUIDE_SPAWNPOINT, bombFactory);
         this.map.addBreakableWall(GuideManager.CRATE_GUIDE_SPAWNPOINT);
@@ -71,8 +64,8 @@ public class BombarderoGameManager implements GameManager {
         map.update();
         if (player.isAlive()) {
             player.update(elapsed);
-            ce.checkCharacterCollision(player);
-            ce.checkFlameAndPowerUpCollision(player);
+            ce.checkCharacterCollision(player, this);
+            ce.checkFlameAndPowerUpCollision(player, this);
         }
         if(!boombs.isEmpty()) {
             boombs.forEach(b->b.update());
@@ -85,8 +78,8 @@ public class BombarderoGameManager implements GameManager {
         enemies.forEach(enemy -> {
              if (enemy.isAlive()) {
                  enemy.update(elapsed);
-                 ce.checkCharacterCollision(enemy);
-                 ce.checkCharacterCollision(enemy);
+                 ce.checkCharacterCollision(enemy, this);
+                 ce.checkCharacterCollision(enemy, this);
              }
         });
         /*if(enemies.get(0).isAlive()){
