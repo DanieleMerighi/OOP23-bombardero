@@ -12,8 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import it.unibo.bombardero.character.AI.api.EnemyGraphReasoner;
-import it.unibo.bombardero.character.AI.impl.EnemyGraphReasonerImpl;
+import it.unibo.bombardero.character.ai.api.EnemyGraphReasoner;
+import it.unibo.bombardero.character.ai.impl.EnemyGraphReasonerImpl;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.map.impl.GameMapImpl;

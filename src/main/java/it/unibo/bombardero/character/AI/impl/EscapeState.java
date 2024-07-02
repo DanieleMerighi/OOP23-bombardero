@@ -1,9 +1,9 @@
-package it.unibo.bombardero.character.AI.impl;
+package it.unibo.bombardero.character.ai.impl;
 
 import java.util.Optional;
 
 import it.unibo.bombardero.character.Enemy;
-import it.unibo.bombardero.character.AI.api.EnemyState;
+import it.unibo.bombardero.character.ai.api.AbstractEnemyState;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.character.Character;
@@ -14,7 +14,7 @@ import it.unibo.bombardero.character.Character;
  * and sets it as the next move target.
  * - Transitions back to PATROL if it reaches a safe space.
  */
-public class EscapeState implements EnemyState {
+public class EscapeState extends AbstractEnemyState {
 
     /**
      * Executes the behavior associated with this enemy state.
@@ -48,16 +48,4 @@ public class EscapeState implements EnemyState {
             }
         }
     }
-
-    /**
-     * Checks if this enemy state is equal to another state.
-     *
-     * @param obj the other enemy state to compare with
-     * @return true if this state is equal to the other state, false otherwise
-     */
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof EscapeState;
-    }
-
 }

@@ -1,11 +1,11 @@
-package it.unibo.bombardero.character.AI.impl;
+package it.unibo.bombardero.character.ai.impl;
 
 import java.util.Optional;
 import java.util.List;
 
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.Enemy;
-import it.unibo.bombardero.character.AI.api.EnemyState;
+import it.unibo.bombardero.character.ai.api.AbstractEnemyState;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
@@ -15,7 +15,7 @@ import it.unibo.bombardero.map.api.Pair;
  * power-up
  * while avoiding danger zones.
  */
-public class ExploringState implements EnemyState {
+public class ExploringState extends AbstractEnemyState {
 
     /**
      * Executes the behavior associated with this enemy state.
@@ -48,16 +48,4 @@ public class ExploringState implements EnemyState {
             enemy.setState(new PatrolState());
         }
     }
-
-    /**
-     * Checks if this enemy state is equal to another state.
-     *
-     * @param obj the other enemy state to compare with
-     * @return true if this state is equal to the other state, false otherwise
-     */
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof ExploringState;
-    }
-
 }

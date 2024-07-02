@@ -1,4 +1,4 @@
-package it.unibo.bombardero.character.AI.api;
+package it.unibo.bombardero.character.ai.api;
 
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.core.api.GameManager;

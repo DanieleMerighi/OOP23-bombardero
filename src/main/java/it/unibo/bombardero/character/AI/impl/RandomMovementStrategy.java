@@ -1,4 +1,4 @@
-package it.unibo.bombardero.character.AI.impl;
+package it.unibo.bombardero.character.ai.impl;
 
 import java.util.Optional;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.character.Enemy;
-import it.unibo.bombardero.character.AI.api.MovementStrategy;
+import it.unibo.bombardero.character.ai.api.MovementStrategy;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;

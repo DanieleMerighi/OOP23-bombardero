@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import it.unibo.bombardero.character.AI.impl.ChaseState;
-import it.unibo.bombardero.character.AI.impl.EscapeState;
-import it.unibo.bombardero.character.AI.impl.PatrolState;
+import it.unibo.bombardero.character.ai.impl.ChaseState;
+import it.unibo.bombardero.character.ai.impl.EscapeState;
+import it.unibo.bombardero.character.ai.impl.PatrolState;
 import it.unibo.bombardero.map.api.Pair;
 
 /**

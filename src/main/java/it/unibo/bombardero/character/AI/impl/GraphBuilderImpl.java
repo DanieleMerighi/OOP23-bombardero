@@ -1,4 +1,4 @@
-package it.unibo.bombardero.character.AI.impl;
+package it.unibo.bombardero.character.ai.impl;
 
 import java.util.stream.IntStream;
 import java.util.stream.Stream;

@@ -1,4 +1,4 @@
-package it.unibo.bombardero.character.AI.impl;
+package it.unibo.bombardero.character.ai.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,7 +21,7 @@ import org.jgrapht.traverse.BreadthFirstIterator;
 
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.Direction;
-import it.unibo.bombardero.character.AI.api.EnemyGraphReasoner;
+import it.unibo.bombardero.character.ai.api.EnemyGraphReasoner;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.utils.Utils;

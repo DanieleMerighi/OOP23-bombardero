@@ -1,4 +1,4 @@
-package it.unibo.bombardero.character.AI.api;
+package it.unibo.bombardero.character.ai.api;
 
 import java.util.Optional;
 
