@@ -13,7 +13,6 @@ import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.physics.api.BoundingBox;
-import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 
 /**
  * Abstract class representing a character in the game.
@@ -22,8 +21,8 @@ import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 public abstract class Character {
 
     // Constants for default settings
-    private static final float BOUNDING_BOX_HEIGHT = 0.75f;
-    private static final float BOUNDING_BOX_WIDTH = 0.700f;
+    public static final float BOUNDING_BOX_HEIGHT = 0.75f;
+    public static final float BOUNDING_BOX_WIDTH = 0.700f;
     private static final float BOUNDING_BOX_Y_OFFSET = 0.2f;
     private static final float BOUNDING_BOX_X_OFFSET = 0.3f;
     private static final float STARTING_SPEED = 0.05f;
@@ -44,8 +43,10 @@ public abstract class Character {
     // Indicates where the character is looking
     private Direction facingDirection = Direction.DOWN; // Starting character facingDirection
     private boolean stationary = true;
+
     // Hit box of the Character
     private final BoundingBox bBox; // Solid area of the character
+
     // Game attribute related
     private boolean isAlive = true;
     private int numBomb = STARTING_BOMBS;
@@ -115,10 +116,10 @@ public abstract class Character {
      * @param coord       the initial coordinates where the character is spawned
      * @param bombFactory the factory to create bombs
      */
-    public Character(final Coord coord, final BombFactory bombFactory) {
+    public Character(final Coord coord, final BombFactory bombFactory, final BoundingBox bBox) {
         this.coordinate = coord;
         this.bombFactory = bombFactory;
-        this.bBox = new RectangleBoundingBox(new Point2D.Float(0, 0), BOUNDING_BOX_WIDTH, BOUNDING_BOX_HEIGHT);
+        this.bBox = bBox;
     }
 
     /**
@@ -128,14 +129,14 @@ public abstract class Character {
      * 
      * @param elapsedTime the time elapsed since the last update
      */
-    public abstract void update(long elapsedTime);
+    public abstract void update(long elapsedTime, GameManager manager);
 
     /**
      * Updates the skeleton's effects.
      * 
      * @param elapsedTime the time elapsed since the last update
      */
-    public void updateSkeleton(final long elapsedTime) {
+    public void updateSkeleton(final long elapsedTime, final GameManager manager) {
         if (this.skeletonEffectDuration > 0) { // Continues until the duration reaches zero
             this.skeletonEffectDuration -= elapsedTime;
             if (this.skeletonEffectDuration <= 0) { // When the effect ends the character's stats get resetted
@@ -144,7 +145,7 @@ public abstract class Character {
                 this.resetEffect = Optional.empty(); // Clear the reset effect after it has run
             }
             if (this.butterfingers) { // If the character has butterfingers, he places a bomb
-                placeBomb();
+                placeBomb(manager);
             }
         }
     }
@@ -187,8 +188,8 @@ public abstract class Character {
      * 
      * @return true if the character has placed the bomb, false otherwise
      */
-    public boolean placeBomb() {
-        return placeBombImpl(this.bombFactory.createBomb(this));
+    public boolean placeBomb(final GameManager manager) {
+        return placeBombImpl(createBomb(getIntCoordinate()), manager);
     }
 
     /**
@@ -198,10 +199,25 @@ public abstract class Character {
      * 
      * @return true if the character has placed the bomb, false otherwise
      */
-    public boolean placeBomb(final Pair coordinate) {
-        return placeBombImpl(this.bombFactory.createBomb(this, coordinate));
+    public boolean placeBomb(final Pair coordinate, final GameManager manager) {
+        return placeBombImpl(createBomb(coordinate), manager);
     }
 
+    private Bomb createBomb(Pair coordinate) {
+        if (!getBombType().isPresent()) {
+            return bombFactory.createBasicBomb(this.getFlameRange(), this.getIntCoordinate());
+        }
+        switch (this.getBombType().get()) {
+            case PIERCING_BOMB:
+                return bombFactory.createPiercingBomb(this.getFlameRange(), this.getIntCoordinate());
+            case REMOTE_BOMB:
+                return bombFactory.createRemoteBomb(this.getFlameRange(), this.getIntCoordinate());
+            case POWER_BOMB:
+                return bombFactory.createPowerBomb(this.getIntCoordinate());
+            default:
+                return null;
+        }
+    }
     /**
      * Checks if the character has to place a bomb.
      * 
@@ -243,9 +259,10 @@ public abstract class Character {
      * @param explodedBomb the exploded bomb that needs to be removed
      */
     public void removeBombFromDeque(final Bomb explodedBomb) {
-        if (!bombQueue.isEmpty()) {
+        if (!bombQueue.isEmpty() && bombQueue.removeFirstOccurrence(explodedBomb)) {
             // System.out.println("removed bomb\n\n");
-            bombQueue.removeFirstOccurrence(explodedBomb);
+            this.increaseNumBomb();
+            
         }
     }
 
@@ -603,9 +620,8 @@ public abstract class Character {
         this.resetEffect = Optional.of(resetEffect);
     }
 
-    private boolean placeBombImpl(final Bomb bomb) {
-        if (hasBombsLeft() && !this.constipation && this.manager
-                .addBomb(bomb)) {
+    private boolean placeBombImpl(final Bomb bomb, final GameManager manager) {
+        if (hasBombsLeft() && !this.constipation && manager.addBomb(bomb, this)) {
             this.numBomb--;
             bombQueue.addLast(bomb);
             return true;

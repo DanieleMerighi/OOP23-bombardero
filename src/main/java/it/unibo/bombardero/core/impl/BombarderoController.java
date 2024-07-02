@@ -21,14 +21,15 @@ public class BombarderoController implements Controller {
     private GameManager manager;
     private Engine engine;
 
-    public BombarderoController(final BombarderoGraphics graphics) {
-        this.graphics = graphics;
+    private boolean isGamePaused = false;
+
+    public BombarderoController() {
+        this.graphics = new BombarderoGraphics(this);
     }
 
     @Override
     public void startGame() {
         this.manager = new FullBombarderoGameManager(this);
-        engine = new BombarderoEngine(this, this.graphics, this.manager);
         graphics.initGameCard();
         graphics.showCard(BombarderoGraphics.GAME_CARD);
         engine.startGameLoop();
@@ -43,8 +44,6 @@ public class BombarderoController implements Controller {
     @Override
     public void startGuide() {
         this.manager = new BombarderoGuideManager(this);
-        engine = new BombarderoEngine(this, this.graphics, this.manager);
-        graphics.initGuideCard();
         graphics.showCard(BombarderoGraphics.GUIDE_CARD);
         engine.startGameLoop();
         toggleMessage(BombarderoViewMessages.EXPLAIN_MOVEMENT);
@@ -53,7 +52,7 @@ public class BombarderoController implements Controller {
     @Override
     public void endGuide() {
         engine.endGameLoop();
-        graphics.update();
+        graphics.update(getMap(), List.of(), getEnemies());
     }
 
     @Override
@@ -64,14 +63,19 @@ public class BombarderoController implements Controller {
 
     @Override
     public void escape() {
-        if (!engine.isInterrupted()) {
+        if (!isGamePaused) {
             graphics.setPausedView();
-            engine.pauseGameLoop();
+            isGamePaused = true;
         }
         else {
-            engine.resumeGameLoop();
+            isGamePaused = false;
             graphics.setUnpausedView();
         }
+    }
+
+    public void updateModel(final long elapsed) {
+        manager.updateGame(elapsed);
+        graphics.update(getMap(), List.of(), getEnemies());
     }
 
     @Override
@@ -81,7 +85,7 @@ public class BombarderoController implements Controller {
     
     @Override
     public boolean isGamePaused() {
-        return engine.isInterrupted();
+        return isGamePaused;
     }
 
     @Override

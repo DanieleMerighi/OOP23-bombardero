@@ -12,15 +12,17 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
-
 import java.util.Map; 
 import java.util.HashMap; 
 import java.util.Optional; 
+import java.util.List; 
 
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.view.sprites.api.Sprite;
 import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
+import it.unibo.bombardero.cell.Cell;
+import it.unibo.bombardero.character.Character;
+import it.unibo.bombardero.map.api.Pair;
 
 /**
  * This class contains the panel for the Guide of
@@ -32,7 +34,7 @@ import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
  * through appropriate methods.
  * @author Federico Bagattoni
  */
-public final class GuideCard extends GamePlayCard{
+public final class GuideCard extends GamePlayCard {
 
     private transient Image startImage;
     private transient Image backImage;
@@ -52,8 +54,10 @@ public final class GuideCard extends GamePlayCard{
 
     private transient final Map<Sprite, Dimension> spritesPlacingPoint = new HashMap<>();
 
-    public GuideCard(final JFrame parentFrame, final Controller controller, final BombarderoGraphics graphics, final ResourceGetter resourceGetter, final ResizingEngine resizingEngine) {
-        super(graphics);
+    public GuideCard(final Controller controller, final BombarderoGraphics graphics, final Map<Pair, Cell> gameMap, List<Character> playersList, List<Character> enemiesList) {
+        super(graphics, gameMap, playersList, enemiesList);
+
+        final ResourceGetter resourceGetter = graphics.getResourceGetter();
 
         // CHECKSTYLE: MagicNumber OFF
         font = resourceGetter.loadFont("mono");

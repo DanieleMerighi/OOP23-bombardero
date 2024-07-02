@@ -24,8 +24,8 @@ public final class FullBombarderoGameManager extends BasicBombarderoGameManager 
 
     @Override
     public void updateGame(final long elapsed) {
-        super.updateGame(elapsed);
         gameTime += elapsed;
+        super.updateGame(elapsed);
     }
 
     @Override

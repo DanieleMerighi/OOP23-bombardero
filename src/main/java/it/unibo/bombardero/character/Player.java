@@ -4,6 +4,7 @@ import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.powerup.impl.PowerUpImpl;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
+import it.unibo.bombardero.physics.api.BoundingBox;
 
 /**
  * This class represents a Player in the game.
@@ -19,8 +20,8 @@ public class Player extends Character {
      * @param coord       the initial coordinates where the player is spawned
      * @param bombFactory the factory to create bombs
      */
-    public Player(final Coord coord, final BombFactory bombFactory) {
-        super(coord, bombFactory);
+    public Player(final Coord coord, final BombFactory bombFactory, final BoundingBox bBox) {
+        super(coord, bombFactory, bBox);
     }
 
     /**
@@ -29,10 +30,10 @@ public class Player extends Character {
      * input.
      */
     @Override
-    public void update(final long elapsedTime) {
+    public void update(final long elapsedTime, final GameManager manager) {
         // Skeleton effect:
         if (getResetEffect().isPresent()) { // If there's a Task to reset
-            updateSkeleton(elapsedTime);
+            updateSkeleton(elapsedTime, manager);
         }
         // Player movement:
         if (!isStationary()) { // If he's not stationary, computes the new position
@@ -40,12 +41,12 @@ public class Player extends Character {
         }
         // Place bomb:
         if (getHasToPlaceBomb()) {
-            placeBomb();
+            placeBomb(manager);
             setHasToPlaceBomb(false);
         }
         // Place line bomb:
         if (getHasToPlaceLineBomb()) {
-            PowerUpImpl.placeLineBomb(this, super.manager.getGameMap().getMap(), getFacingDirection());
+            PowerUpImpl.placeLineBomb(this, manager.getGameMap().getMap(), getFacingDirection());
             setHasToPlaceLineBomb(false);
         }
         // Explode remote bomb:

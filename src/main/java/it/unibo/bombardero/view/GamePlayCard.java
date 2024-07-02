@@ -61,7 +61,7 @@ public class GamePlayCard extends JPanel {
     /* References to model components: */
     private transient final BombarderoGraphics graphics;
     private transient Map<Pair, Cell> cells;
-    private transient Character player;
+    private transient List<Character> playersList;
     private transient final Map<Character, SpriteImageCombo> characterImages = new HashMap<>(); // every enemy is linked to its own sprite
     private transient List<Character> enemiesList;
 
@@ -76,26 +76,17 @@ public class GamePlayCard extends JPanel {
     private final Dimension mapPlacingPoint;
 
 
-    public GamePlayCard(final BombarderoGraphics graphics) {
+    public GamePlayCard(final BombarderoGraphics graphics, final Map<Pair, Cell> map, final List<Character> playersList, final List<Character> enemies) {
         this.graphics = graphics;
         this.setMinimumSize(graphics.getResizingEngine().getMapSize());
         this.setLayout(new BorderLayout());
 
         mapPlacingPoint = graphics.getResizingEngine().getMapPlacingPoint();
-
-        cells = graphics.getController().getMap(); 
-        player = graphics.getController().getMainPlayer();
-        enemiesList = graphics.getController().getEnemies();
-
-        checkForNewEnemies();
-
         flamesSprite = new BombarderoFlameSprite(500, 6, graphics.getResizingEngine()::getScaledCellImage, resourceGetter);
-        OrientedSprite playerSprite = new BombarderoOrientedSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
-        Image playerImage = playerSprite.getStandingImage();
-        characterImages.put(player, new SpriteImageCombo(playerSprite, playerImage, "main"));
         normalBomb = new SimpleBombarderoSprite("bomb", resourceGetter, graphics.getResizingEngine()::getScaledBombImage, 4);
         bomb_image = normalBomb.getImage();
 
+        updateGameState(map, playersList, enemies);
         scaleEverything();
     }
 
@@ -186,15 +177,14 @@ public class GamePlayCard extends JPanel {
         });
     }
 
-    public void updateGameState(final Map<Pair, Cell> map, final Character player, final List<Character> enemiesList) {
+    public void updateGameState(final Map<Pair, Cell> map, final List<Character> playersList, final List<Character> enemiesList) {
         cells = Map.copyOf(map);
-        this.player = player;
+        this.playersList = List.copyOf(playersList);
         this.enemiesList = List.copyOf(enemiesList);
-        updateSprites();
     }
 
     public void updateSprites() {
-        checkForNewEnemies();
+        checkForNewCharacters();
 
         characterImages.entrySet().forEach(character -> {
             character.getValue().sprite.update();
@@ -242,7 +232,7 @@ public class GamePlayCard extends JPanel {
         skull = graphics.getResizingEngine().getScaledCellImage(skull);
     }
 
-    private void checkForNewEnemies() {
+    private void checkForNewCharacters() {
         enemiesList.stream()
             .filter(enemy -> !characterImages.keySet().contains(enemy))
             .forEach(enemy -> {
@@ -254,6 +244,20 @@ public class GamePlayCard extends JPanel {
                     new SpriteImageCombo(
                         sprite,
                         sprite.getStandingImage(),
+                        colorCode
+                    )
+                );
+            });
+        playersList.stream()
+            .filter(player -> !characterImages.keySet().contains(player))
+            .forEach(player -> {
+                String colorCode = "main";
+                OrientedSprite playerSprite = new BombarderoOrientedSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
+                characterImages.put(
+                    player,
+                    new SpriteImageCombo(
+                        playerSprite,
+                        playerSprite.getStandingImage(),
                         colorCode
                     )
                 );

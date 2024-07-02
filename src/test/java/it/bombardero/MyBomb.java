@@ -1,8 +1,12 @@
 package it.bombardero;
 
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 
 import it.unibo.bombardero.cell.Bomb;
+import it.unibo.bombardero.cell.Flame.FlameType;
+import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.physics.api.BoundingBox;
 
@@ -101,5 +105,11 @@ public class MyBomb implements Bomb{
     public boolean haveBoundingCollision() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'haveBoundingCollision'");
+    }
+
+    @Override
+    public Set<Entry<Pair, FlameType>> computeFlame(GameManager mgr) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'computeFlame'");
     }
 }

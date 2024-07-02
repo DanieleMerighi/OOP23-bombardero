@@ -3,6 +3,7 @@ package it.unibo.bombardero.core;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.Engine;
 import it.unibo.bombardero.core.api.GameManager;
+import it.unibo.bombardero.core.impl.BombarderoController;
 import it.unibo.bombardero.view.BombarderoGraphics;
 /**
  * This class implements the concept of the game engine expressed 
@@ -17,8 +18,8 @@ public final class BombarderoEngine extends Thread implements Engine {
 
     private final static long SLEEP_TIME = 16L; // Time during which the thread sleeps, equivalent to about 60FPS
     
-    private final GameManager manager;
-    private final BombarderoGraphics graphics;
+    //private final GameManager manager;
+    //private final BombarderoGraphics graphics;
     private Controller controller;
     private boolean isGameInterrupted;
     private boolean isGameOver;
@@ -30,10 +31,8 @@ public final class BombarderoEngine extends Thread implements Engine {
      * @param graphics
      * @param manager
      */
-    public BombarderoEngine(final Controller controller, final BombarderoGraphics graphics, final GameManager manager) {
-        this.controller = controller;
-        this.graphics = graphics;
-        this.manager = manager;
+    public BombarderoEngine() {
+        this.controller = new BombarderoController();
     }
 
     @Override
@@ -42,9 +41,8 @@ public final class BombarderoEngine extends Thread implements Engine {
         while (!isGameOver) {
             final long currentCycleStartTime = System.currentTimeMillis();
             final long elapsed = currentCycleStartTime - previousCycleStartTime;
-            if (!isGameInterrupted) {
-                manager.updateGame(elapsed);
-                graphics.update();
+            if (controller.isGamePaused()) {
+                controller.updateModel(elapsed);
             }
             waitForNextFrame(currentCycleStartTime);
             previousCycleStartTime = currentCycleStartTime;
@@ -56,25 +54,6 @@ public final class BombarderoEngine extends Thread implements Engine {
     public void startGameLoop() {
         isGameOver = false;
         this.start();
-    }
-
-    @Override
-    public synchronized void pauseGameLoop() {
-        /*try {
-            BombarderoEngine.this.wait();
-        } catch (InterruptedException e) {
-            System.err.println("Exception thrown in main loop: interrupted exception calling Thread.wait()");
-            e.printStackTrace();
-        } */
-        isGameInterrupted = true;
-    }
-
-    @Override
-    public synchronized void resumeGameLoop() {
-        /* if (this.isInterrupted()) {
-            this.notify();
-        } */
-        isGameInterrupted = false;
     }
 
     @Override

@@ -17,6 +17,7 @@ import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.physics.api.BoundingBox;
 import it.unibo.bombardero.utils.Utils;
 
 /**
@@ -43,8 +44,8 @@ public class Enemy extends Character {
      * 
      * @param bombFactory the factory to create bombs
      */
-    public Enemy(final Coord coord, final BombFactory bombFactory) {
-        super(coord, bombFactory);
+    public Enemy(final Coord coord, final BombFactory bombFactory, BoundingBox bBox) {
+        super(coord, bombFactory, bBox);
         setStationary(true);
         setFacingDirection(Direction.UP);
     }
@@ -148,11 +149,11 @@ public class Enemy extends Character {
             }
             if (!isStateEqualTo(new EscapeState())
                     && gameMap.whichPowerUpType(nextMove.get()).map(c -> c == PowerUpType.SKULL).orElse(false)) {
-                placeBomb();
+                placeBomb(manager);
                 nextMove = Optional.empty();
             } else if (gameMap.isBreakableWall(nextMove.get())
                     && graph.findNearestSafeCell(getIntCoordinate(), getFlameRange()).isPresent()) {
-                placeBomb();
+                placeBomb(manager);
             }
         } else {
             waitTimer++;

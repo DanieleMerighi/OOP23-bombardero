@@ -1,64 +1,28 @@
 package it.unibo.bombardero.cell;
 
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.character.Character;
+import it.unibo.bombardero.cell.Bomb.BombType;
+import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 
 
 //TODO dividere la logica fare una factory normale  
 //chiedere a baga del menu fare un po di grafica rendere Pair generico e magari fare due classi specifiche
 //in generale cercare di rendere il tutto piu generico
 public class BombFactoryImpl implements BombFactory {
-    private final GameManager mgr;
 
-    public BombFactoryImpl(final GameManager mgr) {
-        this.mgr = mgr;
+    @Override
+    public Bomb createBasicBomb(final int range, final Pair pos) {
+        return new BasicBomb(BombType.BOMB_BASIC, range, pos, new RectangleBoundingBox(pos.x(), pos.y(), 1.0f , 1.0f)) {};
     }
 
     @Override
-    public Bomb createBomb(final Character character) {
-        if (!character.getBombType().isPresent()) {
-            return createBasicBomb(character, character.getIntCoordinate());
-        }
-        switch (character.getBombType().get()) {
-            case PIERCING_BOMB:
-                return createPiercingBomb(character, character.getIntCoordinate());
-            case REMOTE_BOMB:
-                return createRemoteBomb(character, character.getIntCoordinate());
-            case POWER_BOMB:
-                return createPowerBomb(character, character.getIntCoordinate());
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    public Bomb createBomb(final Character character, final Pair pos) {
-        if (!character.getBombType().isPresent()) {
-            return createBasicBomb(character, pos);
-        }
-        switch (character.getBombType().get()) {
-            case PIERCING_BOMB:
-                return createPiercingBomb(character, pos);
-            case REMOTE_BOMB:
-                return createRemoteBomb(character, pos);
-            case POWER_BOMB:
-                return createPowerBomb(character, pos);
-            default:
-                return null;
-        }
-    }
-
-    private Bomb createBasicBomb(final Character character, final Pair pos) {
-        return new BasicBomb(mgr, character, character.getFlameRange(), pos) {
-        };
-    }
-
-    private Bomb createPiercingBomb(final Character character, final Pair pos) {
-        return new BasicBomb(mgr, character, character.getFlameRange(), pos) {
+    public Bomb createPiercingBomb(final int range, final Pair pos) {
+        return new BasicBomb(BombType.BOMB_PIERCING, range, pos, new RectangleBoundingBox(pos.x(), pos.y(), 1.0f , 1.0f)) {
 
             @Override
-            public boolean isBreckableWall(final Pair pos) {
+            public boolean isBreckableWall(final Pair pos, GameMap map, GameManager mgr) {
                 if (mgr.getGameMap().isBreakableWall(pos) && isLastWall(pos)) {
                     mgr.removeWall(pos);
                     return true;
@@ -75,22 +39,21 @@ public class BombFactoryImpl implements BombFactory {
         };
     }
 
-    private Bomb createPowerBomb(final Character character, final Pair pos) {
-        return new BasicBomb(mgr, character, BasicBomb.MAX_RANGE, pos) {
-        };
+    @Override
+    public Bomb createPowerBomb(final Pair pos) {
+        return new BasicBomb(BombType.BOMB_POWER, BasicBomb.MAX_RANGE, pos, new RectangleBoundingBox(pos.x(), pos.y(), 1.0f , 1.0f)) {};
     }
 
-    private Bomb createRemoteBomb(final Character character, final Pair pos) {
-        return new BasicBomb(mgr, character, character.getFlameRange(), pos) {
+    @Override
+    public Bomb createRemoteBomb(final int range, final Pair pos) {
+        return new BasicBomb(BombType.BOMB_REMOTE, range, pos, new RectangleBoundingBox(pos.x(), pos.y(), 1.0f , 1.0f)) {
 
             @Override
-            public void update() {
-            }
+            public void update() {}
 
             @Override
             public void update(final boolean condition) {
                 super.update(condition);
-                character.removeBombFromDeque(this);
             }
         };
     }

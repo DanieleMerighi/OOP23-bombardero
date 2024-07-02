@@ -1,6 +1,8 @@
 package it.unibo.bombardero.core.impl;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +19,7 @@ import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.physics.impl.BombarderoCollision;
+import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;
@@ -33,7 +36,7 @@ public class BasicBombarderoGameManager implements GameManager {
     public final static long GAME_OVER_TIME = 0L;
     
     private final GameMap map;
-    private final List<Bomb> boombs = new ArrayList<>();
+    private final Map<Bomb, Character> boombs = new HashMap<>();
     private final List<Flame> flames = new ArrayList<>();
     private final List<Character> enemies = new ArrayList<>();
     private final Character player;
@@ -59,9 +62,11 @@ public class BasicBombarderoGameManager implements GameManager {
         this.controller = controller;
         map = new GameMapImpl(generateWalls);
         ce = new BombarderoCollision();
-        bombFactory = new BombFactoryImpl(this);
-        this.player = new Player(this, playerSpawnPoint, bombFactory);
-        enemiesSpawnpoint.forEach(spawnpoint -> enemies.add(new Enemy(this, spawnpoint, bombFactory)));
+        bombFactory = new BombFactoryImpl();
+        this.player = new Player(this, playerSpawnPoint, bombFactory, 
+            new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
+        enemiesSpawnpoint.forEach(spawnpoint -> enemies.add(new Enemy(this, spawnpoint, bombFactory, 
+            new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT))));
     }
 
     /**
@@ -86,20 +91,29 @@ public class BasicBombarderoGameManager implements GameManager {
             ce.checkFlameAndPowerUpCollision(player, this);
         }
         if (!boombs.isEmpty()) {
-            boombs.forEach(b -> b.update());
-            boombs.removeIf(b -> b.isExploded());
+            boombs.entrySet().forEach(entry -> entry.getKey().update());
+            placeBombexplosion();
         }
         if (!flames.isEmpty()) {
             flames.forEach(f -> f.update(elapsed));
-            flames.removeIf(f -> f.isExpired());
+            List.copyOf(flames).stream().filter(f->f.isExpired()).peek(f->flames.remove(f)).forEach(f->removeFlame(f.getPos()));
         }
         enemies.forEach(enemy -> {
              if (enemy.isAlive()) {
                  enemy.update(elapsed);
                  ce.checkCharacterCollision(enemy, this);
-                 ce.checkCharacterCollision(enemy, this);
+                 ce.checkFlameAndPowerUpCollision(enemy, this);
              }
         });
+    }
+
+    private void placeBombexplosion() {
+        Map.copyOf(boombs).entrySet().stream()
+            .filter(entry -> entry.getKey().isExploded())
+            .peek(entry -> boombs.remove(entry.getKey()))
+            .peek(entry -> entry.getValue().removeBombFromDeque(entry.getKey()))
+            .map(entry -> entry.getKey().computeFlame(this))
+            .forEach(set -> set.forEach(entry -> addFlame(entry.getValue(), entry.getKey())));
     }
 
     @Override
@@ -123,9 +137,9 @@ public class BasicBombarderoGameManager implements GameManager {
     }
 
     @Override
-    public boolean addBomb(final Bomb bomb) {
+    public boolean addBomb(final Bomb bomb, final Character character) {
         if (map.addBomb(bomb, bomb.getPos())) { // If the bomb is added to the map
-            boombs.add(bomb); // The bomb is added to the list
+            boombs.put(bomb, character); // The bomb is added to the Map bombs
             return true;
         }
         return false;
@@ -138,7 +152,7 @@ public class BasicBombarderoGameManager implements GameManager {
 
     @Override
     public Optional<Bomb> getBomb(final Pair pos) {
-        return boombs.stream().filter(b -> b.getPos().equals(pos)).findAny();
+        return boombs.entrySet().stream().map(entry -> entry.getKey()).filter(b -> b.getPos().equals(pos)).findAny();
     }
 
     @Override
@@ -148,7 +162,7 @@ public class BasicBombarderoGameManager implements GameManager {
 
     @Override
     public void addFlame(final Flame.FlameType type, final Pair pos) {
-        final Flame f = new Flame(CellType.FLAME, type, pos , this);
+        final Flame f = new Flame(CellType.FLAME, type, pos);
         flames.add(f);
         map.addFlame(f, pos);
     }

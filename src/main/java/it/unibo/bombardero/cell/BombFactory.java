@@ -1,6 +1,5 @@
 package it.unibo.bombardero.cell;
 
-import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.map.api.Pair;
 
 public interface BombFactory {
@@ -8,14 +7,31 @@ public interface BombFactory {
     /**
      * @param character
      * @param pos
-     * @return a Bomb in the given position with character's caratteristics 
+     * @return a normal Bomb
      */
-    Bomb createBomb(Character character, Pair pos);
+    Bomb createBasicBomb(final int range, final Pair pos);
 
     /**
+     * 
      * @param character
      * @param pos
-     * @return a Bomb in the character's position with character's caratteristics 
+     * @return a PircingBomb that destroy every breackableWall in his range
      */
-    Bomb createBomb(Character character);
+    Bomb createPiercingBomb(final int range, final Pair pos);
+
+    /**
+     * 
+     * @param character
+     * @param pos
+     * @return a PowerBomb a bomb with max range
+     */
+    Bomb createPowerBomb(final Pair pos);
+
+    /**
+     * 
+     * @param character
+     * @param pos
+     * @return a RemoteBomb that explode on comand
+     */
+    Bomb createRemoteBomb(final int range, final Pair pos);
 }

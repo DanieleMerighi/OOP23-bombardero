@@ -4,6 +4,8 @@ import javax.swing.JPanel;
 import it.unibo.bombardero.core.api.Controller;
 import javax.swing.JLabel;
 
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -33,13 +35,15 @@ public final class MenuCard extends JPanel {
         this.graphicsEngine = graphicsEngine;
 
         // CHECKSTYLE: MagicNumber OFF
-        logo = rg.loadImage("menu/logo");
+        Dimension dim = graphicsEngine.getResizingEngine().getMenuLogoSize();
+        logo = rg.loadImage("menu/logo").getScaledInstance((int)dim.getWidth(), (int)dim.getHeight(), Image.SCALE_SMOOTH);
         playImage = graphicsEngine.getResizingEngine().getScaledButtonImage(rg.loadImage("overlay/buttons/PLAY"));
         guideImage = graphicsEngine.getResizingEngine().getScaledButtonImage(rg.loadImage("overlay/buttons/GUIDE"));
         background = rg.loadImage("menu/background");
         // CHECKSTYLE: MagicNumber ON
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
         play = new JButton(new ImageIcon(playImage));
         guide = new JButton(new ImageIcon(guideImage));
         /* TODO: better style JButtons, in windows you can stil see the buttons highlight, in MacOS however no...  */
@@ -53,9 +57,27 @@ public final class MenuCard extends JPanel {
         guide.setFocusPainted(false);
 
         /* TODO: smaller logo and dynamic resizing menu (dependant on JFrame size) */
-        this.add(new JLabel(new ImageIcon(logo)));
-        this.add(play);
-        this.add(guide);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.gridheight = 2;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.CENTER;
+        this.add(new JLabel(new ImageIcon(logo)), gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.gridheight = 1;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.CENTER;
+        this.add(play, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 5;
+        gbc.gridheight = 1;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.CENTER;
+        this.add(guide, gbc);
 
         play.addActionListener(new ActionListener() {
 
