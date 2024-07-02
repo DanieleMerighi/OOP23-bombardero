@@ -46,10 +46,11 @@ public final class GameCard extends GamePlayCard {
      * Creates a new game card, togheter with two buttons to be displayed when
      * the game is paused, and an arena that can be updated throught the {@link #update(Map, List, List)}
      * method.
+     * @param graphics the {@link GraphicsEngine} managing this class
      */
     public GameCard(final GraphicsEngine graphics) {
         super(graphics, Map.of(), List.of(), List.of());
-        
+ 
         clockImage = graphics.getResizingEngine().getScaledClockImage(
             graphics.getResourceGetter().loadImage("overlay/clock")
         );
@@ -82,7 +83,7 @@ public final class GameCard extends GamePlayCard {
     public void paintComponent(final Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        int fontYOffset = (int)(g.getFontMetrics(clockFont).getAscent() / 2);
+        int fontYOffset = (int) (g.getFontMetrics(clockFont).getAscent() / 2);
         g2d.setFont(clockFont.deriveFont(Font.PLAIN, 16));
         g2d.drawString(getFormattedTime(), timerPosition.width, timerPosition.height + fontYOffset);
         g2d.drawImage(clockImage, imageClockPosition.width, imageClockPosition.height, null);
@@ -92,7 +93,7 @@ public final class GameCard extends GamePlayCard {
      * Sets the paused view, adding the buttons to the panel and performing
      * an update.
      */
-    public final void setPausedView() {
+    public void setPausedView() {
         this.add(resumeButton);
         this.add(quitButton);
         this.revalidate();
@@ -103,7 +104,7 @@ public final class GameCard extends GamePlayCard {
      * Removes the paused view, removing the buttons from the panel
      * and performing ad update.
      */
-    public final void setUnpausedView() {
+    public void setUnpausedView() {
         this.remove(quitButton);
         this.remove(resumeButton);
         this.revalidate();
@@ -116,7 +117,7 @@ public final class GameCard extends GamePlayCard {
      * @param stateToDisplay the state to be displayed
      * @see {@link endGameState}
      */
-    public final void displayEndGameState(final endGameState stateToDisplay) {
+    public void displayEndGameState(final endGameState stateToDisplay) {
         blurView();
     }
 
