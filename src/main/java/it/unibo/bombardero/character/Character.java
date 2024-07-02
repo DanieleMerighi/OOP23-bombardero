@@ -36,9 +36,6 @@ public abstract class Character {
     private static final int MAX_FLAME_RANGE = 8;
     private static final int MAX_BOMBS = 8;
 
-    // Game manager reference
-    protected final GameManager manager;
-
     // Bomb Factory reference
     private final BombFactory bombFactory;
 
@@ -118,8 +115,7 @@ public abstract class Character {
      * @param coord       the initial coordinates where the character is spawned
      * @param bombFactory the factory to create bombs
      */
-    public Character(final GameManager manager, final Coord coord, final BombFactory bombFactory) {
-        this.manager = manager; // TODO: Solve manager, a copy?
+    public Character(final Coord coord, final BombFactory bombFactory) {
         this.coordinate = coord;
         this.bombFactory = bombFactory;
         this.bBox = new RectangleBoundingBox(new Point2D.Float(0, 0), BOUNDING_BOX_WIDTH, BOUNDING_BOX_HEIGHT);
