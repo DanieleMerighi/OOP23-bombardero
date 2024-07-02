@@ -18,4 +18,5 @@ public interface MovementStrategy {
      * @return an Optional containing the next move as a Pair of coordinates, or an empty Optional if no move is available
      */
     Optional<Pair> getNextMove(Enemy enemy, GameManager manager);
+
 }

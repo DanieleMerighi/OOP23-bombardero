@@ -64,6 +64,8 @@ public interface Controller {
 
     boolean isGamePaused();
 
+    boolean isGameStarted();
+
     /**
      * Returns the main player of the current game instance. 
      * @return the main {@link Character}
