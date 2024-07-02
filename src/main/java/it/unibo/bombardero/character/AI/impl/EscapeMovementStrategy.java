@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.AI.api.MovementStrategy;
-import it.unibo.bombardero.map.api.GameMap;
+import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
 
 /**
@@ -22,19 +22,19 @@ public class EscapeMovementStrategy implements MovementStrategy {
      *         empty Optional if no move is available
      */
     @Override
-    public Optional<Pair> getNextMove(final Enemy enemy, final GameMap map) {
+    public Optional<Pair> getNextMove(final Enemy enemy, final GameManager manager) {
         return enemy.getGraph().findNearestSafeCell(enemy.getIntCoordinate(), enemy.getFlameRange());
     }
 
     /**
      * Checks if one movement strategy is equal to EscapeMovementStrategy.
      *
-     * @param other the other movement strategy to compare with
+     * @param obj the other movement strategy to compare with
      * @return true if the two movement strategies are equal, false otherwise
      */
     @Override
-    public boolean equals(final MovementStrategy other) {
-        return other instanceof EscapeMovementStrategy;
+    public boolean equals(Object obj) {
+        return obj instanceof EscapeMovementStrategy;
     }
 
 }

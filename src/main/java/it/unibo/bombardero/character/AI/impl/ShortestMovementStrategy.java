@@ -5,7 +5,7 @@ import java.util.List;
 
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.AI.api.MovementStrategy;
-import it.unibo.bombardero.map.api.GameMap;
+import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
 
 /**
@@ -24,13 +24,13 @@ public class ShortestMovementStrategy implements MovementStrategy {
      *         empty Optional if no move is available
      */
     @Override
-    public Optional<Pair> getNextMove(final Enemy enemy, final GameMap map) {
+    public Optional<Pair> getNextMove(final Enemy enemy, final GameManager manager) {
         if (enemy.getNextMove().isEmpty()) {
-            return new RandomMovementStrategy().getNextMove(enemy, map);
+            return new RandomMovementStrategy().getNextMove(enemy, manager);
         }
         final List<Pair> l = enemy.getGraph().findShortestPathToPlayer(enemy.getIntCoordinate(), enemy.getNextMove().get());
         if (l.isEmpty()) {
-            return new RandomMovementStrategy().getNextMove(enemy, map);
+            return new RandomMovementStrategy().getNextMove(enemy, manager);
         } else {
             return Optional.of(l.get(0));
         }
@@ -39,12 +39,12 @@ public class ShortestMovementStrategy implements MovementStrategy {
     /**
      * Checks if one movement strategy is equal to ShortestMovementStrategy.
      *
-     * @param other the other movement strategy to compare with
+     * @param obj the other movement strategy to compare with
      * @return true if the two movement strategies are equal, false otherwise
      */
     @Override
-    public boolean equals(final MovementStrategy other) {
-        return other instanceof ShortestMovementStrategy;
+    public boolean equals(Object obj) {
+        return obj instanceof ShortestMovementStrategy;
     }
 
 }

@@ -37,7 +37,7 @@ public class MyGameManager implements GameManager {
      */
     MyGameManager() {
         this.map = new GameMapImpl(false);
-        this.enemy = new Enemy(this, new Coord(0, 0), new BombFactoryImpl(), new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
+        this.enemy = new Enemy(new Coord(0, 0), new BombFactoryImpl(), new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
         this.player = new Player(new Coord(0, PLAYERY), new BombFactoryImpl(), new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
     }
 
@@ -80,7 +80,7 @@ public class MyGameManager implements GameManager {
     public void updateGame(final long elapsed) {
         // 60 fps
         for (int i = 0; i < LENGHT; i++) {
-            enemy.update(STANDARD_ELAPSED_TIME);
+            enemy.update(STANDARD_ELAPSED_TIME, this);
         }
     }
 

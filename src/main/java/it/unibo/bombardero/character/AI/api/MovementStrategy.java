@@ -3,7 +3,7 @@ package it.unibo.bombardero.character.AI.api;
 import java.util.Optional;
 
 import it.unibo.bombardero.character.Enemy;
-import it.unibo.bombardero.map.api.GameMap;
+import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
 
 /**
@@ -17,13 +17,5 @@ public interface MovementStrategy {
      * @param map the game map on which the enemy is located
      * @return an Optional containing the next move as a Pair of coordinates, or an empty Optional if no move is available
      */
-    Optional<Pair> getNextMove(Enemy enemy, GameMap map);
-
-    /**
-     * Checks if two movement strategy are equals.
-     *
-     * @param other the other movement strategy to compare with
-     * @return true if the two movement strategies are equal, false otherwise
-     */
-    boolean equals(MovementStrategy other);
+    Optional<Pair> getNextMove(Enemy enemy, GameManager manager);
 }

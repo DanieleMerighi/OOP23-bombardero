@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.AI.api.MovementStrategy;
-import it.unibo.bombardero.map.api.GameMap;
+import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
 
 /**
@@ -23,8 +23,8 @@ public class ChaseMovementStrategy implements MovementStrategy {
      *         empty Optional if no move is available
      */
     @Override
-    public Optional<Pair> getNextMove(final Enemy enemy, final GameMap map) {
-        return enemy.getClosestEntity().flatMap(closestEntity -> {
+    public Optional<Pair> getNextMove(final Enemy enemy, final GameManager manager) {
+        return enemy.getClosestEntity(manager).flatMap(closestEntity -> {
             final List<Pair> path = enemy.getGraph().findShortestPathToPlayer(enemy.getIntCoordinate(), closestEntity);
             if (!path.isEmpty()) {
                 return Optional.of(path.get(0));
@@ -36,12 +36,12 @@ public class ChaseMovementStrategy implements MovementStrategy {
     /**
      * Checks if one strategy is equal to ChaseMovementStrategy.
      *
-     * @param other the other movement strategy to compare with
+     * @param obj the other movement strategy to compare with
      * @return true if the two movement strategies are equal, false otherwise
      */
     @Override
-    public boolean equals(final MovementStrategy other) {
-        return other instanceof ChaseMovementStrategy;
+    public boolean equals(Object obj) {
+        return obj instanceof ChaseMovementStrategy;
     }
 
 }

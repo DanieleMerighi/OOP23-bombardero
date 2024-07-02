@@ -6,6 +6,7 @@ import java.util.List;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.AI.api.EnemyState;
+import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 
@@ -23,7 +24,8 @@ public class ExploringState implements EnemyState {
      * @param map   the game map where the enemy operates
      */
     @Override
-    public void execute(final Enemy enemy, final GameMap map) {
+    public void execute(final Enemy enemy, final GameManager manager) {
+        final GameMap map = manager.getGameMap();
         final Optional<Pair> powerUp = enemy.getGraph().findNearestPowerUp(enemy.getIntCoordinate());
         if (powerUp.isPresent()
                 && !enemy.getGraph().isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) {
@@ -36,7 +38,7 @@ public class ExploringState implements EnemyState {
                 enemy.setState(new WaitingState());
                 enemy.setNextMove(Optional.empty());
             } else {
-                enemy.setNextMove(new ShortestMovementStrategy().getNextMove(enemy, map));
+                enemy.setNextMove(new ShortestMovementStrategy().getNextMove(enemy, manager));
                 enemy.setAttemptedPowerUp(false);
             }
 
@@ -50,12 +52,12 @@ public class ExploringState implements EnemyState {
     /**
      * Checks if this enemy state is equal to another state.
      *
-     * @param otherState the other enemy state to compare with
+     * @param obj the other enemy state to compare with
      * @return true if this state is equal to the other state, false otherwise
      */
     @Override
-    public boolean equals(final EnemyState otherState) {
-        return otherState instanceof ExploringState;
+    public boolean equals(Object obj) {
+        return obj instanceof ExploringState;
     }
 
 }

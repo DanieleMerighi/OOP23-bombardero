@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.AI.api.MovementStrategy;
+import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 
@@ -29,7 +30,8 @@ public class RandomMovementStrategy implements MovementStrategy {
      *         empty Optional if no move is available
      */
     @Override
-    public Optional<Pair> getNextMove(final Enemy enemy, final GameMap map) {
+    public Optional<Pair> getNextMove(final Enemy enemy, final GameManager manager) {
+        final GameMap map = manager.getGameMap();
         final Pair currentCoord = enemy.getIntCoordinate();
         final List<Direction> dirs = EnumSet.allOf(Direction.class)
                 .stream()
@@ -51,12 +53,12 @@ public class RandomMovementStrategy implements MovementStrategy {
     /**
      * Checks if one movement strategy is equal to RandomMovementStrategy.
      *
-     * @param other the other movement strategy to compare with
+     * @param obj the other movement strategy to compare with
      * @return true if the two movement strategies are equal, false otherwise
      */
     @Override
-    public boolean equals(final MovementStrategy other) {
-        return other instanceof RandomMovementStrategy;
+    public boolean equals(Object obj) {
+        return obj instanceof RandomMovementStrategy;
     }
 
 }

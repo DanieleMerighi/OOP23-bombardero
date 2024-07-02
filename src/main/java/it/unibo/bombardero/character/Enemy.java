@@ -44,9 +44,8 @@ public class Enemy extends Character {
      * 
      * @param bombFactory the factory to create bombs
      */
-    public Enemy(final GameManager manager, final Coord coord, final BombFactory bombFactory, BoundingBox bBox) {
-        super(manager, coord, bombFactory, bBox);
-        GraphManagerImpl.initialize(manager.getGameMap());
+    public Enemy(final Coord coord, final BombFactory bombFactory, BoundingBox bBox) {
+        super(coord, bombFactory, bBox);
         setStationary(true);
         setFacingDirection(Direction.UP);
     }
@@ -70,8 +69,8 @@ public class Enemy extends Character {
      *
      * @return true if the player is within detection radius, false otherwise.
      */
-    public boolean isEnemyClose() {
-        return getClosestEntity().map(
+    public boolean isEnemyClose(final GameManager manager) {
+        return getClosestEntity(manager).map(
                 closestCoord -> calculateDistance(getIntCoordinate(), closestCoord) <= Utils.ENEMY_DETECTION_RADIUS)
                 .orElse(false);
     }
@@ -83,10 +82,10 @@ public class Enemy extends Character {
      * @return An Optional containing the closest entity's coordinates as a Pair,
      *         or empty if no other entities exist.
      */
-    public Optional<Pair> getClosestEntity() {
+    public Optional<Pair> getClosestEntity(final GameManager manager) {
         final Pair enemyCoord = getIntCoordinate();
-        final List<Character> allEntities = new ArrayList<>(super.manager.getEnemies());
-        allEntities.add(super.manager.getPlayer());
+        final List<Character> allEntities = new ArrayList<>(manager.getEnemies());
+        allEntities.add(manager.getPlayer());
 
         return allEntities.stream()
                 .map(Character::getIntCoordinate)
@@ -103,9 +102,9 @@ public class Enemy extends Character {
      * @return An Optional containing the closest entity, or empty if no other
      *         entities exist at the specified position.
      */
-    public Optional<Character> getClosestEntity(final Pair enemy) {
-        final List<Character> allEntities = new ArrayList<>(super.manager.getEnemies());
-        allEntities.add(super.manager.getPlayer());
+    public Optional<Character> getClosestEntity(final GameManager manager, final Pair enemy) {
+        final List<Character> allEntities = new ArrayList<>(manager.getEnemies());
+        allEntities.add(manager.getPlayer());
 
         return allEntities.stream()
                 .filter(e -> e.getIntCoordinate().equals(getIntCoordinate()))
@@ -141,26 +140,26 @@ public class Enemy extends Character {
      * 
      * @param time the elapsed time
      */
-    private void computeNextDir(final long time) {
-        final GameMap gameMap = super.manager.getGameMap();
+    private void computeNextDir(final long time, final GameManager manager) {
+        GameMap gameMap = manager.getGameMap();
         graph = GraphManagerImpl.getGraphReasoner(gameMap, time);
-        currentState.execute(this, gameMap);
+        currentState.execute(this, manager);
         if (nextMove.isPresent()) {
             if (calculateDistance(getIntCoordinate(), nextMove.get()) > 1) {
-                nextMove = new ShortestMovementStrategy().getNextMove(this, gameMap);
+                nextMove = new ShortestMovementStrategy().getNextMove(this, manager);
             }
             if (!isStateEqualTo(new EscapeState())
                     && gameMap.whichPowerUpType(nextMove.get()).map(c -> c == PowerUpType.SKULL).orElse(false)) {
-                placeBomb();
+                placeBomb(manager);
                 nextMove = Optional.empty();
             } else if (gameMap.isBreakableWall(nextMove.get())
                     && graph.findNearestSafeCell(getIntCoordinate(), getFlameRange()).isPresent()) {
-                placeBomb();
+                placeBomb(manager);
             }
         } else {
             waitTimer++;
             if (waitTimer >= Utils.MAX_WAITING_TIME) {
-                nextMove = new RandomMovementStrategy().getNextMove(this, gameMap);
+                nextMove = new RandomMovementStrategy().getNextMove(this, manager);
             }
         }
     }
@@ -170,11 +169,11 @@ public class Enemy extends Character {
      * This method is called every frame to handle enemy movement and actions.
      */
     @Override
-    public void update(final long elapsedTime) {
-        updateSkeleton(elapsedTime);
+    public void update(final long elapsedTime, final GameManager manager) {
+        updateSkeleton(elapsedTime, manager);
         if (nextMove.isEmpty()) {
-            computeNextDir(elapsedTime);
-        } else if (canMoveOn(nextMove.get())) {
+            computeNextDir(elapsedTime, manager);
+        } else if (canMoveOn(manager.getGameMap() ,nextMove.get())) {
             setStationary(false);
             final Coord target = new Coord(nextMove.get().x() + 0.5f, nextMove.get().y() + 0.5f);
             final Coord currentPos = getCharacterPosition();
@@ -201,8 +200,7 @@ public class Enemy extends Character {
         }
     }
 
-    private boolean canMoveOn(final Pair cell) {
-        final GameMap gameMap = this.manager.getGameMap();
+    private boolean canMoveOn(final GameMap gameMap, final Pair cell) {
         return gameMap.isEmpty(cell) || gameMap.isPowerUp(cell) 
         || (gameMap.isBomb(cell) && getIntCoordinate().equals(cell));
     }
