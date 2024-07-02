@@ -40,7 +40,7 @@ public final class BombarderoEngine extends Thread implements Engine {
             final long currentCycleStartTime = System.currentTimeMillis();
             final long elapsed = currentCycleStartTime - previousCycleStartTime;
             if (controller.isGameStarted() && !controller.isGamePaused()) {
-                controller.updateModel(elapsed);
+                controller.update(elapsed);
             }
             waitForNextFrame(currentCycleStartTime);
             previousCycleStartTime = currentCycleStartTime;

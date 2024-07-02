@@ -86,7 +86,7 @@ public class BombarderoController implements Controller {
         }
     }
 
-    public void updateModel(final long elapsed) {
+    public void update(final long elapsed) {
         manager.updateGame(elapsed);
         graphics.update(getMap(), List.of(getMainPlayer()), getEnemies(), getTimeLeft());
     }
