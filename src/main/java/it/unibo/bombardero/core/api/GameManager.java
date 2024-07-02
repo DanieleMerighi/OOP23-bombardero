@@ -60,7 +60,7 @@ public interface GameManager {
 
     Optional<Bomb> getBomb(Pair pos);
 
-    void addFlame(FlameType type,Pair pos);
+    void addFlame(FlameType type, Pair pos);
 
     void removePowerUp(Pair pos);
     
