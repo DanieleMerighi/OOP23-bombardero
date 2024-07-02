@@ -1,6 +1,7 @@
 package it.unibo.bombardero.view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -14,6 +15,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.swing.JPanel;
+
+import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
 
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Flame;
@@ -62,7 +65,7 @@ public class GamePlayCard extends JPanel {
     private transient Image skull = resourceGetter.loadImage("powerup/skull");
 
     /* References to model components: */
-    private transient final BombarderoGraphics graphics;
+    private transient final it.unibo.bombardero.view.Graphics graphics;
     private transient Map<Pair, Cell> cells;
     private transient List<Character> playersList;
     private transient final Map<Character, SpriteImageCombo> characterImages = new HashMap<>(); // every enemy is linked to its own sprite
@@ -78,8 +81,10 @@ public class GamePlayCard extends JPanel {
     /* Static positions for quicker access: */
     private final Dimension mapPlacingPoint;
 
+    private boolean blurEntireWindow = true;
 
-    public GamePlayCard(final BombarderoGraphics graphics, final Map<Pair, Cell> map, final List<Character> playersList, final List<Character> enemies) {
+
+    public GamePlayCard(final it.unibo.bombardero.view.Graphics graphics, final Map<Pair, Cell> map, final List<Character> playersList, final List<Character> enemies) {
         this.graphics = graphics;
         this.setMinimumSize(graphics.getResizingEngine().getMapSize());
         this.setLayout(new BorderLayout());
@@ -162,7 +167,6 @@ public class GamePlayCard extends JPanel {
                         null
                     );
                 }
-            
             }
         }
         /* Drawing the player and the enemies */
@@ -178,11 +182,19 @@ public class GamePlayCard extends JPanel {
                 null
             );
         });
+        if (blurEntireWindow) {
+            g2d.setColor(new Color(0, 0, 0, 0.35f));
+            g2d.fillRect(0, 0, getSize().width, getSize().height);
+        }
     }
 
     public void update(final Map<Pair, Cell> map, final List<Character> playersList, final List<Character> enemiesList) {
         updateGameState(map, playersList, enemiesList);
         updateSprites();
+    }
+
+    public void blurView() {
+        blurEntireWindow = true;
     }
 
     private void updateGameState(final Map<Pair, Cell> map, final List<Character> playersList, final List<Character> enemiesList) {
@@ -191,7 +203,7 @@ public class GamePlayCard extends JPanel {
         this.enemiesList = List.copyOf(enemiesList);
     }
 
-    public void updateSprites() {
+    protected void updateSprites() {
         checkForNewCharacters();
 
         characterImages.entrySet().forEach(character -> {
