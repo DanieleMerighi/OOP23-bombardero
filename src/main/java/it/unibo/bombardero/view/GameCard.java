@@ -10,6 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.awt.GridLayout;
 import javax.swing.JLabel;
+
+import it.unibo.bombardero.view.Graphics.endGameState;
+
 import java.awt.Font;
 import javax.swing.ImageIcon;
 
@@ -37,7 +40,7 @@ public final class GameCard extends GamePlayCard {
     private Dimension timerPosition;
     private long timeLeft;
 
-    public GameCard(final BombarderoGraphics graphics) {
+    public GameCard(final it.unibo.bombardero.view.Graphics graphics) {
         super(graphics, Map.of(), List.of(), List.of());
         
         clockImage = graphics.getResizingEngine().getScaledClockImage(
@@ -91,6 +94,10 @@ public final class GameCard extends GamePlayCard {
         this.remove(resumeButton);
         this.revalidate();
         this.repaint(0);
+    }
+
+    public void displayEndGameState(endGameState stateToDisplay) {
+        blurView();
     }
 
     public void setTimeLeft(final long timeLeft) {
