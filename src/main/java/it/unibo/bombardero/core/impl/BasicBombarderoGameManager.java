@@ -96,7 +96,7 @@ public class BasicBombarderoGameManager implements GameManager {
         }
         if (!flames.isEmpty()) {
             flames.forEach(f -> f.update(elapsed));
-            flames.removeIf(f -> f.isExpired());
+            List.copyOf(flames).stream().filter(f->f.isExpired()).peek(f->flames.remove(f)).forEach(f->removeFlame(f.getPos()));
         }
         enemies.forEach(enemy -> {
              if (enemy.isAlive()) {
