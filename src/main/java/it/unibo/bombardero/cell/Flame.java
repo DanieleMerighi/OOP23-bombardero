@@ -5,6 +5,7 @@ import java.util.Map;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.physics.api.BoundingBox;
 
 public class Flame extends AbstractCell {
 
@@ -57,7 +58,7 @@ public class Flame extends AbstractCell {
     private long countTime;
 
     public Flame(final CellType type, final FlameType specfiFlameType, final Pair pos, final GameManager mgr) {
-        super(type, pos, false);
+        super(type, pos, false, null);
         this.specificFlameType = specfiFlameType;
         this.mgr = mgr;
         this.pos = pos;

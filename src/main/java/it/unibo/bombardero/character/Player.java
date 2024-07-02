@@ -4,6 +4,7 @@ import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.powerup.impl.PowerUpImpl;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
+import it.unibo.bombardero.physics.api.BoundingBox;
 
 /**
  * This class represents a Player in the game.
@@ -19,8 +20,8 @@ public class Player extends Character {
      * @param coord       the initial coordinates where the player is spawned
      * @param bombFactory the factory to create bombs
      */
-    public Player(final GameManager manager, final Coord coord, final BombFactory bombFactory) {
-        super(manager, coord, bombFactory);
+    public Player(final GameManager manager, final Coord coord, final BombFactory bombFactory, BoundingBox bBox) {
+        super(manager, coord, bombFactory, bBox);
     }
 
     /**

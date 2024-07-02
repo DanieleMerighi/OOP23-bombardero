@@ -65,7 +65,7 @@ public final class PowerUpImpl extends AbstractCell implements PowerUp {
      * @param effect    the effect of the PowerUp
      */
     public PowerUpImpl(final PowerUpType type, final Pair position, final PowerUpEffect effect) {
-        super(CellType.POWERUP, position, false);
+        super(CellType.POWERUP, position, false, null);
         this.type = type;
         this.effect = effect.getEffect();
     }

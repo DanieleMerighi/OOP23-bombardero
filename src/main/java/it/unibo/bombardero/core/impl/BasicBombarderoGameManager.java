@@ -19,6 +19,7 @@ import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.physics.impl.BombarderoCollision;
+import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;
@@ -62,8 +63,10 @@ public class BasicBombarderoGameManager implements GameManager {
         map = new GameMapImpl(generateWalls);
         ce = new BombarderoCollision();
         bombFactory = new BombFactoryImpl();
-        this.player = new Player(this, playerSpawnPoint, bombFactory);
-        enemiesSpawnpoint.forEach(spawnpoint -> enemies.add(new Enemy(this, spawnpoint, bombFactory)));
+        this.player = new Player(this, playerSpawnPoint, bombFactory, 
+            new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
+        enemiesSpawnpoint.forEach(spawnpoint -> enemies.add(new Enemy(this, spawnpoint, bombFactory, 
+            new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT))));
     }
 
     /**

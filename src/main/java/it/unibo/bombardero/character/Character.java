@@ -13,7 +13,6 @@ import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.physics.api.BoundingBox;
-import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 
 /**
  * Abstract class representing a character in the game.
@@ -22,8 +21,8 @@ import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 public abstract class Character {
 
     // Constants for default settings
-    private static final float BOUNDING_BOX_HEIGHT = 0.75f;
-    private static final float BOUNDING_BOX_WIDTH = 0.700f;
+    public static final float BOUNDING_BOX_HEIGHT = 0.75f;
+    public static final float BOUNDING_BOX_WIDTH = 0.700f;
     private static final float BOUNDING_BOX_Y_OFFSET = 0.2f;
     private static final float BOUNDING_BOX_X_OFFSET = 0.3f;
     private static final float STARTING_SPEED = 0.05f;
@@ -118,11 +117,11 @@ public abstract class Character {
      * @param coord       the initial coordinates where the character is spawned
      * @param bombFactory the factory to create bombs
      */
-    public Character(final GameManager manager, final Coord coord, final BombFactory bombFactory) {
+    public Character(final GameManager manager, final Coord coord, final BombFactory bombFactory, BoundingBox bBox) {
         this.manager = manager; // TODO: Solve manager, a copy?
         this.coordinate = coord;
         this.bombFactory = bombFactory;
-        this.bBox = new RectangleBoundingBox(new Point2D.Float(0, 0), BOUNDING_BOX_WIDTH, BOUNDING_BOX_HEIGHT);
+        this.bBox = bBox;
     }
 
     /**

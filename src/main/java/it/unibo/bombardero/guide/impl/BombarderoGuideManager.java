@@ -9,6 +9,7 @@ import it.unibo.bombardero.core.impl.BasicBombarderoGameManager;
 import it.unibo.bombardero.guide.api.GuideManager;
 import it.unibo.bombardero.guide.api.GuideStep;
 import it.unibo.bombardero.map.api.Coord;
+import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 import it.unibo.bombardero.view.BombarderoViewMessages;
 
 /**
@@ -92,7 +93,8 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
          * @param coord where to spawn the dummy
          */
         Dummy(final Coord coord) {
-            super(BombarderoGuideManager.this, coord, BombarderoGuideManager.this.getBombFactory());
+            super(BombarderoGuideManager.this, coord, BombarderoGuideManager.this.getBombFactory(), 
+                new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
         }
 
         @Override

@@ -14,6 +14,7 @@ import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.physics.api.BoundingBox;
 
 //TODO cercare di dividere logica del character e del manager es: ritornare entryset di fiamme da aggiungere e numbob nel character 
 public abstract class BasicBomb extends AbstractCell implements Bomb{
@@ -26,8 +27,8 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
     private final Pair position;
     private final BombType bombType;
 
-    public BasicBomb(final BombType bombType, final int range, final Pair pos) {
-        super(CellType.BOMB , pos, true);
+    public BasicBomb(final BombType bombType, final int range, final Pair pos, BoundingBox bBox) {
+        super(CellType.BOMB , pos, true, bBox);
         this.position = pos;
         this.range = range;
         this.bombType = bombType;

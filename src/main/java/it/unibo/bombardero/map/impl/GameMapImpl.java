@@ -17,6 +17,7 @@ import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.MapGenerator;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 import it.unibo.bombardero.utils.Utils;
 
 /**
@@ -91,12 +92,14 @@ public final class GameMapImpl implements GameMap {
 
     @Override
     public void addUnbreakableWall(final Pair coordinate) {
-        this.map.put(coordinate , new Wall(Cell.CellType.WALL_UNBREAKABLE, coordinate));
+        this.map.put(coordinate , new Wall(Cell.CellType.WALL_UNBREAKABLE, coordinate, 
+            new RectangleBoundingBox(coordinate.x(), coordinate.y(), 1.0f , 1.0f)));
     }
 
     @Override
     public void addBreakableWall(final Pair coordinate) {
-        this.map.put(coordinate, new Wall(Cell.CellType.WALL_BREAKABLE, coordinate));
+        this.map.put(coordinate, new Wall(Cell.CellType.WALL_BREAKABLE, coordinate, 
+            new RectangleBoundingBox(coordinate.x(), coordinate.y(), 1.0f , 1.0f)));
     }
 
     @Override

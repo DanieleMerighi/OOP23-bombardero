@@ -4,6 +4,7 @@ import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 
 
 //TODO dividere la logica fare una factory normale  
@@ -13,13 +14,12 @@ public class BombFactoryImpl implements BombFactory {
 
     @Override
     public Bomb createBasicBomb(final int range, final Pair pos) {
-        return new BasicBomb(BombType.BOMB_BASIC, range, pos) {
-        };
+        return new BasicBomb(BombType.BOMB_BASIC, range, pos, new RectangleBoundingBox(pos.x(), pos.y(), 1.0f , 1.0f)) {};
     }
 
     @Override
     public Bomb createPiercingBomb(final int range, final Pair pos) {
-        return new BasicBomb(BombType.BOMB_PIERCING, range, pos) {
+        return new BasicBomb(BombType.BOMB_PIERCING, range, pos, new RectangleBoundingBox(pos.x(), pos.y(), 1.0f , 1.0f)) {
 
             @Override
             public boolean isBreckableWall(final Pair pos, GameMap map, GameManager mgr) {
@@ -41,13 +41,12 @@ public class BombFactoryImpl implements BombFactory {
 
     @Override
     public Bomb createPowerBomb(final Pair pos) {
-        return new BasicBomb(BombType.BOMB_POWER, BasicBomb.MAX_RANGE, pos) {
-        };
+        return new BasicBomb(BombType.BOMB_POWER, BasicBomb.MAX_RANGE, pos, new RectangleBoundingBox(pos.x(), pos.y(), 1.0f , 1.0f)) {};
     }
 
     @Override
     public Bomb createRemoteBomb(final int range, final Pair pos) {
-        return new BasicBomb(BombType.BOMB_REMOTE, range, pos) {
+        return new BasicBomb(BombType.BOMB_REMOTE, range, pos, new RectangleBoundingBox(pos.x(), pos.y(), 1.0f , 1.0f)) {
 
             @Override
             public void update() {}
