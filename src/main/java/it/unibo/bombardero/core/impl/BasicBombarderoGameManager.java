@@ -172,10 +172,11 @@ public class BasicBombarderoGameManager implements GameManager {
     }
 
     /**
-     * If the time is being kept it returns the time passed. 
+     * If the time is being kept it returns the time passed. This implementation does
+     * not keep the game time, therefore returns an empty {@link Optional}. 
      */
     @Override
-    public final Optional<Long> getTimeLeft() {
+    public Optional<Long> getTimeLeft() {
         return Optional.empty();
     }
 
