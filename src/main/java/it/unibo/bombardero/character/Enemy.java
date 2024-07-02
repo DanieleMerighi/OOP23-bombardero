@@ -17,6 +17,7 @@ import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.physics.api.BoundingBox;
 import it.unibo.bombardero.utils.Utils;
 
 /**
@@ -43,8 +44,8 @@ public class Enemy extends Character {
      * 
      * @param bombFactory the factory to create bombs
      */
-    public Enemy(final GameManager manager, final Coord coord, final BombFactory bombFactory) {
-        super(manager, coord, bombFactory);
+    public Enemy(final GameManager manager, final Coord coord, final BombFactory bombFactory, BoundingBox bBox) {
+        super(manager, coord, bombFactory, bBox);
         GraphManagerImpl.initialize(manager.getGameMap());
         setStationary(true);
         setFacingDirection(Direction.UP);

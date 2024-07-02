@@ -3,7 +3,6 @@ package it.unibo.bombardero.cell;
 import java.util.Map;
 
 import it.unibo.bombardero.character.Direction;
-import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
 
 public class Flame extends AbstractCell {
@@ -51,15 +50,13 @@ public class Flame extends AbstractCell {
     }
 
     private boolean expired;
-    private final GameManager mgr;
     private final FlameType specificFlameType;
     private final Pair pos;
     private long countTime;
 
-    public Flame(final CellType type, final FlameType specfiFlameType, final Pair pos, final GameManager mgr) {
-        super(type, pos, false);
+    public Flame(final CellType type, final FlameType specfiFlameType, final Pair pos) {
+        super(type, pos, false, null);
         this.specificFlameType = specfiFlameType;
-        this.mgr = mgr;
         this.pos = pos;
     }
 
@@ -67,7 +64,6 @@ public class Flame extends AbstractCell {
         this.countTime += timeElapsed;
         if (countTime > 500) {
             expired = true;
-            mgr.removeFlame(pos);
         }
     }
 

@@ -37,7 +37,7 @@ class TestInput {
     void setUp() {
         // Initialize the test controller
         controller = new Controller() {
-            private final Character mainPlayer = new Character(null, null, null) {
+            private final Character mainPlayer = new Character(null, null, null, null) {
 
                 @Override
                 public void update(final long elapsedTime) {

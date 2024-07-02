@@ -13,7 +13,6 @@ import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.physics.api.BoundingBox;
-import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 
 /**
  * Abstract class representing a character in the game.
@@ -22,8 +21,8 @@ import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 public abstract class Character {
 
     // Constants for default settings
-    private static final float BOUNDING_BOX_HEIGHT = 0.75f;
-    private static final float BOUNDING_BOX_WIDTH = 0.700f;
+    public static final float BOUNDING_BOX_HEIGHT = 0.75f;
+    public static final float BOUNDING_BOX_WIDTH = 0.700f;
     private static final float BOUNDING_BOX_Y_OFFSET = 0.2f;
     private static final float BOUNDING_BOX_X_OFFSET = 0.3f;
     private static final float STARTING_SPEED = 0.05f;
@@ -117,10 +116,10 @@ public abstract class Character {
      * @param coord       the initial coordinates where the character is spawned
      * @param bombFactory the factory to create bombs
      */
-    public Character(final Coord coord, final BombFactory bombFactory) {
+    public Character(final Coord coord, final BombFactory bombFactory, final BoundingBox bBox) {
         this.coordinate = coord;
         this.bombFactory = bombFactory;
-        this.bBox = new RectangleBoundingBox(new Point2D.Float(0, 0), BOUNDING_BOX_WIDTH, BOUNDING_BOX_HEIGHT);
+        this.bBox = bBox;
     }
 
     /**
@@ -190,7 +189,7 @@ public abstract class Character {
      * @return true if the character has placed the bomb, false otherwise
      */
     public boolean placeBomb(final GameManager manager) {
-        return placeBombImpl(this.bombFactory.createBomb(this), manager);
+        return placeBombImpl(createBomb(getIntCoordinate()), manager);
     }
 
     /**
@@ -200,10 +199,25 @@ public abstract class Character {
      * 
      * @return true if the character has placed the bomb, false otherwise
      */
-    public boolean placeBomb(final Pair coordinate, final GameManager manager) {
-        return placeBombImpl(this.bombFactory.createBomb(this, coordinate), manager);
+    public boolean placeBomb(final Pair coordinate) {
+        return placeBombImpl(createBomb(coordinate));
     }
 
+    private Bomb createBomb(Pair coordinate) {
+        if (!getBombType().isPresent()) {
+            return bombFactory.createBasicBomb(this.getFlameRange(), this.getIntCoordinate());
+        }
+        switch (this.getBombType().get()) {
+            case PIERCING_BOMB:
+                return bombFactory.createPiercingBomb(this.getFlameRange(), this.getIntCoordinate());
+            case REMOTE_BOMB:
+                return bombFactory.createRemoteBomb(this.getFlameRange(), this.getIntCoordinate());
+            case POWER_BOMB:
+                return bombFactory.createPowerBomb(this.getIntCoordinate());
+            default:
+                return null;
+        }
+    }
     /**
      * Checks if the character has to place a bomb.
      * 
@@ -245,9 +259,10 @@ public abstract class Character {
      * @param explodedBomb the exploded bomb that needs to be removed
      */
     public void removeBombFromDeque(final Bomb explodedBomb) {
-        if (!bombQueue.isEmpty()) {
+        if (!bombQueue.isEmpty() && bombQueue.removeFirstOccurrence(explodedBomb)) {
             // System.out.println("removed bomb\n\n");
-            bombQueue.removeFirstOccurrence(explodedBomb);
+            this.increaseNumBomb();
+            
         }
     }
 
@@ -606,7 +621,7 @@ public abstract class Character {
     }
 
     private boolean placeBombImpl(final Bomb bomb, final GameManager manager) {
-        if (hasBombsLeft() && !this.constipation && manager.addBomb(bomb)) {
+        if (hasBombsLeft() && !this.constipation && manager.addBomb(bomb, this)) {
             this.numBomb--;
             bombQueue.addLast(bomb);
             return true;

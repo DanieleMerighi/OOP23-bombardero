@@ -67,9 +67,9 @@ public class TestGraphBuilder {
     public void testMapSizeWithObastacles() {
         GameMap baseMap = new GameMapImpl(true);
         // CHECKSTYLE: MagicNumber OFF
-        baseMap.addFlame(new Flame(CellType.FLAME, null, new Pair(0, 2), null), new Pair(0, 2));
-        baseMap.addFlame(new Flame(CellType.FLAME, null, new Pair(0, 4), null), new Pair(0, 4));
-        baseMap.addFlame(new Flame(CellType.FLAME, null, new Pair(5, 6), null), new Pair(5, 6));
+        baseMap.addFlame(new Flame(CellType.FLAME, null, new Pair(0, 2)), new Pair(0, 2));
+        baseMap.addFlame(new Flame(CellType.FLAME, null, new Pair(0, 4)), new Pair(0, 4));
+        baseMap.addFlame(new Flame(CellType.FLAME, null, new Pair(5, 6)), new Pair(5, 6));
         // CHECKSTYLE: MagicNumber ON
         this.graph = GraphBuilderImpl.buildFromMap(baseMap);
         assertEquals(VERTEX_SIZE, this.graph.vertexSet().size());

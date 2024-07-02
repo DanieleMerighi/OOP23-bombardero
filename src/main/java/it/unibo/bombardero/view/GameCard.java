@@ -12,6 +12,9 @@ import java.awt.GridLayout;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.ImageIcon;
+
+import java.util.List;
+import java.util.Map;
 /** 
  * This class represents a JPanel containing a the view of some 
  * playable part of the game (e.g. guide, gameplay, sandbox... etc).
@@ -35,7 +38,7 @@ public final class GameCard extends GamePlayCard {
     private long timeLeft;
 
     public GameCard(final BombarderoGraphics graphics) {
-        super(graphics);
+        super(graphics, Map.of(), List.of(), List.of());
         
         clockImage = graphics.getResizingEngine().getScaledClockImage(
             graphics.getResourceGetter().loadImage("overlay/clock")

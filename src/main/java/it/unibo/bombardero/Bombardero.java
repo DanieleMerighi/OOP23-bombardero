@@ -1,6 +1,6 @@
 package it.unibo.bombardero;
 
-import it.unibo.bombardero.view.BombarderoGraphics;
+import it.unibo.bombardero.core.BombarderoEngine;
 /**
  * The main class of the Bombardero game.
  */
@@ -15,6 +15,6 @@ public final class Bombardero {
      * @param args the command line arguments
      */
     public static void main(final String[] args) {
-        new BombarderoGraphics();
+        new BombarderoEngine();
     }
 }
