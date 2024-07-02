@@ -162,7 +162,7 @@ public class BasicBombarderoGameManager implements GameManager {
 
     @Override
     public void addFlame(final Flame.FlameType type, final Pair pos) {
-        final Flame f = new Flame(CellType.FLAME, type, pos , this);
+        final Flame f = new Flame(CellType.FLAME, type, pos);
         flames.add(f);
         map.addFlame(f, pos);
     }
