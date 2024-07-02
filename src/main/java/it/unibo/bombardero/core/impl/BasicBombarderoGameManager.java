@@ -65,7 +65,7 @@ public class BasicBombarderoGameManager implements GameManager {
         bombFactory = new BombFactoryImpl();
         this.player = new Player(playerSpawnPoint, bombFactory, 
             new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
-        enemiesSpawnpoint.forEach(spawnpoint -> enemies.add(new Enemy(this, spawnpoint, bombFactory, 
+        enemiesSpawnpoint.forEach(spawnpoint -> enemies.add(new Enemy(spawnpoint, bombFactory, 
             new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT))));
     }
 

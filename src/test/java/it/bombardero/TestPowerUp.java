@@ -59,7 +59,7 @@ class TestPowerUp {
         });
         if (this.manager.getPlayer().getResetEffect().isPresent()) {
             while (this.manager.getPlayer().getSkeletonEffectDuration() > 0) {
-                this.manager.getPlayer().updateSkeleton(STANDARD_ELAPSED_TIME);
+                this.manager.getPlayer().updateSkeleton(STANDARD_ELAPSED_TIME, manager);
             }
         }
     }
@@ -79,7 +79,7 @@ class TestPowerUp {
         assertTrue(this.manager.getPlayer().getResetEffect().isPresent());
 
         while (this.manager.getPlayer().getSkeletonEffectDuration() > 0) {
-            this.manager.getPlayer().updateSkeleton(STANDARD_ELAPSED_TIME);
+            this.manager.getPlayer().updateSkeleton(STANDARD_ELAPSED_TIME, manager);
         }
 
         // Asserts the skull duration is 0
