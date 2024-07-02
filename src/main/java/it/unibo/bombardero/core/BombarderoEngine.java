@@ -14,8 +14,8 @@ import it.unibo.bombardero.core.impl.BombarderoController;
  */
 public final class BombarderoEngine extends Thread implements Engine {
 
-    private final static long SLEEP_TIME = 16L; // Time during which the thread sleeps, equivalent to about 60FPS
-    
+    private static final long SLEEP_TIME = 16L; // Time during which the thread sleeps, equivalent to about 60FPS
+ 
     //private final GameManager manager;
     //private final BombarderoGraphics graphics;
     private Controller controller;
@@ -24,9 +24,6 @@ public final class BombarderoEngine extends Thread implements Engine {
     /**
      * Creates a new BombarderoEngine, associating it to a Controller 
      * , a Graphics engine and a GameManager.
-     * @param controller
-     * @param graphics
-     * @param manager
      */
     public BombarderoEngine() {
         this.controller = new BombarderoController();
