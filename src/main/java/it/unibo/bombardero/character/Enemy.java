@@ -140,12 +140,13 @@ public class Enemy extends Character {
      * 
      * @param time the elapsed time
      */
-    private void computeNextDir(final long time, final GameMap gameMap) {
+    private void computeNextDir(final long time, final GameManager manager) {
+        GameMap gameMap = manager.getGameMap();
         graph = GraphManagerImpl.getGraphReasoner(gameMap, time);
-        currentState.execute(this, gameMap);
+        currentState.execute(this, manager);
         if (nextMove.isPresent()) {
             if (calculateDistance(getIntCoordinate(), nextMove.get()) > 1) {
-                nextMove = new ShortestMovementStrategy().getNextMove(this, gameMap);
+                nextMove = new ShortestMovementStrategy().getNextMove(this, manager);
             }
             if (!isStateEqualTo(new EscapeState())
                     && gameMap.whichPowerUpType(nextMove.get()).map(c -> c == PowerUpType.SKULL).orElse(false)) {
@@ -158,7 +159,7 @@ public class Enemy extends Character {
         } else {
             waitTimer++;
             if (waitTimer >= Utils.MAX_WAITING_TIME) {
-                nextMove = new RandomMovementStrategy().getNextMove(this, gameMap);
+                nextMove = new RandomMovementStrategy().getNextMove(this, manager);
             }
         }
     }
@@ -169,9 +170,9 @@ public class Enemy extends Character {
      */
     @Override
     public void update(final long elapsedTime, final GameManager manager) {
-        updateSkeleton(elapsedTime);
+        updateSkeleton(elapsedTime, manager);
         if (nextMove.isEmpty()) {
-            computeNextDir(elapsedTime, manager.getGameMap());
+            computeNextDir(elapsedTime, manager);
         } else if (canMoveOn(manager.getGameMap() ,nextMove.get())) {
             setStationary(false);
             final Coord target = new Coord(nextMove.get().x() + 0.5f, nextMove.get().y() + 0.5f);

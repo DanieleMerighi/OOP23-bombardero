@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.AI.api.EnemyState;
-import it.unibo.bombardero.map.api.GameMap;
+import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.character.Character;
 
@@ -23,14 +23,14 @@ public class EscapeState implements EnemyState {
      * @param map   the game map where the enemy operates
      */
     @Override
-    public void execute(final Enemy enemy, final GameMap map) {
+    public void execute(final Enemy enemy, final GameManager manager) {
         if (!enemy.getGraph().isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) { // Safe now
             if (!enemy.getBombQueue().isEmpty()) {
                 enemy.setState(new WaitingState());
             } else {
-                if (enemy.isEnemyClose()) {
-                    final Pair closeEnemy = enemy.getClosestEntity().get();
-                    final Optional<Character> c = enemy.getClosestEntity(closeEnemy);
+                if (enemy.isEnemyClose(manager)) {
+                    final Pair closeEnemy = enemy.getClosestEntity(manager).get();
+                    final Optional<Character> c = enemy.getClosestEntity(manager,closeEnemy);
                     if (c.isPresent()) {
                         final Pair newdir = new Pair(-c.get().getFacingDirection().x(),
                                 -c.get().getFacingDirection().y());
@@ -42,7 +42,7 @@ public class EscapeState implements EnemyState {
                 }
             }
         } else {
-            enemy.setNextMove(new EscapeMovementStrategy().getNextMove(enemy, map));
+            enemy.setNextMove(new EscapeMovementStrategy().getNextMove(enemy, manager));
             if (enemy.getNextMove().isEmpty()) {
                 enemy.setState(new WaitingState());
             }
@@ -52,12 +52,12 @@ public class EscapeState implements EnemyState {
     /**
      * Checks if this enemy state is equal to another state.
      *
-     * @param otherState the other enemy state to compare with
+     * @param obj the other enemy state to compare with
      * @return true if this state is equal to the other state, false otherwise
      */
     @Override
-    public boolean equals(final EnemyState otherState) {
-        return otherState instanceof EscapeState;
+    public boolean equals(Object obj) {
+        return obj instanceof EscapeState;
     }
 
 }
