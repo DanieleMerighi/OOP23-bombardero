@@ -44,8 +44,10 @@ public abstract class Character {
     // Indicates where the character is looking
     private Direction facingDirection = Direction.DOWN; // Starting character facingDirection
     private boolean stationary = true;
+
     // Hit box of the Character
     private final BoundingBox bBox; // Solid area of the character
+
     // Game attribute related
     private boolean isAlive = true;
     private int numBomb = STARTING_BOMBS;
@@ -128,14 +130,14 @@ public abstract class Character {
      * 
      * @param elapsedTime the time elapsed since the last update
      */
-    public abstract void update(long elapsedTime);
+    public abstract void update(long elapsedTime, GameManager manager);
 
     /**
      * Updates the skeleton's effects.
      * 
      * @param elapsedTime the time elapsed since the last update
      */
-    public void updateSkeleton(final long elapsedTime) {
+    public void updateSkeleton(final long elapsedTime, final GameManager manager) {
         if (this.skeletonEffectDuration > 0) { // Continues until the duration reaches zero
             this.skeletonEffectDuration -= elapsedTime;
             if (this.skeletonEffectDuration <= 0) { // When the effect ends the character's stats get resetted
@@ -144,7 +146,7 @@ public abstract class Character {
                 this.resetEffect = Optional.empty(); // Clear the reset effect after it has run
             }
             if (this.butterfingers) { // If the character has butterfingers, he places a bomb
-                placeBomb();
+                placeBomb(manager);
             }
         }
     }
@@ -187,8 +189,8 @@ public abstract class Character {
      * 
      * @return true if the character has placed the bomb, false otherwise
      */
-    public boolean placeBomb() {
-        return placeBombImpl(this.bombFactory.createBomb(this));
+    public boolean placeBomb(final GameManager manager) {
+        return placeBombImpl(this.bombFactory.createBomb(this), manager);
     }
 
     /**
@@ -198,8 +200,8 @@ public abstract class Character {
      * 
      * @return true if the character has placed the bomb, false otherwise
      */
-    public boolean placeBomb(final Pair coordinate) {
-        return placeBombImpl(this.bombFactory.createBomb(this, coordinate));
+    public boolean placeBomb(final Pair coordinate, final GameManager manager) {
+        return placeBombImpl(this.bombFactory.createBomb(this, coordinate), manager);
     }
 
     /**
@@ -603,9 +605,8 @@ public abstract class Character {
         this.resetEffect = Optional.of(resetEffect);
     }
 
-    private boolean placeBombImpl(final Bomb bomb) {
-        if (hasBombsLeft() && !this.constipation && this.manager
-                .addBomb(bomb)) {
+    private boolean placeBombImpl(final Bomb bomb, final GameManager manager) {
+        if (hasBombsLeft() && !this.constipation && manager.addBomb(bomb)) {
             this.numBomb--;
             bombQueue.addLast(bomb);
             return true;

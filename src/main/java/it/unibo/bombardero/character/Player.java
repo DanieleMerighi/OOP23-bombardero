@@ -29,10 +29,10 @@ public class Player extends Character {
      * input.
      */
     @Override
-    public void update(final long elapsedTime) {
+    public void update(final long elapsedTime, final GameManager manager) {
         // Skeleton effect:
         if (getResetEffect().isPresent()) { // If there's a Task to reset
-            updateSkeleton(elapsedTime);
+            updateSkeleton(elapsedTime, manager);
         }
         // Player movement:
         if (!isStationary()) { // If he's not stationary, computes the new position
@@ -40,12 +40,12 @@ public class Player extends Character {
         }
         // Place bomb:
         if (getHasToPlaceBomb()) {
-            placeBomb();
+            placeBomb(manager);
             setHasToPlaceBomb(false);
         }
         // Place line bomb:
         if (getHasToPlaceLineBomb()) {
-            PowerUpImpl.placeLineBomb(this, super.manager.getGameMap().getMap(), getFacingDirection());
+            PowerUpImpl.placeLineBomb(this, manager.getGameMap().getMap(), getFacingDirection());
             setHasToPlaceLineBomb(false);
         }
         // Explode remote bomb:

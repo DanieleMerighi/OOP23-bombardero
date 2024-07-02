@@ -57,10 +57,8 @@ public final class SkullEffect implements PowerUpEffect {
         skull.add(character -> character.setFlameRange(Character.getStartingFlameRange())); // Weakness
 
         return character -> {
-            // Checks if the character already had a skeleton effect applied
-            if (character.getResetEffect().isPresent()) { // Ends the previews effect and resets the player stats
-                character.updateSkeleton(EFFECT_DURATION_IN_SECONDS * SECONDS_TO_MILLISECONDS);
-            }
+            // Checks if the character already had a skull effect applied
+            character.getResetEffect().ifPresent(Runnable::run); // Ends the previews effect and resets the player stats
             // Saves the previous stats
             final float previousSpeed = character.getSpeed();
             final int previousFlameRange = character.getFlameRange();
