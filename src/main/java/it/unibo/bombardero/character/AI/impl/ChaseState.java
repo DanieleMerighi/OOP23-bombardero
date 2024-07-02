@@ -1,6 +1,7 @@
 package it.unibo.bombardero.character.ai.impl;
 
 import it.unibo.bombardero.character.Enemy;
+import it.unibo.bombardero.character.Character.CharacterType;
 import it.unibo.bombardero.character.ai.api.AbstractEnemyState;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
@@ -30,7 +31,7 @@ public class ChaseState extends AbstractEnemyState {
             final Pair currPos = enemy.getIntCoordinate();
             if ((closeEnemy.x() == currPos.x() || closeEnemy.y() == currPos.y())) {
                 if (enemy.calculateDistance(currPos, closeEnemy) <= enemy.getFlameRange()) {
-                    enemy.placeBomb(manager);
+                    enemy.placeBomb(manager, CharacterType.ENEMY);
                 } else {
                     enemy.setNextMove(new RandomMovementStrategy().getNextMove(enemy, manager));
                 }

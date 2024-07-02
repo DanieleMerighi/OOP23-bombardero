@@ -19,6 +19,9 @@ import it.unibo.bombardero.physics.api.BoundingBox;
  * Contains common properties and methods for characters.
  */
 public abstract class Character {
+    public enum CharacterType {
+        PLAYER, ENEMY;
+    }
 
     // Constants for default settings
     public static final float BOUNDING_BOX_HEIGHT = 0.75f;
@@ -136,7 +139,7 @@ public abstract class Character {
      * 
      * @param elapsedTime the time elapsed since the last update
      */
-    public void updateSkeleton(final long elapsedTime, final GameManager manager) {
+    public void updateSkeleton(final long elapsedTime, final GameManager manager, final CharacterType type) {
         if (this.skeletonEffectDuration > 0) { // Continues until the duration reaches zero
             this.skeletonEffectDuration -= elapsedTime;
             if (this.skeletonEffectDuration <= 0) { // When the effect ends the character's stats get resetted
@@ -145,7 +148,7 @@ public abstract class Character {
                 this.resetEffect = Optional.empty(); // Clear the reset effect after it has run
             }
             if (this.butterfingers) { // If the character has butterfingers, he places a bomb
-                placeBomb(manager);
+                placeBomb(manager, type);
             }
         }
     }
@@ -188,8 +191,8 @@ public abstract class Character {
      * 
      * @return true if the character has placed the bomb, false otherwise
      */
-    public boolean placeBomb(final GameManager manager) {
-        return placeBombImpl(createBomb(getIntCoordinate()), manager);
+    public boolean placeBomb(final GameManager manager, final CharacterType type) {
+        return placeBombImpl(createBomb(getIntCoordinate(), type), manager);
     }
 
     /**
@@ -200,10 +203,10 @@ public abstract class Character {
      * @return true if the character has placed the bomb, false otherwise
      */
     public boolean placeBomb(final Pair coordinate, final GameManager manager) {
-        return placeBombImpl(createBomb(coordinate), manager);
+        return placeBombImpl(createBomb(coordinate, CharacterType.PLAYER), manager);
     }
 
-    private Bomb createBomb(Pair coordinate) {
+    private Bomb createBomb(Pair coordinate, final CharacterType type) {
         if (!getBombType().isPresent()) {
             return bombFactory.createBasicBomb(this.getFlameRange(), coordinate);
         }
@@ -211,13 +214,15 @@ public abstract class Character {
             case PIERCING_BOMB:
                 return bombFactory.createPiercingBomb(this.getFlameRange(), coordinate);
             case REMOTE_BOMB:
-                return bombFactory.createRemoteBomb(this.getFlameRange(), coordinate);
+                return type.equals(CharacterType.ENEMY) ? bombFactory.createBasicBomb(this.getFlameRange(), coordinate)
+                        : bombFactory.createRemoteBomb(this.getFlameRange(), coordinate);
             case POWER_BOMB:
                 return bombFactory.createPowerBomb(coordinate);
             default:
                 return null;
         }
     }
+
     /**
      * Checks if the character has to place a bomb.
      * 
@@ -262,7 +267,7 @@ public abstract class Character {
         if (!bombQueue.isEmpty() && bombQueue.removeFirstOccurrence(explodedBomb)) {
             // System.out.println("removed bomb\n\n");
             this.increaseNumBomb();
-            
+
         }
     }
 
