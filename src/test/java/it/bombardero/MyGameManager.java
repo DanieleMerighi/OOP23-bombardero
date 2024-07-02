@@ -11,6 +11,8 @@ import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
+import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Arrays;
@@ -35,8 +37,8 @@ public class MyGameManager implements GameManager {
      */
     MyGameManager() {
         this.map = new GameMapImpl(false);
-        this.enemy = new Enemy(this, new Coord(0, 0), new BombFactoryImpl());
-        this.player = new Player(this, new Coord(0, PLAYERY), new BombFactoryImpl());
+        this.enemy = new Enemy(this, new Coord(0, 0), new BombFactoryImpl(), new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
+        this.player = new Player(this, new Coord(0, PLAYERY), new BombFactoryImpl(), new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
     }
 
     /**
