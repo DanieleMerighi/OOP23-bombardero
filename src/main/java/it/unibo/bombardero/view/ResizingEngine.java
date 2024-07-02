@@ -311,8 +311,8 @@ public final class ResizingEngine {
         final float scale = Math.floorDiv(MENU_LOGO_WIDTH, MENU_LOGO_HEIGHT);
         final float logoWidth = Math.floorDiv(gameWindowSize.width, 2);
         return new Dimension(
-            (int)Math.floor(logoWidth),
-            (int)Math.floor(logoWidth * scale)
+            (int)Math.floor(500),
+            (int)Math.floor(100)
         );
     }
     
