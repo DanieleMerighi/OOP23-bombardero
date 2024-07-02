@@ -5,6 +5,7 @@ import java.util.List;
 
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.core.api.Controller;
+import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.core.impl.BasicBombarderoGameManager;
 import it.unibo.bombardero.guide.api.GuideManager;
 import it.unibo.bombardero.guide.api.GuideStep;
@@ -93,12 +94,12 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
          * @param coord where to spawn the dummy
          */
         Dummy(final Coord coord) {
-            super(BombarderoGuideManager.this, coord, BombarderoGuideManager.this.getBombFactory(), 
+            super(coord, BombarderoGuideManager.this.getBombFactory(), 
                 new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
         }
 
         @Override
-        public void update(final long elapsedTime) {
+        public void update(final long elapsedTime, final GameManager manager) {
 
         }
    
