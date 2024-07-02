@@ -106,7 +106,6 @@ public final class GameMapImpl implements GameMap {
     public void removeBreakableWall(final Pair coordinate) {
         if (this.isBreakableWall(coordinate)) {
             this.map.remove(coordinate);
-            /* TODO: add powerup spawn mechanism */
             this.map.put(coordinate, powerupFactory.createPowerUp(coordinate));
         }
     }
