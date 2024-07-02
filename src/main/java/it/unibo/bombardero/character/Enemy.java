@@ -43,9 +43,8 @@ public class Enemy extends Character {
      * 
      * @param bombFactory the factory to create bombs
      */
-    public Enemy(final GameManager manager, final Coord coord, final BombFactory bombFactory) {
-        super(manager, coord, bombFactory);
-        GraphManagerImpl.initialize(manager.getGameMap());
+    public Enemy(final Coord coord, final BombFactory bombFactory) {
+        super(coord, bombFactory);
         setStationary(true);
         setFacingDirection(Direction.UP);
     }
@@ -69,8 +68,8 @@ public class Enemy extends Character {
      *
      * @return true if the player is within detection radius, false otherwise.
      */
-    public boolean isEnemyClose() {
-        return getClosestEntity().map(
+    public boolean isEnemyClose(final GameManager manager) {
+        return getClosestEntity(manager).map(
                 closestCoord -> calculateDistance(getIntCoordinate(), closestCoord) <= Utils.ENEMY_DETECTION_RADIUS)
                 .orElse(false);
     }
@@ -82,10 +81,10 @@ public class Enemy extends Character {
      * @return An Optional containing the closest entity's coordinates as a Pair,
      *         or empty if no other entities exist.
      */
-    public Optional<Pair> getClosestEntity() {
+    public Optional<Pair> getClosestEntity(final GameManager manager) {
         final Pair enemyCoord = getIntCoordinate();
-        final List<Character> allEntities = new ArrayList<>(super.manager.getEnemies());
-        allEntities.add(super.manager.getPlayer());
+        final List<Character> allEntities = new ArrayList<>(manager.getEnemies());
+        allEntities.add(manager.getPlayer());
 
         return allEntities.stream()
                 .map(Character::getIntCoordinate)
@@ -102,9 +101,9 @@ public class Enemy extends Character {
      * @return An Optional containing the closest entity, or empty if no other
      *         entities exist at the specified position.
      */
-    public Optional<Character> getClosestEntity(final Pair enemy) {
-        final List<Character> allEntities = new ArrayList<>(super.manager.getEnemies());
-        allEntities.add(super.manager.getPlayer());
+    public Optional<Character> getClosestEntity(final GameManager manager, final Pair enemy) {
+        final List<Character> allEntities = new ArrayList<>(manager.getEnemies());
+        allEntities.add(manager.getPlayer());
 
         return allEntities.stream()
                 .filter(e -> e.getIntCoordinate().equals(getIntCoordinate()))
@@ -140,8 +139,7 @@ public class Enemy extends Character {
      * 
      * @param time the elapsed time
      */
-    private void computeNextDir(final long time) {
-        final GameMap gameMap = super.manager.getGameMap();
+    private void computeNextDir(final long time, final GameMap gameMap) {
         graph = GraphManagerImpl.getGraphReasoner(gameMap, time);
         currentState.execute(this, gameMap);
         if (nextMove.isPresent()) {
@@ -169,11 +167,11 @@ public class Enemy extends Character {
      * This method is called every frame to handle enemy movement and actions.
      */
     @Override
-    public void update(final long elapsedTime) {
+    public void update(final long elapsedTime, final GameManager manager) {
         updateSkeleton(elapsedTime);
         if (nextMove.isEmpty()) {
-            computeNextDir(elapsedTime);
-        } else if (canMoveOn(nextMove.get())) {
+            computeNextDir(elapsedTime, manager.getGameMap());
+        } else if (canMoveOn(manager.getGameMap() ,nextMove.get())) {
             setStationary(false);
             final Coord target = new Coord(nextMove.get().x() + 0.5f, nextMove.get().y() + 0.5f);
             final Coord currentPos = getCharacterPosition();
@@ -200,8 +198,7 @@ public class Enemy extends Character {
         }
     }
 
-    private boolean canMoveOn(final Pair cell) {
-        final GameMap gameMap = this.manager.getGameMap();
+    private boolean canMoveOn(final GameMap gameMap, final Pair cell) {
         return gameMap.isEmpty(cell) || gameMap.isPowerUp(cell) 
         || (gameMap.isBomb(cell) && getIntCoordinate().equals(cell));
     }
