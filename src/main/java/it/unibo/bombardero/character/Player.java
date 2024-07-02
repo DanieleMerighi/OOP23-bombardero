@@ -46,7 +46,7 @@ public class Player extends Character {
         }
         // Place line bomb:
         if (getHasToPlaceLineBomb()) {
-            PowerUpImpl.placeLineBomb(this, manager.getGameMap().getMap(), getFacingDirection());
+            PowerUpImpl.placeLineBomb(this, manager.getGameMap().getMap(), getFacingDirection(), manager);
             setHasToPlaceLineBomb(false);
         }
         // Explode remote bomb:

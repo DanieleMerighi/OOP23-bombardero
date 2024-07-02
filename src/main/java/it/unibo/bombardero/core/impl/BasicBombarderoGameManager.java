@@ -63,7 +63,7 @@ public class BasicBombarderoGameManager implements GameManager {
         map = new GameMapImpl(generateWalls);
         ce = new BombarderoCollision();
         bombFactory = new BombFactoryImpl();
-        this.player = new Player(this, playerSpawnPoint, bombFactory, 
+        this.player = new Player(playerSpawnPoint, bombFactory, 
             new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
         enemiesSpawnpoint.forEach(spawnpoint -> enemies.add(new Enemy(this, spawnpoint, bombFactory, 
             new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT))));
@@ -86,7 +86,7 @@ public class BasicBombarderoGameManager implements GameManager {
     public void updateGame(final long elapsed) {
         //map.update(getTimeLeft());
         if (player.isAlive()) {
-            player.update(elapsed);
+            player.update(elapsed, this);
             ce.checkCharacterCollision(player, this);
             ce.checkFlameAndPowerUpCollision(player, this);
         }
@@ -100,7 +100,7 @@ public class BasicBombarderoGameManager implements GameManager {
         }
         enemies.forEach(enemy -> {
              if (enemy.isAlive()) {
-                 enemy.update(elapsed);
+                 enemy.update(elapsed, this);
                  ce.checkCharacterCollision(enemy, this);
                  ce.checkFlameAndPowerUpCollision(enemy, this);
              }
