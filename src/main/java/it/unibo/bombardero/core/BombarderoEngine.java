@@ -33,6 +33,7 @@ public final class BombarderoEngine extends Thread implements Engine {
      */
     public BombarderoEngine() {
         this.controller = new BombarderoController();
+        startGameLoop();
     }
 
     @Override
@@ -41,7 +42,7 @@ public final class BombarderoEngine extends Thread implements Engine {
         while (!isGameOver) {
             final long currentCycleStartTime = System.currentTimeMillis();
             final long elapsed = currentCycleStartTime - previousCycleStartTime;
-            if (controller.isGamePaused()) {
+            if (controller.isGameStarted() && !controller.isGamePaused()) {
                 controller.updateModel(elapsed);
             }
             waitForNextFrame(currentCycleStartTime);
@@ -76,4 +77,5 @@ public final class BombarderoEngine extends Thread implements Engine {
             }
         }
     }
+
 }
