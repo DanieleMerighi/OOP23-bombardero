@@ -21,7 +21,7 @@ import it.unibo.bombardero.character.Character;
 /** 
  * The graphics engine for the game, managing the layout and the component's update.
  */
-public final class BombarderoGraphics implements Graphics {
+public final class BombarderoGraphics implements GraphicsEngine {
 
     private final ResourceGetter resourceGetter = new ResourceGetter();
     private final ResizingEngine resizingEngine; 

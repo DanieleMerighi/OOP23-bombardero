@@ -12,14 +12,14 @@ import it.unibo.bombardero.guide.impl.BombarderoGuideManager;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.view.BombarderoGraphics;
 import it.unibo.bombardero.view.BombarderoViewMessages;
-import it.unibo.bombardero.view.Graphics;
+import it.unibo.bombardero.view.GraphicsEngine;
 import it.unibo.bombardero.character.Character;
 
 /**
  * This class implements the idea of the game controller expressed by
  * the {@link Controller} interface.
  * <p>
- * By containing references to the game's {@link GameManager} and {@link Graphics}
+ * By containing references to the game's {@link GameManager} and {@link GraphicsEngine}
  * this class is able to be updated by the engine and update the entire model and view,
  * while also serving as the Controller in the M.V.C. architecture of the software.
  */
@@ -34,7 +34,7 @@ public final class BombarderoController implements Controller {
 
     /**
      * Creates a new {@link BombarderoController} calling the constructor 
-     * will automatically instantiate the game's {@link Graphics} and show
+     * will automatically instantiate the game's {@link GraphicsEngine} and show
      * the game.
      */
     public BombarderoController() {
@@ -46,7 +46,7 @@ public final class BombarderoController implements Controller {
         this.manager = new FullBombarderoGameManager(this);
         isGamePaused = false;
         isGameStarted = true;
-        graphics.showCard(Graphics.viewCards.GAME);
+        graphics.showCard(GraphicsEngine.viewCards.GAME);
     }
 
     @Override
@@ -54,7 +54,7 @@ public final class BombarderoController implements Controller {
         engine.endGameLoop();
         isGamePaused = true;
         isGameStarted = false;
-        graphics.showCard(Graphics.viewCards.END);
+        graphics.showCard(GraphicsEngine.viewCards.END);
     }
 
     @Override
@@ -63,7 +63,7 @@ public final class BombarderoController implements Controller {
             this.manager = new BombarderoGuideManager(this);
             isGamePaused = false;
             isGameStarted = true;
-            graphics.showCard(Graphics.viewCards.GUIDE);
+            graphics.showCard(GraphicsEngine.viewCards.GUIDE);
             toggleMessage(BombarderoViewMessages.EXPLAIN_MOVEMENT);
         }
     }

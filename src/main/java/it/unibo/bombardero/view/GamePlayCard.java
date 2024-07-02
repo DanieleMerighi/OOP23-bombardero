@@ -65,7 +65,7 @@ public class GamePlayCard extends JPanel {
     private transient Image skull = resourceGetter.loadImage("powerup/skull");
 
     /* References to model components: */
-    private transient final it.unibo.bombardero.view.Graphics graphics;
+    private transient final it.unibo.bombardero.view.GraphicsEngine graphics;
     private transient Map<Pair, Cell> cells;
     private transient List<Character> playersList;
     private transient final Map<Character, SpriteImageCombo> characterImages = new HashMap<>(); // every enemy is linked to its own sprite
@@ -84,7 +84,7 @@ public class GamePlayCard extends JPanel {
     private boolean blurEntireWindow = true;
 
 
-    public GamePlayCard(final it.unibo.bombardero.view.Graphics graphics, final Map<Pair, Cell> map, final List<Character> playersList, final List<Character> enemies) {
+    public GamePlayCard(final it.unibo.bombardero.view.GraphicsEngine graphics, final Map<Pair, Cell> map, final List<Character> playersList, final List<Character> enemies) {
         this.graphics = graphics;
         this.setMinimumSize(graphics.getResizingEngine().getMapSize());
         this.setLayout(new BorderLayout());

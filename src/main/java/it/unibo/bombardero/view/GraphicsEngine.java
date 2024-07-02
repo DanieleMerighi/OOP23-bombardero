@@ -10,7 +10,7 @@ import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.map.api.Pair;
 
-public interface Graphics {
+public interface GraphicsEngine {
 
     enum viewCards {
         GAME("game"),

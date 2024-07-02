@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.List; 
 
 import it.unibo.bombardero.core.api.Controller;
-import it.unibo.bombardero.view.Graphics.viewCards;
+import it.unibo.bombardero.view.GraphicsEngine.viewCards;
 import it.unibo.bombardero.view.sprites.api.Sprite;
 import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
 import it.unibo.bombardero.cell.Cell;
@@ -55,7 +55,7 @@ public final class GuideCard extends GamePlayCard {
 
     private transient final Map<Sprite, Dimension> spritesPlacingPoint = new HashMap<>();
 
-    public GuideCard(final Controller controller, final it.unibo.bombardero.view.Graphics graphics, final Map<Pair, Cell> gameMap, List<Character> playersList, List<Character> enemiesList) {
+    public GuideCard(final Controller controller, final it.unibo.bombardero.view.GraphicsEngine graphics, final Map<Pair, Cell> gameMap, List<Character> playersList, List<Character> enemiesList) {
         super(graphics, gameMap, playersList, enemiesList);
 
         final ResourceGetter resourceGetter = graphics.getResourceGetter();
