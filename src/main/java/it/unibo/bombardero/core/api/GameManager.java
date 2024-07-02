@@ -55,18 +55,18 @@ public interface GameManager {
     GameMap getGameMap();
 
     boolean addBomb(Bomb bomb, Character character);
-    
+
     void removeBomb(Pair pos);
 
     Optional<Bomb> getBomb(Pair pos);
 
-    void addFlame(FlameType type,Pair pos);
+    void addFlame(FlameType type, Pair pos);
 
     void removePowerUp(Pair pos);
-    
+
     void removeFlame(Pair pos);
-    
+
     boolean removeWall(Pair pos);
-    
+
     Optional<Long> getTimeLeft();
-}   
+}
