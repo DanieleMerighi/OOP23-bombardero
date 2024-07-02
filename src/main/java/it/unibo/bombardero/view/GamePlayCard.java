@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.HashMap;
 import java.util.List;
+import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.swing.JPanel;
@@ -24,6 +26,7 @@ import it.unibo.bombardero.view.sprites.impl.BombarderoOrientedSprite;
 import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
 import it.unibo.bombardero.view.sprites.impl.TimedBombarderoSprite;
 import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
 
@@ -177,7 +180,12 @@ public class GamePlayCard extends JPanel {
         });
     }
 
-    public void updateGameState(final Map<Pair, Cell> map, final List<Character> playersList, final List<Character> enemiesList) {
+    public void update(final Map<Pair, Cell> map, final List<Character> playersList, final List<Character> enemiesList) {
+        updateGameState(map, playersList, enemiesList);
+        updateSprites();
+    }
+
+    private void updateGameState(final Map<Pair, Cell> map, final List<Character> playersList, final List<Character> enemiesList) {
         cells = Map.copyOf(map);
         this.playersList = List.copyOf(playersList);
         this.enemiesList = List.copyOf(enemiesList);
@@ -234,7 +242,7 @@ public class GamePlayCard extends JPanel {
 
     private void checkForNewCharacters() {
         enemiesList.stream()
-            .filter(enemy -> !characterImages.keySet().contains(enemy))
+            .filter(enemy -> !characterImages.keySet().contains(enemy) && enemy.isAlive())
             .forEach(enemy -> {
                 String colorCode =  colorCodes.isEmpty() ? "red" : colorCodes.get(0);
                 colorCodes = !colorCodes.isEmpty() ? colorCodes.subList(1, colorCodes.size()) : List.of();
@@ -249,7 +257,7 @@ public class GamePlayCard extends JPanel {
                 );
             });
         playersList.stream()
-            .filter(player -> !characterImages.keySet().contains(player))
+            .filter(player -> !characterImages.keySet().contains(player) && player.isAlive())
             .forEach(player -> {
                 String colorCode = "main";
                 OrientedSprite playerSprite = new BombarderoOrientedSprite("character/main/walking", resourceGetter, Direction.DOWN, graphics.getResizingEngine()::getScaledCharacterImage);
