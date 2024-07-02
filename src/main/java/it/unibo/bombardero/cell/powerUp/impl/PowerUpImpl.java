@@ -11,6 +11,7 @@ import it.unibo.bombardero.cell.powerup.api.PowerUpEffect;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
+import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Pair;
 
 /**
@@ -29,7 +30,7 @@ public final class PowerUpImpl extends AbstractCell implements PowerUp {
      * @param map               the map of cells
      * @param facingDirection   the direction the character is facing
      */
-    public static void placeLineBomb(final Character character, final Map<Pair, Cell> map, final Direction facingDirection) {
+    public static void placeLineBomb(final Character character, final Map<Pair, Cell> map, final Direction facingDirection, final GameManager manager) {
         if (character.hasLineBomb()) {
             // Lo stream continua finché non ha piazzato tutte le bombe o finché incontra un ostacolo
             IntStream
@@ -51,7 +52,7 @@ public final class PowerUpImpl extends AbstractCell implements PowerUp {
                         .sum(new Pair(
                             facingDirection.x() * offset,
                             facingDirection.y() * offset)
-                        )
+                        ), manager
                     )
                 );
         }
