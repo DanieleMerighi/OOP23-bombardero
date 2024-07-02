@@ -25,16 +25,4 @@ public class EscapeMovementStrategy implements MovementStrategy {
     public Optional<Pair> getNextMove(final Enemy enemy, final GameManager manager) {
         return enemy.getGraph().findNearestSafeCell(enemy.getIntCoordinate(), enemy.getFlameRange());
     }
-
-    /**
-     * Checks if one movement strategy is equal to EscapeMovementStrategy.
-     *
-     * @param obj the other movement strategy to compare with
-     * @return true if the two movement strategies are equal, false otherwise
-     */
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof EscapeMovementStrategy;
-    }
-
 }

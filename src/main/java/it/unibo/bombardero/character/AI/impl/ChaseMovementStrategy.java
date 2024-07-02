@@ -32,16 +32,4 @@ public class ChaseMovementStrategy implements MovementStrategy {
             return Optional.empty();
         });
     }
-
-    /**
-     * Checks if one strategy is equal to ChaseMovementStrategy.
-     *
-     * @param obj the other movement strategy to compare with
-     * @return true if the two movement strategies are equal, false otherwise
-     */
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof ChaseMovementStrategy;
-    }
-
 }

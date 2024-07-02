@@ -35,16 +35,4 @@ public class ShortestMovementStrategy implements MovementStrategy {
             return Optional.of(l.get(0));
         }
     }
-
-    /**
-     * Checks if one movement strategy is equal to ShortestMovementStrategy.
-     *
-     * @param obj the other movement strategy to compare with
-     * @return true if the two movement strategies are equal, false otherwise
-     */
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof ShortestMovementStrategy;
-    }
-
 }

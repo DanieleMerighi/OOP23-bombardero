@@ -1,0 +1,59 @@
+> Task :compileJava
+> Task :processResources UP-TO-DATE
+> Task :classes
+> Task :populateDefaultSpotBugsExcludes
+
+> Task :spotbugsMain
+L P UM: Method calls static Math class method on a constant value  At ResizingEngine.java:[line 305]
+L P UM: Method calls static Math class method on a constant value  At ResizingEngine.java:[line 306]
+M V EI: it.unibo.bombardero.physics.impl.RectangleBoundingBox.getPhysicsBox() may expose internal representation by returning RectangleBoundingBox.physicsBox  At RectangleBoundingBox.java:[line 72]
+L V MC: Overridable method haveBoundingCollision is called from constructor new it.unibo.bombardero.cell.AbstractCell(Cell$CellType, Pair, boolean, BoundingBox).  At AbstractCell.java:[line 24]
+M V EI2: new it.unibo.bombardero.character.AI.impl.EnemyGraphReasonerImpl(GameMap) may expose internal representation by storing an externally mutable object into EnemyGraphReasonerImpl.map  At EnemyGraphReasonerImpl.java:[line 54]
+M V EI2: it.unibo.bombardero.character.AI.impl.EnemyGraphReasonerImpl.updateGraph(GameMap) may expose internal representation by storing an externally mutable object into EnemyGraphReasonerImpl.map  At EnemyGraphReasonerImpl.java:[line 259]
+H B DMI: Random object created and used only once in it.unibo.bombardero.cell.powerup.impl.SkullEffect.lambda$getEffect$6(List, Character)  At SkullEffect.java:[line 67]
+M V EI2: new it.unibo.bombardero.view.MenuCard(Controller, BombarderoGraphics, ResourceGetter) may expose internal representation by storing an externally mutable object into MenuCard.graphicsEngine  At MenuCard.java:[line 35]
+L B Se: The field it.unibo.bombardero.view.MenuCard.play is transient but isn't set by deserialization  In MenuCard.java
+L B Se: The field it.unibo.bombardero.view.MenuCard.guide is transient but isn't set by deserialization  In MenuCard.java
+L D BC: Unchecked/unconfirmed cast from java.awt.Graphics to java.awt.Graphics2D in it.unibo.bombardero.view.MenuCard.paintComponent(Graphics)  At MenuCard.java:[line 104]
+L D ICAST: Result of integer multiplication cast to long in it.unibo.bombardero.cell.BasicBomb.update()  At BasicBomb.java:[line 57]
+M V EI: it.unibo.bombardero.view.sprites.impl.BombarderoOrientedSprite.getStandingImage() may expose internal representation by returning BombarderoOrientedSprite.standingAsset  At BombarderoOrientedSprite.java:[line 70]
+M V EI: it.unibo.bombardero.view.BombarderoGraphics.getParentFrame() may expose internal representation by returning BombarderoGraphics.frame  At BombarderoGraphics.java:[line 143]
+M V EI: it.unibo.bombardero.core.impl.BasicBombarderoGameManager.getGameMap() may expose internal representation by returning BasicBombarderoGameManager.map  At BasicBombarderoGameManager.java:[line 131]
+M V EI: it.unibo.bombardero.core.impl.BasicBombarderoGameManager.getPlayer() may expose internal representation by returning BasicBombarderoGameManager.player  At BasicBombarderoGameManager.java:[line 136]
+L B HE: it.unibo.bombardero.character.AI.impl.PatrolState defines equals and uses Object.hashCode()  At PatrolState.java:[line 40]
+L B HE: it.unibo.bombardero.character.AI.impl.ChaseState defines equals and uses Object.hashCode()  At ChaseState.java:[line 52]
+M V EI2: new it.unibo.bombardero.view.GamePlayCard(BombarderoGraphics, Map, List, List) may expose internal representation by storing an externally mutable object into GamePlayCard.graphics  At GamePlayCard.java:[line 80]
+L B Se: The field it.unibo.bombardero.view.GamePlayCard.characterImages is transient but isn't set by deserialization  In GamePlayCard.java
+L B Se: The field it.unibo.bombardero.view.GamePlayCard.dyingCharacters is transient but isn't set by deserialization  In GamePlayCard.java
+L D BC: Unchecked/unconfirmed cast from java.awt.Graphics to java.awt.Graphics2D in it.unibo.bombardero.view.GamePlayCard.paintComponent(Graphics)  At GamePlayCard.java:[line 97]
+L B HE: it.unibo.bombardero.character.AI.impl.ExploringState defines equals and uses Object.hashCode()  At ExploringState.java:[line 60]
+L B Se: Class it.unibo.bombardero.view.GameCard defines non-transient non-serializable instance field resumeButtonImage  In GameCard.java
+L B Se: Class it.unibo.bombardero.view.GameCard defines non-transient non-serializable instance field quitButtonImage  In GameCard.java
+M B Se: java.awt.image.BufferedImage stored into non-transient field GameCard.resumeButtonImage  At GameCard.java:[line 47]
+M B Se: java.awt.image.BufferedImage stored into non-transient field GameCard.quitButtonImage  At GameCard.java:[line 48]
+L D BC: Unchecked/unconfirmed cast from java.awt.Graphics to java.awt.Graphics2D in it.unibo.bombardero.view.GameCard.paintComponent(Graphics)  At GameCard.java:[line 74]
+M M STCAL: Call to method of static java.text.DateFormat in it.unibo.bombardero.view.GameCard.getFormattedTime()  At GameCard.java:[line 101]
+L B HE: it.unibo.bombardero.character.AI.impl.EscapeState defines equals and uses Object.hashCode()  At EscapeState.java:[line 60]
+L B Se: The field it.unibo.bombardero.view.GuideCard.spritesPlacingPoint is transient but isn't set by deserialization  In GuideCard.java
+L B HE: it.unibo.bombardero.character.AI.impl.WaitingState defines equals and uses Object.hashCode()  At WaitingState.java:[line 52]
+L C UwF: Unwritten field: it.unibo.bombardero.core.BombarderoEngine.isGameInterrupted  At BombarderoEngine.java:[line 66]
+M C UwF: Unwritten field: it.unibo.bombardero.core.impl.BombarderoController.engine  At BombarderoController.java:[line 35]
+M P UrF: Unread field: it.unibo.bombardero.view.ResizingEngine.minimumFrameSize  At ResizingEngine.java:[line 254]
+M C NP: Read of unwritten field engine in it.unibo.bombardero.core.impl.BombarderoController.endGuide()  At BombarderoController.java:[line 54]
+M C NP: Read of unwritten field engine in it.unibo.bombardero.core.impl.BombarderoController.startGuide()  At BombarderoController.java:[line 48]
+M C NP: Read of unwritten field engine in it.unibo.bombardero.core.impl.BombarderoController.startGame()  At BombarderoController.java:[line 35]
+M C NP: Read of unwritten field engine in it.unibo.bombardero.core.impl.BombarderoController.endGame()  At BombarderoController.java:[line 40]
+H V MS: it.unibo.bombardero.utils.Utils.MAP_WIDTH isn't final but should be  At Utils.java:[line 30]
+H V MS: it.unibo.bombardero.utils.Utils.MAP_HEIGHT isn't final but should be  At Utils.java:[line 31]
+H V MS: it.unibo.bombardero.utils.Utils.GRASS_PADDING_RATIO isn't final but should be  At Utils.java:[line 32]
+H V MS: it.unibo.bombardero.utils.Utils.BG_WIDTH isn't final but should be  At Utils.java:[line 33]
+H V MS: it.unibo.bombardero.utils.Utils.BG_HEIGHT isn't final but should be  At Utils.java:[line 34]
+
+> Task :spotbugsMain FAILED
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.6/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+4 actionable tasks: 3 executed, 1 up-to-date

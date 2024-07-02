@@ -51,5 +51,4 @@ public class WaitingState implements EnemyState {
     public boolean equals(Object obj) {
         return obj instanceof WaitingState;
     }
-
 }
