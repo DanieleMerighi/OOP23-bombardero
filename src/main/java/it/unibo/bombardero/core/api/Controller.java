@@ -53,6 +53,8 @@ public interface Controller {
      */
     void escape();
 
+    void updateModel(long elapsed);
+
     /** 
      * Requests the view to display the message passed as argument.
      * @param message the {@link BombarderoViewMessage} message to be displayed

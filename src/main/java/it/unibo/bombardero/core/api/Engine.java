@@ -30,16 +30,6 @@ public interface Engine extends Runnable {
      */
     void startGameLoop();
 
-    /**
-     * Pauses the game loop by making wait the thread running it.
-     */
-    void pauseGameLoop();
-
-    /**
-     * Resumes the main loop, if it was stopped.
-     */
-    void resumeGameLoop();
-
     /** 
      * Ends the game loop, supposedly when the game has ended. 
      */
