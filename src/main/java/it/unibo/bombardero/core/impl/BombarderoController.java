@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.List;
 import java.util.Optional;
 
+import org.jgrapht.generate.GnmRandomGraphGenerator;
+
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.core.BombarderoEngine;
 import it.unibo.bombardero.core.api.Controller;
@@ -13,6 +15,7 @@ import it.unibo.bombardero.guide.impl.BombarderoGuideManager;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.view.BombarderoGraphics;
 import it.unibo.bombardero.view.BombarderoViewMessages;
+import it.unibo.bombardero.view.Graphics;
 import it.unibo.bombardero.character.Character;
 
 public class BombarderoController implements Controller {
@@ -33,8 +36,7 @@ public class BombarderoController implements Controller {
         this.manager = new FullBombarderoGameManager(this);
         isGamePaused = false;
         isGameStarted = true;
-        graphics.initGameCard();
-        graphics.showCard(BombarderoGraphics.GAME_CARD);
+        graphics.showCard(Graphics.viewCards.GAME);
     }
 
     @Override
@@ -42,24 +44,28 @@ public class BombarderoController implements Controller {
         engine.endGameLoop();
         isGamePaused = true;
         isGameStarted = false;
-        graphics.showCard(BombarderoGraphics.END_CARD);
+        graphics.showCard(Graphics.viewCards.END);
     }
 
     @Override
     public void startGuide() {
-        this.manager = new BombarderoGuideManager(this);
-        isGamePaused = false;
-        isGameStarted = true;
-        graphics.showCard(BombarderoGraphics.GUIDE_CARD);
-        toggleMessage(BombarderoViewMessages.EXPLAIN_MOVEMENT);
+        if (isGameStarted) {
+            this.manager = new BombarderoGuideManager(this);
+            isGamePaused = false;
+            isGameStarted = true;
+            graphics.showCard(Graphics.viewCards.GUIDE);
+            toggleMessage(BombarderoViewMessages.EXPLAIN_MOVEMENT);
+        }
     }
 
     @Override
     public void endGuide() {
-        engine.endGameLoop();
-        isGamePaused = true;
-        isGameStarted = false;
-        graphics.update(getMap(), List.of(), getEnemies());
+        if (isGameStarted) {
+            engine.endGameLoop();
+            isGamePaused = true;
+            isGameStarted = false;
+            graphics.update(getMap(), List.of(), getEnemies(), getTimeLeft());
+        }
     }
 
     @Override
@@ -82,7 +88,7 @@ public class BombarderoController implements Controller {
 
     public void updateModel(final long elapsed) {
         manager.updateGame(elapsed);
-        graphics.update(getMap(), List.of(getMainPlayer()), getEnemies());
+        graphics.update(getMap(), List.of(getMainPlayer()), getEnemies(), getTimeLeft());
     }
 
     @Override
