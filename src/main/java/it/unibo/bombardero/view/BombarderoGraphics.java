@@ -19,8 +19,7 @@ import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.character.Character;
 
 /** 
- * The graphics engine for the game, managing the layout and the component's update
- * @author Federico Bagattoni
+ * The graphics engine for the game, managing the layout and the component's update.
  */
 public final class BombarderoGraphics implements Graphics {
 
@@ -36,7 +35,12 @@ public final class BombarderoGraphics implements Graphics {
     private final MenuCard menuCard;
     private GuideCard guideCard;
     private viewCards currentShowedCard = viewCards.MENU;
-    
+
+    /**
+     * Creates a new Graphics engine, creating and showing the window frame toghether
+     * with the various game modes panels. 
+     * @param controller the controller with whom the Graphics has to comunicate
+     */
     public BombarderoGraphics(final Controller controller) {
         this.frame = new JFrame("Bombardero: the Bomberman remake");
         this.deck = new JPanel(layout);
