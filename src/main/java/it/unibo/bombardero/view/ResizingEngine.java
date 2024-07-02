@@ -47,7 +47,7 @@ public final class ResizingEngine {
     private final Dimension buttonSize;
     private final Dimension menuLogoSize; 
 
-    public ResizingEngine(final BombarderoGraphics graphics) {
+    public ResizingEngine(final Graphics graphics) {
         int resolution = Toolkit.getDefaultToolkit().getScreenResolution();
         if(resolution >= 200) {              
             currentScale = 1.25; 
