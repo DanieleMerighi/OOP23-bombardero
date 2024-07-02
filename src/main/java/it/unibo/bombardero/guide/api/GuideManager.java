@@ -1,5 +1,6 @@
 package it.unibo.bombardero.guide.api;
 
+import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.Pair;
@@ -33,4 +34,5 @@ public interface GuideManager extends GameManager {
      */
     void spawnDummy();
 
+    void updateGame(long elapsed, Controller controller);
 }
