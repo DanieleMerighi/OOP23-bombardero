@@ -199,8 +199,8 @@ public abstract class Character {
      * 
      * @return true if the character has placed the bomb, false otherwise
      */
-    public boolean placeBomb(final Pair coordinate) {
-        return placeBombImpl(createBomb(coordinate));
+    public boolean placeBomb(final Pair coordinate, final GameManager manager) {
+        return placeBombImpl(createBomb(coordinate), manager);
     }
 
     private Bomb createBomb(Pair coordinate) {

@@ -20,8 +20,8 @@ public class Player extends Character {
      * @param coord       the initial coordinates where the player is spawned
      * @param bombFactory the factory to create bombs
      */
-    public Player(final Coord coord, final BombFactory bombFactory) {
-        super(coord, bombFactory);
+    public Player(final Coord coord, final BombFactory bombFactory, final BoundingBox bBox) {
+        super(coord, bombFactory, bBox);
     }
 
     /**
