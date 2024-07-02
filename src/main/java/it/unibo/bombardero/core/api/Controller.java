@@ -42,7 +42,7 @@ public interface Controller {
     void endGuide();
 
     /** 
-     * TODO: Displays the end fo.
+     *  Signals the View to display the end of the Guide game mode.
      */
     void displayEndGuide();
 
@@ -53,7 +53,11 @@ public interface Controller {
      */
     void escape();
 
-    void updateModel(long elapsed);
+    /** 
+     * Updates the model and the view. 
+     * @param elapsed the time elapsed since the last update
+     */
+    void update(long elapsed);
 
     /** 
      * Requests the view to display the message passed as argument.
@@ -62,15 +66,23 @@ public interface Controller {
      */
     void toggleMessage(BombarderoViewMessages message);
 
+    /** 
+     * Returns the pause state of the game.
+     * @return true if the game is paused, false otherwise
+     */
     boolean isGamePaused();
 
+    /**
+     * Tells wether any game mode has started or not.
+     * @return wether any game mode has started. 
+     */
     boolean isGameStarted();
 
     /**
      * Returns the main player of the current game instance. 
      * @return the main {@link Character}
      */
-    Character getMainPlayer();  
+    Character getMainPlayer();
 
     /** 
      * Returns the enemies of the current game instance. 
