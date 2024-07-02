@@ -4,10 +4,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.Optional;
 
-import org.jgrapht.generate.GnmRandomGraphGenerator;
-
 import it.unibo.bombardero.cell.Cell;
-import it.unibo.bombardero.core.BombarderoEngine;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.Engine;
 import it.unibo.bombardero.core.api.GameManager;
@@ -18,7 +15,15 @@ import it.unibo.bombardero.view.BombarderoViewMessages;
 import it.unibo.bombardero.view.Graphics;
 import it.unibo.bombardero.character.Character;
 
-public class BombarderoController implements Controller {
+/**
+ * This class implements the idea of the game controller expressed by
+ * the {@link Controller} interface.
+ * <p>
+ * By containing references to the game's {@link GameManager} and {@link Graphics}
+ * this class is able to be updated by the engine and update the entire model and view,
+ * while also serving as the Controller in the M.V.C. architecture of the software.
+ */
+public final class BombarderoController implements Controller {
 
     private final BombarderoGraphics graphics;
     private GameManager manager;
@@ -27,6 +32,11 @@ public class BombarderoController implements Controller {
     private boolean isGamePaused = true;
     private boolean isGameStarted = false;
 
+    /**
+     * Creates a new {@link BombarderoController} calling the constructor 
+     * will automatically instantiate the game's {@link Graphics} and show
+     * the game.
+     */
     public BombarderoController() {
         this.graphics = new BombarderoGraphics(this);
     }
@@ -86,6 +96,7 @@ public class BombarderoController implements Controller {
         }
     }
 
+    @Override
     public void update(final long elapsed) {
         manager.updateGame(elapsed);
         graphics.update(getMap(), List.of(getMainPlayer()), getEnemies(), getTimeLeft());
@@ -95,7 +106,7 @@ public class BombarderoController implements Controller {
     public void toggleMessage(final BombarderoViewMessages message) {
         graphics.setMessage(message);
     }
-    
+
     @Override
     public boolean isGamePaused() {
         return isGamePaused;
