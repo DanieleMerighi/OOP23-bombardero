@@ -208,15 +208,15 @@ public abstract class Character {
 
     private Bomb createBomb(Pair coordinate) {
         if (!getBombType().isPresent()) {
-            return bombFactory.createBasicBomb(this.getBombType(), this.getFlameRange(), this.getIntCoordinate());
+            return bombFactory.createBasicBomb(this.getFlameRange(), this.getIntCoordinate());
         }
         switch (this.getBombType().get()) {
             case PIERCING_BOMB:
-                return bombFactory.createPiercingBomb(this.getBombType(), this.getFlameRange(), this.getIntCoordinate());
+                return bombFactory.createPiercingBomb(this.getFlameRange(), this.getIntCoordinate());
             case REMOTE_BOMB:
-                return bombFactory.createRemoteBomb(this.getBombType(), this.getFlameRange(), this.getIntCoordinate());
+                return bombFactory.createRemoteBomb(this.getFlameRange(), this.getIntCoordinate());
             case POWER_BOMB:
-                return bombFactory.createPowerBomb(this.getBombType(), this.getIntCoordinate());
+                return bombFactory.createPowerBomb(this.getIntCoordinate());
             default:
                 return null;
         }

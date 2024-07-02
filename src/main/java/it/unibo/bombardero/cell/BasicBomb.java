@@ -1,6 +1,5 @@
 package it.unibo.bombardero.cell;
 
-import java.util.Optional;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.HashMap;
@@ -11,7 +10,6 @@ import java.util.stream.IntStream;
 import java.util.Set;
 
 import it.unibo.bombardero.cell.Flame.FlameType;
-import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
@@ -28,15 +26,11 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
     private final Pair position;
     private final BombType bombType;
 
-    public BasicBomb(final Optional<PowerUpType> bombType, final int range, final Pair pos) {
+    public BasicBomb(final BombType bombType, final int range, final Pair pos) {
         super(CellType.BOMB , pos, true);
         this.position = pos;
         this.range = range;
-        if(bombType.isPresent()) {
-            this.bombType = bombType.get().toBombType();
-        } else {
-            this.bombType = BombType.BOMB_BASIC;
-        }
+        this.bombType = bombType;
     }
 
     @Override

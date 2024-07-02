@@ -4,11 +4,9 @@ import java.awt.geom.Point2D;
 
 import java.util.Optional;
 
-import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.physics.api.BoundingBox;
 import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
-import it.unibo.bombardero.utils.Utils;
 
 /**
  * A class that defines a generic "Cell", in this game a "Cell" is an entity 

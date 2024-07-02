@@ -1,9 +1,7 @@
 package it.unibo.bombardero.cell;
 
-import java.util.Optional;
-
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.cell.powerup.api.PowerUpType;
+import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 
@@ -14,14 +12,14 @@ import it.unibo.bombardero.map.api.Pair;
 public class BombFactoryImpl implements BombFactory {
 
     @Override
-    public Bomb createBasicBomb(final Optional<PowerUpType> BombType,final int range, final Pair pos) {
-        return new BasicBomb(BombType, range, pos) {
+    public Bomb createBasicBomb(final int range, final Pair pos) {
+        return new BasicBomb(BombType.BOMB_BASIC, range, pos) {
         };
     }
 
     @Override
-    public Bomb createPiercingBomb(final Optional<PowerUpType> BombType,final int range, final Pair pos) {
-        return new BasicBomb(BombType, range, pos) {
+    public Bomb createPiercingBomb(final int range, final Pair pos) {
+        return new BasicBomb(BombType.BOMB_PIERCING, range, pos) {
 
             @Override
             public boolean isBreckableWall(final Pair pos, GameMap map, GameManager mgr) {
@@ -42,14 +40,14 @@ public class BombFactoryImpl implements BombFactory {
     }
 
     @Override
-    public Bomb createPowerBomb(final Optional<PowerUpType> BombType, final Pair pos) {
-        return new BasicBomb(BombType, BasicBomb.MAX_RANGE, pos) {
+    public Bomb createPowerBomb(final Pair pos) {
+        return new BasicBomb(BombType.BOMB_POWER, BasicBomb.MAX_RANGE, pos) {
         };
     }
 
     @Override
-    public Bomb createRemoteBomb(final Optional<PowerUpType> BombType,final int range, final Pair pos) {
-        return new BasicBomb(BombType, range, pos) {
+    public Bomb createRemoteBomb(final int range, final Pair pos) {
+        return new BasicBomb(BombType.BOMB_REMOTE, range, pos) {
 
             @Override
             public void update() {}
