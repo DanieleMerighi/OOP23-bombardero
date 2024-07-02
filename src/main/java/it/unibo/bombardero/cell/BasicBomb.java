@@ -54,7 +54,7 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
     @Override
     public void update() {
         countTick++;
-        if(countTick*16>=TIME_TO_EXPLODE) {
+        if(countTick*16f>=TIME_TO_EXPLODE) {
             explode();
         }
     }
