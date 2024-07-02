@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.core.KeyboardInput;
@@ -21,14 +22,7 @@ import it.unibo.bombardero.character.Character;
  * The graphics engine for the game, managing the layout and the component's update
  * @author Federico Bagattoni
  */
-public final class BombarderoGraphics {
-
-    public final static String MENU_CARD = "menu";
-    public final static String END_CARD = "end";
-    public final static String GAME_CARD = "game";
-    public final static String GUIDE_CARD = "guide";
-
-    private final Controller controller;
+public final class BombarderoGraphics implements Graphics {
 
     private final ResourceGetter resourceGetter = new ResourceGetter();
     private final ResizingEngine resizingEngine; 
@@ -39,13 +33,11 @@ public final class BombarderoGraphics {
     private final CardLayout layout = new CardLayout();
 
     private GameCard gameCard;
-    private GameoverCard endGameCard;
     private final MenuCard menuCard;
     private GuideCard guideCard;
-    private String currentShowedCard = MENU_CARD;
+    private viewCards currentShowedCard = viewCards.MENU;
     
     public BombarderoGraphics(final Controller controller) {
-        this.controller = controller;
         this.frame = new JFrame("Bombardero: the Bomberman remake");
         this.deck = new JPanel(layout);
 
@@ -62,40 +54,42 @@ public final class BombarderoGraphics {
 
         this.menuCard = new MenuCard(controller, this, resourceGetter);
         this.guideCard = new GuideCard(controller, this, Map.of(), List.of(), List.of());
-        deck.add(GUIDE_CARD, guideCard);
-        layout.addLayoutComponent(guideCard, GUIDE_CARD);
-        deck.add(MENU_CARD, menuCard);
-        layout.addLayoutComponent(menuCard, MENU_CARD);
+        this.gameCard = new GameCard(this);
+
+        deck.add(viewCards.GUIDE.getStringId(), guideCard);
+        layout.addLayoutComponent(guideCard, viewCards.GUIDE.getStringId());
+
+        deck.add(viewCards.MENU.getStringId(), menuCard);
+        layout.addLayoutComponent(menuCard, viewCards.MENU.getStringId());
+
+        deck.add(viewCards.GAME.getStringId(), gameCard);
+        layout.addLayoutComponent(gameCard, viewCards.GAME.getStringId());
         deck.validate();
         
         frame.add(deck);
-        showCard(MENU_CARD);
-        this.frame.setVisible(true);
+        showCard(viewCards.MENU);
+        frame.setVisible(true);
     }
 
-    public void showCard(final String cardName) {
-        layout.show(deck, cardName);
+    @Override
+    public void showCard(final viewCards cardName) {
+        layout.show(deck, cardName.getStringId());
         currentShowedCard = cardName;
-        this.frame.requestFocus();
+        frame.requestFocus();
     }
 
-    public void initGameCard() {
-        this.gameCard = new GameCard(this);
-        this.endGameCard = new GameoverCard();
-        deck.add(GAME_CARD, gameCard);
-        deck.add(END_CARD, endGameCard);
-        layout.addLayoutComponent(gameCard, GAME_CARD);
-        layout.addLayoutComponent(endGameCard, END_CARD);
-        deck.validate();
-    }
-
-    public void update(final Map<Pair, Cell> map, List<Character> playerList, List<Character> enemiesList) {
-        if (GAME_CARD.equals(currentShowedCard)) {
+    @Override
+    public void update(
+        final Map<Pair, Cell> map,
+        final List<Character> playerList,
+        final List<Character> enemiesList,
+        final Optional<Long> timeLeft) {
+        if (viewCards.GAME.equals(currentShowedCard)) {
             gameCard.update(map, playerList, enemiesList);
-            gameCard.setTimeLeft(controller.getTimeLeft().get());
+            gameCard.setTimeLeft(timeLeft.get());
             gameCard.repaint(0);
         }
-        else if (GUIDE_CARD.equals(currentShowedCard)) {
+        else if (viewCards.GUIDE.equals(currentShowedCard)) {
             guideCard.update(map, playerList, enemiesList);
             guideCard.repaint(0);
         }
@@ -109,14 +103,17 @@ public final class BombarderoGraphics {
         );
     }
 
+    @Override
     public void setPausedView() {
         gameCard.setPausedView();
     }
 
+    @Override
     public void setUnpausedView() {
         gameCard.setUnpausedView();
     }
 
+    @Override
     public void setMessage(final BombarderoViewMessages message) {
         guideCard.showMessage(message);
     }
@@ -124,19 +121,22 @@ public final class BombarderoGraphics {
     public void displayEndGuide() {
         guideCard.displayEndGuide();
     }
-
-    public Controller getController() {
-        return this.controller;
+ 
+    public void displayEndGame(final endGameState stateToDisplay) {
+        gameCard.displayEndGameState(stateToDisplay);
     }
 
+    @Override
     public ResizingEngine getResizingEngine() {
         return this.resizingEngine;
     }
 
+    @Override
     public ResourceGetter getResourceGetter() {
         return this.resourceGetter;
     }
 
+    @Override
     public JFrame getParentFrame() {
         return this.frame;
     }
