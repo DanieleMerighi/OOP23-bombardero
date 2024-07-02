@@ -2,17 +2,20 @@ package it.unibo.bombardero.view;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.awt.Image;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import java.util.List;
+import java.util.Map;
+
+import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.core.KeyboardInput;
 import it.unibo.bombardero.core.api.Controller;
-import it.unibo.bombardero.core.impl.BombarderoController;
+import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.character.Character;
 
 /** 
  * The graphics engine for the game, managing the layout and the component's update
@@ -41,8 +44,8 @@ public final class BombarderoGraphics {
     private GuideCard guideCard;
     private String currentShowedCard = MENU_CARD;
     
-    public BombarderoGraphics() {
-        this.controller = new BombarderoController(this);
+    public BombarderoGraphics(final Controller controller) {
+        this.controller = controller;
         this.frame = new JFrame("Bombardero: the Bomberman remake");
         this.deck = new JPanel(layout);
 
@@ -58,6 +61,9 @@ public final class BombarderoGraphics {
         frame.setIconImage(gameIconImage.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
 
         this.menuCard = new MenuCard(controller, this, resourceGetter);
+        this.guideCard = new GuideCard(controller, this, Map.of(), List.of(), List.of());
+        deck.add(GUIDE_CARD, guideCard);
+        layout.addLayoutComponent(guideCard, GUIDE_CARD);
         deck.add(MENU_CARD, menuCard);
         layout.addLayoutComponent(menuCard, MENU_CARD);
         deck.validate();
@@ -83,21 +89,16 @@ public final class BombarderoGraphics {
         deck.validate();
     }
 
-    public void initGuideCard() {
-        this.guideCard = new GuideCard(frame, controller, this, resourceGetter, resizingEngine);
-        deck.add(GUIDE_CARD, guideCard);
-        layout.addLayoutComponent(guideCard, GUIDE_CARD);
-        deck.validate();
-    }
-
-    public void update() {
+    public void update(final Map<Pair, Cell> map, List<Character> playerList, List<Character> enemiesList) {
         if (GAME_CARD.equals(currentShowedCard)) {
-            gameCard.updateGameState(controller.getMap(), controller.getMainPlayer(), controller.getEnemies());
+            gameCard.updateGameState(map, playerList, enemiesList);
+            gameCard.updateSprites();
             gameCard.setTimeLeft(controller.getTimeLeft().get());
             gameCard.repaint(0);
         }
         else if (GUIDE_CARD.equals(currentShowedCard)) {
-            guideCard.updateGameState(controller.getMap(), controller.getMainPlayer(), controller.getEnemies());
+            guideCard.updateGameState(map, playerList, enemiesList);
+            guideCard.updateSprites();
             guideCard.repaint(0);
         }
     }
