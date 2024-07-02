@@ -91,14 +91,12 @@ public final class BombarderoGraphics {
 
     public void update(final Map<Pair, Cell> map, List<Character> playerList, List<Character> enemiesList) {
         if (GAME_CARD.equals(currentShowedCard)) {
-            gameCard.updateGameState(map, playerList, enemiesList);
-            gameCard.updateSprites();
+            gameCard.update(map, playerList, enemiesList);
             gameCard.setTimeLeft(controller.getTimeLeft().get());
             gameCard.repaint(0);
         }
         else if (GUIDE_CARD.equals(currentShowedCard)) {
-            guideCard.updateGameState(map, playerList, enemiesList);
-            guideCard.updateSprites();
+            guideCard.update(map, playerList, enemiesList);
             guideCard.repaint(0);
         }
     }
