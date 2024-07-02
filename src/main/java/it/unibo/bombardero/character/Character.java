@@ -206,23 +206,6 @@ public abstract class Character {
         return placeBombImpl(createBomb(coordinate, CharacterType.PLAYER), manager);
     }
 
-    private Bomb createBomb(Pair coordinate, final CharacterType type) {
-        if (!getBombType().isPresent()) {
-            return bombFactory.createBasicBomb(this.getFlameRange(), coordinate);
-        }
-        switch (this.getBombType().get()) {
-            case PIERCING_BOMB:
-                return bombFactory.createPiercingBomb(this.getFlameRange(), coordinate);
-            case REMOTE_BOMB:
-                return type.equals(CharacterType.ENEMY) ? bombFactory.createBasicBomb(this.getFlameRange(), coordinate)
-                        : bombFactory.createRemoteBomb(this.getFlameRange(), coordinate);
-            case POWER_BOMB:
-                return bombFactory.createPowerBomb(coordinate);
-            default:
-                return null;
-        }
-    }
-
     /**
      * Checks if the character has to place a bomb.
      * 
@@ -625,6 +608,13 @@ public abstract class Character {
         this.resetEffect = Optional.of(resetEffect);
     }
 
+    /**
+     * General implementation of the placeBomb method.
+     * 
+     * @param bomb      the bomb that needs to be placed
+     * @param manager   the game manager
+     * @return          true if the bomb was placed
+     */
     private boolean placeBombImpl(final Bomb bomb, final GameManager manager) {
         if (hasBombsLeft() && !this.constipation && manager.addBomb(bomb, this)) {
             this.numBomb--;
@@ -640,5 +630,29 @@ public abstract class Character {
     private boolean hasPlacedRemoteBomb() {
         return bombQueue.stream()
                 .anyMatch(bomb -> bomb.getBombType().equals(BombType.BOMB_REMOTE));
+    }
+
+    /**
+     * Creates a bomb based on the type of bomb and the type of character.
+     * 
+     * @param coordinate    the coordinate of the bomb
+     * @param type          the type of character who creates it
+     * @return              the bomb created
+     */
+    private Bomb createBomb(Pair coordinate, final CharacterType type) {
+        if (!getBombType().isPresent()) {
+            return bombFactory.createBasicBomb(this.getFlameRange(), coordinate);
+        }
+        switch (this.getBombType().get()) {
+            case PIERCING_BOMB:
+                return bombFactory.createPiercingBomb(this.getFlameRange(), coordinate);
+            case REMOTE_BOMB:
+                return type.equals(CharacterType.ENEMY) ? bombFactory.createBasicBomb(this.getFlameRange(), coordinate)
+                        : bombFactory.createRemoteBomb(this.getFlameRange(), coordinate);
+            case POWER_BOMB:
+                return bombFactory.createPowerBomb(coordinate);
+            default:
+                return null;
+        }
     }
 }
