@@ -16,7 +16,7 @@ public interface MapGenerator {
      * @param wallSpawnRate the percentage at which walls have to be present in the map.
      * @return the number of breakable walls that have to be spawned. 
      */
-    int getTotalWallsToGenerate(final double wallSpawnRate);
+    int getTotalWallsToGenerate(double wallSpawnRate);
 
     /** 
      * Generates the positions in which unbreakable walls have to spawn, 
@@ -30,9 +30,11 @@ public interface MapGenerator {
      * Generates the requested number of breakable walls, avoiding spawing them 
      * in the map's corners and in occupied spaces in the {@link GameMap} passed
      * as argument. 
+     * @param map the {@link GameMap} object on which the walls will be placed
+     * @param totalWallToGenerate the total number of walls that have to be generated
      * @return a {@link Set} containing all the positions of the walls.
      */
-    Set<Pair> generateBreakableWalls(final GameMap map, final int totalWallsToGenerate);
+    Set<Pair> generateBreakableWalls(GameMap map, int totalWallsToGenerate);
 
     /** 
      * Generates the order of cell on which an Unbreakable wall has to be spawned
