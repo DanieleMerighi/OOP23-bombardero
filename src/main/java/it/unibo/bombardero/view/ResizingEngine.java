@@ -27,6 +27,8 @@ public final class ResizingEngine {
     private final static int BUTTON_HEIGHT = 92; 
     private final static int MENU_BACKGROUND_WIDTH = 3840;
     private final static int MENU_BACKGROUND_HEIGHT = 2160;
+    private final static int MENU_LOGO_WIDTH = 1522;
+    private final static int MENU_LOGO_HEIGHT = 362;
 
     private double currentScale = 1.125; /* default scale size for every device */
     private final int scaledCellSize;
@@ -139,6 +141,10 @@ public final class ResizingEngine {
 
     public Image getScaledButtonImage(final Image buttonImage) {
         return buttonImage.getScaledInstance(buttonSize.width, buttonSize.height, Image.SCALE_SMOOTH);
+    }
+
+    public Image getScaledMenuLogoImage(final Image menuLogoImage) {
+        return menuLogoImage.getScaledInstance(menuLogoSize.width, menuLogoSize.height, Image.SCALE_SMOOTH);
     }
 
     public Image getSubImageFromBackground(final BufferedImage menuBackgroundImage) {
@@ -302,9 +308,11 @@ public final class ResizingEngine {
     }
 
     private Dimension initLogoSize() {
+        final float scale = Math.floorDiv(MENU_LOGO_WIDTH, MENU_LOGO_HEIGHT);
+        final float logoWidth = Math.floorDiv(gameWindowSize.width, 2);
         return new Dimension(
-            (int)Math.floor(gameWindowSize.width / 2),
-            (int)Math.floor(gameWindowSize.height / 2)
+            (int)Math.floor(logoWidth),
+            (int)Math.floor(logoWidth * scale)
         );
     }
     
