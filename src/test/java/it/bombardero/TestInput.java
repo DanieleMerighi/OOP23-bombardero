@@ -18,6 +18,8 @@ import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.KeyboardInput;
 import it.unibo.bombardero.core.api.Controller;
+import it.unibo.bombardero.core.api.GameManager;
+import it.unibo.bombardero.core.impl.BombarderoController;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.view.BombarderoViewMessages;
 
@@ -36,17 +38,17 @@ class TestInput {
     @BeforeEach
     void setUp() {
         // Initialize the test controller
-        controller = new Controller() {
-            private final Character mainPlayer = new Character(null, null, null, null) {
+        controller = new BombarderoController() {
+            private boolean escapeCalled;
+            private final Character mainPlayer = new Character(null, null, null) {
 
                 @Override
-                public void update(final long elapsedTime) {
+                public void update(final long elapsedTime, final GameManager manager) {
                     // TODO Auto-generated method stub
                     throw new UnsupportedOperationException("Unimplemented method 'update'");
                 }
 
             };
-            private boolean escapeCalled;
 
             @Override
             public void startGame() {
