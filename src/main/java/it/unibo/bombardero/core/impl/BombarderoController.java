@@ -21,7 +21,8 @@ public class BombarderoController implements Controller {
     private GameManager manager;
     private Engine engine;
 
-    private boolean isGamePaused = false;
+    private boolean isGamePaused = true;
+    private boolean isGameStarted = false;
 
     public BombarderoController() {
         this.graphics = new BombarderoGraphics(this);
@@ -30,28 +31,34 @@ public class BombarderoController implements Controller {
     @Override
     public void startGame() {
         this.manager = new FullBombarderoGameManager(this);
+        isGamePaused = false;
+        isGameStarted = true;
         graphics.initGameCard();
         graphics.showCard(BombarderoGraphics.GAME_CARD);
-        engine.startGameLoop();
     }
 
     @Override
     public void endGame() {
         engine.endGameLoop();
+        isGamePaused = true;
+        isGameStarted = false;
         graphics.showCard(BombarderoGraphics.END_CARD);
     }
 
     @Override
     public void startGuide() {
         this.manager = new BombarderoGuideManager(this);
+        isGamePaused = false;
+        isGameStarted = true;
         graphics.showCard(BombarderoGraphics.GUIDE_CARD);
-        engine.startGameLoop();
         toggleMessage(BombarderoViewMessages.EXPLAIN_MOVEMENT);
     }
 
     @Override
     public void endGuide() {
         engine.endGameLoop();
+        isGamePaused = true;
+        isGameStarted = false;
         graphics.update(getMap(), List.of(), getEnemies());
     }
 
@@ -75,7 +82,7 @@ public class BombarderoController implements Controller {
 
     public void updateModel(final long elapsed) {
         manager.updateGame(elapsed);
-        graphics.update(getMap(), List.of(), getEnemies());
+        graphics.update(getMap(), List.of(getMainPlayer()), getEnemies());
     }
 
     @Override
@@ -86,6 +93,11 @@ public class BombarderoController implements Controller {
     @Override
     public boolean isGamePaused() {
         return isGamePaused;
+    }
+
+    @Override
+    public boolean isGameStarted() {
+        return isGameStarted;
     }
 
     @Override
