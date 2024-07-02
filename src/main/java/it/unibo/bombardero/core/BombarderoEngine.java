@@ -2,9 +2,7 @@ package it.unibo.bombardero.core;
 
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.Engine;
-import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.core.impl.BombarderoController;
-import it.unibo.bombardero.view.BombarderoGraphics;
 /**
  * This class implements the concept of the game engine expressed 
  * in the {@link Engine} interface; to do so it extends the Thread 
@@ -21,7 +19,6 @@ public final class BombarderoEngine extends Thread implements Engine {
     //private final GameManager manager;
     //private final BombarderoGraphics graphics;
     private Controller controller;
-    private boolean isGameInterrupted;
     private boolean isGameOver;
 
     /**
@@ -60,11 +57,6 @@ public final class BombarderoEngine extends Thread implements Engine {
     @Override
     public void endGameLoop() {
         isGameOver = true;
-    }
-
-    @Override
-    public synchronized boolean isInterrupted() {
-        return this.isGameInterrupted;
     }
 
     private void waitForNextFrame(final long currentCycleStartTime) {
