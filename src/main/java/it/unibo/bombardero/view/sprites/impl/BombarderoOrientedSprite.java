@@ -29,6 +29,7 @@ public final class BombarderoOrientedSprite extends SimpleBombarderoSprite imple
      * @param rg the {@link ResourceGetter} object to use for fetching the resource
      * @param facingDirection the direction that the assets will face (e.g. <code>Direction.UP</code> tells the constructor
      * to load the sprite facing the <code>UP</code> direction)
+     * @param imageResizer the function that will be applied to each asset after being loaded, to resize it
      */
     public BombarderoOrientedSprite(final String resource,
         final ResourceGetter rg,
@@ -42,7 +43,7 @@ public final class BombarderoOrientedSprite extends SimpleBombarderoSprite imple
             getFramesFromPosition(facingDirection), facingDirection),
             getFramesFromPosition(facingDirection)
         );
-        
+   
         this.resource = resource;
         this.rg = rg;
         this.currentFacingDirection = facingDirection;
@@ -91,6 +92,7 @@ public final class BombarderoOrientedSprite extends SimpleBombarderoSprite imple
      * @param rg the ResourceGetter used to fetch the asset
      * @param imageResizer the function used to resize the asset
      * @param framesPerSprite the number of frames the sprite is composed
+     * @param facingDirection the direction that the asset will face
      * @return the array of assets representing the sprite resource
      */
     public static Image[] importOrientedAssets(
