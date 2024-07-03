@@ -16,6 +16,7 @@ import it.unibo.bombardero.cell.powerup.impl.PowerUpFactoryImpl;
 import it.unibo.bombardero.cell.powerup.impl.PowerUpImpl;
 import it.unibo.bombardero.cell.powerup.impl.SkullEffect;
 import it.unibo.bombardero.character.Character;
+import it.unibo.bombardero.character.Character.CharacterType;
 import it.unibo.bombardero.map.api.Pair;
 
 /**
@@ -59,7 +60,7 @@ class TestPowerUp {
         });
         if (this.manager.getPlayer().getResetEffect().isPresent()) {
             while (this.manager.getPlayer().getSkeletonEffectDuration() > 0) {
-                this.manager.getPlayer().updateSkeleton(STANDARD_ELAPSED_TIME, manager);
+                this.manager.getPlayer().updateSkeleton(STANDARD_ELAPSED_TIME, manager, CharacterType.PLAYER);
             }
         }
     }
@@ -79,7 +80,7 @@ class TestPowerUp {
         assertTrue(this.manager.getPlayer().getResetEffect().isPresent());
 
         while (this.manager.getPlayer().getSkeletonEffectDuration() > 0) {
-            this.manager.getPlayer().updateSkeleton(STANDARD_ELAPSED_TIME, manager);
+            this.manager.getPlayer().updateSkeleton(STANDARD_ELAPSED_TIME, manager, CharacterType.PLAYER);
         }
 
         // Asserts the skull duration is 0

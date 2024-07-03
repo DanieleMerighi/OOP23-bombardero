@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import it.unibo.bombardero.cell.Cell;
-import it.unibo.bombardero.core.BombarderoEngine;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.Engine;
 import it.unibo.bombardero.core.api.GameManager;
@@ -13,9 +12,18 @@ import it.unibo.bombardero.guide.impl.BombarderoGuideManager;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.view.BombarderoGraphics;
 import it.unibo.bombardero.view.BombarderoViewMessages;
+import it.unibo.bombardero.view.GraphicsEngine;
 import it.unibo.bombardero.character.Character;
 
-public class BombarderoController implements Controller {
+/**
+ * This class implements the idea of the game controller expressed by
+ * the {@link Controller} interface.
+ * <p>
+ * By containing references to the game's {@link GameManager} and {@link GraphicsEngine}
+ * this class is able to be updated by the engine and update the entire model and view,
+ * while also serving as the Controller in the M.V.C. architecture of the software.
+ */
+public final class BombarderoController implements Controller {
 
     private final BombarderoGraphics graphics;
     private GameManager manager;
@@ -24,6 +32,11 @@ public class BombarderoController implements Controller {
     private boolean isGamePaused = true;
     private boolean isGameStarted = false;
 
+    /**
+     * Creates a new {@link BombarderoController} calling the constructor 
+     * will automatically instantiate the game's {@link GraphicsEngine} and show
+     * the game.
+     */
     public BombarderoController() {
         this.graphics = new BombarderoGraphics(this);
     }
@@ -33,8 +46,7 @@ public class BombarderoController implements Controller {
         this.manager = new FullBombarderoGameManager(this);
         isGamePaused = false;
         isGameStarted = true;
-        graphics.initGameCard();
-        graphics.showCard(BombarderoGraphics.GAME_CARD);
+        graphics.showCard(GraphicsEngine.viewCards.GAME);
     }
 
     @Override
@@ -42,24 +54,28 @@ public class BombarderoController implements Controller {
         engine.endGameLoop();
         isGamePaused = true;
         isGameStarted = false;
-        graphics.showCard(BombarderoGraphics.END_CARD);
+        graphics.showCard(GraphicsEngine.viewCards.END);
     }
 
     @Override
     public void startGuide() {
-        this.manager = new BombarderoGuideManager(this);
-        isGamePaused = false;
-        isGameStarted = true;
-        graphics.showCard(BombarderoGraphics.GUIDE_CARD);
-        toggleMessage(BombarderoViewMessages.EXPLAIN_MOVEMENT);
+        if (isGameStarted) {
+            this.manager = new BombarderoGuideManager(this);
+            isGamePaused = false;
+            isGameStarted = true;
+            graphics.showCard(GraphicsEngine.viewCards.GUIDE);
+            toggleMessage(BombarderoViewMessages.EXPLAIN_MOVEMENT);
+        }
     }
 
     @Override
     public void endGuide() {
-        engine.endGameLoop();
-        isGamePaused = true;
-        isGameStarted = false;
-        graphics.update(getMap(), List.of(), getEnemies());
+        if (isGameStarted) {
+            engine.endGameLoop();
+            isGamePaused = true;
+            isGameStarted = false;
+            graphics.update(getMap(), List.of(), getEnemies(), getTimeLeft());
+        }
     }
 
     @Override
@@ -80,16 +96,17 @@ public class BombarderoController implements Controller {
         }
     }
 
-    public void updateModel(final long elapsed) {
+    @Override
+    public void update(final long elapsed) {
         manager.updateGame(elapsed);
-        graphics.update(getMap(), List.of(getMainPlayer()), getEnemies());
+        graphics.update(getMap(), List.of(getMainPlayer()), getEnemies(), getTimeLeft());
     }
 
     @Override
     public void toggleMessage(final BombarderoViewMessages message) {
         graphics.setMessage(message);
     }
-    
+
     @Override
     public boolean isGamePaused() {
         return isGamePaused;

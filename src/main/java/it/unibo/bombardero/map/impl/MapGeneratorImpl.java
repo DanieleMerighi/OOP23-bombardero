@@ -20,7 +20,7 @@ import it.unibo.bombardero.utils.Utils;
  * constructor.
  * @author Federico Bagattoni
  */
-public class MapGeneratorImpl implements MapGenerator {
+public final class MapGeneratorImpl implements MapGenerator {
 
     /* This number and List represent the twelve cells on which nothing can spawn except the player: */
     /* NOTE: the number "12" does NOT depend from the arena's size, however the "MAP_CORNERS" Set does. */
@@ -29,7 +29,6 @@ public class MapGeneratorImpl implements MapGenerator {
 
     /** 
      * Creates a new Map Manager managing a the map passed as argument.
-     * @param map the map to manage
      */
     public MapGeneratorImpl() {
         this.computeMapCorners();
@@ -76,10 +75,10 @@ public class MapGeneratorImpl implements MapGenerator {
             do {
                 coordinate = new Pair(rnd.nextInt(Utils.MAP_COLS), rnd.nextInt(Utils.MAP_ROWS));
             } while (
-                !map.isEmpty(coordinate) ||
-                this.mapCorners.contains(coordinate) ||
-                walls.contains(coordinate) ||
-                unbreakableWalls.contains(coordinate));
+                !map.isEmpty(coordinate)
+                || this.mapCorners.contains(coordinate)
+                || walls.contains(coordinate)
+                || unbreakableWalls.contains(coordinate));
             walls.add(coordinate);
             counter--;
         }
@@ -122,7 +121,7 @@ public class MapGeneratorImpl implements MapGenerator {
 
     /** 
      * To be called during the manager's initialization, it computes the twelve cells 
-     * on which nothing can spawn except the player
+     * on which nothing can spawn except the player.
      */
     private void computeMapCorners() {
         this.mapCorners.add(new Pair(0, 0));

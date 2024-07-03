@@ -10,7 +10,7 @@ import it.unibo.bombardero.physics.api.BoundingBox;
  * 
  */
 public interface Cell {
-    
+
     /** 
      * This enumerator defines the various types of
      * cells that exist in the game.

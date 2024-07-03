@@ -60,7 +60,7 @@ public final class GameMapImpl implements GameMap {
     @Override
     public void update(final long timeLeft) {
         if (collapseStarted && !collapseOrder.isEmpty()) {
-            counter = (counter + 1)%GameMap.COLLAPSE_RATE;
+            counter = (counter + 1) % GameMap.COLLAPSE_RATE;
             if (counter == 0) {
                 addUnbreakableWall(collapseOrder.remove(0));
             }
@@ -92,21 +92,20 @@ public final class GameMapImpl implements GameMap {
 
     @Override
     public void addUnbreakableWall(final Pair coordinate) {
-        this.map.put(coordinate , new Wall(Cell.CellType.WALL_UNBREAKABLE, coordinate, 
-            new RectangleBoundingBox(coordinate.x(), coordinate.y(), 1.0f , 1.0f)));
+        this.map.put(coordinate, new Wall(Cell.CellType.WALL_UNBREAKABLE, coordinate, 
+            new RectangleBoundingBox(coordinate.x(), coordinate.y(), 1.0f, 1.0f)));
     }
 
     @Override
     public void addBreakableWall(final Pair coordinate) {
         this.map.put(coordinate, new Wall(Cell.CellType.WALL_BREAKABLE, coordinate, 
-            new RectangleBoundingBox(coordinate.x(), coordinate.y(), 1.0f , 1.0f)));
+            new RectangleBoundingBox(coordinate.x(), coordinate.y(), 1.0f, 1.0f)));
     }
 
     @Override
     public void removeBreakableWall(final Pair coordinate) {
         if (this.isBreakableWall(coordinate)) {
             this.map.remove(coordinate);
-            /* TODO: add powerup spawn mechanism */
             this.map.put(coordinate, powerupFactory.createPowerUp(coordinate));
         }
     }
@@ -182,8 +181,8 @@ public final class GameMapImpl implements GameMap {
 
     @Override
     public Optional<PowerUpType> whichPowerUpType(final Pair coordinate) {
-        if(this.isPowerUp(coordinate)) {
-            PowerUp powerup = (PowerUp)this.map.get(coordinate);
+        if (this.isPowerUp(coordinate)) {
+            PowerUp powerup = (PowerUp) this.map.get(coordinate);
             return Optional.of(powerup.getType());
         }
         return Optional.empty();

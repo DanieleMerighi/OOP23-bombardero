@@ -2,9 +2,7 @@ package it.unibo.bombardero.core;
 
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.Engine;
-import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.core.impl.BombarderoController;
-import it.unibo.bombardero.view.BombarderoGraphics;
 /**
  * This class implements the concept of the game engine expressed 
  * in the {@link Engine} interface; to do so it extends the Thread 
@@ -16,20 +14,16 @@ import it.unibo.bombardero.view.BombarderoGraphics;
  */
 public final class BombarderoEngine extends Thread implements Engine {
 
-    private final static long SLEEP_TIME = 16L; // Time during which the thread sleeps, equivalent to about 60FPS
-    
+    private static final long SLEEP_TIME = 16L; // Time during which the thread sleeps, equivalent to about 60FPS
+ 
     //private final GameManager manager;
     //private final BombarderoGraphics graphics;
     private Controller controller;
-    private boolean isGameInterrupted;
     private boolean isGameOver;
 
     /**
      * Creates a new BombarderoEngine, associating it to a Controller 
      * , a Graphics engine and a GameManager.
-     * @param controller
-     * @param graphics
-     * @param manager
      */
     public BombarderoEngine() {
         this.controller = new BombarderoController();
@@ -43,7 +37,7 @@ public final class BombarderoEngine extends Thread implements Engine {
             final long currentCycleStartTime = System.currentTimeMillis();
             final long elapsed = currentCycleStartTime - previousCycleStartTime;
             if (controller.isGameStarted() && !controller.isGamePaused()) {
-                controller.updateModel(elapsed);
+                controller.update(elapsed);
             }
             waitForNextFrame(currentCycleStartTime);
             previousCycleStartTime = currentCycleStartTime;
@@ -60,11 +54,6 @@ public final class BombarderoEngine extends Thread implements Engine {
     @Override
     public void endGameLoop() {
         isGameOver = true;
-    }
-
-    @Override
-    public synchronized boolean isInterrupted() {
-        return this.isGameInterrupted;
     }
 
     private void waitForNextFrame(final long currentCycleStartTime) {

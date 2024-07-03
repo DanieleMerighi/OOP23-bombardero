@@ -33,7 +33,7 @@ public class Player extends Character {
     public void update(final long elapsedTime, final GameManager manager) {
         // Skeleton effect:
         if (getResetEffect().isPresent()) { // If there's a Task to reset
-            updateSkeleton(elapsedTime, manager);
+            updateSkeleton(elapsedTime, manager, CharacterType.PLAYER);
         }
         // Player movement:
         if (!isStationary()) { // If he's not stationary, computes the new position
@@ -41,7 +41,7 @@ public class Player extends Character {
         }
         // Place bomb:
         if (getHasToPlaceBomb()) {
-            placeBomb(manager);
+            placeBomb(manager, CharacterType.PLAYER);
             setHasToPlaceBomb(false);
         }
         // Place line bomb:

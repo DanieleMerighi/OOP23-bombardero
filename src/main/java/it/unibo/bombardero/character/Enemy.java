@@ -150,11 +150,11 @@ public class Enemy extends Character {
             }
             if (!isStateEqualTo(new EscapeState())
                     && gameMap.whichPowerUpType(nextMove.get()).map(c -> c == PowerUpType.SKULL).orElse(false)) {
-                placeBomb(manager);
+                placeBomb(manager, CharacterType.ENEMY);
                 nextMove = Optional.empty();
             } else if (gameMap.isBreakableWall(nextMove.get())
                     && graph.findNearestSafeCell(getIntCoordinate(), getFlameRange()).isPresent()) {
-                placeBomb(manager);
+                placeBomb(manager, CharacterType.ENEMY);
             }
         } else {
             waitTimer++;
@@ -171,7 +171,7 @@ public class Enemy extends Character {
     @Override
     public void update(final long elapsedTime, final GameManager manager) {
         GraphManagerImpl.initialize(manager.getGameMap());
-        updateSkeleton(elapsedTime, manager);
+        updateSkeleton(elapsedTime, manager, CharacterType.ENEMY);
         if (nextMove.isEmpty()) {
             computeNextDir(elapsedTime, manager);
         } else if (canMoveOn(manager.getGameMap() ,nextMove.get())) {

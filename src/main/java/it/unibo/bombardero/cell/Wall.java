@@ -13,8 +13,9 @@ public class Wall extends AbstractCell {
      * position inside the map. 
      * @param type the type of the wall
      * @param pos the position of the wall
+     * @param bBox the {@link BoundingBox} representing the hitbox of this class
      */
-    public Wall(CellType type, Pair pos, BoundingBox bBox) {
+    public Wall(final CellType type, final Pair pos, final BoundingBox bBox) {
         super(type, pos, true, bBox);
     }
 

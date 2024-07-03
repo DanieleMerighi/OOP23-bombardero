@@ -43,10 +43,10 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
     }
 
     @Override
-    public void updateGame(final long elapsed) {
+    public void updateGame(final long elapsed, final Controller controller) {
         super.updateGame(elapsed);
         if (!guideProcedures.isEmpty() && guideProcedures.peek().condition().test(getGameMap(), this)) {
-            guideProcedures.pop().action().accept(this, getController());
+            guideProcedures.pop().action().accept(this, controller);
         }
     }
 

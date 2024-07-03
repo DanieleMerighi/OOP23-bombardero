@@ -32,9 +32,9 @@ import it.unibo.bombardero.character.Player;
  */
 public class BasicBombarderoGameManager implements GameManager {
 
-    public final static long TOTAL_GAME_TIME = 120_000L;
-    public final static long GAME_OVER_TIME = 0L;
-    
+    public static final long TOTAL_GAME_TIME = 120_000L;
+    public static final long GAME_OVER_TIME = 0L;
+
     private final GameMap map;
     private final Map<Bomb, Character> boombs = new HashMap<>();
     private final List<Flame> flames = new ArrayList<>();
@@ -48,7 +48,7 @@ public class BasicBombarderoGameManager implements GameManager {
      * Creates a new Game Manager, creating all the model's entities. Spawning 
      * the player and the enemies in the request positions.
      * <p>
-     * A enemy for each element of the list will be spawned.  
+     * A enemy for each element of the list will be spawned.
      * @param controller the game's controller 
      * @param playerSpawnPoint the main player's spawnpoint
      * @param enemiesSpawnpoint a list of the enemies spawnpoints
@@ -84,7 +84,6 @@ public class BasicBombarderoGameManager implements GameManager {
      */
     @Override
     public void updateGame(final long elapsed) {
-        //map.update(getTimeLeft());
         if (player.isAlive()) {
             player.update(elapsed, this);
             ce.checkCharacterCollision(player, this);
@@ -96,7 +95,7 @@ public class BasicBombarderoGameManager implements GameManager {
         }
         if (!flames.isEmpty()) {
             flames.forEach(f -> f.update(elapsed));
-            List.copyOf(flames).stream().filter(f->f.isExpired()).peek(f->flames.remove(f)).forEach(f->removeFlame(f.getPos()));
+            List.copyOf(flames).stream().filter(f->f.isExpired()).peek(f->flames.remove(f)).forEach(f -> removeFlame(f.getPos()));
         }
         enemies.forEach(enemy -> {
              if (enemy.isAlive()) {
@@ -107,32 +106,23 @@ public class BasicBombarderoGameManager implements GameManager {
         });
     }
 
-    private void placeBombexplosion() {
-        Map.copyOf(boombs).entrySet().stream()
-            .filter(entry -> entry.getKey().isExploded())
-            .peek(entry -> boombs.remove(entry.getKey()))
-            .peek(entry -> entry.getValue().removeBombFromDeque(entry.getKey()))
-            .map(entry -> entry.getKey().computeFlame(this))
-            .forEach(set -> set.forEach(entry -> addFlame(entry.getValue(), entry.getKey())));
-    }
-
     @Override
-    public void endGame() {
+    public final void endGame() {
         controller.endGame();
     }
 
     @Override
-    public List<Character> getEnemies() {
+    public final List<Character> getEnemies() {
         return List.copyOf(enemies);
     }
 
     @Override
-    public GameMap getGameMap() {
+    public final GameMap getGameMap() {
         return this.map;
     }
 
     @Override
-    public Character getPlayer() {
+    public final Character getPlayer() {
         return this.player;
     }
 
@@ -182,14 +172,15 @@ public class BasicBombarderoGameManager implements GameManager {
     }
 
     /**
-     * If the time is being kept it returns the time passed. 
+     * If the time is being kept it returns the time passed. This implementation does
+     * not keep the game time, therefore returns an empty {@link Optional}. 
      */
     @Override
     public Optional<Long> getTimeLeft() {
         return Optional.empty();
     }
 
-    protected void addEnemy(final Character enemy) {
+    protected final void addEnemy(final Character enemy) {
         this.enemies.add(enemy);
     }
 
@@ -197,8 +188,13 @@ public class BasicBombarderoGameManager implements GameManager {
         return this.bombFactory;
     }
 
-    protected Controller getController() {
-        return this.controller;
+    private void placeBombexplosion() {
+        Map.copyOf(boombs).entrySet().stream()
+            .filter(entry -> entry.getKey().isExploded())
+            .peek(entry -> boombs.remove(entry.getKey()))
+            .peek(entry -> entry.getValue().removeBombFromDeque(entry.getKey()))
+            .map(entry -> entry.getKey().computeFlame(this))
+            .forEach(set -> set.forEach(entry -> addFlame(entry.getValue(), entry.getKey())));
     }
-    
+
 }

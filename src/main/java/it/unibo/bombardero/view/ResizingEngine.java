@@ -18,9 +18,10 @@ import java.awt.image.BufferedImage;
  */
 public final class ResizingEngine {
 
+    private static final double MENU_LOGO_SCALE = 0.90;
+
     /* A mischevious padding no one knows its reason to exist: */
     private final static int MISCHIEVOUS_PADDING = 23;
-    private final static double initialMenuScale = 0.75;
 
     /* Constants for resources: */
     private final static int BUTTON_WIDTH = 346;
@@ -32,7 +33,6 @@ public final class ResizingEngine {
 
     private double currentScale = 1.125; /* default scale size for every device */
     private final int scaledCellSize;
-    private Dimension minimumFrameSize;
     private final Dimension gameWindowSize;
 
     private final Insets frameInsets;
@@ -47,7 +47,7 @@ public final class ResizingEngine {
     private final Dimension buttonSize;
     private final Dimension menuLogoSize; 
 
-    public ResizingEngine(final BombarderoGraphics graphics) {
+    public ResizingEngine(final GraphicsEngine graphics) {
         int resolution = Toolkit.getDefaultToolkit().getScreenResolution();
         if(resolution >= 200) {              
             currentScale = 1.25; 
@@ -248,11 +248,7 @@ public final class ResizingEngine {
         );
     }
 
-    public Dimension initGameWindowSize(JFrame frame) {       
-        minimumFrameSize = new Dimension(
-            frame.getInsets().left + frame.getInsets().right + (int)(Utils.MAP_WIDTH * currentScale), 
-            frame.getInsets().top + frame.getInsets().bottom + (int)(Utils.MAP_HEIGHT * currentScale)
-        ); 
+    public Dimension initGameWindowSize(final JFrame frame) {       
         return new Dimension(
             frame.getInsets().left + frame.getInsets().right + (int)(Utils.MAP_WIDTH * currentScale + Utils.GRASS_PADDING_RATIO * Utils.MAP_WIDTH), 
             frame.getInsets().top + frame.getInsets().bottom + (int)(Utils.MAP_HEIGHT * currentScale + Utils.GRASS_PADDING_RATIO * Utils.MAP_HEIGHT)
@@ -308,11 +304,10 @@ public final class ResizingEngine {
     }
 
     private Dimension initLogoSize() {
-        final float scale = Math.floorDiv(MENU_LOGO_WIDTH, MENU_LOGO_HEIGHT);
-        final float logoWidth = Math.floorDiv(gameWindowSize.width, 2);
+        final float scale = (float)MENU_LOGO_HEIGHT / (float)MENU_LOGO_WIDTH;
         return new Dimension(
-            (int)Math.floor(500),
-            (int)Math.floor(100)
+            (int)Math.floor(gameWindowSize.width * MENU_LOGO_SCALE),
+            (int)Math.floor(gameWindowSize.width * MENU_LOGO_SCALE * scale)
         );
     }
     

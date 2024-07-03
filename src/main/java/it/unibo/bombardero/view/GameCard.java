@@ -10,6 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.awt.GridLayout;
 import javax.swing.JLabel;
+
+import it.unibo.bombardero.view.GraphicsEngine.endGameState;
+
 import java.awt.Font;
 import javax.swing.ImageIcon;
 
@@ -22,7 +25,9 @@ import java.util.Map;
  */
 public final class GameCard extends GamePlayCard {
 
-    private final static SimpleDateFormat format = new SimpleDateFormat("mm:ss");
+    private static final SimpleDateFormat TIMER_FORMAT = new SimpleDateFormat("mm:ss");
+    private static final int LAYOUT_COLS = 1;
+    private static final int LAYOUT_ROWS = 5;
 
     private final Image clockImage;
     private final Image resumeButtonImage;
@@ -37,9 +42,15 @@ public final class GameCard extends GamePlayCard {
     private Dimension timerPosition;
     private long timeLeft;
 
-    public GameCard(final BombarderoGraphics graphics) {
+    /** 
+     * Creates a new game card, togheter with two buttons to be displayed when
+     * the game is paused, and an arena that can be updated throught the {@link #update(Map, List, List)}
+     * method.
+     * @param graphics the {@link GraphicsEngine} managing this class
+     */
+    public GameCard(final GraphicsEngine graphics) {
         super(graphics, Map.of(), List.of(), List.of());
-        
+ 
         clockImage = graphics.getResizingEngine().getScaledClockImage(
             graphics.getResourceGetter().loadImage("overlay/clock")
         );
@@ -65,20 +76,23 @@ public final class GameCard extends GamePlayCard {
         this.add(new JLabel());
 
         this.setFont(clockFont);
-        this.setLayout(new GridLayout(5, 1));
+        this.setLayout(new GridLayout(LAYOUT_ROWS, LAYOUT_COLS));
     }
 
     @Override
-    public void paintComponent(Graphics g) {
+    public void paintComponent(final Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D)g;
-        int fontYOffset = (int)(g.getFontMetrics(clockFont).getAscent() / 2);
+        Graphics2D g2d = (Graphics2D) g;
+        int fontYOffset = (int) (g.getFontMetrics(clockFont).getAscent() / 2);
         g2d.setFont(clockFont.deriveFont(Font.PLAIN, 16));
         g2d.drawString(getFormattedTime(), timerPosition.width, timerPosition.height + fontYOffset);
         g2d.drawImage(clockImage, imageClockPosition.width, imageClockPosition.height, null);
     }
 
-    
+    /**
+     * Sets the paused view, adding the buttons to the panel and performing
+     * an update.
+     */
     public void setPausedView() {
         this.add(resumeButton);
         this.add(quitButton);
@@ -86,6 +100,10 @@ public final class GameCard extends GamePlayCard {
         this.repaint(0);
     }
 
+    /**
+     * Removes the paused view, removing the buttons from the panel
+     * and performing ad update.
+     */
     public void setUnpausedView() {
         this.remove(quitButton);
         this.remove(resumeButton);
@@ -93,12 +111,26 @@ public final class GameCard extends GamePlayCard {
         this.repaint(0);
     }
 
+    /**
+     * Displays the end game state based off the passed argument. Displays
+     * a panel with the report of the game. 
+     * @param stateToDisplay the state to be displayed
+     * @see {@link endGameState}
+     */
+    public void displayEndGameState(final endGameState stateToDisplay) {
+        blurView();
+    }
+
+    /**
+     * Sets the time left for the displayed timer.
+     * @param timeLeft the time left, in milliseconds
+     */
     public void setTimeLeft(final long timeLeft) {
         this.timeLeft = timeLeft;
     }
 
     private String getFormattedTime() {
-        return format.format(new Date(timeLeft));
+        return TIMER_FORMAT.format(new Date(timeLeft));
     }
-    
+
 }
