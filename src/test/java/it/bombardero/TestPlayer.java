@@ -54,7 +54,7 @@ class TestPlayer {
         this.manager.getPlayer().setCharacterPosition(spawnCoord);
         for (final Direction dir : Direction.values()) {
             this.manager.getPlayer().setFacingDirection(dir);
-            this.manager.getPlayer().update(STANDARD_ELAPSED_TIME, manager);
+            this.manager.getPlayer().update(manager, STANDARD_ELAPSED_TIME);
             assertEquals(dir, manager.getPlayer().getFacingDirection());
         }
     }
@@ -73,7 +73,7 @@ class TestPlayer {
 
         // Setting the number of update and calling them
         final int updateNumeber = FPS; // Number of updates done
-        IntStream.range(0, updateNumeber).forEach(n -> this.manager.getPlayer().update(STANDARD_ELAPSED_TIME, manager));
+        IntStream.range(0, updateNumeber).forEach(n -> this.manager.getPlayer().update(manager, STANDARD_ELAPSED_TIME));
 
         roundPlayerCoordinateToThreeDecimal();
         // Sums the spawn coordinates with the movement done

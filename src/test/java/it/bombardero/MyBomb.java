@@ -13,7 +13,7 @@ import it.unibo.bombardero.physics.api.BoundingBox;
 /**
  * A Modified bomb for testing purpose.
  */
-public class MyBomb implements Bomb{
+public class MyBomb implements Bomb {
 
     private GenPair<Integer, Integer> pos;
 
@@ -108,7 +108,7 @@ public class MyBomb implements Bomb{
     }
 
     @Override
-    public Set<Entry<GenPair<Integer, Integer>, FlameType>> computeFlame(GameMap map) {
+    public Set<Entry<GenPair<Integer, Integer>, FlameType>> computeFlame(final GameMap map) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'computeFlame'");
     }

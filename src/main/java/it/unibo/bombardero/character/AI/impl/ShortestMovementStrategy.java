@@ -19,7 +19,7 @@ public class ShortestMovementStrategy implements MovementStrategy {
      * in a shortest path.
      *
      * @param enemy the enemy for which the next move is to be calculated
-     * @param map   the game map on which the enemy is located
+     * @param manager the game manager
      * @return an Optional containing the next move as a Pair of coordinates, or an
      *         empty Optional if no move is available
      */

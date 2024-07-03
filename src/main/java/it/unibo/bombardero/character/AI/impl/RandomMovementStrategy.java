@@ -25,8 +25,8 @@ public class RandomMovementStrategy implements MovementStrategy {
     /**
      * Calculates the next move for the given enemy in a total random way.
      *
-     * @param enemy the enemy for which the next move is to be calculated
-     * @param map   the game map on which the enemy is located
+     * @param enemy   the enemy for which the next move is to be calculated
+     * @param manager the game manager
      * @return an Optional containing the next move as a Pair of coordinates, or an
      *         empty Optional if no move is available
      */
@@ -36,12 +36,15 @@ public class RandomMovementStrategy implements MovementStrategy {
         final GenPair<Integer, Integer> currentCoord = enemy.getIntCoordinate();
         final List<Direction> dirs = EnumSet.allOf(Direction.class)
                 .stream()
-                .filter(d -> !enemy.getNextMove().map(move -> move.equals(currentCoord.apply(Functions.sumInt(new GenPair<Integer, Integer> (d.x(), d.y())))))
+                .filter(d -> !enemy.getNextMove()
+                        .map(move -> move.equals(
+                                currentCoord.apply(Functions.sumInt(new GenPair<Integer, Integer>(d.x(), d.y())))))
                         .orElse(false))
                 .collect(Collectors.toList());
         while (!dirs.isEmpty()) {
             final Direction randomDirection = dirs.remove(RANDOM.nextInt(dirs.size()));
-            final GenPair<Integer, Integer> p = currentCoord.apply(Functions.sumInt(new GenPair<Integer, Integer>(randomDirection.x(), randomDirection.y())));
+            final GenPair<Integer, Integer> p = currentCoord
+                    .apply(Functions.sumInt(new GenPair<Integer, Integer>(randomDirection.x(), randomDirection.y())));
             if (enemy.isValidCell(p)
                     && (map.isEmpty(p) || map.isBreakableWall(p)
                             || map.isPowerUp(p))) {

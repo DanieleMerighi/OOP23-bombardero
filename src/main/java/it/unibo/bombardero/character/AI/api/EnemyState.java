@@ -14,7 +14,7 @@ public interface EnemyState {
      * Executes the behavior associated with this enemy state.
      *
      * @param enemy the enemy character to execute the state behavior on
-     * @param map   the game map where the enemy operates
+     * @param manager the game manager
      */
     void execute(Enemy enemy, GameManager manager);
 }

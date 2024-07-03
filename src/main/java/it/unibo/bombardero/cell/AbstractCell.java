@@ -6,11 +6,12 @@ import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.physics.api.BoundingBox;
 
 /**
- * A class that defines a generic "Cell", in this game a "Cell" is an entity 
+ * A class that defines a generic "Cell", in this game a "Cell" is an entity
  * which occupies an entire squared tile and normally cannot move
+ * 
  * @author Federico Bagattoni
  * @author Luca Venturini
- * @author Jacopo Turchi 
+ * @author Jacopo Turchi
  */
 public abstract class AbstractCell implements Cell {
 
@@ -18,10 +19,11 @@ public abstract class AbstractCell implements Cell {
     private final CellType type;
     private final boolean boundingCollision;
 
-    public AbstractCell(final CellType type , final GenPair<Integer, Integer> pos , final boolean boundingCollision, BoundingBox bBox) {
+    public AbstractCell(final CellType type, final GenPair<Integer, Integer> pos, final boolean boundingCollision,
+            BoundingBox bBox) {
         this.type = type;
-        this.boundingCollision=boundingCollision;
-        if(this.haveBoundingCollision()) {
+        this.boundingCollision = boundingCollision;
+        if (this.haveBoundingCollision()) {
             this.bBox = bBox;
         }
     }
@@ -40,4 +42,4 @@ public abstract class AbstractCell implements Cell {
     public Optional<BoundingBox> getBoundingBox() {
         return Optional.of(bBox);
     }
-}   
+}

@@ -1,8 +1,8 @@
 package it.unibo.bombardero.utils;
 
-import it.unibo.bombardero.map.api.GenPair;
-
 import java.util.List;
+
+import it.unibo.bombardero.map.api.GenPair;
 
 public class Utils {
 
@@ -19,22 +19,22 @@ public class Utils {
             new GenPair<Float, Float>(12.5f, 12.5f),
             new GenPair<Float, Float>(0.5f, 12.5f), new GenPair<Float, Float>(12.5f, 0.5f));
     // timers value
-    public final static long GAME_TIME = 120000l;
-    public final static int MAX_WAITING_TIME = 2000;
+    public static final long GAME_TIME = 120000L;
+    public static final int MAX_WAITING_TIME = 2000;
 
     // explosion value
     public static final int ENEMY_DETECTION_RADIUS = 4;
     public static final int ENEMY_STARTING_BOMBS = 1;
 
     // view value
-    public static int MAP_WIDTH = 524; // the original map image's width
-    public static int MAP_HEIGHT = 512; // the original map image's height
-    public static double GRASS_PADDING_RATIO = 0.2; // the padding that has to be added to the map
-    public static int BG_WIDTH = 1920;
-    public static int BG_HEIGHT = 1088;
-    public final static int CELL_SIZE = 32; // A single cell's size in game-pixels
-    public final static int PLAYER_WIDTH = 20;
-    public final static int PLAYER_HEIGHT = 30;
-    public final static int NUM_OF_ENEMIES = 3;
+    public static final int MAP_WIDTH = 524; // the original map image's width
+    public static final int MAP_HEIGHT = 512; // the original map image's height
+    public static final double GRASS_PADDING_RATIO = 0.2; // the padding that has to be added to the map
+    public static final int BG_WIDTH = 1920;
+    public static final int BG_HEIGHT = 1088;
+    public static final int CELL_SIZE = 32; // A single cell's size in game-pixels
+    public static final int PLAYER_WIDTH = 20;
+    public static final int PLAYER_HEIGHT = 30;
+    public static final int NUM_OF_ENEMIES = 3;
 
 }

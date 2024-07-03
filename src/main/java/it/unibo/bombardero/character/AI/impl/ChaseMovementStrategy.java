@@ -17,15 +17,16 @@ public class ChaseMovementStrategy implements MovementStrategy {
     /**
      * Calculates the next move for the given enemy based on the closest entity.
      *
-     * @param enemy the enemy for which the next move is to be calculated
-     * @param map   the game map on which the enemy is located
+     * @param enemy   the enemy for which the next move is to be calculated
+     * @param manager the game manager
      * @return an Optional containing the next move as a Pair of coordinates, or an
      *         empty Optional if no move is available
      */
     @Override
     public Optional<GenPair<Integer, Integer>> getNextMove(final Enemy enemy, final GameManager manager) {
         return enemy.getClosestEntity(manager).flatMap(closestEntity -> {
-            final List<GenPair<Integer, Integer>> path = enemy.getGraph().findShortestPathToPlayer(enemy.getIntCoordinate(), closestEntity);
+            final List<GenPair<Integer, Integer>> path = enemy.getGraph()
+                    .findShortestPathToPlayer(enemy.getIntCoordinate(), closestEntity);
             if (!path.isEmpty()) {
                 return Optional.of(path.get(0));
             }

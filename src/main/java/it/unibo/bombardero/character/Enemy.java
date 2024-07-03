@@ -38,11 +38,11 @@ public class Enemy extends Character {
     /**
      * Constructs a new Enemy with the specified parameters.
      * 
-     * @param manager     the game manager that controls the game state
+     * @param coord         the initial coordinates where the enemy is spawned
      * 
-     * @param coord       the initial coordinates where the enemy is spawned
+     * @param bombFactory   the factory to create bombs
      * 
-     * @param bombFactory the factory to create bombs
+     * @param bBox          the hitbox of the enemy
      */
     public Enemy(final GenPair<Float, Float> coord, final BombFactory bombFactory, BoundingBox bBox) {
         super(coord, bombFactory, bBox);
@@ -66,6 +66,8 @@ public class Enemy extends Character {
     /**
      * Checks if the player is within the enemy's detection radius using Manhattan
      * distance.
+     * 
+     * @param manager the game manager
      *
      * @return true if the player is within detection radius, false otherwise.
      */
@@ -79,6 +81,8 @@ public class Enemy extends Character {
      * Retrieves the closest entity (character) to the enemy's current position,
      * excluding itself and the player character.
      *
+     * @param manager the game manager
+     * 
      * @return An Optional containing the closest entity's coordinates as a Pair,
      *         or empty if no other entities exist.
      */
@@ -98,7 +102,9 @@ public class Enemy extends Character {
      * Retrieves the closest entity (character) to the specified enemy position,
      * excluding itself and the player character.
      *
+     * @param manager the game manager
      * @param enemy the position of the enemy to find the closest entity to
+     * 
      * @return An Optional containing the closest entity, or empty if no other
      *         entities exist at the specified position.
      */
@@ -139,6 +145,7 @@ public class Enemy extends Character {
      * or pathfinding results.
      * 
      * @param time the elapsed time
+     * @param manager the game manager
      */
     private void computeNextDir(final long time, final GameManager manager) {
         GameMap gameMap = manager.getGameMap();
@@ -167,11 +174,14 @@ public class Enemy extends Character {
     /**
      * Updates the enemy's position and behavior within the game environment.
      * This method is called every frame to handle enemy movement and actions.
+     * 
+     * @param manager the game manager
+     * @param elapsedTime the time elapsed since the last update
      */
     @Override
-    public void update(final long elapsedTime, final GameManager manager) {
+    public void update(final GameManager manager, final long elapsedTime) {
         GraphManagerImpl.initialize(manager.getGameMap());
-        updateSkeleton(elapsedTime, manager, CharacterType.ENEMY);
+        updateSkeleton(manager, elapsedTime, CharacterType.ENEMY);
         if (nextMove.isEmpty()) {
             computeNextDir(elapsedTime, manager);
         } else if (canMoveOn(manager.getGameMap() ,nextMove.get())) {

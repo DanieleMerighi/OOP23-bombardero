@@ -17,9 +17,9 @@ public class Player extends Character {
     /**
      * Constructs a new Player instance with the specified parameters.
      * 
-     * @param manager     the game manager that controls the game state
-     * @param coord       the initial coordinates where the player is spawned
-     * @param bombFactory the factory to create bombs
+     * @param coord         the initial coordinates where the player is spawned
+     * @param bombFactory   the factory to create bombs
+     * @param bBox          the hit box of the player
      */
     public Player(final GenPair<Float, Float> coord, final BombFactory bombFactory, final BoundingBox bBox) {
         super(coord, bombFactory, bBox);
@@ -29,12 +29,15 @@ public class Player extends Character {
      * Updates the Player's interactions with the map.
      * This method should define how the player moves and interacts based on user
      * input.
+     * 
+     * @param manager   the game manager
+     * @param elapsedTime   the time elapsed since the last update
      */
     @Override
-    public void update(final long elapsedTime, final GameManager manager) {
+    public void update(final GameManager manager, final long elapsedTime) {
         // Skeleton effect:
         if (getResetEffect().isPresent()) { // If there's a Task to reset
-            updateSkeleton(elapsedTime, manager, CharacterType.PLAYER);
+            updateSkeleton(manager, elapsedTime, CharacterType.PLAYER);
         }
         // Player movement:
         if (!isStationary()) { // If he's not stationary, computes the new position

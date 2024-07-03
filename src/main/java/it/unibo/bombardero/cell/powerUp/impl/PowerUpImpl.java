@@ -23,15 +23,20 @@ public final class PowerUpImpl extends AbstractCell implements PowerUp {
     private final PowerUpType type;
 
     private final Consumer<Character> effect;
-    
+
     /**
      * Places a line of bombs in the direction the character is facing.
      * 
      * @param character         the character placing the bombs
      * @param map               the map of cells
      * @param facingDirection   the direction the character is facing
+     * @param manager           the game manager
      */
-    public static void placeLineBomb(final Character character, final Map<GenPair<Integer, Integer>, Cell> map, final Direction facingDirection, final GameManager manager) {
+    public static void placeLineBomb(
+            final Character character,
+            final Map<GenPair<Integer, Integer>, Cell> map,
+            final Direction facingDirection,
+            final GameManager manager) {
         if (character.hasLineBomb()) {
             // Lo stream continua finché non ha piazzato tutte le bombe o finché incontra un ostacolo
             IntStream
@@ -48,12 +53,12 @@ public final class PowerUpImpl extends AbstractCell implements PowerUp {
                 )
                 // Piazzo le bombe nelle celle vuote
                 .forEach(offset -> character
-                    .placeBomb(character
+                    .placeBomb(manager, character
                         .getIntCoordinate().apply(Functions
                         .sumInt(new GenPair<Integer, Integer>(
                             facingDirection.x() * offset,
                             facingDirection.y() * offset))
-                        ), manager
+                        )
                     )
                 );
         }

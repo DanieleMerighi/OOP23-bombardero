@@ -17,7 +17,7 @@ public class WaitingState extends AbstractEnemyState {
      * Executes the behavior associated with this enemy state.
      *
      * @param enemy the enemy character to execute the state behavior on
-     * @param map   the game map where the enemy operates
+     * @param manager the game manager
      */
     @Override
     public void execute(final Enemy enemy, final GameManager manager) {

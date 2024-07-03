@@ -64,17 +64,20 @@ public enum Direction {
      * @return A Pair representing the direction.
      */
     public GenPair<Integer, Integer> getPair() {
-        return new GenPair <Integer, Integer> (x, y);
+        return new GenPair<Integer, Integer>(x, y);
     }
 
     /**
-     * Gets the diagonal cells relative to the current direction and character position.
+     * Gets the diagonal cells relative to the current direction and character
+     * position.
      * 
-     * @param dir The direction to consider.
+     * @param dir          The direction to consider.
      * @param characterPos The current position of the character.
-     * @return A list of diagonal cells relative to the direction and character position.
+     * @return A list of diagonal cells relative to the direction and character
+     *         position.
      */
-    public List<GenPair<Integer, Integer>> getDiagonals(final Direction dir, final GenPair<Integer, Integer> characterPos) {
+    public List<GenPair<Integer, Integer>> getDiagonals(final Direction dir,
+            final GenPair<Integer, Integer> characterPos) {
         List<GenPair<Integer, Integer>> cells;
         switch (dir) {
             case UP:
@@ -96,7 +99,9 @@ public enum Direction {
             default:
                 return null;
         }
-        return cells.stream().filter(c -> c.x() >= 0 && c.y() >= 0 && c.x() < Utils.MAP_COLS && c.y() < Utils.MAP_ROWS).toList();
+        return cells.stream()
+                .filter(c -> c.x() >= 0 && c.y() >= 0 && c.x() < Utils.MAP_COLS && c.y() < Utils.MAP_ROWS)
+                .toList();
     }
 
 }

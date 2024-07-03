@@ -1,9 +1,9 @@
 package it.unibo.bombardero.core.impl;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import it.unibo.bombardero.cell.Bomb;
@@ -11,6 +11,9 @@ import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.BombFactoryImpl;
 import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.Flame;
+import it.unibo.bombardero.character.Character;
+import it.unibo.bombardero.character.Enemy;
+import it.unibo.bombardero.character.Player;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
@@ -19,14 +22,11 @@ import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.physics.impl.BombarderoCollision;
 import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
-import it.unibo.bombardero.character.Character;
-import it.unibo.bombardero.character.Enemy;
-import it.unibo.bombardero.character.Player;
 
 /**
- * This class implements the concepts expressed in the 
+ * This class implements the concepts expressed in the
  * {@link GameManager} interface. This class is designed to
- * be extended, adding further capabilities such as time-keeping and 
+ * be extended, adding further capabilities such as time-keeping and
  * advanced game dynamics.
  */
 public class BasicBombarderoGameManager implements GameManager {
@@ -44,47 +44,49 @@ public class BasicBombarderoGameManager implements GameManager {
     private final BombFactory bombFactory;
 
     /**
-     * Creates a new Game Manager, creating all the model's entities. Spawning 
+     * Creates a new Game Manager, creating all the model's entities. Spawning
      * the player and the enemies in the request positions.
      * <p>
      * A enemy for each element of the list will be spawned.
-     * @param controller the game's controller 
-     * @param playerSpawnPoint the main player's spawnpoint
+     * 
+     * @param controller        the game's controller
+     * @param playerSpawnPoint  the main player's spawnpoint
      * @param enemiesSpawnpoint a list of the enemies spawnpoints
-     * @param generateWalls wether the breakable walls have to be generated or not
+     * @param generateWalls     wether the breakable walls have to be generated or not
      */
     public BasicBombarderoGameManager(
             final Controller controller,
-            final GenPair<Float, Float> playerSpawnPoint, 
+            final GenPair<Float, Float> playerSpawnPoint,
             final List<GenPair<Float, Float>> enemiesSpawnpoint,
             final boolean generateWalls) {
         this.controller = controller;
         map = new GameMapImpl(generateWalls);
         ce = new BombarderoCollision();
         bombFactory = new BombFactoryImpl();
-        this.player = new Player(playerSpawnPoint, bombFactory, 
-            new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
-        enemiesSpawnpoint.forEach(spawnpoint -> enemies.add(new Enemy(spawnpoint, bombFactory, 
-            new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT))));
+        this.player = new Player(playerSpawnPoint, bombFactory,
+                new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
+        enemiesSpawnpoint.forEach(spawnpoint -> enemies.add(new Enemy(spawnpoint, bombFactory,
+                new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT))));
     }
 
     /**
      * Updates the synchronous and asynchronous objects of the game, namely:
      * <ul>
-     *  <li> The map
-     *  <li> The main character
-     *  <li> The bombs
-     *  <li> The flames
-     *  <li> The enemies 
-     * </ul> 
+     * <li>The map
+     * <li>The main character
+     * <li>The bombs
+     * <li>The flames
+     * <li>The enemies
+     * </ul>
      * The argument passed can be passed to the synchronous entities
      * to synchronize them to the game's time.
-     * @param elapsed the time passed since the last update. 
+     * 
+     * @param elapsed the time passed since the last update.
      */
     @Override
     public void updateGame(final long elapsed) {
         if (player.isAlive()) {
-            player.update(elapsed, this);
+            player.update(this, elapsed);
             ce.checkCharacterCollision(player, this.getGameMap());
             ce.checkFlameAndPowerUpCollision(player, this.getGameMap());
         }
@@ -94,14 +96,15 @@ public class BasicBombarderoGameManager implements GameManager {
         }
         if (!flames.isEmpty()) {
             flames.forEach(f -> f.update(elapsed));
-            List.copyOf(flames).stream().filter(f->f.isExpired()).peek(f->flames.remove(f)).forEach(f -> removeFlame(f.getPos()));
+            List.copyOf(flames).stream().filter(f -> f.isExpired()).peek(f -> flames.remove(f))
+                    .forEach(f -> removeFlame(f.getPos()));
         }
         enemies.forEach(enemy -> {
-             if (enemy.isAlive()) {
-                 enemy.update(elapsed, this);
-                 ce.checkCharacterCollision(enemy, this.getGameMap());
-                 ce.checkFlameAndPowerUpCollision(enemy, this.getGameMap());
-             }
+            if (enemy.isAlive()) {
+                enemy.update(this, elapsed);
+                ce.checkCharacterCollision(enemy, this.getGameMap());
+                ce.checkFlameAndPowerUpCollision(enemy, this.getGameMap());
+            }
         });
     }
 
@@ -171,8 +174,9 @@ public class BasicBombarderoGameManager implements GameManager {
     }
 
     /**
-     * If the time is being kept it returns the time passed. This implementation does
-     * not keep the game time, therefore returns an empty {@link Optional}. 
+     * If the time is being kept it returns the time passed. This implementation
+     * does
+     * not keep the game time, therefore returns an empty {@link Optional}.
      */
     @Override
     public Optional<Long> getTimeLeft() {
@@ -189,11 +193,11 @@ public class BasicBombarderoGameManager implements GameManager {
 
     private void placeBombexplosion() {
         Map.copyOf(boombs).entrySet().stream()
-            .filter(entry -> entry.getKey().isExploded())
-            .peek(entry -> boombs.remove(entry.getKey()))
-            .peek(entry -> entry.getValue().removeBombFromDeque(entry.getKey()))
-            .map(entry -> entry.getKey().computeFlame(this.getGameMap()))
-            .forEach(set -> set.forEach(entry -> addFlame(entry.getValue(), entry.getKey())));
+                .filter(entry -> entry.getKey().isExploded())
+                .peek(entry -> boombs.remove(entry.getKey()))
+                .peek(entry -> entry.getValue().removeBombFromDeque(entry.getKey()))
+                .map(entry -> entry.getKey().computeFlame(this.getGameMap()))
+                .forEach(set -> set.forEach(entry -> addFlame(entry.getValue(), entry.getKey())));
     }
 
 }

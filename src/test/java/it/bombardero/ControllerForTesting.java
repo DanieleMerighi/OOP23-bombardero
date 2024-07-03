@@ -17,10 +17,16 @@ import it.unibo.bombardero.view.BombarderoViewMessages;
 
 import java.util.Arrays;
 
-public class ControllerForTesting implements Controller {
+/**
+ * A simulation of an implementation of the {@link #Controller} interface
+ * for testing purposes only.
+ */
+public final class ControllerForTesting implements Controller {
     private final GameManager manager = new MyGameManager();
-    private final Player player = new Player(new GenPair<Float, Float>(0f, 0f), new BombFactoryImpl(), new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
-    private final Enemy enemy = new Enemy(new GenPair<Float, Float>(0f, 0f), new BombFactoryImpl(), new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
+    private final Player player = new Player(new GenPair<Float, Float>(0f, 0f), new BombFactoryImpl(),
+            new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
+    private final Enemy enemy = new Enemy(new GenPair<Float, Float>(0f, 0f), new BombFactoryImpl(),
+            new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
     private boolean escapeCalled;
 
     @Override
@@ -54,12 +60,12 @@ public class ControllerForTesting implements Controller {
     }
 
     @Override
-    public void update(long elapsed) {
+    public void update(final long elapsed) {
         throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
 
     @Override
-    public void toggleMessage(BombarderoViewMessages message) {
+    public void toggleMessage(final BombarderoViewMessages message) {
         throw new UnsupportedOperationException("Unimplemented method 'toggleMessage'");
     }
 
@@ -92,5 +98,5 @@ public class ControllerForTesting implements Controller {
     public Optional<Long> getTimeLeft() {
         throw new UnsupportedOperationException("Unimplemented method 'getTimeLeft'");
     }
-    
+
 }

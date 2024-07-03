@@ -36,8 +36,10 @@ public class MyGameManager implements GameManager {
      */
     MyGameManager() {
         this.map = new GameMapImpl(false);
-        this.enemy = new Enemy(new GenPair<Float, Float>(0f, 0f), new BombFactoryImpl(), new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
-        this.player = new Player(new GenPair<Float, Float>(0f, PLAYERY), new BombFactoryImpl(), new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
+        this.enemy = new Enemy(new GenPair<Float, Float>(0f, 0f), new BombFactoryImpl(),
+                new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
+        this.player = new Player(new GenPair<Float, Float>(0f, PLAYERY), new BombFactoryImpl(),
+                new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
     }
 
     /**
@@ -79,7 +81,7 @@ public class MyGameManager implements GameManager {
     public void updateGame(final long elapsed) {
         // 60 fps
         for (int i = 0; i < LENGHT; i++) {
-            enemy.update(STANDARD_ELAPSED_TIME, this);
+            enemy.update(this, STANDARD_ELAPSED_TIME);
         }
     }
 
@@ -145,7 +147,7 @@ public class MyGameManager implements GameManager {
      * Adds a flame to the game map.
      *
      * @param type the type of flame
-     * @param pos the position of the flame
+     * @param pos  the position of the flame
      */
     @Override
     public void addFlame(final FlameType type, final GenPair<Integer, Integer> pos) {
@@ -199,7 +201,8 @@ public class MyGameManager implements GameManager {
      * Gets a bomb from the game map.
      *
      * @param pos the position of the bomb
-     * @return an optional containing the bomb, or an empty optional if no bomb is found
+     * @return an optional containing the bomb, or an empty optional if no bomb is
+     *         found
      */
     @Override
     public Optional<Bomb> getBomb(final GenPair<Integer, Integer> pos) {

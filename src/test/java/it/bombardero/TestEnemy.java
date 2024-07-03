@@ -42,7 +42,7 @@ public class TestEnemy {
         // CHECKSTYLE: MagicNumber OFF
         manager.setPlayerCoord(0, 5);
         // CHECKSTYLE: MagicNumber ON
-        manager.getEnemy().update(STANDARD_ELAPSED_TIME, manager);
+        manager.getEnemy().update(manager, STANDARD_ELAPSED_TIME);
 
         // Verify enemy state is PATROL
         assertTrue(manager.getEnemy().isStateEqualTo(new PatrolState()));
@@ -97,7 +97,7 @@ public class TestEnemy {
         // Set enemy position inside a danger zone
         this.manager.getEnemy().setSpeed(NEWSPEED);
         this.manager.addBomb(new MyBomb(new GenPair<Integer, Integer>(0, 1)), null);
-        this.manager.getEnemy().update(STANDARD_ELAPSED_TIME, manager);
+        this.manager.getEnemy().update(manager, STANDARD_ELAPSED_TIME);
 
         assertTrue(manager.getEnemy().isStateEqualTo(new EscapeState()));
         this.manager.updateGame(STANDARD_ELAPSED_TIME);
@@ -117,7 +117,7 @@ public class TestEnemy {
         manager.setPlayerCoord(1, 2);
         manager.getEnemy().setNumBomb(STARTING_BOMBS); // 1 bomb added to enemy
         manager.getGameMap().addBreakableWall(new GenPair<Integer, Integer>(0, 1));
-        manager.getEnemy().update(STANDARD_ELAPSED_TIME, manager);
+        manager.getEnemy().update(manager, STANDARD_ELAPSED_TIME);
 
         assertTrue(manager.getEnemy().isStateEqualTo(new ChaseState()));
         manager.updateGame(STANDARD_ELAPSED_TIME);

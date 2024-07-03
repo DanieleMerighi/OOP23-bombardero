@@ -64,7 +64,10 @@ public final class GraphBuilderImpl {
      * @param p     the current cell to connect with neighbors
      * @param map   the game map object used to identify walkable cells and walls
      */
-    private static void connectWithNeighbors(final Graph<GenPair<Integer, Integer>, DefaultWeightedEdge> graph, final GenPair<Integer, Integer> p,
+    private static void connectWithNeighbors(
+            final Graph<GenPair<Integer, Integer>,
+            DefaultWeightedEdge> graph,
+            final GenPair<Integer, Integer> p,
             final GameMap map) {
         EnumSet.allOf(Direction.class)
                 .stream()

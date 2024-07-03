@@ -5,7 +5,7 @@ import it.unibo.bombardero.map.api.GenPair;
 public interface BombFactory {
 
     /**
-     * @param character
+     * @param range
      * @param pos
      * @return a normal Bomb
      */
@@ -13,7 +13,7 @@ public interface BombFactory {
 
     /**
      * 
-     * @param character
+     * @param range
      * @param pos
      * @return a PircingBomb that destroy every breackableWall in his range
      */
@@ -21,7 +21,6 @@ public interface BombFactory {
 
     /**
      * 
-     * @param character
      * @param pos
      * @return a PowerBomb a bomb with max range
      */
@@ -29,7 +28,7 @@ public interface BombFactory {
 
     /**
      * 
-     * @param character
+     * @param range
      * @param pos
      * @return a RemoteBomb that explode on comand
      */

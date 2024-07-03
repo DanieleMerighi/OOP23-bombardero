@@ -16,5 +16,5 @@ public interface CollisionHandler {
     void applyFlameCollision(Character character);
 
     void applyPowerUpCollision(Character character, PowerUp powerUp);
-    
+
 }

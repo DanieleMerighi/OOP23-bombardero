@@ -20,8 +20,8 @@ public class ExploringState extends AbstractEnemyState {
     /**
      * Executes the behavior associated with this enemy state.
      *
-     * @param enemy the enemy character to execute the state behavior on
-     * @param map   the game map where the enemy operates
+     * @param enemy   the enemy character to execute the state behavior on
+     * @param manager the game manager
      */
     @Override
     public void execute(final Enemy enemy, final GameManager manager) {
@@ -30,7 +30,8 @@ public class ExploringState extends AbstractEnemyState {
         if (powerUp.isPresent()
                 && !enemy.getGraph().isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) {
             enemy.setNextMove(powerUp);
-            final List<GenPair<Integer, Integer>> l = enemy.getGraph().findShortestPathToPlayer(enemy.getIntCoordinate(),
+            final List<GenPair<Integer, Integer>> l = enemy.getGraph().findShortestPathToPlayer(
+                    enemy.getIntCoordinate(),
                     enemy.getNextMove().get());
             if (l.stream().anyMatch(c -> enemy.getGraph().isInDangerZone(c, enemy.getFlameRange())
                     || map.isBreakableWall(c)

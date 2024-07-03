@@ -18,12 +18,36 @@ import it.unibo.bombardero.physics.api.BoundingBox;
  * Contains common properties and methods for characters.
  */
 public abstract class Character {
+
+    /**
+     * Enum representing the type of the character.
+     * <p>
+     * There are two types of characters:
+     * <ul>
+     *   <li>{@link #PLAYER} - Represents a keyboard-controlled character.</li>
+     *   <li>{@link #ENEMY} - Represents a character that operates autonomously.</li>
+     * </ul>
+     * </p>
+     */
     public enum CharacterType {
-        PLAYER, ENEMY;
+        /**
+         * Represents a keyboard-controlled character.
+         */
+        PLAYER,
+        /**
+         * Represents a character that operates autonomously.
+         */
+        ENEMY;
     }
 
     // Constants for default settings
+    /**
+     * The character's hitbox height.
+     */
     public static final float BOUNDING_BOX_HEIGHT = 0.75f;
+    /**
+     * The character's hitbox width.
+     */
     public static final float BOUNDING_BOX_WIDTH = 0.700f;
     private static final float BOUNDING_BOX_Y_OFFSET = 0.2f;
     private static final float BOUNDING_BOX_X_OFFSET = 0.3f;
@@ -46,7 +70,7 @@ public abstract class Character {
     private Direction facingDirection = Direction.DOWN; // Starting character facingDirection
     private boolean stationary = true;
 
-    // Hit box of the Character
+    // Hitbox of the Character
     private final BoundingBox bBox; // Solid area of the character
 
     // Game attribute related
@@ -114,9 +138,9 @@ public abstract class Character {
     /**
      * Constructs a new Character with the specified parameters.
      * 
-     * @param manager     the game manager that controls the game state
-     * @param coord       the initial coordinates where the character is spawned
-     * @param bombFactory the factory to create bombs
+     * @param coord         the initial coordinates where the character is spawned
+     * @param bombFactory   the factory to create bombs
+     * @param bBox          the hitbox of the character
      */
     public Character(final GenPair<Float, Float> coord, final BombFactory bombFactory, final BoundingBox bBox) {
         this.coordinate = coord;
@@ -129,16 +153,19 @@ public abstract class Character {
      * This method should be implemented by subclasses to define character-specific
      * behavior.
      * 
-     * @param elapsedTime the time elapsed since the last update
+     * @param manager       the game manager
+     * @param elapsedTime   the time elapsed since the last update
      */
-    public abstract void update(long elapsedTime, GameManager manager);
+    public abstract void update(GameManager manager, long elapsedTime);
 
     /**
      * Updates the skeleton's effects.
      * 
-     * @param elapsedTime the time elapsed since the last update
+     * @param manager       the game manager
+     * @param elapsedTime   the time elapsed since the last update
+     * @param type          the type of character
      */
-    public void updateSkeleton(final long elapsedTime, final GameManager manager, final CharacterType type) {
+    public void updateSkeleton(final GameManager manager, final long elapsedTime, final CharacterType type) {
         if (this.skeletonEffectDuration > 0) { // Continues until the duration reaches zero
             this.skeletonEffectDuration -= elapsedTime;
             if (this.skeletonEffectDuration <= 0) { // When the effect ends the character's stats get resetted
@@ -188,21 +215,25 @@ public abstract class Character {
     /**
      * Places a bomb at the character's current location if he has bombs left.
      * 
+     * @param manager   the game manager
+     * @param type      the type of character
+     * 
      * @return true if the character has placed the bomb, false otherwise
      */
     public boolean placeBomb(final GameManager manager, final CharacterType type) {
-        return placeBombImpl(createBomb(getIntCoordinate(), type), manager);
+        return placeBombImpl(manager, createBomb(getIntCoordinate(), type));
     }
 
     /**
      * Places a bomb at the given coordinates if the character has bombs left.
      * 
+     * @param manager   the game manager
      * @param coordinate the bomb's coordinate
      * 
      * @return true if the character has placed the bomb, false otherwise
      */
-    public boolean placeBomb(final GenPair<Integer, Integer> coordinate, final GameManager manager) {
-        return placeBombImpl(createBomb(coordinate, CharacterType.PLAYER), manager);
+    public boolean placeBomb(final GameManager manager, final GenPair<Integer, Integer> coordinate) {
+        return placeBombImpl(manager, createBomb(coordinate, CharacterType.PLAYER));
     }
 
     /**
@@ -610,11 +641,11 @@ public abstract class Character {
     /**
      * General implementation of the placeBomb method.
      * 
-     * @param bomb      the bomb that needs to be placed
      * @param manager   the game manager
+     * @param bomb      the bomb that needs to be placed
      * @return          true if the bomb was placed
      */
-    private boolean placeBombImpl(final Bomb bomb, final GameManager manager) {
+    private boolean placeBombImpl(final GameManager manager, final Bomb bomb) {
         if (hasBombsLeft() && !this.constipation && manager.addBomb(bomb, this)) {
             this.numBomb--;
             bombQueue.addLast(bomb);
@@ -638,7 +669,7 @@ public abstract class Character {
      * @param type          the type of character who creates it
      * @return              the bomb created
      */
-    private Bomb createBomb(GenPair<Integer, Integer> coordinate, final CharacterType type) {
+    private Bomb createBomb(final GenPair<Integer, Integer> coordinate, final CharacterType type) {
         if (!getBombType().isPresent()) {
             return bombFactory.createBasicBomb(this.getFlameRange(), coordinate);
         }

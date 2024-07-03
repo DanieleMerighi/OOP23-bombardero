@@ -99,7 +99,7 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
         }
 
         @Override
-        public void update(final long elapsedTime, final GameManager manager) {
+        public void update(final GameManager manager, final long elapsedTime) {
 
         }
    

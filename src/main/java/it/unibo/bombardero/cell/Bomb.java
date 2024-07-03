@@ -37,6 +37,7 @@ public interface Bomb extends Cell {
 
     /**
      * the bomb explode if the condition is true
+     * 
      * @param condition
      */
     void update(boolean condition);
@@ -48,10 +49,10 @@ public interface Bomb extends Cell {
 
     /**
      * 
-     * @param mgr
+     * @param map
      * @return the EntrySet that contains the flames of the explosion
      */
-    public Set<Entry<GenPair<Integer, Integer> ,FlameType>> computeFlame(final GameMap map);
+    public Set<Entry<GenPair<Integer, Integer>, FlameType>> computeFlame(final GameMap map);
 
     /**
      * 
