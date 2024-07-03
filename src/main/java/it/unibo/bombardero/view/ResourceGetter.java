@@ -7,27 +7,29 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 import java.awt.FontFormatException;
 
-/** 
- * A class that gets the files in the resources/ directory given the name
- * @author Federico Bagattoni   
+/**
+ * A class that gets the files in the resources/ directory given the name.
+ * 
+ * @author Federico Bagattoni
  */
 
-public final class ResourceGetter { 
+public final class ResourceGetter {
 
-    private final static String FONT_PATH = "font/";
-    private final static String RESOURCE_PATH = "it/unibo/bombardero/";
-    private final static String IMAGE_EXTENSION = ".png";
-    private final static String FONT_EXTENSION = ".TTF";
+    private static final String FONT_PATH = "font/";
+    private static final String RESOURCE_PATH = "it/unibo/bombardero/";
+    private static final String IMAGE_EXTENSION = ".png";
+    private static final String FONT_EXTENSION = ".TTF";
 
-    /**  
-     * Gets a resource named @name
+    /**
+     * Gets a resource named @name.
+     * 
      * @param name the name of the resource to get
-    */
+     * @return the image loaded, if the loading fails then {@code null} is returned
+     */
     public BufferedImage loadImage(final String name) {
         try {
             return ImageIO.read(ClassLoader.getSystemResource(RESOURCE_PATH + name + IMAGE_EXTENSION));
-        }
-        catch(IOException e) {
+        } catch (IOException e) {
             System.out.println("There was an exception loading " + name + IMAGE_EXTENSION + " resource.\n");
         }
         return null;
@@ -36,13 +38,15 @@ public final class ResourceGetter {
     /**
      * Register the requested font in the local {@code GraphicsEnvironment} and
      * returns it.
+     * 
      * @param name
      * @return the requested Font
      */
     public Font loadFont(final String name) {
         try {
             System.out.println(RESOURCE_PATH + FONT_PATH + name + FONT_EXTENSION);
-            InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream(RESOURCE_PATH + FONT_PATH + name + FONT_EXTENSION);
+            InputStream inputStream = ClassLoader.getSystemClassLoader()
+                    .getResourceAsStream(RESOURCE_PATH + FONT_PATH + name + FONT_EXTENSION);
             Font font = Font.createFont(Font.TRUETYPE_FONT, inputStream);
             return font;
         } catch (FontFormatException | IOException e) {
@@ -52,4 +56,3 @@ public final class ResourceGetter {
         }
     }
 }
-

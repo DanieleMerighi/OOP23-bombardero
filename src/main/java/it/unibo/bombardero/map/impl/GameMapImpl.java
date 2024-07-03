@@ -22,6 +22,7 @@ import it.unibo.bombardero.utils.Utils;
 
 /**
  * This class implements the Game Map of the Bombardero game.
+ * 
  * @author Federico Bagattoni
  */
 public final class GameMapImpl implements GameMap {
@@ -34,8 +35,9 @@ public final class GameMapImpl implements GameMap {
     private boolean collapseStarted;
     private int counter;
 
-    /** 
-     * Constructs a new Game Map generating unbreakable walls, to skip the wall generation use {@#GameMapImpl(boolean)}.
+    /**
+     * Constructs a new Game Map generating unbreakable walls, to skip the wall
+     * generation use {@#GameMapImpl(boolean)}.
      */
     public GameMapImpl() {
         this.mapGenerator = new MapGeneratorImpl();
@@ -46,12 +48,13 @@ public final class GameMapImpl implements GameMap {
 
     /**
      * Creates a new Game Map with the option to opt out of the walls generation.
+     * 
      * @param wallGeneration wether the walls have to be generated or not
-    */
+     */
     public GameMapImpl(final boolean wallGeneration) {
         this.mapGenerator = new MapGeneratorImpl();
         placeUnbreakableWalls();
-        if (wallGeneration) { 
+        if (wallGeneration) {
             placeBreakableWalls();
         }
         collapseOrder = mapGenerator.generateCollapseOrder();
@@ -75,11 +78,15 @@ public final class GameMapImpl implements GameMap {
 
     @Override
     public boolean addBomb(final Bomb bomb, final GenPair<Integer, Integer> coordinate) {
-        /* NOTA: sarebbe una ridondanza controllare anche se è vuota perché se le collisioni
-         *  sono fatte bene allora l'unica cosa per cui si deve controllare è la presenza della 
-         * bomba */
+        /*
+         * NOTA: sarebbe una ridondanza controllare anche se è vuota perché se le
+         * collisioni
+         * sono fatte bene allora l'unica cosa per cui si deve controllare è la presenza
+         * della
+         * bomba
+         */
         if (!isBomb(coordinate) && isEmpty(coordinate)) {
-            map.put(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y()), bomb);
+            map.put(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()), bomb);
             return true;
         }
         return false;
@@ -87,68 +94,76 @@ public final class GameMapImpl implements GameMap {
 
     @Override
     public void addFlame(final Flame flame, final GenPair<Integer, Integer> coordinate) {
-        this.map.put(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y()), flame);
+        this.map.put(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()), flame);
     }
 
     @Override
     public void addUnbreakableWall(final GenPair<Integer, Integer> coordinate) {
-        this.map.put(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y()), new Wall(Cell.CellType.WALL_UNBREAKABLE, coordinate, 
-            new RectangleBoundingBox(coordinate.x(), coordinate.y(), 1.0f, 1.0f)));
+        this.map.put(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()),
+                new Wall(Cell.CellType.WALL_UNBREAKABLE, coordinate,
+                        new RectangleBoundingBox(coordinate.x(), coordinate.y(), 1.0f, 1.0f)));
     }
 
     @Override
     public void addBreakableWall(final GenPair<Integer, Integer> coordinate) {
-        this.map.put(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y()), new Wall(Cell.CellType.WALL_BREAKABLE, coordinate, 
-            new RectangleBoundingBox(coordinate.x(), coordinate.y(), 1.0f, 1.0f)));
+        this.map.put(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()),
+                new Wall(Cell.CellType.WALL_BREAKABLE, coordinate,
+                        new RectangleBoundingBox(coordinate.x(), coordinate.y(), 1.0f, 1.0f)));
     }
 
     @Override
     public void removeBreakableWall(final GenPair<Integer, Integer> coordinate) {
         if (this.isBreakableWall(coordinate)) {
-            this.map.remove(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y()));
-            this.map.put(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y()), powerupFactory.createPowerUp(coordinate));
+            this.map.remove(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()));
+            this.map.put(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()),
+                    powerupFactory.createPowerUp(coordinate));
         }
     }
 
     @Override
     public void removeFlame(final GenPair<Integer, Integer> coordinate) {
         if (this.isFlame(coordinate)) {
-            this.map.remove(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y()));
+            this.map.remove(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()));
         }
     }
 
     @Override
     public void removeBomb(final GenPair<Integer, Integer> coordinate) {
         if (this.isBomb(coordinate)) {
-            this.map.remove(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y()));
+            this.map.remove(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()));
         }
     }
 
     @Override
     public boolean isBomb(final GenPair<Integer, Integer> coordinate) {
-        return this.map.containsKey(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y())) && this.map.get(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y())) instanceof Bomb;
+        return this.map.containsKey(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()))
+                && this.map.get(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y())) instanceof Bomb;
     }
 
     @Override
     public boolean isBreakableWall(final GenPair<Integer, Integer> coordinate) {
-        return this.map.containsKey(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y())) 
-            && this.map.get(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y())).getCellType().equals(Cell.CellType.WALL_BREAKABLE);
+        return this.map.containsKey(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()))
+                && this.map.get(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y())).getCellType()
+                        .equals(Cell.CellType.WALL_BREAKABLE);
     }
 
     @Override
     public boolean isUnbreakableWall(final GenPair<Integer, Integer> coordinate) {
-        return this.map.containsKey(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y()))
-            && this.map.get(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y())).getCellType().equals(Cell.CellType.WALL_UNBREAKABLE);
+        return this.map.containsKey(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()))
+                && this.map.get(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y())).getCellType()
+                        .equals(Cell.CellType.WALL_UNBREAKABLE);
     }
 
     @Override
     public boolean isFlame(final GenPair<Integer, Integer> coordinate) {
-        return this.map.containsKey(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y())) && this.map.get(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y())).getCellType().equals(CellType.FLAME);
+        return this.map.containsKey(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()))
+                && this.map.get(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y())).getCellType()
+                        .equals(CellType.FLAME);
     }
 
     @Override
     public boolean isEmpty(final GenPair<Integer, Integer> coordinate) {
-        return !this.map.containsKey(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y()));
+        return !this.map.containsKey(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()));
     }
 
     @Override
@@ -158,14 +173,16 @@ public final class GameMapImpl implements GameMap {
 
     @Override
     public void removePowerUp(final GenPair<Integer, Integer> coordinate) {
-        if(isPowerUp(coordinate)) {
-            map.remove(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y()));
+        if (isPowerUp(coordinate)) {
+            map.remove(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()));
         }
     }
 
     @Override
     public boolean isPowerUp(final GenPair<Integer, Integer> coordinate) {
-        return this.map.containsKey(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y())) && this.map.get(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y())).getCellType().equals(CellType.POWERUP);
+        return this.map.containsKey(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()))
+                && this.map.get(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y())).getCellType()
+                        .equals(CellType.POWERUP);
     }
 
     private void placeUnbreakableWalls() {
@@ -174,18 +191,18 @@ public final class GameMapImpl implements GameMap {
 
     private void placeBreakableWalls() {
         mapGenerator.generateBreakableWalls(
-            this,
-            mapGenerator.getTotalWallsToGenerate(Utils.WALL_PRESENCE_RATE)
-        ).forEach(wallPosition -> addBreakableWall(wallPosition));
+                this,
+                mapGenerator.getTotalWallsToGenerate(Utils.WALL_PRESENCE_RATE))
+                .forEach(wallPosition -> addBreakableWall(wallPosition));
     }
 
     @Override
     public Optional<PowerUpType> whichPowerUpType(final GenPair<Integer, Integer> coordinate) {
         if (this.isPowerUp(coordinate)) {
-            PowerUp powerup = (PowerUp) this.map.get(new GenPair<Integer,Integer>(coordinate.x(), coordinate.y()));
+            PowerUp powerup = (PowerUp) this.map.get(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()));
             return Optional.of(powerup.getType());
         }
         return Optional.empty();
     }
- 
+
 }

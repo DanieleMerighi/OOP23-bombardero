@@ -7,7 +7,17 @@ import java.awt.Image;
  * @author Federico Bagattoni
  */
 public interface Sprite {
-    
+
+    /**
+     * The advised TPS (ticks per second) for an asset with two frames.
+     */
+    int TWO_FRAMES_TPS = 16;
+
+    /** 
+     * The advised TPS (ticks per second) for an asset with four frames.
+     */
+    int FOUR_FRAMES_TPS = 7;
+
     /**
      * Updates the sprites, eventually changing the displayed frame.
      * The rate at which the frames change is implementation-dependant.

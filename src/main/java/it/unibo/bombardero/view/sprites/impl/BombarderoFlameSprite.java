@@ -11,13 +11,14 @@ import it.unibo.bombardero.view.ResourceGetter;
 import it.unibo.bombardero.view.sprites.api.FlameSprite;
 
 /**
- * A class that holds the game's flames sprites in every direction 
+ * A class that holds the game's flames sprites in every direction
  * and returns the appropriate image.
  * <p>
  * The class divides the flame lifetime in as many equal parts as
  * the frames in the sprite. Once an image is requested the class
  * determines which "phase of life" the flame is in and returns the
- * appropriate image. 
+ * appropriate image.
+ * 
  * @author Federico Bagattoni
  */
 public final class BombarderoFlameSprite implements FlameSprite {
@@ -28,33 +29,43 @@ public final class BombarderoFlameSprite implements FlameSprite {
 
     /**
      * Instantiates a new BombarderoFlameSprite object. Imports the resources,
-     * and saves the passed lifetime for internal use. 
-     * @param imageResizer function used to resize appropriately the assets
-     * @param lifetime the total flame lifetime
+     * and saves the passed lifetime for internal use.
+     * 
+     * @param imageResizer    function used to resize appropriately the assets
+     * @param lifetime        the total flame lifetime
      * @param framesPerSprite the number of frames contained in the sprite
-     * @param rg the ResourceGetter that will be used to fetch the resources
+     * @param rg              the ResourceGetter that will be used to fetch the
+     *                        resources
      */
     public BombarderoFlameSprite(
-        final long lifetime,
-        final int framesPerSprite,
-        final Function<Image, Image> imageResizer,
-        final ResourceGetter rg
-        ){
+            final long lifetime,
+            final int framesPerSprite,
+            final Function<Image, Image> imageResizer,
+            final ResourceGetter rg) {
         for (final Flame.FlameType type : Flame.FlameType.values()) {
-            assets.put(type, SimpleBombarderoSprite.importAssets(getStringFromType(type), type.getTypeString(), rg, imageResizer, framesPerSprite));
+            assets.put(type, SimpleBombarderoSprite.importAssets(getStringFromType(type), type.getTypeString(), rg,
+                    imageResizer, framesPerSprite));
         }
         this.framesPerSprite = framesPerSprite;
-        coefficient = (int)Math.floorDiv(lifetime, framesPerSprite);
+        coefficient = (int) Math.floorDiv(lifetime, framesPerSprite);
     }
 
     @Override
     public Image getImage(final long elapsed, final Flame.FlameType flameType) {
-        final int frameToDisplay = (int)(elapsed / coefficient);
+        final int frameToDisplay = (int) (elapsed / coefficient);
         return assets.get(flameType)[frameToDisplay == framesPerSprite ? framesPerSprite - 1 : frameToDisplay];
     }
 
+    /** 
+     * This method returns the {@link String} name related to the
+     * {@link Flame.FlameType} requested.
+     * <p>
+     * The names returned are the ones of the resources.
+     * @param type the type of flame
+     * @return the name of the resource's type related to the flame's type
+     */
     public static String getStringFromType(final Flame.FlameType type) {
-        return switch(type) {
+        return switch (type) {
             case FLAME_BODY_HORIZONTAL -> "hor";
             case FLAME_BODY_VERTICAL -> "vert";
             case FLAME_CROSS -> "cross";
