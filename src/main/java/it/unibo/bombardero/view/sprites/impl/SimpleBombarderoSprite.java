@@ -71,7 +71,7 @@ public class SimpleBombarderoSprite implements Sprite {
         this(importAssets(resource, rg, imageResizer, framesPerSprite), framesPerSprite);
     }
 
-    /**  
+    /**
      * Updates the sprite adding one tick to the internal counter and eventually
      * flipping to the next image in the asset.
      * <p>
