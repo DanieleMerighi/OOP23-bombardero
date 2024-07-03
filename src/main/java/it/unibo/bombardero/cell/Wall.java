@@ -16,7 +16,7 @@ public class Wall extends AbstractCell {
      * @param bBox the {@link BoundingBox} representing the hitbox of this class
      */
     public Wall(final CellType type, final GenPair<Integer, Integer> pos, final BoundingBox bBox) {
-        super(type, pos, true, bBox);
+        super(type, true, bBox);
     }
 
 }

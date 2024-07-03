@@ -55,7 +55,7 @@ public class Flame extends AbstractCell {
     private long countTime;
 
     public Flame(final CellType type, final FlameType specfiFlameType, final GenPair<Integer, Integer> pos) {
-        super(type, pos, false, null);
+        super(type, false, null);
         this.specificFlameType = specfiFlameType;
         this.pos = pos;
     }

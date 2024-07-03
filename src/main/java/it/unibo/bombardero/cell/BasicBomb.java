@@ -28,7 +28,7 @@ public abstract class BasicBomb extends AbstractCell implements Bomb {
     private final BombType bombType;
 
     public BasicBomb(final BombType bombType, final int range, final GenPair<Integer, Integer> pos, BoundingBox bBox) {
-        super(CellType.BOMB, pos, true, bBox);
+        super(CellType.BOMB, true, bBox);
         this.position = pos;
         this.range = range;
         this.bombType = bombType;
