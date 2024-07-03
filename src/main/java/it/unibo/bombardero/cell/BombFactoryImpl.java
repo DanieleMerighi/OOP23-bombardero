@@ -1,6 +1,5 @@
 package it.unibo.bombardero.cell;
 
-import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
@@ -22,9 +21,9 @@ public class BombFactoryImpl implements BombFactory {
         return new BasicBomb(BombType.BOMB_PIERCING, range, pos, new RectangleBoundingBox(pos.x(), pos.y(), 1.0f , 1.0f)) {
 
             @Override
-            public boolean isBreckableWall(final Pair pos, GameMap map, GameManager mgr) {
-                if (mgr.getGameMap().isBreakableWall(pos) && isLastWall(pos)) {
-                    mgr.removeWall(pos);
+            public boolean isBreckableWall(final Pair pos, GameMap map) {
+                if (map.isBreakableWall(pos) && isLastWall(pos)) {
+                    map.removeBreakableWall(pos);
                     return true;
                 }
                 return false;

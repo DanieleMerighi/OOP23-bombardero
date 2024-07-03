@@ -86,8 +86,8 @@ public class BasicBombarderoGameManager implements GameManager {
     public void updateGame(final long elapsed) {
         if (player.isAlive()) {
             player.update(elapsed, this);
-            ce.checkCharacterCollision(player, this);
-            ce.checkFlameAndPowerUpCollision(player, this);
+            ce.checkCharacterCollision(player, this.getGameMap());
+            ce.checkFlameAndPowerUpCollision(player, this.getGameMap());
         }
         if (!boombs.isEmpty()) {
             boombs.entrySet().forEach(entry -> entry.getKey().update());
@@ -100,8 +100,8 @@ public class BasicBombarderoGameManager implements GameManager {
         enemies.forEach(enemy -> {
              if (enemy.isAlive()) {
                  enemy.update(elapsed, this);
-                 ce.checkCharacterCollision(enemy, this);
-                 ce.checkFlameAndPowerUpCollision(enemy, this);
+                 ce.checkCharacterCollision(enemy, this.getGameMap());
+                 ce.checkFlameAndPowerUpCollision(enemy, this.getGameMap());
              }
         });
     }
@@ -193,7 +193,7 @@ public class BasicBombarderoGameManager implements GameManager {
             .filter(entry -> entry.getKey().isExploded())
             .peek(entry -> boombs.remove(entry.getKey()))
             .peek(entry -> entry.getValue().removeBombFromDeque(entry.getKey()))
-            .map(entry -> entry.getKey().computeFlame(this))
+            .map(entry -> entry.getKey().computeFlame(this.getGameMap()))
             .forEach(set -> set.forEach(entry -> addFlame(entry.getValue(), entry.getKey())));
     }
 

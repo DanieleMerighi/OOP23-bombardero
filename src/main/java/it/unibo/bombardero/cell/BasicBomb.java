@@ -11,7 +11,6 @@ import java.util.Set;
 
 import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.character.Direction;
-import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.physics.api.BoundingBox;
@@ -76,13 +75,12 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
     }
 
     @Override
-    public Set<Entry<Pair ,FlameType>> computeFlame(final GameManager mgr) {
+    public Set<Entry<Pair ,FlameType>> computeFlame(final GameMap map) {
         if(this.isExploded()) {
-            GameMap map = mgr.getGameMap();
             Map<Pair, FlameType> temp = new HashMap<>();
             final List<Direction> allDirection = List.of(Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.DOWN);
             allDirection.stream()
-                .map(dir -> checkDirection(dir, map, mgr))
+                .map(dir -> checkDirection(dir, map))
                 .forEach((set) -> set.forEach((e)->temp.put(e.getKey(), e.getValue())));
             temp.put(this.getPos(), FlameType.FLAME_CROSS);
             return temp.entrySet();
@@ -90,10 +88,10 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
         return new HashMap<Pair, FlameType>().entrySet();
     }
     
-    private Set<Entry<Pair ,FlameType>> checkDirection(final Direction dir, final GameMap map, final GameManager mgr) {
+    private Set<Entry<Pair ,FlameType>> checkDirection(final Direction dir, final GameMap map) {
         return IntStream.iterate(1 , i->i <= this.getRange() , i->i+1)
             .mapToObj(i -> getPos().sum(dir.getPair().multipy(i)))
-            .takeWhile(p->stopFlamePropagation(p, map, mgr))
+            .takeWhile(p->stopFlamePropagation(p, map))
             .collect(Collectors.toMap(
                 Function.identity() ,
                 p -> p.equals(getPos().sum(dir.getPair().multipy(this.getRange()))) 
@@ -102,21 +100,21 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
             .entrySet();
     }
 
-    private boolean stopFlamePropagation(final Pair pos, final GameMap map, GameManager mgr) {
-        return map.isEmpty(pos) || (isBomb(pos, map, mgr) && !map.isUnbreakableWall(pos) && !isBreckableWall(pos, map, mgr));
+    private boolean stopFlamePropagation(final Pair pos, final GameMap map) {
+        return map.isEmpty(pos) || (isBomb(pos, map) && !map.isUnbreakableWall(pos) && !isBreckableWall(pos, map));
     }
 
-    public boolean isBreckableWall(final Pair pos, GameMap map, GameManager mgr) {  
+    public boolean isBreckableWall(final Pair pos, GameMap map) {  
         if(map.isBreakableWall(pos)) {
-            mgr.removeWall(pos);
+            map.removeBreakableWall(pos);
             return true;
         }
         return false;
     }
 
-    private boolean isBomb(final Pair pos, GameMap map, GameManager mgr) { 
+    private boolean isBomb(final Pair pos, GameMap map) { 
         if(map.isBomb(pos)) {
-            final Bomb bomb = mgr.getBomb(pos).get();
+            final Bomb bomb = (Bomb) map.getMap().get(pos);
             if(!bomb.isExploded()) {
                 bomb.update(true);
             }

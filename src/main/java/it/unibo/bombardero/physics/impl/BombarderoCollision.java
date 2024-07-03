@@ -10,7 +10,6 @@ import java.awt.geom.Point2D;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.character.Direction;
-import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.physics.api.CollisionEngine;
@@ -29,19 +28,17 @@ public class BombarderoCollision implements CollisionEngine{
     );
 
     @Override
-    public void checkFlameAndPowerUpCollision(final Character character, final GameManager mgr) {
-        final GameMap gMap = mgr.getGameMap();
+    public void checkFlameAndPowerUpCollision(final Character character, final GameMap gMap) {
         if(gMap.isFlame(character.getIntCoordinate())) {
             cHandler.applyFlameCollision(character);
         } else if(gMap.isPowerUp(character.getIntCoordinate())) {
             cHandler.applyPowerUpCollision(character, (PowerUp)gMap.getMap().get(character.getIntCoordinate()));
-            mgr.removePowerUp(character.getIntCoordinate());
+            gMap.removePowerUp(character.getIntCoordinate());
         }
     }
 
     @Override
-    public void checkCharacterCollision(final Character character, final GameManager mgr) {
-        final GameMap gMap = mgr.getGameMap();
+    public void checkCharacterCollision(final Character character, final GameMap gMap) {
         final Map<Pair, Cell> map = gMap.getMap();
         final List<Pair> cells = getDirectionCell(character);
         if(!cells.isEmpty()) {

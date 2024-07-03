@@ -7,6 +7,7 @@ import java.util.Set;
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.core.api.GameManager;
+import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.Pair;
 import it.unibo.bombardero.physics.api.BoundingBox;
 
@@ -108,7 +109,7 @@ public class MyBomb implements Bomb{
     }
 
     @Override
-    public Set<Entry<Pair, FlameType>> computeFlame(GameManager mgr) {
+    public Set<Entry<Pair, FlameType>> computeFlame(GameMap map) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'computeFlame'");
     }
