@@ -3,8 +3,6 @@ package it.unibo.bombardero.view;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import javax.swing.ImageIcon;
@@ -12,10 +10,10 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import javax.swing.JButton;
-import java.util.Map; 
-import java.util.HashMap; 
-import java.util.Optional; 
-import java.util.List; 
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.List;
 
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.view.GraphicsEngine.viewCards;
@@ -33,15 +31,19 @@ import it.unibo.bombardero.map.api.GenPair;
  * <p>
  * Instructions on what to display are given by the {@link Controller}
  * through appropriate methods.
+ * 
  * @author Federico Bagattoni
  */
 public final class GuideCard extends GamePlayCard {
 
+    private final static int LAYOUT_ROWS = 1;
+    private final static int LAYOUT_COLS = 1;
+
     private transient Image startImage;
     private transient Image backImage;
 
-    //private String message = "";
-    private transient final Image messageBoxImage;
+    // private String message = "";
+    private final transient Image messageBoxImage;
     private final Font font;
 
     private final JButton back;
@@ -53,9 +55,22 @@ public final class GuideCard extends GamePlayCard {
     private final transient Sprite spacebarSprite;
     private transient Optional<Sprite> currentShowedSprite;
 
-    private transient final Map<Sprite, Dimension> spritesPlacingPoint = new HashMap<>();
+    private final transient Map<Sprite, Dimension> spritesPlacingPoint = new HashMap<>();
 
-    public GuideCard(final Controller controller, final it.unibo.bombardero.view.GraphicsEngine graphics, final Map<GenPair<Integer, Integer>, Cell> gameMap, List<Character> playersList, List<Character> enemiesList) {
+    /**
+     * Creates a new GuideCard using the passed arguments to build the button's actions and using the character's lists to build the view. 
+     * @param controller the {@link Controller} overseering the view.
+     * @param graphics the {@link GraphicsEngine} that manages this card
+     * @param gameMap the gamemap to render initially
+     * @param playersList the players to render initally
+     * @param enemiesList the enemies to rendere initially
+     */
+    public GuideCard(
+        final Controller controller,
+        final GraphicsEngine graphics,
+        final Map<GenPair<Integer, Integer>, Cell> gameMap,
+        final List<Character> playersList,
+        final List<Character> enemiesList) {
         super(graphics, gameMap, playersList, enemiesList);
 
         final ResourceGetter resourceGetter = graphics.getResourceGetter();
@@ -63,30 +78,33 @@ public final class GuideCard extends GamePlayCard {
         // CHECKSTYLE: MagicNumber OFF
         font = resourceGetter.loadFont("mono");
         messageBoxImage = resourceGetter.loadImage("overlay/dialog");
-        startImage = graphics.getResizingEngine().getScaledButtonImage(resourceGetter.loadImage("overlay/buttons/PLAY"));
+        startImage = graphics.getResizingEngine()
+                .getScaledButtonImage(resourceGetter.loadImage("overlay/buttons/PLAY"));
         backImage = graphics.getResizingEngine().getScaledButtonImage(resourceGetter.loadImage("overlay/buttons/BACK"));
         wasdSprite = new SimpleBombarderoSprite(
-            SimpleBombarderoSprite.importAssets("WASD", "overlay/buttons/WASD", resourceGetter, graphics.getResizingEngine()::getScaledWASDImage, 8),
-            8, 12);
+                SimpleBombarderoSprite.importAssets("WASD", "overlay/buttons/WASD", resourceGetter,
+                        graphics.getResizingEngine()::getScaledWASDImage, 8),
+                8, 12);
         spacebarSprite = new SimpleBombarderoSprite(
-            SimpleBombarderoSprite.importAssets("SPACE", "overlay/buttons/SPACEBAR", resourceGetter, graphics.getResizingEngine()::getScaledSpaceImage, 2),
-            2, 32);
+                SimpleBombarderoSprite.importAssets("SPACE", "overlay/buttons/SPACEBAR", resourceGetter,
+                        graphics.getResizingEngine()::getScaledSpaceImage, 2),
+                2, 32);
         // CHECKSTYLE: MagicNumber ON
-        
+
         currentShowedSprite = Optional.of(wasdSprite);
-        
+
         spritesPlacingPoint.put(wasdSprite, graphics.getResizingEngine().getWasdGuidePosition());
         spritesPlacingPoint.put(spacebarSprite, graphics.getResizingEngine().getSpaceGuidePosition());
 
-        this.setLayout(new GridLayout(5, 1));
+        this.setLayout(new GridLayout(LAYOUT_ROWS, LAYOUT_COLS));
 
         back = new JButton(new ImageIcon(backImage));
         start = new JButton(new ImageIcon(startImage));
         messageBox = new JLabel(new ImageIcon(messageBoxImage));
-        
+
         messageBox.setHorizontalTextPosition(SwingConstants.CENTER);
         messageBox.setVerticalTextPosition(SwingConstants.CENTER);
-        messageBox.setFont(font.deriveFont( 10.0f));
+        messageBox.setFont(font.deriveFont(10.0f));
 
         back.setBorder(null);
         start.setBorder(null);
@@ -99,32 +117,23 @@ public final class GuideCard extends GamePlayCard {
         this.add(new JLabel());
         this.add(messageBox);
 
-        back.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                controller.endGuide();
-                graphics.showCard(viewCards.MENU);
-            }
-            
+        back.addActionListener(e -> {
+            controller.endGuide();
+            graphics.showCard(viewCards.MENU);
         });
 
-        start.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                controller.endGuide();
-                controller.startGame();
-            }
-            
+        start.addActionListener(e -> {
+            controller.endGuide();
+            controller.startGame();
         });
     }
 
     @Override
-    public void paintComponent(Graphics g) {
+    public void paintComponent(final Graphics g) {
         super.paintComponent(g);
         if (currentShowedSprite.isPresent()) {
-            g.drawImage(currentShowedSprite.get().getImage(), spritesPlacingPoint.get(currentShowedSprite.get()).width, spritesPlacingPoint.get(currentShowedSprite.get()).height, null);
+            g.drawImage(currentShowedSprite.get().getImage(), spritesPlacingPoint.get(currentShowedSprite.get()).width,
+                    spritesPlacingPoint.get(currentShowedSprite.get()).height, null);
         }
     }
 
@@ -135,11 +144,21 @@ public final class GuideCard extends GamePlayCard {
         spacebarSprite.update();
     }
 
+    /** 
+     * Shows a message to the view. Only one message will be displayed
+     * at the time. The messages' content can be seen at {@link BombarderoViewMessages}.
+     * @param message the message to be shown
+     * @see BombarderoViewMessages
+     */
     public void showMessage(final BombarderoViewMessages message) {
         messageBox.setText(message.getMessage());
         showAnimatedKeys(message);
     }
 
+    /** 
+     * Displays the end of the guide: two buttons, one to proceed to the game, 
+     * the other to go back to the menu.
+     */
     public void displayEndGuide() {
         this.remove(messageBox);
         this.add(new JLabel());
@@ -151,7 +170,7 @@ public final class GuideCard extends GamePlayCard {
     }
 
     private void showAnimatedKeys(final BombarderoViewMessages message) {
-        currentShowedSprite = switch(message) {
+        currentShowedSprite = switch (message) {
             case END_GUIDE -> Optional.empty();
             case EXPLAIN_MOVEMENT -> Optional.of(wasdSprite);
             case EXPLAIN_POWERUP -> Optional.empty();
