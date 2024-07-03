@@ -53,7 +53,7 @@ public final class MapGeneratorImpl implements MapGenerator {
             .flatMap(x -> IntStream
                 .range(0, Utils.MAP_COLS)
                 .filter(num -> num % 2 != 0)
-                .mapToObj(y -> new GenPair <Integer, Integer> (x, y))
+                .mapToObj(y -> new GenPair<Integer, Integer>(x, y))
             )
             .collect(Collectors.toSet());
     }
@@ -73,7 +73,7 @@ public final class MapGeneratorImpl implements MapGenerator {
         int counter = totalWallsToGenerate;
         while (counter > 0) {
             do {
-                coordinate = new GenPair <> (rnd.nextInt(Utils.MAP_COLS), rnd.nextInt(Utils.MAP_ROWS));
+                coordinate = new GenPair<>(rnd.nextInt(Utils.MAP_COLS), rnd.nextInt(Utils.MAP_ROWS));
             } while (
                 !map.isEmpty(coordinate)
                 || this.mapCorners.contains(coordinate)
@@ -91,27 +91,27 @@ public final class MapGeneratorImpl implements MapGenerator {
      * @return the list of walls in collpase-order, the first element being the first to fall 
      */
     public List<GenPair<Integer, Integer>> generateCollapseOrder() {
-        final List<GenPair <Integer, Integer>> order = new ArrayList<>();
+        final List<GenPair<Integer, Integer>> order = new ArrayList<>();
         int top = 0, bottom = Utils.MAP_ROWS - 1, left = 0, right = Utils.MAP_COLS - 1;
         while (top <= bottom && left <= right) {
 
             for (int i = left; i <= right; i++) {
-                order.add(new GenPair <> (top, i));
+                order.add(new GenPair<>(top, i));
             }
             top++;
             for (int i = top; i <= bottom; i++) {
-                order.add(new GenPair <> (i, right));
+                order.add(new GenPair<>(i, right));
             }
             right--;
             if (top <= bottom) {
                 for (int i = right; i >= left; i--) {
-                    order.add(new GenPair <> (bottom, i));
+                    order.add(new GenPair<>(bottom, i));
                 } 
                 bottom--;
             }
             if (left <= right) {
                 for (int i = bottom; i >= top; i--) {
-                    order.add(new GenPair <> (i, left));
+                    order.add(new GenPair<>(i, left));
                 }
                 left++;
             }
@@ -124,21 +124,21 @@ public final class MapGeneratorImpl implements MapGenerator {
      * on which nothing can spawn except the player.
      */
     private void computeMapCorners() {
-        this.mapCorners.add(new GenPair <> (0, 0));
-        this.mapCorners.add(new GenPair <> (0, 1));
-        this.mapCorners.add(new GenPair <> (1, 0));
+        this.mapCorners.add(new GenPair<>(0, 0));
+        this.mapCorners.add(new GenPair<>(0, 1));
+        this.mapCorners.add(new GenPair<>(1, 0));
 
-        this.mapCorners.add(new GenPair <> (Utils.MAP_ROWS - 1, Utils.MAP_COLS - 1));
-        this.mapCorners.add(new GenPair <> (Utils.MAP_ROWS - 1, Utils.MAP_COLS - 2));
-        this.mapCorners.add(new GenPair <> (Utils.MAP_ROWS - 2, Utils.MAP_COLS - 1));
+        this.mapCorners.add(new GenPair<>(Utils.MAP_ROWS - 1, Utils.MAP_COLS - 1));
+        this.mapCorners.add(new GenPair<>(Utils.MAP_ROWS - 1, Utils.MAP_COLS - 2));
+        this.mapCorners.add(new GenPair<>(Utils.MAP_ROWS - 2, Utils.MAP_COLS - 1));
 
-        this.mapCorners.add(new GenPair <> (Utils.MAP_ROWS - 1, 0));
-        this.mapCorners.add(new GenPair <> (Utils.MAP_ROWS - 1, 1));
-        this.mapCorners.add(new GenPair <> (Utils.MAP_ROWS - 2, 0));
+        this.mapCorners.add(new GenPair<>(Utils.MAP_ROWS - 1, 0));
+        this.mapCorners.add(new GenPair<>(Utils.MAP_ROWS - 1, 1));
+        this.mapCorners.add(new GenPair<>(Utils.MAP_ROWS - 2, 0));
 
-        this.mapCorners.add(new GenPair <> (0, Utils.MAP_COLS - 1));
-        this.mapCorners.add(new GenPair <> (1, Utils.MAP_COLS - 1));
-        this.mapCorners.add(new GenPair <> (0, Utils.MAP_COLS - 2));
+        this.mapCorners.add(new GenPair<>(0, Utils.MAP_COLS - 1));
+        this.mapCorners.add(new GenPair<>(1, Utils.MAP_COLS - 1));
+        this.mapCorners.add(new GenPair<>(0, Utils.MAP_COLS - 2));
 
     }
 }
