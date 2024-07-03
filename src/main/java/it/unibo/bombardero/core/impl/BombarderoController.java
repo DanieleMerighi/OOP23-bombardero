@@ -9,7 +9,7 @@ import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.Engine;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.guide.impl.BombarderoGuideManager;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.view.BombarderoGraphics;
 import it.unibo.bombardero.view.BombarderoViewMessages;
 import it.unibo.bombardero.view.GraphicsEngine;
@@ -128,7 +128,7 @@ public final class BombarderoController implements Controller {
     }
 
     @Override
-    public Map<Pair, Cell> getMap() {
+    public Map<GenPair<Integer, Integer>, Cell> getMap() {
         return manager.getGameMap().getMap();
     }
 

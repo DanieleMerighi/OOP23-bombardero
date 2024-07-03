@@ -10,8 +10,7 @@ import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.map.api.Coord;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.physics.api.BoundingBox;
 
 /**
@@ -42,7 +41,7 @@ public abstract class Character {
     private final BombFactory bombFactory;
 
     // Position related
-    private Coord coordinate; // Starting character coordinate
+    private GenPair<Float, Float> coordinate; // Starting character coordinate
     // Indicates where the character is looking
     private Direction facingDirection = Direction.DOWN; // Starting character facingDirection
     private boolean stationary = true;
@@ -119,7 +118,7 @@ public abstract class Character {
      * @param coord       the initial coordinates where the character is spawned
      * @param bombFactory the factory to create bombs
      */
-    public Character(final Coord coord, final BombFactory bombFactory, final BoundingBox bBox) {
+    public Character(final GenPair<Float, Float> coord, final BombFactory bombFactory, final BoundingBox bBox) {
         this.coordinate = coord;
         this.bombFactory = bombFactory;
         this.bBox = bBox;
@@ -174,8 +173,8 @@ public abstract class Character {
      * 
      * @return the map's corrisponding integer coordinates of the character
      */
-    public Pair getIntCoordinate() {
-        return new Pair((int) Math.floor(this.coordinate.x()),
+    public GenPair<Integer, Integer> getIntCoordinate() {
+        return new GenPair<Integer, Integer>((int) Math.floor(this.coordinate.x()),
                 (int) Math.floor(this.coordinate.y()));
     }
 
@@ -202,7 +201,7 @@ public abstract class Character {
      * 
      * @return true if the character has placed the bomb, false otherwise
      */
-    public boolean placeBomb(final Pair coordinate, final GameManager manager) {
+    public boolean placeBomb(final GenPair<Integer, Integer> coordinate, final GameManager manager) {
         return placeBombImpl(createBomb(coordinate, CharacterType.PLAYER), manager);
     }
 
@@ -309,7 +308,7 @@ public abstract class Character {
      * 
      * @return the character's float coordinates
      */
-    public Coord getCharacterPosition() {
+    public GenPair<Float, Float> getCharacterPosition() {
         return coordinate;
     }
 
@@ -318,7 +317,7 @@ public abstract class Character {
      * 
      * @param coordinates the new coordinates of the character
      */
-    public void setCharacterPosition(final Coord coordinates) {
+    public void setCharacterPosition(final GenPair<Float, Float> coordinates) {
         this.coordinate = coordinates;
         bBox.move(new Point2D.Float(coordinates.x() - (float) BOUNDING_BOX_X_OFFSET,
                 coordinates.y() - BOUNDING_BOX_Y_OFFSET));
@@ -639,7 +638,7 @@ public abstract class Character {
      * @param type          the type of character who creates it
      * @return              the bomb created
      */
-    private Bomb createBomb(Pair coordinate, final CharacterType type) {
+    private Bomb createBomb(GenPair<Integer, Integer> coordinate, final CharacterType type) {
         if (!getBombType().isPresent()) {
             return bombFactory.createBasicBomb(this.getFlameRange(), coordinate);
         }

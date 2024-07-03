@@ -34,102 +34,102 @@ public interface GameMap {
      * @param coordinate where the bomb is to be placed
      * @return true if the bomb is placed correctly
      */
-    boolean addBomb(Bomb bomb, Pair coordinate);
+    boolean addBomb(Bomb bomb, GenPair<Integer, Integer> coordinate);
 
     /**
      * Adds a flame's reference to the map.
      * @param flame the flame to be added
      * @param coordinate where the flame is to be placed
      */
-    void addFlame(Flame flame, Pair coordinate);
+    void addFlame(Flame flame, GenPair<Integer, Integer> coordinate);
 
     /** 
      * Creates and adds an unbreakable wall to the map.
      * @param coordinate where the wall is to be placed
      */
-    void addUnbreakableWall(Pair coordinate);
+    void addUnbreakableWall(GenPair<Integer, Integer> coordinate);
 
     /**
      * Creates and adds a breakable wall to the map.
      * @param coordinate where the wall is to be placed
      */
-    void addBreakableWall(Pair coordinate);
+    void addBreakableWall(GenPair<Integer, Integer> coordinate);
 
     /** 
      * Removes the breakable wall at the coordinate and eventually spawns a powerup.
      * @param coordinate the position of the wall to remove
      */
-    void removeBreakableWall(Pair coordinate);
+    void removeBreakableWall(GenPair<Integer, Integer> coordinate);
 
     /**
      * Removes the bomb at the given coordinate.
      * @param coordinate the coordinate where to remove the bomb
      */
-    void removeBomb(Pair coordinate);
+    void removeBomb(GenPair<Integer, Integer> coordinate);
 
     /**
      * Removes the powerUp at the given coordinate.
      * @param coordinate the position of the wall to remove
      */
-    void removePowerUp(Pair coordinate);
+    void removePowerUp(GenPair<Integer, Integer> coordinate);
 
     /**
      * @param coordinate
      * @return if the Cell with this coordinates is a PowerUp
      */
-    boolean isPowerUp(Pair coordinate);
+    boolean isPowerUp(GenPair<Integer, Integer> coordinate);
 
     /**
      * @param coordinate
      * @return which type of PowerUp the Cell is
      */
-    Optional<PowerUpType> whichPowerUpType(Pair coordinate);
+    Optional<PowerUpType> whichPowerUpType(GenPair<Integer, Integer> coordinate);
 
     /**
      * remove the falme at the given coordinate
      * @param coordinate
      */
-    void removeFlame(Pair coordinate);
+    void removeFlame(GenPair<Integer, Integer> coordinate);
 
     /** 
      * Returns true if the cell at the coordinate is a Bomb.
      * @param coordinate the coordinate to check 
      * @return wether the cell at the coordinate is a Bomb
      */
-    boolean isBomb(Pair coordinate);
+    boolean isBomb(GenPair<Integer, Integer> coordinate);
 
     /**
      * Returns true if the cell at the coordinate is a Breakable Wall.
      * @param coordinate the coordinate to check 
      * @return wether the cell at the coordinate is a Breakable Wall
      */
-    boolean isBreakableWall(Pair coordinate);
+    boolean isBreakableWall(GenPair<Integer, Integer> coordinate);
 
     /**
      * Returns true if the cell at the coordinate is an Unbreakable Wall.
      * @param coordinate the coordinate to check 
      * @return wether the cell at the coordinate is an Unbreakable Wall
      */
-    boolean isUnbreakableWall(Pair coordinate);
+    boolean isUnbreakableWall(GenPair<Integer, Integer> coordinate);
 
     /**
      * Returns true if the cell at the coordinate is a Flame.
      * @param coordinate the coordinate to check 
      * @return wether the cell at the coordinate is a Flame
      */
-    boolean isFlame(Pair coordinate);
+    boolean isFlame(GenPair<Integer, Integer> coordinate);
 
     /**
      * Returns true if the cell at the coordinate is empty.
      * @param coordinate the coordinate to check 
      * @return wether the cell is empty or not
      */
-    boolean isEmpty(Pair coordinate);
+    boolean isEmpty(GenPair<Integer, Integer> coordinate);
 
     /**
      * Returns a copy of the Map used to map the coordinates to the elements of the game.
      * @return a copy of the map
      */
-    Map<Pair, Cell> getMap();
+    Map<GenPair<Integer, Integer>, Cell> getMap();
 
 }

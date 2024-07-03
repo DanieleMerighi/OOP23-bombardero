@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.character.Character;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 
 public interface GraphicsEngine {
 
@@ -36,7 +36,7 @@ public interface GraphicsEngine {
 
     void showCard(viewCards cardName);
 
-    void update(Map<Pair, Cell> map, List<Character> playerList, List<Character> enemiesList, final Optional<Long> timeLeft);
+    void update(Map<GenPair<Integer, Integer>, Cell> map, List<Character> playerList, List<Character> enemiesList, final Optional<Long> timeLeft);
 
     void setPausedView();
 

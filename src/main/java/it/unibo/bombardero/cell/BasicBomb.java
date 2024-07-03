@@ -11,8 +11,9 @@ import java.util.Set;
 
 import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.character.Direction;
+import it.unibo.bombardero.map.api.Functions;
 import it.unibo.bombardero.map.api.GameMap;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.physics.api.BoundingBox;
 
 //TODO cercare di dividere logica del character e del manager es: ritornare entryset di fiamme da aggiungere e numbob nel character 
@@ -23,10 +24,10 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
     private boolean exploded;
     private final int range;
     private int countTick;
-    private final Pair position;
+    private final GenPair<Integer, Integer> position;
     private final BombType bombType;
 
-    public BasicBomb(final BombType bombType, final int range, final Pair pos, BoundingBox bBox) {
+    public BasicBomb(final BombType bombType, final int range, final GenPair<Integer, Integer> pos, BoundingBox bBox) {
         super(CellType.BOMB , pos, true, bBox);
         this.position = pos;
         this.range = range;
@@ -70,14 +71,14 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
     }
     
     @Override
-    public Pair getPos(){
+    public GenPair<Integer, Integer> getPos(){
         return position;
     }
 
     @Override
-    public Set<Entry<Pair ,FlameType>> computeFlame(final GameMap map) {
+    public Set<Entry<GenPair<Integer, Integer> ,FlameType>> computeFlame(final GameMap map) {
         if(this.isExploded()) {
-            Map<Pair, FlameType> temp = new HashMap<>();
+            Map<GenPair<Integer, Integer>, FlameType> temp = new HashMap<>();
             final List<Direction> allDirection = List.of(Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.DOWN);
             allDirection.stream()
                 .map(dir -> checkDirection(dir, map))
@@ -85,26 +86,26 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
             temp.put(this.getPos(), FlameType.FLAME_CROSS);
             return temp.entrySet();
         }
-        return new HashMap<Pair, FlameType>().entrySet();
+        return new HashMap<GenPair<Integer, Integer>, FlameType>().entrySet();
     }
     
-    private Set<Entry<Pair ,FlameType>> checkDirection(final Direction dir, final GameMap map) {
+    private Set<Entry<GenPair<Integer, Integer> ,FlameType>> checkDirection(final Direction dir, final GameMap map) {
         return IntStream.iterate(1 , i->i <= this.getRange() , i->i+1)
-            .mapToObj(i -> getPos().sum(dir.getPair().multipy(i)))
+            .mapToObj(i -> getPos().apply(Functions.sumInt(dir.getPair().apply(Functions.multiplyInt(i)))))
             .takeWhile(p->stopFlamePropagation(p, map))
             .collect(Collectors.toMap(
                 Function.identity() ,
-                p -> p.equals(getPos().sum(dir.getPair().multipy(this.getRange()))) 
+                p -> p.equals(getPos().apply(Functions.sumInt(position.apply(Functions.multiplyInt(getRange()))))) 
                     ? FlameType.getFlameEndType(dir) 
                     : FlameType.getFlameBodyType(dir)))
             .entrySet();
     }
 
-    private boolean stopFlamePropagation(final Pair pos, final GameMap map) {
+    private boolean stopFlamePropagation(final GenPair<Integer, Integer> pos, final GameMap map) {
         return map.isEmpty(pos) || (isBomb(pos, map) && !map.isUnbreakableWall(pos) && !isBreckableWall(pos, map));
     }
 
-    public boolean isBreckableWall(final Pair pos, GameMap map) {  
+    public boolean isBreckableWall(final GenPair<Integer, Integer> pos, GameMap map) {  
         if(map.isBreakableWall(pos)) {
             map.removeBreakableWall(pos);
             return true;
@@ -112,7 +113,7 @@ public abstract class BasicBomb extends AbstractCell implements Bomb{
         return false;
     }
 
-    private boolean isBomb(final Pair pos, GameMap map) { 
+    private boolean isBomb(final GenPair<Integer, Integer> pos, GameMap map) { 
         if(map.isBomb(pos)) {
             final Bomb bomb = (Bomb) map.getMap().get(pos);
             if(!bomb.isExploded()) {

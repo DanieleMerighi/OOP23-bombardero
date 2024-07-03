@@ -24,7 +24,7 @@ public interface MapGenerator {
      * by an empty cell.
      * @return a {@link Set} containing all the positions of the walls.
      */
-    Set<Pair> generateUnbreakableWalls();
+    Set<GenPair<Integer, Integer>> generateUnbreakableWalls();
 
     /** 
      * Generates the requested number of breakable walls, avoiding spawing them 
@@ -34,14 +34,14 @@ public interface MapGenerator {
      * @param totalWallToGenerate the total number of walls that have to be generated
      * @return a {@link Set} containing all the positions of the walls.
      */
-    Set<Pair> generateBreakableWalls(GameMap map, int totalWallsToGenerate);
+    Set<GenPair<Integer, Integer>> generateBreakableWalls(GameMap map, int totalWallsToGenerate);
 
     /** 
      * Generates the order of cell on which an Unbreakable wall has to be spawned
      * during the map's collpase.
      * @return a list of positions, the first position being the first wall to collapse.
      */
-    List<Pair> generateCollapseOrder();
+    List<GenPair<Integer, Integer>> generateCollapseOrder();
 
 
 }

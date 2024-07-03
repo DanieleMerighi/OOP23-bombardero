@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.character.Player;
-import it.unibo.bombardero.map.api.Coord;
+import it.unibo.bombardero.map.api.Coordinates;
 
 /**
  * Unit tests for the {@link Player} class.
@@ -28,8 +28,8 @@ class TestPlayer {
 
     private float spawnX;
     private float spawnY;
-    private Coord spawnCoord;
-    private Coord expectedCoord;
+    private Coordinates spawnCoord;
+    private Coordinates expectedCoord;
 
     /**
      * Sets up the test environment before each test.
@@ -40,8 +40,8 @@ class TestPlayer {
         this.manager = new MyGameManager();
         spawnX = STARTING_COORD;
         spawnY = STARTING_COORD;
-        spawnCoord  = new Coord(spawnX, spawnY);
-        expectedCoord = new Coord(spawnX, spawnY);
+        spawnCoord  = new Coordinates(spawnX, spawnY);
+        expectedCoord = new Coordinates(spawnX, spawnY);
         this.manager.getPlayer().setCharacterPosition(spawnCoord);
     }
 
@@ -85,10 +85,10 @@ class TestPlayer {
      * Calculates the expected delta movement of the player based on the number of updates.
      *
      * @param updateNumeber the number of updates
-     * @return the expected delta movement as a {@link Coord}
+     * @return the expected delta movement as a {@link Coordinates}
      */
-    private Coord calculateExpectedDeltaMovement(final int updateNumeber) {
-        return new Coord(
+    private Coordinates calculateExpectedDeltaMovement(final int updateNumeber) {
+        return new Coordinates(
                 this.manager.getPlayer().getSpeed() * this.manager.getPlayer().getFacingDirection().x()
                         * updateNumeber,
                 this.manager.getPlayer().getSpeed() * this.manager.getPlayer().getFacingDirection().y()
@@ -100,7 +100,7 @@ class TestPlayer {
      */
     private void roundPlayerCoordinateToThreeDecimal() {
         this.manager.getPlayer().setCharacterPosition(
-            new Coord(
+            new Coordinates(
                 Math.round(this.manager.getPlayer().getCharacterPosition().x() * 1000.0f) / 1000.0f,
                 Math.round(this.manager.getPlayer().getCharacterPosition().y() * 1000.0f) / 1000.0f
             ));

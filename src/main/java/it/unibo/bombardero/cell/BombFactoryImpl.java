@@ -1,8 +1,9 @@
 package it.unibo.bombardero.cell;
 
 import it.unibo.bombardero.cell.Bomb.BombType;
+import it.unibo.bombardero.map.api.Functions;
 import it.unibo.bombardero.map.api.GameMap;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 
 
@@ -12,16 +13,16 @@ import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 public class BombFactoryImpl implements BombFactory {
 
     @Override
-    public Bomb createBasicBomb(final int range, final Pair pos) {
+    public Bomb createBasicBomb(final int range, final GenPair<Integer, Integer> pos) {
         return new BasicBomb(BombType.BOMB_BASIC, range, pos, new RectangleBoundingBox(pos.x(), pos.y(), 1.0f , 1.0f)) {};
     }
 
     @Override
-    public Bomb createPiercingBomb(final int range, final Pair pos) {
+    public Bomb createPiercingBomb(final int range, final GenPair<Integer, Integer> pos) {
         return new BasicBomb(BombType.BOMB_PIERCING, range, pos, new RectangleBoundingBox(pos.x(), pos.y(), 1.0f , 1.0f)) {
 
             @Override
-            public boolean isBreckableWall(final Pair pos, GameMap map) {
+            public boolean isBreckableWall(final GenPair<Integer, Integer> pos, GameMap map) {
                 if (map.isBreakableWall(pos) && isLastWall(pos)) {
                     map.removeBreakableWall(pos);
                     return true;
@@ -29,22 +30,22 @@ public class BombFactoryImpl implements BombFactory {
                 return false;
             }
 
-            private boolean isLastWall(final Pair pos) {
-                return pos.equals(this.getPos().sum(new Pair(this.getRange(), 0)))
-                        || pos.equals(this.getPos().sum(new Pair(0, this.getRange())))
-                        || pos.equals(this.getPos().sum(new Pair(-this.getRange(), 0)))
-                        || pos.equals(this.getPos().sum(new Pair(0, -this.getRange())));
+            private boolean isLastWall(final GenPair<Integer, Integer> pos) {
+                return pos.equals(this.getPos().apply(Functions.sumInt(new GenPair<Integer, Integer>(this.getRange(), 0))))
+                        || pos.equals(this.getPos().apply(Functions.sumInt(new GenPair<Integer, Integer>(0, this.getRange()))))
+                        || pos.equals(this.getPos().apply(Functions.sumInt(new GenPair<Integer, Integer>(-this.getRange(), 0))))
+                        || pos.equals(this.getPos().apply(Functions.sumInt(new GenPair<Integer, Integer>(0, -this.getRange()))));
             }
         };
     }
 
     @Override
-    public Bomb createPowerBomb(final Pair pos) {
+    public Bomb createPowerBomb(final GenPair<Integer, Integer> pos) {
         return new BasicBomb(BombType.BOMB_POWER, BasicBomb.MAX_RANGE, pos, new RectangleBoundingBox(pos.x(), pos.y(), 1.0f , 1.0f)) {};
     }
 
     @Override
-    public Bomb createRemoteBomb(final int range, final Pair pos) {
+    public Bomb createRemoteBomb(final int range, final GenPair<Integer, Integer> pos) {
         return new BasicBomb(BombType.BOMB_REMOTE, range, pos, new RectangleBoundingBox(pos.x(), pos.y(), 1.0f , 1.0f)) {
 
             @Override

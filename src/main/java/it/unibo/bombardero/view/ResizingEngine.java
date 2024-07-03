@@ -3,8 +3,8 @@ package it.unibo.bombardero.view;
 import javax.swing.JFrame;
 
 import it.unibo.bombardero.guide.api.GuideManager;
-import it.unibo.bombardero.map.api.Coord;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.Coordinates;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.utils.Utils;
 
 import java.awt.Dimension;
@@ -178,14 +178,14 @@ public final class ResizingEngine {
     /** 
      * Returns the upper-left corner of the cell at {@link #cooordinate}
      */
-    public Dimension getCellPlacingPoint(Pair coordinate) {
+    public Dimension getCellPlacingPoint(GenPair<Integer, Integer> coordinate) {
         return new Dimension(
             entityPlacingPoint.width + (int)(getScaledCellSize() * coordinate.x()),
             entityPlacingPoint.height + (int)(getScaledCellSize() * coordinate.y())
         );
     }
 
-    public Dimension getBombPlacingPoint(Pair coordinate) {
+    public Dimension getBombPlacingPoint(GenPair<Integer, Integer> coordinate) {
         Dimension placingPoint = getCellPlacingPoint(coordinate);
         return new Dimension(
             placingPoint.width + (int)(getScaledCellSize() / 2),
@@ -193,7 +193,7 @@ public final class ResizingEngine {
         );
     }
 
-    public Dimension getCharacterPlacingPoint(final Coord playerPosition) {
+    public Dimension getCharacterPlacingPoint(final Coordinates playerPosition) {
         return new Dimension(
             (int)Math.floor(
                 entityPlacingPoint.width

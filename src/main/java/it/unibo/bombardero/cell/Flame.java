@@ -3,7 +3,7 @@ package it.unibo.bombardero.cell;
 import java.util.Map;
 
 import it.unibo.bombardero.character.Direction;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 
 public class Flame extends AbstractCell {
 
@@ -51,10 +51,10 @@ public class Flame extends AbstractCell {
 
     private boolean expired;
     private final FlameType specificFlameType;
-    private final Pair pos;
+    private final GenPair<Integer, Integer> pos;
     private long countTime;
 
-    public Flame(final CellType type, final FlameType specfiFlameType, final Pair pos) {
+    public Flame(final CellType type, final FlameType specfiFlameType, final GenPair<Integer, Integer> pos) {
         super(type, pos, false, null);
         this.specificFlameType = specfiFlameType;
         this.pos = pos;
@@ -71,7 +71,7 @@ public class Flame extends AbstractCell {
         return this.expired;
     }
 
-    public Pair getPos() {
+    public GenPair<Integer, Integer> getPos() {
         return this.pos;
     }
 

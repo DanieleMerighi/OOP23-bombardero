@@ -2,7 +2,7 @@ package it.unibo.bombardero.character;
 
 import java.util.List;
 
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.utils.Utils;
 
 /**
@@ -63,8 +63,8 @@ public enum Direction {
      * 
      * @return A Pair representing the direction.
      */
-    public Pair getPair() {
-        return new Pair(x, y);
+    public GenPair<Integer, Integer> getPair() {
+        return new GenPair <Integer, Integer> (x, y);
     }
 
     /**
@@ -74,24 +74,24 @@ public enum Direction {
      * @param characterPos The current position of the character.
      * @return A list of diagonal cells relative to the direction and character position.
      */
-    public List<Pair> getDiagonals(final Direction dir, final Pair characterPos) {
-        List<Pair> cells;
+    public List<GenPair<Integer, Integer>> getDiagonals(final Direction dir, final GenPair<Integer, Integer> characterPos) {
+        List<GenPair<Integer, Integer>> cells;
         switch (dir) {
             case UP:
-                cells = List.of(new Pair(characterPos.x() - 1, characterPos.y() - 1),
-                        new Pair(characterPos.x() + 1, characterPos.y() - 1));
+                cells = List.of(new GenPair<Integer, Integer>(characterPos.x() - 1, characterPos.y() - 1),
+                        new GenPair<Integer, Integer>(characterPos.x() + 1, characterPos.y() - 1));
                 break;
             case DOWN:
-                cells = List.of(new Pair(characterPos.x() - 1, characterPos.y() + 1),
-                        new Pair(characterPos.x() + 1, characterPos.y() + 1));
+                cells = List.of(new GenPair<Integer, Integer>(characterPos.x() - 1, characterPos.y() + 1),
+                        new GenPair<Integer, Integer>(characterPos.x() + 1, characterPos.y() + 1));
                 break;
             case LEFT:
-                cells = List.of(new Pair(characterPos.x() - 1, characterPos.y() - 1),
-                        new Pair(characterPos.x() - 1, characterPos.y() + 1));
+                cells = List.of(new GenPair<Integer, Integer>(characterPos.x() - 1, characterPos.y() - 1),
+                        new GenPair<Integer, Integer>(characterPos.x() - 1, characterPos.y() + 1));
                 break;
             case RIGHT:
-                cells = List.of(new Pair(characterPos.x() + 1, characterPos.y() - 1),
-                        new Pair(characterPos.x() + 1, characterPos.y() + 1));
+                cells = List.of(new GenPair<Integer, Integer>(characterPos.x() + 1, characterPos.y() - 1),
+                        new GenPair<Integer, Integer>(characterPos.x() + 1, characterPos.y() + 1));
                 break;
             default:
                 return null;

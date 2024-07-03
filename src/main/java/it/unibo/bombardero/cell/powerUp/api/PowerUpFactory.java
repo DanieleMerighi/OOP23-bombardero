@@ -1,6 +1,6 @@
 package it.unibo.bombardero.cell.powerup.api;
 
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 
 /**
  * Factory interface for creating instances of PowerUp.
@@ -17,5 +17,5 @@ public interface PowerUpFactory {
      * @param position the coordinates where the PowerUp will be placed on the map
      * @return a new instance of PowerUp with a specific type and effect
      */
-    PowerUp createPowerUp(Pair position);
+    PowerUp createPowerUp(GenPair<Integer, Integer> position);
 }

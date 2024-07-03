@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.MapGenerator;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.utils.Utils;
 
 /**
@@ -25,7 +25,7 @@ public final class MapGeneratorImpl implements MapGenerator {
     /* This number and List represent the twelve cells on which nothing can spawn except the player: */
     /* NOTE: the number "12" does NOT depend from the arena's size, however the "MAP_CORNERS" Set does. */
     private static final int MAP_CORNERS_NUMBER = 12;
-    private final Set<Pair> mapCorners = new HashSet<>();
+    private final Set<GenPair<Integer, Integer>> mapCorners = new HashSet<>();
 
     /** 
      * Creates a new Map Manager managing a the map passed as argument.
@@ -45,7 +45,7 @@ public final class MapGeneratorImpl implements MapGenerator {
     }
 
     @Override
-    public Set<Pair> generateUnbreakableWalls() {
+    public Set<GenPair<Integer, Integer>> generateUnbreakableWalls() {
         return IntStream
             .range(0, Utils.MAP_ROWS)
             .filter(num -> num % 2 != 0)
@@ -53,7 +53,7 @@ public final class MapGeneratorImpl implements MapGenerator {
             .flatMap(x -> IntStream
                 .range(0, Utils.MAP_COLS)
                 .filter(num -> num % 2 != 0)
-                .mapToObj(y -> new Pair(x, y))
+                .mapToObj(y -> new GenPair <Integer, Integer> (x, y))
             )
             .collect(Collectors.toSet());
     }
@@ -65,15 +65,15 @@ public final class MapGeneratorImpl implements MapGenerator {
      * @return a Set containing all the generated coordinates
      */
     @Override
-    public Set<Pair> generateBreakableWalls(final GameMap map, final int totalWallsToGenerate) {
+    public Set<GenPair<Integer, Integer>> generateBreakableWalls(final GameMap map, final int totalWallsToGenerate) {
         final Random rnd = new Random();
-        final Set<Pair> unbreakableWalls = generateUnbreakableWalls();
-        Pair coordinate;
-        final Set<Pair> walls = new HashSet<>();
+        final Set<GenPair<Integer, Integer>> unbreakableWalls = generateUnbreakableWalls();
+        GenPair<Integer, Integer> coordinate;
+        final Set<GenPair<Integer, Integer>> walls = new HashSet<>();
         int counter = totalWallsToGenerate;
         while (counter > 0) {
             do {
-                coordinate = new Pair(rnd.nextInt(Utils.MAP_COLS), rnd.nextInt(Utils.MAP_ROWS));
+                coordinate = new GenPair <> (rnd.nextInt(Utils.MAP_COLS), rnd.nextInt(Utils.MAP_ROWS));
             } while (
                 !map.isEmpty(coordinate)
                 || this.mapCorners.contains(coordinate)
@@ -90,28 +90,28 @@ public final class MapGeneratorImpl implements MapGenerator {
      * of spiral traversal to the game map.
      * @return the list of walls in collpase-order, the first element being the first to fall 
      */
-    public List<Pair> generateCollapseOrder() {
-        final List<Pair> order = new ArrayList<>();
+    public List<GenPair<Integer, Integer>> generateCollapseOrder() {
+        final List<GenPair <Integer, Integer>> order = new ArrayList<>();
         int top = 0, bottom = Utils.MAP_ROWS - 1, left = 0, right = Utils.MAP_COLS - 1;
         while (top <= bottom && left <= right) {
 
             for (int i = left; i <= right; i++) {
-                order.add(new Pair(top, i));
+                order.add(new GenPair <> (top, i));
             }
             top++;
             for (int i = top; i <= bottom; i++) {
-                order.add(new Pair(i, right));
+                order.add(new GenPair <> (i, right));
             }
             right--;
             if (top <= bottom) {
                 for (int i = right; i >= left; i--) {
-                    order.add(new Pair(bottom, i));
+                    order.add(new GenPair <> (bottom, i));
                 } 
                 bottom--;
             }
             if (left <= right) {
                 for (int i = bottom; i >= top; i--) {
-                    order.add(new Pair(i, left));
+                    order.add(new GenPair <> (i, left));
                 }
                 left++;
             }
@@ -124,21 +124,21 @@ public final class MapGeneratorImpl implements MapGenerator {
      * on which nothing can spawn except the player.
      */
     private void computeMapCorners() {
-        this.mapCorners.add(new Pair(0, 0));
-        this.mapCorners.add(new Pair(0, 1));
-        this.mapCorners.add(new Pair(1, 0));
+        this.mapCorners.add(new GenPair <> (0, 0));
+        this.mapCorners.add(new GenPair <> (0, 1));
+        this.mapCorners.add(new GenPair <> (1, 0));
 
-        this.mapCorners.add(new Pair(Utils.MAP_ROWS - 1, Utils.MAP_COLS - 1));
-        this.mapCorners.add(new Pair(Utils.MAP_ROWS - 1, Utils.MAP_COLS - 2));
-        this.mapCorners.add(new Pair(Utils.MAP_ROWS - 2, Utils.MAP_COLS - 1));
+        this.mapCorners.add(new GenPair <> (Utils.MAP_ROWS - 1, Utils.MAP_COLS - 1));
+        this.mapCorners.add(new GenPair <> (Utils.MAP_ROWS - 1, Utils.MAP_COLS - 2));
+        this.mapCorners.add(new GenPair <> (Utils.MAP_ROWS - 2, Utils.MAP_COLS - 1));
 
-        this.mapCorners.add(new Pair(Utils.MAP_ROWS - 1, 0));
-        this.mapCorners.add(new Pair(Utils.MAP_ROWS - 1, 1));
-        this.mapCorners.add(new Pair(Utils.MAP_ROWS - 2, 0));
+        this.mapCorners.add(new GenPair <> (Utils.MAP_ROWS - 1, 0));
+        this.mapCorners.add(new GenPair <> (Utils.MAP_ROWS - 1, 1));
+        this.mapCorners.add(new GenPair <> (Utils.MAP_ROWS - 2, 0));
 
-        this.mapCorners.add(new Pair(0, Utils.MAP_COLS - 1));
-        this.mapCorners.add(new Pair(1, Utils.MAP_COLS - 1));
-        this.mapCorners.add(new Pair(0, Utils.MAP_COLS - 2));
+        this.mapCorners.add(new GenPair <> (0, Utils.MAP_COLS - 1));
+        this.mapCorners.add(new GenPair <> (1, Utils.MAP_COLS - 1));
+        this.mapCorners.add(new GenPair <> (0, Utils.MAP_COLS - 2));
 
     }
 }

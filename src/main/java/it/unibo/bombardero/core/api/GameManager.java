@@ -6,7 +6,7 @@ import java.util.Optional;
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.map.api.GameMap;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.character.Character;
 
 /** 
@@ -56,17 +56,17 @@ public interface GameManager {
 
     boolean addBomb(Bomb bomb, Character character);
 
-    void removeBomb(Pair pos);
+    void removeBomb(GenPair<Integer, Integer> pos);
 
-    Optional<Bomb> getBomb(Pair pos);
+    Optional<Bomb> getBomb(GenPair<Integer, Integer> pos);
 
-    void addFlame(FlameType type, Pair pos);
+    void addFlame(FlameType type, GenPair<Integer, Integer> pos);
 
-    void removePowerUp(Pair pos);
+    void removePowerUp(GenPair<Integer, Integer> pos);
 
-    void removeFlame(Pair pos);
+    void removeFlame(GenPair<Integer, Integer> pos);
 
-    boolean removeWall(Pair pos);
+    boolean removeWall(GenPair<Integer, Integer> pos);
 
     Optional<Long> getTimeLeft();
 }

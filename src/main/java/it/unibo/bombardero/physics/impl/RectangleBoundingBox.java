@@ -5,7 +5,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import it.unibo.bombardero.character.Direction;
-import it.unibo.bombardero.map.api.Coord;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.physics.api.BoundingBox;
 //TODO generalizzare il physicsBox fare classe astratta 
 
@@ -30,18 +30,18 @@ public class RectangleBoundingBox implements BoundingBox{
     }
 
     @Override
-    public Coord computeCollision(final BoundingBox bBox, final Direction dir) {
+    public GenPair<Float, Float> computeCollision(final BoundingBox bBox, final Direction dir) {
         switch (dir) {
             case LEFT:
-                return new Coord((float)this.physicsBox.createIntersection(bBox.getPhysicsBox()).getWidth(),0);
+                return new GenPair<Float, Float>((float)this.physicsBox.createIntersection(bBox.getPhysicsBox()).getWidth(), 0f);
             case RIGHT:
-                return new Coord((float)-this.physicsBox.createIntersection(bBox.getPhysicsBox()).getWidth() , 0);
+                return new GenPair<Float, Float>((float)-this.physicsBox.createIntersection(bBox.getPhysicsBox()).getWidth() , 0f);
             case UP:
-                return new Coord(0 , (float)this.physicsBox.createIntersection(bBox.getPhysicsBox()).getHeight());
+                return new GenPair<Float, Float>(0f , (float)this.physicsBox.createIntersection(bBox.getPhysicsBox()).getHeight());
             case DOWN:
-                return new Coord(0, -(float)this.physicsBox.createIntersection(bBox.getPhysicsBox()).getHeight());
+                return new GenPair<Float, Float>(0f, -(float)this.physicsBox.createIntersection(bBox.getPhysicsBox()).getHeight());
             default:
-                return new Coord(0, 0);
+                return new GenPair<Float, Float>(0f, 0f);
         }
     }
 
@@ -52,18 +52,18 @@ public class RectangleBoundingBox implements BoundingBox{
     }
 
     @Override
-    public Coord computeCollision(final Line2D.Float mapOutline ,final Direction dir) {
+    public GenPair<Float, Float> computeCollision(final Line2D.Float mapOutline ,final Direction dir) {
         switch (dir) {
             case UP:
-                return new Coord(0 , (float)(mapOutline.getY1()-this.physicsBox.getMinY()));
+                return new GenPair<Float, Float>(0f , (float)(mapOutline.getY1()-this.physicsBox.getMinY()));
             case DOWN:
-                return new Coord(0 , (float)(mapOutline.getY1()-this.physicsBox.getMaxY()));
+                return new GenPair<Float, Float>(0f , (float)(mapOutline.getY1()-this.physicsBox.getMaxY()));
             case LEFT:
-                return new Coord((float)(mapOutline.getX1()-this.physicsBox.getMinX()) , 0);
+                return new GenPair<Float, Float>((float)(mapOutline.getX1()-this.physicsBox.getMinX()) , 0f);
             case RIGHT:
-                return new Coord((float)(mapOutline.getX1()-this.physicsBox.getMaxX()) , 0);
+                return new GenPair<Float, Float>((float)(mapOutline.getX1()-this.physicsBox.getMaxX()) , 0f);
             default:
-                return new Coord(0, 0);
+                return new GenPair<Float, Float>(0f, 0f);
         }
     }
 

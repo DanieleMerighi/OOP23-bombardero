@@ -15,7 +15,7 @@ import java.util.Optional;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.core.KeyboardInput;
 import it.unibo.bombardero.core.api.Controller;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.character.Character;
 
 /** 
@@ -84,7 +84,7 @@ public final class BombarderoGraphics implements GraphicsEngine {
 
     @Override
     public void update(
-        final Map<Pair, Cell> map,
+        final Map<GenPair<Integer, Integer>, Cell> map,
         final List<Character> playerList,
         final List<Character> enemiesList,
         final Optional<Long> timeLeft) {

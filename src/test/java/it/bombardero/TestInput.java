@@ -12,16 +12,12 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import it.unibo.bombardero.cell.Cell;
+
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
-import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.KeyboardInput;
 import it.unibo.bombardero.core.api.Controller;
-import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.core.impl.BombarderoController;
-import it.unibo.bombardero.map.api.Pair;
-import it.unibo.bombardero.view.BombarderoViewMessages;
+
 
 /**
  * Test class for KeyboardInput to verify the handling of keyboard events.
@@ -38,7 +34,7 @@ class TestInput {
     @BeforeEach
     void setUp() {
         // Initialize the test controller
-        controller = new BombarderoController() {
+        /*controller = new BombarderoController() {
             private boolean escapeCalled;
             private final Character mainPlayer = new Character(null, null, null) {
 
@@ -102,7 +98,7 @@ class TestInput {
             }
 
             @Override
-            public Map<Pair, Cell> getMap() {
+            public Map<IntPair, Cell> getMap() {
                 // TODO Auto-generated method stub
                 throw new UnsupportedOperationException("Unimplemented method 'getMap'");
             }
@@ -119,7 +115,7 @@ class TestInput {
                 throw new UnsupportedOperationException("Unimplemented method 'displayEndGuide'");
             }
 
-        };
+        };*/
         // Initialize KeyboardInput with the test controller
         this.keyboardInput = new KeyboardInput(controller);
     }

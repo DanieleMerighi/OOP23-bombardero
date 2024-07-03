@@ -1,9 +1,12 @@
 package it.unibo.bombardero.character;
 
+import org.apache.commons.math3.util.MathArrays.Function;
+
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.powerup.impl.PowerUpImpl;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.map.api.Coord;
+import it.unibo.bombardero.map.api.Functions;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.physics.api.BoundingBox;
 
 /**
@@ -20,7 +23,7 @@ public class Player extends Character {
      * @param coord       the initial coordinates where the player is spawned
      * @param bombFactory the factory to create bombs
      */
-    public Player(final Coord coord, final BombFactory bombFactory, final BoundingBox bBox) {
+    public Player(final GenPair<Float, Float> coord, final BombFactory bombFactory, final BoundingBox bBox) {
         super(coord, bombFactory, bBox);
     }
 
@@ -63,9 +66,9 @@ public class Player extends Character {
      * 
      * @return the new updated Player position
      */
-    private Coord computeNewPlayerPosition() {
-        return getCharacterPosition()
-                .sum(new Coord((getFacingDirection().x()) * getSpeed(),
-                        (getFacingDirection().y()) * getSpeed()));
+    private GenPair<Float, Float> computeNewPlayerPosition() {
+        return getCharacterPosition().apply(Functions
+                .sumFloat(new GenPair<Float, Float>((getFacingDirection().x()) * getSpeed(),
+                        (getFacingDirection().y()) * getSpeed())));
     }
 }

@@ -14,9 +14,9 @@ import it.unibo.bombardero.character.ai.impl.PatrolState;
 import it.unibo.bombardero.character.ai.impl.RandomMovementStrategy;
 import it.unibo.bombardero.character.ai.impl.ShortestMovementStrategy;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.map.api.Coord;
+import it.unibo.bombardero.map.api.Functions;
 import it.unibo.bombardero.map.api.GameMap;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.physics.api.BoundingBox;
 import it.unibo.bombardero.utils.Utils;
 
@@ -28,7 +28,7 @@ import it.unibo.bombardero.utils.Utils;
  */
 public class Enemy extends Character {
 
-    private Optional<Pair> nextMove = Optional.empty();
+    private Optional<GenPair<Integer, Integer>> nextMove = Optional.empty();
     private EnemyState currentState = new PatrolState(); // Initial state
     private EnemyGraphReasonerImpl graph;
     private int waitTimer = -1;
@@ -44,7 +44,7 @@ public class Enemy extends Character {
      * 
      * @param bombFactory the factory to create bombs
      */
-    public Enemy(final Coord coord, final BombFactory bombFactory, BoundingBox bBox) {
+    public Enemy(final GenPair<Float, Float> coord, final BombFactory bombFactory, BoundingBox bBox) {
         super(coord, bombFactory, bBox);
         setStationary(true);
         setFacingDirection(Direction.UP);
@@ -59,7 +59,7 @@ public class Enemy extends Character {
      * 
      * @return the distance in integer value
      */
-    public int calculateDistance(final Pair coord1, final Pair coord2) {
+    public int calculateDistance(final GenPair<Integer, Integer> coord1, final GenPair<Integer, Integer> coord2) {
         return Math.abs(coord1.x() - coord2.x()) + Math.abs(coord1.y() - coord2.y());
     }
 
@@ -82,8 +82,8 @@ public class Enemy extends Character {
      * @return An Optional containing the closest entity's coordinates as a Pair,
      *         or empty if no other entities exist.
      */
-    public Optional<Pair> getClosestEntity(final GameManager manager) {
-        final Pair enemyCoord = getIntCoordinate();
+    public Optional<GenPair<Integer, Integer>> getClosestEntity(final GameManager manager) {
+        final GenPair<Integer, Integer> enemyCoord = getIntCoordinate();
         final List<Character> allEntities = new ArrayList<>(manager.getEnemies());
         allEntities.add(manager.getPlayer());
 
@@ -102,7 +102,7 @@ public class Enemy extends Character {
      * @return An Optional containing the closest entity, or empty if no other
      *         entities exist at the specified position.
      */
-    public Optional<Character> getClosestEntity(final GameManager manager, final Pair enemy) {
+    public Optional<Character> getClosestEntity(final GameManager manager, final GenPair<Integer, Integer> enemy) {
         final List<Character> allEntities = new ArrayList<>(manager.getEnemies());
         allEntities.add(manager.getPlayer());
 
@@ -117,7 +117,7 @@ public class Enemy extends Character {
      * @param cell the cell to be checked
      * @return true if the cell is within map boundaries, false otherwise.
      */
-    public boolean isValidCell(final Pair cell) {
+    public boolean isValidCell(final GenPair<Integer, Integer> cell) {
         return cell.x() >= 0 && cell.y() >= 0 && cell.x() < Utils.MAP_COLS && cell.y() < Utils.MAP_ROWS;
     }
 
@@ -176,17 +176,17 @@ public class Enemy extends Character {
             computeNextDir(elapsedTime, manager);
         } else if (canMoveOn(manager.getGameMap() ,nextMove.get())) {
             setStationary(false);
-            final Coord target = new Coord(nextMove.get().x() + 0.5f, nextMove.get().y() + 0.5f);
-            final Coord currentPos = getCharacterPosition();
+            final GenPair<Float, Float> target = new GenPair<Float, Float>(nextMove.get().x() + 0.5f, nextMove.get().y() + 0.5f);
+            final GenPair<Float, Float> currentPos = getCharacterPosition();
 
             // Calculate direction vector
-            Coord dir = target.subtract(currentPos);
+            GenPair<Float, Float> dir = target.apply(Functions.subtractFloat(currentPos));
 
             // Restrict movement to 4 directions (up, down, left, right)
             dir = restrictToGridDirections(dir);
 
             // Aggiorna la posizione del nemico
-            final Coord newPos = currentPos.sum(dir.multiply(getSpeed()));
+            final GenPair<Float, Float> newPos = currentPos.apply(Functions.sumFloat(dir.apply(Functions.multiplyFloat(getSpeed()))));
 
             // Check if reached the target cell using a small tolerance
             if (isReachedTarget(newPos, target)) {
@@ -201,23 +201,23 @@ public class Enemy extends Character {
         }
     }
 
-    private boolean canMoveOn(final GameMap gameMap, final Pair cell) {
+    private boolean canMoveOn(final GameMap gameMap, final GenPair<Integer, Integer> cell) {
         return gameMap.isEmpty(cell) || gameMap.isPowerUp(cell) 
         || (gameMap.isBomb(cell) && getIntCoordinate().equals(cell));
     }
 
-    private boolean isReachedTarget(final Coord currentPos, final Coord target) {
-        final float distance = currentPos.distanceTo(target);
+    private boolean isReachedTarget(final GenPair<Float, Float> currentPos, final GenPair<Float, Float> target) {
+        final float distance = currentPos.reduce(Functions.distanceTo(target));
         // Use a small fixed tolerance value for the distance check
         return distance <= getSpeed() + TOLERANCE;
     }
 
-    private Coord restrictToGridDirections(final Coord direction) {
+    private GenPair<Float, Float> restrictToGridDirections(final GenPair<Float, Float> direction) {
         final Direction newDirection = (Math.abs(direction.x()) > Math.abs(direction.y()))
                 ? (direction.x() > 0 ? Direction.RIGHT : Direction.LEFT)
                 : (direction.y() > 0 ? Direction.DOWN : Direction.UP);
         setFacingDirection(newDirection);
-        return new Coord(newDirection.x(), newDirection.y());
+        return new GenPair<Float, Float>((float)newDirection.x(), (float)newDirection.y());
     }
 
     /**
@@ -229,7 +229,7 @@ public class Enemy extends Character {
      * @return An Optional object containing the next move target (Pair) or empty if
      *         none.
      */
-    public Optional<Pair> getNextMove() {
+    public Optional<GenPair<Integer, Integer>> getNextMove() {
         return nextMove;
     }
 
@@ -256,7 +256,7 @@ public class Enemy extends Character {
      *
      * @param nextMove The optional pair representing the next move target.
      */
-    public void setNextMove(final Optional<Pair> nextMove) {
+    public void setNextMove(final Optional<GenPair<Integer, Integer>> nextMove) {
         this.nextMove = nextMove;
     }
 

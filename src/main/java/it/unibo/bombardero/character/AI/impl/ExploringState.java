@@ -8,7 +8,7 @@ import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.ai.api.AbstractEnemyState;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 
 /**
  * Represents the EXPLORING state of the enemy where it seeks out the nearest
@@ -26,11 +26,11 @@ public class ExploringState extends AbstractEnemyState {
     @Override
     public void execute(final Enemy enemy, final GameManager manager) {
         final GameMap map = manager.getGameMap();
-        final Optional<Pair> powerUp = enemy.getGraph().findNearestPowerUp(enemy.getIntCoordinate());
+        final Optional<GenPair<Integer, Integer>> powerUp = enemy.getGraph().findNearestPowerUp(enemy.getIntCoordinate());
         if (powerUp.isPresent()
                 && !enemy.getGraph().isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) {
             enemy.setNextMove(powerUp);
-            final List<Pair> l = enemy.getGraph().findShortestPathToPlayer(enemy.getIntCoordinate(),
+            final List<GenPair<Integer, Integer>> l = enemy.getGraph().findShortestPathToPlayer(enemy.getIntCoordinate(),
                     enemy.getNextMove().get());
             if (l.stream().anyMatch(c -> enemy.getGraph().isInDangerZone(c, enemy.getFlameRange())
                     || map.isBreakableWall(c)

@@ -4,7 +4,6 @@ import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.awt.GraphicsEnvironment;
 import javax.imageio.ImageIO;
 import java.awt.FontFormatException;
 

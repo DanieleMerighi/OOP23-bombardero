@@ -8,7 +8,7 @@ import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.IntPair;
 import it.unibo.bombardero.physics.api.BoundingBox;
 
 /**
@@ -16,7 +16,7 @@ import it.unibo.bombardero.physics.api.BoundingBox;
  */
 public class MyBomb implements Bomb{
 
-    private Pair pos;
+    private IntPair pos;
 
     /**
      * Constructs a new {@link MyBomb}.
@@ -24,7 +24,7 @@ public class MyBomb implements Bomb{
      * 
      * @param pos the initial position of the bomb
      */
-    MyBomb(final Pair pos) {
+    MyBomb(final IntPair pos) {
         this.pos = pos;
     }
 
@@ -98,7 +98,7 @@ public class MyBomb implements Bomb{
      * @return the position of the bomb
      */
     @Override
-    public Pair getPos() {
+    public IntPair getPos() {
         return this.pos;
     }
 
@@ -109,7 +109,7 @@ public class MyBomb implements Bomb{
     }
 
     @Override
-    public Set<Entry<Pair, FlameType>> computeFlame(GameMap map) {
+    public Set<Entry<IntPair, FlameType>> computeFlame(GameMap map) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'computeFlame'");
     }

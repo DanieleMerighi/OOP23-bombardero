@@ -6,12 +6,15 @@ import java.util.EnumSet;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import org.apache.commons.math3.util.MathArrays.Function;
+
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.ai.api.MovementStrategy;
 import it.unibo.bombardero.core.api.GameManager;
+import it.unibo.bombardero.map.api.Functions;
 import it.unibo.bombardero.map.api.GameMap;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 
 /**
  * The RandomMovementStrategy class implements a movement strategy where the
@@ -30,17 +33,17 @@ public class RandomMovementStrategy implements MovementStrategy {
      *         empty Optional if no move is available
      */
     @Override
-    public Optional<Pair> getNextMove(final Enemy enemy, final GameManager manager) {
+    public Optional<GenPair<Integer, Integer>> getNextMove(final Enemy enemy, final GameManager manager) {
         final GameMap map = manager.getGameMap();
-        final Pair currentCoord = enemy.getIntCoordinate();
+        final GenPair<Integer, Integer> currentCoord = enemy.getIntCoordinate();
         final List<Direction> dirs = EnumSet.allOf(Direction.class)
                 .stream()
-                .filter(d -> !enemy.getNextMove().map(move -> move.equals(currentCoord.sum(new Pair(d.x(), d.y()))))
+                .filter(d -> !enemy.getNextMove().map(move -> move.equals(currentCoord.apply(Functions.sumInt(new GenPair<Integer, Integer> (d.x(), d.y())))))
                         .orElse(false))
                 .collect(Collectors.toList());
         while (!dirs.isEmpty()) {
             final Direction randomDirection = dirs.remove(RANDOM.nextInt(dirs.size()));
-            final Pair p = currentCoord.sum(new Pair(randomDirection.x(), randomDirection.y()));
+            final GenPair<Integer, Integer> p = currentCoord.apply(Functions.sumInt(new GenPair<Integer, Integer>(randomDirection.x(), randomDirection.y())));
             if (enemy.isValidCell(p)
                     && (map.isEmpty(p) || map.isBreakableWall(p)
                             || map.isPowerUp(p))) {

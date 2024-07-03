@@ -1,6 +1,6 @@
 package it.unibo.bombardero.utils;
 
-import it.unibo.bombardero.map.api.Coord;
+import it.unibo.bombardero.map.api.GenPair;
 
 import java.util.List;
 
@@ -14,10 +14,10 @@ public class Utils {
     public static final double WALL_PRESENCE_RATE = 0.8;
     public static final int MAX_RANGE_BOMB = 13;
 
-    public static final Coord PLAYER_SPAWNPOINT = new Coord(0.5f, 0.5f);
-    public static final List<Coord> ENEMIES_SPAWNPOINT = List.of(
-            new Coord(12.5f, 12.5f),
-            new Coord(0.5f, 12.5f), new Coord(12.5f, 0.5f));
+    public static final GenPair<Float, Float> PLAYER_SPAWNPOINT = new GenPair<Float, Float>(0.5f, 0.5f);
+    public static final List<GenPair<Float, Float>> ENEMIES_SPAWNPOINT = List.of(
+            new GenPair<Float, Float>(12.5f, 12.5f),
+            new GenPair<Float, Float>(0.5f, 12.5f), new GenPair<Float, Float>(12.5f, 0.5f));
     // timers value
     public final static long GAME_TIME = 120000l;
     public final static int MAX_WAITING_TIME = 2000;

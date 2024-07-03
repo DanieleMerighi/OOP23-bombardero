@@ -6,7 +6,7 @@ import java.util.Optional;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.ai.api.MovementStrategy;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 
 /**
  * The ChaseMovementStrategy class implements a movement strategy where the
@@ -23,9 +23,9 @@ public class ChaseMovementStrategy implements MovementStrategy {
      *         empty Optional if no move is available
      */
     @Override
-    public Optional<Pair> getNextMove(final Enemy enemy, final GameManager manager) {
+    public Optional<GenPair<Integer, Integer>> getNextMove(final Enemy enemy, final GameManager manager) {
         return enemy.getClosestEntity(manager).flatMap(closestEntity -> {
-            final List<Pair> path = enemy.getGraph().findShortestPathToPlayer(enemy.getIntCoordinate(), closestEntity);
+            final List<GenPair<Integer, Integer>> path = enemy.getGraph().findShortestPathToPlayer(enemy.getIntCoordinate(), closestEntity);
             if (!path.isEmpty()) {
                 return Optional.of(path.get(0));
             }

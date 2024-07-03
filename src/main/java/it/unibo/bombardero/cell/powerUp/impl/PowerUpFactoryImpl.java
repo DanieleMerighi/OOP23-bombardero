@@ -14,6 +14,7 @@ import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.cell.powerup.api.PowerUpEffect;
 import it.unibo.bombardero.cell.powerup.api.PowerUpFactory;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
+import it.unibo.bombardero.map.api.GenPair;
 
 /**
  * Implementation of the PowerUpFactory interface.
@@ -58,7 +59,7 @@ public final class PowerUpFactoryImpl implements PowerUpFactory {
      * @throws IllegalArgumentException if there is no effect  for the selected PowerUp type
      */
     @Override
-    public PowerUp createPowerUp(final it.unibo.bombardero.map.api.Pair position) {
+    public PowerUp createPowerUp(final GenPair<Integer, Integer> position) {
         final PowerUpType powerUpType = WEIGHTED_POWERUP_DISTRIBUTION.sample(); // Extract a random weighted PowerUp
         final Supplier<PowerUpEffect> supplier = powerUpEffectMap.get(powerUpType); // Get the power-Up effect
         if (supplier == null) { // Checks if the effect is null

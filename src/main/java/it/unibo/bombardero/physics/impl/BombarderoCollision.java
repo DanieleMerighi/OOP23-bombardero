@@ -10,8 +10,9 @@ import java.awt.geom.Point2D;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.character.Direction;
+import it.unibo.bombardero.map.api.Functions;
 import it.unibo.bombardero.map.api.GameMap;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.physics.api.CollisionHandler;
 import it.unibo.bombardero.character.Character;
@@ -39,8 +40,8 @@ public class BombarderoCollision implements CollisionEngine{
 
     @Override
     public void checkCharacterCollision(final Character character, final GameMap gMap) {
-        final Map<Pair, Cell> map = gMap.getMap();
-        final List<Pair> cells = getDirectionCell(character);
+        final Map<GenPair<Integer, Integer>, Cell> map = gMap.getMap();
+        final List<GenPair<Integer, Integer>> cells = getDirectionCell(character);
         if(!cells.isEmpty()) {
             final Optional<Cell> collidingCell= cells.stream()
                 .filter(p -> map.containsKey(p))
@@ -53,16 +54,16 @@ public class BombarderoCollision implements CollisionEngine{
         }
     }
 
-    private List<Pair> getDirectionCell(final Character character) {
+    private List<GenPair<Integer, Integer>> getDirectionCell(final Character character) {
         final Direction dir = character.getFacingDirection();
-        final List<Pair> l = new ArrayList<>();
-        l.add(character.getIntCoordinate().sum(dir.getPair()));
+        final List<GenPair<Integer, Integer>> l = new ArrayList<>();
+        l.add(character.getIntCoordinate().apply(Functions.sumInt(dir.getPair())));
         if (dir.equals(Direction.RIGHT) || dir.equals(Direction.LEFT)) {
-            l.add(new Pair(character.getIntCoordinate().x(),
-                getAdjacent(character.getCharacterPosition().y(), character.getIntCoordinate().y())).sum(dir.getPair()));
+            l.add(new GenPair<Integer, Integer>(character.getIntCoordinate().x(),
+                getAdjacent(character.getCharacterPosition().y(), character.getIntCoordinate().y())).apply(Functions.sumInt(dir.getPair())));
         } else {
-            l.add(new Pair(getAdjacent(character.getCharacterPosition().x(), character.getIntCoordinate().x()),
-                character.getIntCoordinate().y()).sum(dir.getPair()));
+            l.add(new GenPair<Integer, Integer>(getAdjacent(character.getCharacterPosition().x(), character.getIntCoordinate().x()),
+                character.getIntCoordinate().y()).apply(Functions.sumInt(dir.getPair())));
         }
         l.removeIf(p -> isOutOfBound(p));
         return l;
@@ -72,7 +73,7 @@ public class BombarderoCollision implements CollisionEngine{
         return n1 - n2 > 0.5 ? n2 + 1 : n2 - 1;
     }
 
-    private boolean isOutOfBound(final Pair p) {
+    private boolean isOutOfBound(final GenPair<Integer, Integer> p) {
         return p.x() < MIN_NUM_CELL || p.y() < MIN_NUM_CELL || p.x() > MAX_NUM_CELL || p.y() > MAX_NUM_CELL;
     }
 }

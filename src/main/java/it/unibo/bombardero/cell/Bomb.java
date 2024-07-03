@@ -5,7 +5,7 @@ import java.util.Map.Entry;
 
 import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.map.api.GameMap;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 
 public interface Bomb extends Cell {
 
@@ -51,7 +51,7 @@ public interface Bomb extends Cell {
      * @param mgr
      * @return the EntrySet that contains the flames of the explosion
      */
-    public Set<Entry<Pair ,FlameType>> computeFlame(final GameMap map);
+    public Set<Entry<GenPair<Integer, Integer> ,FlameType>> computeFlame(final GameMap map);
 
     /**
      * 
@@ -69,5 +69,5 @@ public interface Bomb extends Cell {
      * 
      * @return the position of this Bomb
      */
-    Pair getPos();
+    GenPair<Integer, Integer> getPos();
 }

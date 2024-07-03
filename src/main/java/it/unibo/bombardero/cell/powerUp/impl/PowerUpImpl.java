@@ -12,7 +12,8 @@ import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.Functions;
+import it.unibo.bombardero.map.api.GenPair;
 
 /**
  * Implementation of the PowerUp interface representing a power-up in the game.
@@ -30,7 +31,7 @@ public final class PowerUpImpl extends AbstractCell implements PowerUp {
      * @param map               the map of cells
      * @param facingDirection   the direction the character is facing
      */
-    public static void placeLineBomb(final Character character, final Map<Pair, Cell> map, final Direction facingDirection, final GameManager manager) {
+    public static void placeLineBomb(final Character character, final Map<GenPair<Integer, Integer>, Cell> map, final Direction facingDirection, final GameManager manager) {
         if (character.hasLineBomb()) {
             // Lo stream continua finché non ha piazzato tutte le bombe o finché incontra un ostacolo
             IntStream
@@ -38,20 +39,20 @@ public final class PowerUpImpl extends AbstractCell implements PowerUp {
                 // Lo stream continua finché trova celle vuote (celle non salvate in keys)
                 .takeWhile(offset -> !map
                         .containsKey(character
-                        .getIntCoordinate()
-                        .sum(new Pair(
+                        .getIntCoordinate().apply(Functions
+                        .sumInt(new GenPair<Integer, Integer>(
                             facingDirection.x() * offset,
                             facingDirection.y() * offset)
-                        )
+                        ))
                     )
                 )
                 // Piazzo le bombe nelle celle vuote
                 .forEach(offset -> character
                     .placeBomb(character
-                        .getIntCoordinate()
-                        .sum(new Pair(
+                        .getIntCoordinate().apply(Functions
+                        .sumInt(new GenPair<Integer, Integer>(
                             facingDirection.x() * offset,
-                            facingDirection.y() * offset)
+                            facingDirection.y() * offset))
                         ), manager
                     )
                 );
@@ -65,7 +66,7 @@ public final class PowerUpImpl extends AbstractCell implements PowerUp {
      * @param position  the position of the PowerUp in the map
      * @param effect    the effect of the PowerUp
      */
-    public PowerUpImpl(final PowerUpType type, final Pair position, final PowerUpEffect effect) {
+    public PowerUpImpl(final PowerUpType type, final GenPair<Integer, Integer> position, final PowerUpEffect effect) {
         super(CellType.POWERUP, position, false, null);
         this.type = type;
         this.effect = effect.getEffect();

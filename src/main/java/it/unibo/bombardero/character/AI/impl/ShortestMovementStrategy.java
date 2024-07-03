@@ -6,7 +6,7 @@ import java.util.List;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.ai.api.MovementStrategy;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 
 /**
  * The ShortestMovementStrategy class implements a movement strategy where the
@@ -24,11 +24,11 @@ public class ShortestMovementStrategy implements MovementStrategy {
      *         empty Optional if no move is available
      */
     @Override
-    public Optional<Pair> getNextMove(final Enemy enemy, final GameManager manager) {
+    public Optional<GenPair<Integer, Integer>> getNextMove(final Enemy enemy, final GameManager manager) {
         if (enemy.getNextMove().isEmpty()) {
             return new RandomMovementStrategy().getNextMove(enemy, manager);
         }
-        final List<Pair> l = enemy.getGraph().findShortestPathToPlayer(enemy.getIntCoordinate(), enemy.getNextMove().get());
+        final List<GenPair<Integer, Integer>> l = enemy.getGraph().findShortestPathToPlayer(enemy.getIntCoordinate(), enemy.getNextMove().get());
         if (l.isEmpty()) {
             return new RandomMovementStrategy().getNextMove(enemy, manager);
         } else {

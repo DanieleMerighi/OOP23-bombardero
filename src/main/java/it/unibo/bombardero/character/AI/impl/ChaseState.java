@@ -4,7 +4,7 @@ import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Character.CharacterType;
 import it.unibo.bombardero.character.ai.api.AbstractEnemyState;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 
 /**
  * In chase state, the enemy actively seeks the player.
@@ -27,8 +27,8 @@ public class ChaseState extends AbstractEnemyState {
         } else if (!enemy.isEnemyClose(manager)) { // Lost sight of player
             enemy.setState(new PatrolState());
         } else {
-            final Pair closeEnemy = enemy.getClosestEntity(manager).get();
-            final Pair currPos = enemy.getIntCoordinate();
+            final GenPair<Integer, Integer> closeEnemy = enemy.getClosestEntity(manager).get();
+            final GenPair<Integer, Integer> currPos = enemy.getIntCoordinate();
             if ((closeEnemy.x() == currPos.x() || closeEnemy.y() == currPos.y())) {
                 if (enemy.calculateDistance(currPos, closeEnemy) <= enemy.getFlameRange()) {
                     enemy.placeBomb(manager, CharacterType.ENEMY);

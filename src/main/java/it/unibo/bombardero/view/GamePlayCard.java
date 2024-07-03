@@ -24,7 +24,7 @@ import it.unibo.bombardero.view.sprites.impl.BombarderoFlameSprite;
 import it.unibo.bombardero.view.sprites.impl.BombarderoOrientedSprite;
 import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
 import it.unibo.bombardero.view.sprites.impl.TimedBombarderoSprite;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
 
@@ -62,7 +62,7 @@ public class GamePlayCard extends JPanel {
 
     /* References to model components: */
     private final transient GraphicsEngine graphics;
-    private transient Map<Pair, Cell> cells;
+    private transient Map<GenPair <Integer, Integer>, Cell> cells;
     private transient List<Character> playersList;
     private final transient Map<Character, SpriteImageCombo> charactersImages = new HashMap<>();
     private transient List<Character> enemiesList;
@@ -89,7 +89,7 @@ public class GamePlayCard extends JPanel {
      */
     public GamePlayCard(
         final GraphicsEngine graphics,
-        final Map<Pair, Cell> map,
+        final Map<GenPair <Integer, Integer>, Cell> map,
         final List<Character> playersList,
         final List<Character> enemies
         ) {
@@ -141,10 +141,10 @@ public class GamePlayCard extends JPanel {
         /* Drawing the breakable obstacles, the bombs and the power ups */
         for (int i = 0; i < Utils.MAP_ROWS; i++) {
             for (int j = 0; j < Utils.MAP_COLS; j++) {
-                if (cells.containsKey(new Pair(i, j))) {
-                    Cell entry = cells.get(new Pair(i, j));
+                if (cells.containsKey(new GenPair <>(i, j))) {
+                    Cell entry = cells.get(new GenPair <>(i, j));
                     Image img = unbreakable;
-                    Dimension placingPoint = graphics.getResizingEngine().getCellPlacingPoint(new Pair(i, j));
+                    Dimension placingPoint = graphics.getResizingEngine().getCellPlacingPoint(new GenPair<>(i, j));
                     switch (entry.getCellType()) {
                         case WALL_BREAKABLE:
                             img = obstacle;
@@ -154,7 +154,7 @@ public class GamePlayCard extends JPanel {
                             break;
                         case BOMB: 
                             img = bombImage;
-                            placingPoint = graphics.getResizingEngine().getBombPlacingPoint(new Pair(i, j));
+                            placingPoint = graphics.getResizingEngine().getBombPlacingPoint(new GenPair<>(i, j));
                             break;
                         case POWERUP:
                             PowerUp pu = (PowerUp) entry;
@@ -217,7 +217,7 @@ public class GamePlayCard extends JPanel {
      * @param playersList the list of players present in the game
      * @param enemiesList the list of enemies present in the game
      */
-    public void update(final Map<Pair, Cell> map, final List<Character> playersList, final List<Character> enemiesList) {
+    public void update(final Map<GenPair<Integer, Integer>, Cell> map, final List<Character> playersList, final List<Character> enemiesList) {
         updateGameState(map, playersList, enemiesList);
         updateSprites();
     }
@@ -230,7 +230,7 @@ public class GamePlayCard extends JPanel {
     }
 
     private void updateGameState(
-        final Map<Pair, Cell> map,
+        final Map<GenPair<Integer, Integer>, Cell> map,
         final List<Character> playersList,
         final List<Character> enemiesList) {
         cells = Map.copyOf(map);

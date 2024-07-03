@@ -23,7 +23,7 @@ import it.unibo.bombardero.view.sprites.api.Sprite;
 import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.character.Character;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 
 /**
  * This class contains the panel for the Guide of
@@ -55,7 +55,7 @@ public final class GuideCard extends GamePlayCard {
 
     private transient final Map<Sprite, Dimension> spritesPlacingPoint = new HashMap<>();
 
-    public GuideCard(final Controller controller, final it.unibo.bombardero.view.GraphicsEngine graphics, final Map<Pair, Cell> gameMap, List<Character> playersList, List<Character> enemiesList) {
+    public GuideCard(final Controller controller, final it.unibo.bombardero.view.GraphicsEngine graphics, final Map<GenPair<Integer, Integer>, Cell> gameMap, List<Character> playersList, List<Character> enemiesList) {
         super(graphics, gameMap, playersList, enemiesList);
 
         final ResourceGetter resourceGetter = graphics.getResourceGetter();

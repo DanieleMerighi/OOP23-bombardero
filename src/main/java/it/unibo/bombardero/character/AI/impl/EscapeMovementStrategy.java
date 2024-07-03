@@ -5,7 +5,7 @@ import java.util.Optional;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.ai.api.MovementStrategy;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 
 /**
  * The RandomMovementStrategy class implements a movement strategy where the
@@ -22,7 +22,7 @@ public class EscapeMovementStrategy implements MovementStrategy {
      *         empty Optional if no move is available
      */
     @Override
-    public Optional<Pair> getNextMove(final Enemy enemy, final GameManager manager) {
+    public Optional<GenPair<Integer, Integer>> getNextMove(final Enemy enemy, final GameManager manager) {
         return enemy.getGraph().findNearestSafeCell(enemy.getIntCoordinate(), enemy.getFlameRange());
     }
 }

@@ -7,9 +7,9 @@ import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.map.api.Coord;
+import it.unibo.bombardero.map.api.Coordinates;
 import it.unibo.bombardero.map.api.GameMap;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.IntPair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 
@@ -37,8 +37,8 @@ public class MyGameManager implements GameManager {
      */
     MyGameManager() {
         this.map = new GameMapImpl(false);
-        this.enemy = new Enemy(new Coord(0, 0), new BombFactoryImpl(), new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
-        this.player = new Player(new Coord(0, PLAYERY), new BombFactoryImpl(), new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
+        this.enemy = new Enemy(new Coordinates(0, 0), new BombFactoryImpl(), new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
+        this.player = new Player(new Coordinates(0, PLAYERY), new BombFactoryImpl(), new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
     }
 
     /**
@@ -48,7 +48,7 @@ public class MyGameManager implements GameManager {
      * @param y the y-coordinate
      */
     public void setPlayerCoord(final int x, final int y) {
-        player.setCharacterPosition(new Coord(x + CENTER, y + CENTER));
+        player.setCharacterPosition(new Coordinates(x + CENTER, y + CENTER));
     }
 
     /**
@@ -58,7 +58,7 @@ public class MyGameManager implements GameManager {
      * @param y the y-coordinate
      */
     public void setEnemyCoord(final int x, final int y) {
-        enemy.setCharacterPosition(new Coord(x + CENTER, y + CENTER));
+        enemy.setCharacterPosition(new Coordinates(x + CENTER, y + CENTER));
     }
 
     /**
@@ -138,7 +138,7 @@ public class MyGameManager implements GameManager {
      * @param pos the position of the bomb
      */
     @Override
-    public void removeBomb(final Pair pos) {
+    public void removeBomb(final IntPair pos) {
         throw new UnsupportedOperationException("Unimplemented method 'removeBomb'");
     }
 
@@ -149,7 +149,7 @@ public class MyGameManager implements GameManager {
      * @param pos the position of the flame
      */
     @Override
-    public void addFlame(final FlameType type, final Pair pos) {
+    public void addFlame(final FlameType type, final IntPair pos) {
         throw new UnsupportedOperationException("Unimplemented method 'addFlame'");
     }
 
@@ -159,7 +159,7 @@ public class MyGameManager implements GameManager {
      * @param pos the position of the flame
      */
     @Override
-    public void removeFlame(final Pair pos) {
+    public void removeFlame(final IntPair pos) {
         throw new UnsupportedOperationException("Unimplemented method 'removeFlame'");
     }
 
@@ -170,7 +170,7 @@ public class MyGameManager implements GameManager {
      * @return true if the wall was removed, false otherwise
      */
     @Override
-    public boolean removeWall(final Pair pos) {
+    public boolean removeWall(final IntPair pos) {
         throw new UnsupportedOperationException("Unimplemented method 'removeWall'");
     }
 
@@ -191,7 +191,7 @@ public class MyGameManager implements GameManager {
      * @param pos the position of the power-up
      */
     @Override
-    public void removePowerUp(final Pair pos) {
+    public void removePowerUp(final IntPair pos) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'removePowerUp'");
     }
@@ -203,7 +203,7 @@ public class MyGameManager implements GameManager {
      * @return an optional containing the bomb, or an empty optional if no bomb is found
      */
     @Override
-    public Optional<Bomb> getBomb(final Pair pos) {
+    public Optional<Bomb> getBomb(final IntPair pos) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getBomb'");
     }

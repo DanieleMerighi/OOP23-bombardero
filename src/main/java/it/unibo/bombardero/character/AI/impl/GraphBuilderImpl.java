@@ -8,7 +8,7 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
 import it.unibo.bombardero.map.api.GameMap;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.utils.Utils;
 import it.unibo.bombardero.character.Direction;
 
@@ -42,12 +42,12 @@ public final class GraphBuilderImpl {
      *            cells
      * @return a weighted graph representing the game map
      */
-    public static Graph<Pair, DefaultWeightedEdge> buildFromMap(final GameMap map) {
-        Graph<Pair, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
+    public static Graph<GenPair<Integer, Integer>, DefaultWeightedEdge> buildFromMap(final GameMap map) {
+        Graph<GenPair<Integer, Integer>, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
 
-        Stream<Pair> validcells = IntStream.range(0, Utils.MAP_ROWS)
+        Stream<GenPair<Integer, Integer>> validcells = IntStream.range(0, Utils.MAP_ROWS)
                 .boxed()
-                .flatMap(r -> IntStream.range(0, Utils.MAP_COLS).mapToObj(c -> new Pair(r, c))
+                .flatMap(r -> IntStream.range(0, Utils.MAP_COLS).mapToObj(c -> new GenPair<Integer, Integer>(r, c))
                         .filter(p -> !map.isUnbreakableWall(p)));
 
         validcells.peek(p -> graph.addVertex(p)).forEach(p -> connectWithNeighbors(graph, p, map));
@@ -64,12 +64,12 @@ public final class GraphBuilderImpl {
      * @param p     the current cell to connect with neighbors
      * @param map   the game map object used to identify walkable cells and walls
      */
-    private static void connectWithNeighbors(final Graph<Pair, DefaultWeightedEdge> graph, final Pair p,
+    private static void connectWithNeighbors(final Graph<GenPair<Integer, Integer>, DefaultWeightedEdge> graph, final GenPair<Integer, Integer> p,
             final GameMap map) {
         EnumSet.allOf(Direction.class)
                 .stream()
                 .forEach(direction -> {
-                    Pair newCoord = new Pair(p.x() + direction.x(), p.y() + direction.y());
+                    GenPair<Integer, Integer> newCoord = new GenPair<Integer, Integer>(p.x() + direction.x(), p.y() + direction.y());
                     if (isValidCell(newCoord.x(), newCoord.y())
                             && graph.containsVertex(newCoord)) {
                         DefaultWeightedEdge e = graph.addEdge(p, newCoord);

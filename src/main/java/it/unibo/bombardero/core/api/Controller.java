@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.List;
 
 import it.unibo.bombardero.cell.Cell;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.view.BombarderoViewMessages;
 import it.unibo.bombardero.character.Character;
 
@@ -95,7 +95,7 @@ public interface Controller {
      * game instance. 
      * @return the {@link Map} containing all the {@link Cell}s of the game.
      */
-    Map<Pair, Cell> getMap();
+    Map<GenPair<Integer, Integer>, Cell> getMap();
 
     /**
      * Returns the time left in the game's timer, if the

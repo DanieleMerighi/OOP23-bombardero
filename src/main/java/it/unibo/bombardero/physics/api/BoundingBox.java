@@ -5,7 +5,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import it.unibo.bombardero.character.Direction;
-import it.unibo.bombardero.map.api.Coord;
+import it.unibo.bombardero.map.api.GenPair;
 
 /**
  * this interface rapresents the solid part of cells and characters.
@@ -30,7 +30,7 @@ public interface BoundingBox {
      * @param dir direction of the Character
      * @return the distance of the collision
      */
-    Coord computeCollision(BoundingBox bBox, Direction dir);
+    GenPair<Float, Float> computeCollision(BoundingBox bBox, Direction dir);
 
     /**
      * 
@@ -45,7 +45,7 @@ public interface BoundingBox {
      * @param dir direction of the Character
      * @return the distance of the collision
      */
-    Coord computeCollision(Line2D.Float mapOutline, Direction dir);
+    GenPair<Float, Float> computeCollision(Line2D.Float mapOutline, Direction dir);
 
     /**
      * @return the rectangle that rappresent the bounding box

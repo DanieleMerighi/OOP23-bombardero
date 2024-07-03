@@ -23,7 +23,7 @@ import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.character.ai.api.EnemyGraphReasoner;
 import it.unibo.bombardero.map.api.GameMap;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.utils.Utils;
 
 /**
@@ -41,7 +41,7 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      * Vertices in this graph represent cells (Pairs of x and column coordinates),
      * and edges represent valid connections between cells.
      */
-    private Graph<Pair, DefaultWeightedEdge> graph;
+    private Graph<GenPair<Integer, Integer>, DefaultWeightedEdge> graph;
 
     /**
      * Constructs a new EnemyGraphReasoner instance for the given game map.
@@ -68,8 +68,8 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      * @param explRadius the explosion radius of the danger zone
      * @return true if the enemy is within a danger zone, false otherwise
      */
-    public boolean isInDangerZone(final Pair enemyCoord, final int explRadius) {
-        final BreadthFirstIterator<Pair, DefaultWeightedEdge> bfsIterator = new BreadthFirstIterator<>(
+    public boolean isInDangerZone(final GenPair<Integer, Integer> enemyCoord, final int explRadius) {
+        final BreadthFirstIterator<GenPair<Integer, Integer>, DefaultWeightedEdge> bfsIterator = new BreadthFirstIterator<>(
                 graph,
                 enemyCoord);
         return StreamSupport.stream(
@@ -93,7 +93,7 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      * @param endCell   the ending cell of the path
      * @return true if the path is blocked by walls, false otherwise
      */
-    public boolean isPathBlockedByWalls(final Pair startCell, final Pair endCell) {
+    public boolean isPathBlockedByWalls(final GenPair<Integer, Integer> startCell, final GenPair<Integer, Integer> endCell) {
         if (startCell.x() != endCell.x() && startCell.y() != endCell.y()) {
             return true; // Diagonal paths not supported
         }
@@ -105,7 +105,7 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
                 .mapToObj(i -> {
                     int x = startCell.x() + i * Integer.signum(dx);
                     int y = startCell.y() + i * Integer.signum(dy);
-                    return new Pair(x, y);
+                    return new GenPair<Integer, Integer>(x, y);
                 })
                 .anyMatch(p -> map.isBreakableWall(p) || map.isUnbreakableWall(p));
     }
@@ -127,15 +127,15 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      *         (excluding starting position)
      *         or an empty list if no path exists
      */
-    public List<Pair> findShortestPathToPlayer(final Pair enemyCoord, final Pair playerCoord) {
+    public List<GenPair<Integer, Integer>> findShortestPathToPlayer(final GenPair<Integer, Integer> enemyCoord, final GenPair<Integer, Integer> playerCoord) {
         if (enemyCoord.equals(playerCoord)) {
             return Collections.emptyList();
         }
 
         // Use Dijkstra's algorithm to find the shortest path to the player
-        DijkstraShortestPath<Pair, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<>(
+        DijkstraShortestPath<GenPair<Integer, Integer>, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<>(
                 graph);
-        GraphPath<Pair, DefaultWeightedEdge> path = null;
+        GraphPath<GenPair<Integer, Integer>, DefaultWeightedEdge> path = null;
         try {
             path = dijkstra.getPath(enemyCoord, playerCoord);
         } catch (Exception e) {
@@ -155,22 +155,22 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      * @return an {@code Optional<Pair>} containing the coordinates of the nearest
      *         safe cell if found, otherwise an empty {@code Optional}
      */
-    public Optional<Pair> findNearestSafeCell(final Pair enemyCoord, final int explRad) {
+    public Optional<GenPair<Integer, Integer>> findNearestSafeCell(final GenPair<Integer, Integer> enemyCoord, final int explRad) {
         return findNearestSafeCellRecursive(enemyCoord, explRad, new HashSet<>());
     }
 
-    private Optional<Pair> findNearestSafeCellRecursive(final Pair enemyCoord, final int explRad,
-            final Set<Pair> visited) {
-        List<Pair> adjacentCells = EnumSet.allOf(Direction.class)
+    private Optional<GenPair<Integer, Integer>> findNearestSafeCellRecursive(final GenPair<Integer, Integer> enemyCoord, final int explRad,
+            final Set<GenPair<Integer, Integer>> visited) {
+        List<GenPair<Integer, Integer>> adjacentCells = EnumSet.allOf(Direction.class)
                 .stream()
-                .map(d -> new Pair(enemyCoord.x() + d.x(), enemyCoord.y() + d.y()))
+                .map(d -> new GenPair<Integer, Integer>(enemyCoord.x() + d.x(), enemyCoord.y() + d.y()))
                 .filter(cell -> isValidCell(cell) && (map.isEmpty(cell)
                         || (map.isPowerUp(cell)
                                 && map.whichPowerUpType(cell).filter(type -> type != PowerUpType.SKULL).isPresent()))
                         && !visited.contains(cell))
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        Optional<Pair> safeCell = adjacentCells.stream()
+        Optional<GenPair<Integer, Integer>> safeCell = adjacentCells.stream()
                 .filter(c -> !isInDangerZone(c, explRad))
                 .min((cell1, cell2) -> Double.compare(calculateDistance(enemyCoord, cell1),
                         calculateDistance(enemyCoord, cell2)));
@@ -179,8 +179,8 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
             return safeCell;
         } else {
             visited.addAll(adjacentCells);
-            for (Pair cell : adjacentCells) {
-                Optional<Pair> recursiveResult = findNearestSafeCellRecursive(cell, explRad, visited);
+            for (GenPair<Integer, Integer> cell : adjacentCells) {
+                Optional<GenPair<Integer, Integer>> recursiveResult = findNearestSafeCellRecursive(cell, explRad, visited);
                 if (recursiveResult.isPresent()) {
                     return recursiveResult;
                 }
@@ -189,11 +189,11 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
         return Optional.empty();
     }
 
-    private boolean isValidCell(final Pair cell) {
+    private boolean isValidCell(final GenPair<Integer, Integer> cell) {
         return cell.x() >= 0 && cell.y() >= 0 && cell.x() < Utils.MAP_COLS && cell.y() < Utils.MAP_ROWS;
     }
 
-    private double calculateDistance(final Pair p1, final Pair p2) {
+    private double calculateDistance(final GenPair<Integer, Integer> p1, final GenPair<Integer, Integer> p2) {
         int dx = p2.x() - p1.x();
         int dy = p2.y() - p1.y();
         return Math.sqrt(dx * dx + dy * dy);
@@ -213,8 +213,8 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      * @return an Optional containing the nearest reachable bomb (Pair) or empty if
      *         none found
      */
-    public Optional<Pair> findNearestBomb(final Pair enemyCoord) {
-        final BreadthFirstIterator<Pair, DefaultWeightedEdge> bfsIterator = new BreadthFirstIterator<>(
+    public Optional<GenPair<Integer, Integer>> findNearestBomb(final GenPair<Integer, Integer> enemyCoord) {
+        final BreadthFirstIterator<GenPair<Integer, Integer>, DefaultWeightedEdge> bfsIterator = new BreadthFirstIterator<>(
                 graph,
                 enemyCoord);
 
@@ -232,8 +232,8 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      * @return an {@code Optional<Pair>} containing the coordinates of the nearest
      *         power-up if found, otherwise an empty {@code Optional}
      */
-    public Optional<Pair> findNearestPowerUp(final Pair enemyCoord) {
-        final BreadthFirstIterator<Pair, DefaultWeightedEdge> bfsIterator = new BreadthFirstIterator<>(
+    public Optional<GenPair<Integer, Integer>> findNearestPowerUp(final GenPair<Integer, Integer> enemyCoord) {
+        final BreadthFirstIterator<GenPair<Integer, Integer>, DefaultWeightedEdge> bfsIterator = new BreadthFirstIterator<>(
                 graph,
                 enemyCoord);
 
@@ -251,15 +251,15 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      * @param newMap the new game map to update to
      */
     public void updateGraph(final GameMap newMap) {
-        List<Pair> oldWalls = map.getMap().keySet().stream().filter(c -> map.isBreakableWall(c)).toList();
-        List<Pair> newWalls = newMap.getMap().keySet().stream().filter(c -> newMap.isBreakableWall(c)).toList();
+        List<GenPair<Integer, Integer>> oldWalls = map.getMap().keySet().stream().filter(c -> map.isBreakableWall(c)).toList();
+        List<GenPair<Integer, Integer>> newWalls = newMap.getMap().keySet().stream().filter(c -> newMap.isBreakableWall(c)).toList();
         if (oldWalls.size() != newWalls.size()) {
             oldWalls.stream().filter(c -> !newWalls.contains(c)).forEach(c -> updateEdges(c));
         }
         this.map = newMap;
     }
 
-    private void updateEdges(final Pair cell) {
+    private void updateEdges(final GenPair<Integer, Integer> cell) {
         graph.edgesOf(cell).forEach(e -> graph.setEdgeWeight(e, 1));
     }
 }

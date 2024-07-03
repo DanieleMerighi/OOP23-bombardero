@@ -17,7 +17,7 @@ import it.unibo.bombardero.cell.powerup.impl.PowerUpImpl;
 import it.unibo.bombardero.cell.powerup.impl.SkullEffect;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Character.CharacterType;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.IntPair;
 
 /**
  * Unit tests for the {@link PowerUp} class.
@@ -34,7 +34,7 @@ class TestPowerUp {
     private static final long SECONDS_TO_MILLISECONDS = 1000;
     private MyGameManager manager;
     private final PowerUpFactory factory = new PowerUpFactoryImpl();
-    private Pair powerUpSpawn;
+    private IntPair powerUpSpawn;
     private PowerUp powerUP;
 
     /**
@@ -44,7 +44,7 @@ class TestPowerUp {
     @BeforeEach
     void setUp() {
         this.manager = new MyGameManager();
-        powerUpSpawn = new Pair(SPAWN_INT_COORDINATES, SPAWN_INT_COORDINATES);
+        powerUpSpawn = new IntPair(SPAWN_INT_COORDINATES, SPAWN_INT_COORDINATES);
     }
 
     /**

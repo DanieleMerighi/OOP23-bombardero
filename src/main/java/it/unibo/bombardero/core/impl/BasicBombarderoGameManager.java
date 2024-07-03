@@ -13,9 +13,8 @@ import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.map.api.Coord;
 import it.unibo.bombardero.map.api.GameMap;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.physics.impl.BombarderoCollision;
@@ -56,8 +55,8 @@ public class BasicBombarderoGameManager implements GameManager {
      */
     public BasicBombarderoGameManager(
             final Controller controller,
-            final Coord playerSpawnPoint, 
-            final List<Coord> enemiesSpawnpoint,
+            final GenPair<Float, Float> playerSpawnPoint, 
+            final List<GenPair<Float, Float>> enemiesSpawnpoint,
             final boolean generateWalls) {
         this.controller = controller;
         map = new GameMapImpl(generateWalls);
@@ -136,34 +135,34 @@ public class BasicBombarderoGameManager implements GameManager {
     }
 
     @Override
-    public void removeBomb(final Pair pos) {
+    public void removeBomb(final GenPair<Integer, Integer> pos) {
         map.removeBomb(pos);
     }
 
     @Override
-    public Optional<Bomb> getBomb(final Pair pos) {
+    public Optional<Bomb> getBomb(final GenPair<Integer, Integer> pos) {
         return boombs.entrySet().stream().map(entry -> entry.getKey()).filter(b -> b.getPos().equals(pos)).findAny();
     }
 
     @Override
-    public void removePowerUp(final Pair pos) {
+    public void removePowerUp(final GenPair<Integer, Integer> pos) {
         map.removePowerUp(pos);
     }
 
     @Override
-    public void addFlame(final Flame.FlameType type, final Pair pos) {
+    public void addFlame(final Flame.FlameType type, final GenPair<Integer, Integer> pos) {
         final Flame f = new Flame(CellType.FLAME, type, pos);
         flames.add(f);
         map.addFlame(f, pos);
     }
 
     @Override
-    public void removeFlame(final Pair pos) {
+    public void removeFlame(final GenPair<Integer, Integer> pos) {
         map.removeFlame(pos);
     }
 
     @Override
-    public boolean removeWall(final Pair pos) {
+    public boolean removeWall(final GenPair<Integer, Integer> pos) {
         if (map.isBreakableWall(pos)) {
             map.removeBreakableWall(pos);
             return true;

@@ -5,7 +5,7 @@ import java.util.Optional;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.ai.api.AbstractEnemyState;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
 
 /**
  * Represents the WAITING state of the enemy where it evaluates its surroundings
@@ -24,7 +24,7 @@ public class WaitingState extends AbstractEnemyState {
         enemy.setStationary(true);
         enemy.setNextMove(Optional.empty());
 
-        Pair currentCoord = enemy.getIntCoordinate();
+        GenPair<Integer, Integer> currentCoord = enemy.getIntCoordinate();
         int flameRange = enemy.getFlameRange();
 
         if (enemy.getGraph().isInDangerZone(currentCoord, flameRange)) {

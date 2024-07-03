@@ -1,7 +1,8 @@
 package it.unibo.bombardero.character.ai.api;
 
 import it.unibo.bombardero.map.api.GameMap;
-import it.unibo.bombardero.map.api.Pair;
+import it.unibo.bombardero.map.api.GenPair;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +25,7 @@ public interface EnemyGraphReasoner {
      * @param explRadius the explosion radius of the danger zone
      * @return true if the enemy is within a danger zone, false otherwise
      */
-    boolean isInDangerZone(Pair enemyCoord, int explRadius);
+    boolean isInDangerZone(GenPair<Integer, Integer> enemyCoord, int explRadius);
 
     /**
      * Checks if a path between two cells is blocked by walls (breakable or
@@ -39,7 +40,7 @@ public interface EnemyGraphReasoner {
      * @param endCell   the ending cell of the path
      * @return true if the path is blocked by walls, false otherwise
      */
-    boolean isPathBlockedByWalls(Pair startCell, Pair endCell);
+    boolean isPathBlockedByWalls(GenPair<Integer, Integer> startCell, GenPair<Integer, Integer> endCell);
 
     /**
      * Finds the shortest path from the enemy's current location to the player's
@@ -58,7 +59,7 @@ public interface EnemyGraphReasoner {
      *         (excluding starting position)
      *         or an empty list if no path exists
      */
-    List<Pair> findShortestPathToPlayer(Pair enemyCoord, Pair playerCoord);
+    List<GenPair<Integer, Integer>> findShortestPathToPlayer(GenPair<Integer, Integer> enemyCoord, GenPair<Integer, Integer> playerCoord);
 
     /**
      * Finds the nearest safe cell for the enemy to move to, given its current
@@ -69,7 +70,7 @@ public interface EnemyGraphReasoner {
      * @return an {@code Optional<Pair>} containing the coordinates of the nearest
      *         safe cell if found, otherwise an empty {@code Optional}
      */
-    Optional<Pair> findNearestSafeCell(Pair enemyCoord, int explRad);
+    Optional<GenPair<Integer, Integer>> findNearestSafeCell(GenPair<Integer, Integer> enemyCoord, int explRad);
 
     /**
      * Finds the nearest reachable bomb from the enemy's current location.
@@ -85,7 +86,7 @@ public interface EnemyGraphReasoner {
      * @return an Optional containing the nearest reachable bomb (Pair) or empty if
      *         none found
      */
-    Optional<Pair> findNearestBomb(Pair enemyCoord);
+    Optional<GenPair<Integer, Integer>> findNearestBomb(GenPair<Integer, Integer> enemyCoord);
 
     /**
      * Updates the internal graph representation of the game map with a new map.
@@ -102,5 +103,5 @@ public interface EnemyGraphReasoner {
      * @return an {@code Optional<Pair>} containing the coordinates of the nearest
      *         power-up if found, otherwise an empty {@code Optional}
      */
-    Optional<Pair> findNearestPowerUp(Pair enemyCoord);
+    Optional<GenPair<Integer, Integer>> findNearestPowerUp(GenPair<Integer, Integer> enemyCoord);
 }
