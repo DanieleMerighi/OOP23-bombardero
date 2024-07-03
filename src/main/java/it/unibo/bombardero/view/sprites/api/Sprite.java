@@ -7,7 +7,7 @@ import java.awt.Image;
  * @author Federico Bagattoni
  */
 public interface Sprite {
-    
+
     /**
      * Updates the sprites, eventually changing the displayed frame.
      * The rate at which the frames change is implementation-dependant.
