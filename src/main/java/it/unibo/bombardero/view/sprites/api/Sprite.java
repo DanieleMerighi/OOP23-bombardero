@@ -8,6 +8,9 @@ import java.awt.Image;
  */
 public interface Sprite {
 
+    static int TWO_FRAMES_TPS = 16;
+    static int FOUR_FRAMES_TPS = 7;
+
     /**
      * Updates the sprites, eventually changing the displayed frame.
      * The rate at which the frames change is implementation-dependant.
