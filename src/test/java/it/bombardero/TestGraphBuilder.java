@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.unibo.bombardero.map.api.GameMap;
-import it.unibo.bombardero.map.api.IntPair;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
 
 import org.jgrapht.Graph;
@@ -24,7 +24,7 @@ import it.unibo.bombardero.character.ai.impl.GraphBuilderImpl;
 public class TestGraphBuilder {
 
     private GameMap map;
-    private Graph<IntPair, DefaultWeightedEdge> graph;
+    private Graph<GenPair<Integer, Integer>, DefaultWeightedEdge> graph;
 
     private static final int VERTEX_SIZE = 133;
     private static final int NODE_SIZE = 168;
@@ -50,9 +50,9 @@ public class TestGraphBuilder {
         assertEquals(NODE_SIZE, this.graph.edgeSet().size());
         // adding (or removing) breakable wall should not change the number of vertex or
         // edges
-        map.addBreakableWall(new IntPair(0, 2));
-        map.addBreakableWall(new IntPair(0, 3));
-        map.addBreakableWall(new IntPair(0, 4));
+        map.addBreakableWall(new GenPair<Integer, Integer>(0, 2));
+        map.addBreakableWall(new GenPair<Integer, Integer>(0, 3));
+        map.addBreakableWall(new GenPair<Integer, Integer>(0, 4));
 
         this.graph = GraphBuilderImpl.buildFromMap(map);
 
@@ -67,9 +67,9 @@ public class TestGraphBuilder {
     public void testMapSizeWithObastacles() {
         GameMap baseMap = new GameMapImpl(true);
         // CHECKSTYLE: MagicNumber OFF
-        baseMap.addFlame(new Flame(CellType.FLAME, null, new IntPair(0, 2)), new IntPair(0, 2));
-        baseMap.addFlame(new Flame(CellType.FLAME, null, new IntPair(0, 4)), new IntPair(0, 4));
-        baseMap.addFlame(new Flame(CellType.FLAME, null, new IntPair(5, 6)), new IntPair(5, 6));
+        baseMap.addFlame(new Flame(CellType.FLAME, null, new GenPair<Integer, Integer>(0, 2)), new GenPair<Integer, Integer>(0, 2));
+        baseMap.addFlame(new Flame(CellType.FLAME, null, new GenPair<Integer, Integer>(0, 4)), new GenPair<Integer, Integer>(0, 4));
+        baseMap.addFlame(new Flame(CellType.FLAME, null, new GenPair<Integer, Integer>(5, 6)), new GenPair<Integer, Integer>(5, 6));
         // CHECKSTYLE: MagicNumber ON
         this.graph = GraphBuilderImpl.buildFromMap(baseMap);
         assertEquals(VERTEX_SIZE, this.graph.vertexSet().size());
@@ -81,14 +81,14 @@ public class TestGraphBuilder {
      */
     @Test
     public void testEdgeWeights() {
-        map.addBreakableWall(new IntPair(1, 2));
+        map.addBreakableWall(new GenPair<Integer, Integer>(1, 2));
         graph = GraphBuilderImpl.buildFromMap(map);
 
-        IntPair p1 = new IntPair(0, 2); // grass
-        IntPair p2 = new IntPair(1, 2); // Breakable wall
-        IntPair p3 = new IntPair(2, 2); // Grass
-        IntPair p4 = new IntPair(3, 2); // Grass
-        IntPair p5 = new IntPair(1, 1); // Unbreakable wall
+        GenPair<Integer, Integer> p1 = new GenPair<Integer, Integer>(0, 2); // grass
+        GenPair<Integer, Integer> p2 = new GenPair<Integer, Integer>(1, 2); // Breakable wall
+        GenPair<Integer, Integer> p3 = new GenPair<Integer, Integer>(2, 2); // Grass
+        GenPair<Integer, Integer> p4 = new GenPair<Integer, Integer>(3, 2); // Grass
+        GenPair<Integer, Integer> p5 = new GenPair<Integer, Integer>(1, 1); // Unbreakable wall
 
         assertTrue(map.isEmpty(p1));
         assertTrue(map.isBreakableWall(p2));

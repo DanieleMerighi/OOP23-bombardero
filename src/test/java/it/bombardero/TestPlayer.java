@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.character.Player;
-import it.unibo.bombardero.map.api.Coordinates;
+import it.unibo.bombardero.map.api.Functions;
+import it.unibo.bombardero.map.api.GenPair;
 
 /**
  * Unit tests for the {@link Player} class.
@@ -28,8 +29,8 @@ class TestPlayer {
 
     private float spawnX;
     private float spawnY;
-    private Coordinates spawnCoord;
-    private Coordinates expectedCoord;
+    private GenPair<Float, Float> spawnCoord;
+    private GenPair<Float, Float> expectedCoord;
 
     /**
      * Sets up the test environment before each test.
@@ -40,8 +41,8 @@ class TestPlayer {
         this.manager = new MyGameManager();
         spawnX = STARTING_COORD;
         spawnY = STARTING_COORD;
-        spawnCoord  = new Coordinates(spawnX, spawnY);
-        expectedCoord = new Coordinates(spawnX, spawnY);
+        spawnCoord  = new GenPair<Float, Float>(spawnX, spawnY);
+        expectedCoord = new GenPair<Float, Float>(spawnX, spawnY);
         this.manager.getPlayer().setCharacterPosition(spawnCoord);
     }
 
@@ -76,7 +77,7 @@ class TestPlayer {
 
         roundPlayerCoordinateToThreeDecimal();
         // Sums the spawn coordinates with the movement done
-        expectedCoord = expectedCoord.sum(calculateExpectedDeltaMovement(updateNumeber));
+        expectedCoord = expectedCoord.apply(Functions.sumFloat(calculateExpectedDeltaMovement(updateNumeber)));
 
         assertEquals(expectedCoord, manager.getPlayer().getCharacterPosition());
      }
@@ -85,10 +86,10 @@ class TestPlayer {
      * Calculates the expected delta movement of the player based on the number of updates.
      *
      * @param updateNumeber the number of updates
-     * @return the expected delta movement as a {@link Coordinates}
+     * @return the expected delta movement as a {@link GenPair<Float, Float>}
      */
-    private Coordinates calculateExpectedDeltaMovement(final int updateNumeber) {
-        return new Coordinates(
+    private GenPair<Float, Float> calculateExpectedDeltaMovement(final int updateNumeber) {
+        return new GenPair<Float, Float>(
                 this.manager.getPlayer().getSpeed() * this.manager.getPlayer().getFacingDirection().x()
                         * updateNumeber,
                 this.manager.getPlayer().getSpeed() * this.manager.getPlayer().getFacingDirection().y()
@@ -100,7 +101,7 @@ class TestPlayer {
      */
     private void roundPlayerCoordinateToThreeDecimal() {
         this.manager.getPlayer().setCharacterPosition(
-            new Coordinates(
+            new GenPair<Float, Float>(
                 Math.round(this.manager.getPlayer().getCharacterPosition().x() * 1000.0f) / 1000.0f,
                 Math.round(this.manager.getPlayer().getCharacterPosition().y() * 1000.0f) / 1000.0f
             ));

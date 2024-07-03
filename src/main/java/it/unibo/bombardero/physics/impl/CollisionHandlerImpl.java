@@ -2,8 +2,6 @@ package it.unibo.bombardero.physics.impl;
 
 import java.util.Optional;
 
-import org.apache.commons.math3.util.MathArrays.Function;
-
 import java.awt.geom.Line2D;
 
 import it.unibo.bombardero.cell.Cell;

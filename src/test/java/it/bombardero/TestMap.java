@@ -12,9 +12,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import it.unibo.bombardero.map.api.GameMap;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.utils.Utils;
-import it.unibo.bombardero.map.api.IntPair;
 
 /**
  * @author Federico Bagattoni
@@ -26,8 +26,8 @@ public class TestMap {
     private static int EXPECTED_BREAKABLE_WALLS_NUMBER;
     private final static int MAP_CORNERS_QTY = 12;
 
-    private final Set<IntPair> MAP_CORNERS = new HashSet<>();
-    private final Set<IntPair> EXPECTED_UNBREAKABLE_WALLS_COORDINATES = new HashSet<>();
+    private final Set<GenPair<Integer, Integer>> MAP_CORNERS = new HashSet<>();
+    private final Set<GenPair<Integer, Integer>> EXPECTED_UNBREAKABLE_WALLS_COORDINATES = new HashSet<>();
 
     private GameMap map;
 
@@ -129,7 +129,7 @@ public class TestMap {
     //     );
     // }
 
-    private String fromClassToInteger(IntPair coordinate) {
+    private String fromClassToInteger(GenPair<Integer, Integer> coordinate) {
         if(this.map.isBreakableWall(coordinate)) {
             return "B";
         }
@@ -173,27 +173,27 @@ public class TestMap {
     private void computeUnbreakableWallsCoordinates() {
         for(int i = 1; i < Utils.MAP_ROWS; i += 2) {
             for(int j = 1; j < Utils.MAP_COLS; j += 2) {
-                this.EXPECTED_UNBREAKABLE_WALLS_COORDINATES.add(new IntPair(i, j));
+                this.EXPECTED_UNBREAKABLE_WALLS_COORDINATES.add(new GenPair<Integer, Integer>(i, j));
             }
         }
     }
 
     private void computeMapCorners() {
-        this.MAP_CORNERS.add(new IntPair(0, 0));
-        this.MAP_CORNERS.add(new IntPair(0, 1));
-        this.MAP_CORNERS.add(new IntPair(1, 0));
+        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(0, 0));
+        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(0, 1));
+        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(1, 0));
 
-        this.MAP_CORNERS.add(new IntPair(Utils.MAP_ROWS - 1, Utils.MAP_COLS - 1));
-        this.MAP_CORNERS.add(new IntPair(Utils.MAP_ROWS - 1, Utils.MAP_COLS - 2));
-        this.MAP_CORNERS.add(new IntPair(Utils.MAP_ROWS - 2, Utils.MAP_COLS - 1));
+        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(Utils.MAP_ROWS - 1, Utils.MAP_COLS - 1));
+        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(Utils.MAP_ROWS - 1, Utils.MAP_COLS - 2));
+        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(Utils.MAP_ROWS - 2, Utils.MAP_COLS - 1));
         
-        this.MAP_CORNERS.add(new IntPair(Utils.MAP_ROWS - 1, 0));
-        this.MAP_CORNERS.add(new IntPair(Utils.MAP_ROWS - 1, 1));
-        this.MAP_CORNERS.add(new IntPair(Utils.MAP_ROWS - 2, 0));
+        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(Utils.MAP_ROWS - 1, 0));
+        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(Utils.MAP_ROWS - 1, 1));
+        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(Utils.MAP_ROWS - 2, 0));
         
-        this.MAP_CORNERS.add(new IntPair(0, Utils.MAP_COLS - 1));
-        this.MAP_CORNERS.add(new IntPair(1, Utils.MAP_COLS - 1));
-        this.MAP_CORNERS.add(new IntPair(0, Utils.MAP_COLS - 2));
+        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(0, Utils.MAP_COLS - 1));
+        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(1, Utils.MAP_COLS - 1));
+        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(0, Utils.MAP_COLS - 2));
     }
 
     private void computeMatrixTraversal() {

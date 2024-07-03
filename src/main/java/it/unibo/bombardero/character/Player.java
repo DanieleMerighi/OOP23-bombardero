@@ -1,7 +1,5 @@
 package it.unibo.bombardero.character;
 
-import org.apache.commons.math3.util.MathArrays.Function;
-
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.powerup.impl.PowerUpImpl;
 import it.unibo.bombardero.core.api.GameManager;

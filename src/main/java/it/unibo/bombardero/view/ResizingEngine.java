@@ -3,7 +3,6 @@ package it.unibo.bombardero.view;
 import javax.swing.JFrame;
 
 import it.unibo.bombardero.guide.api.GuideManager;
-import it.unibo.bombardero.map.api.Coordinates;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.utils.Utils;
 
@@ -193,7 +192,7 @@ public final class ResizingEngine {
         );
     }
 
-    public Dimension getCharacterPlacingPoint(final Coordinates playerPosition) {
+    public Dimension getCharacterPlacingPoint(final GenPair<Float, Float> playerPosition) {
         return new Dimension(
             (int)Math.floor(
                 entityPlacingPoint.width

@@ -2,7 +2,6 @@ package it.unibo.bombardero.guide.api;
 
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.map.api.Coordinates;
 import it.unibo.bombardero.map.api.GenPair;
 
 /**
@@ -15,7 +14,7 @@ public interface GuideManager extends GameManager {
     /** 
      * The player's spawnpoint coordinates during the guide.
      */
-    Coordinates PLAYER_GUIDE_SPAWNPOINT = new Coordinates(4.5f, 6.5f);
+    GenPair<Float, Float> PLAYER_GUIDE_SPAWNPOINT = new GenPair<Float, Float>(4.5f, 6.5f);
 
     /**
      * The coordinate where the guide's crate have to be spawned.
@@ -25,7 +24,7 @@ public interface GuideManager extends GameManager {
     /** 
      * The coordinate where the dummy character have to be spawned.
      */
-    Coordinates DUMMY_GUIDE_SPAWNPOINT = new Coordinates(8.5f, 6.5f);
+    GenPair<Float, Float> DUMMY_GUIDE_SPAWNPOINT = new GenPair<Float, Float>(8.5f, 6.5f);
 
     /**
      * Spawns a dummy {@link Character} in the game. The

@@ -6,8 +6,6 @@ import java.util.EnumSet;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import org.apache.commons.math3.util.MathArrays.Function;
-
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.ai.api.MovementStrategy;

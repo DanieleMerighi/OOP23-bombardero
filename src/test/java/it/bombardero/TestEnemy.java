@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import it.unibo.bombardero.character.ai.impl.ChaseState;
 import it.unibo.bombardero.character.ai.impl.EscapeState;
 import it.unibo.bombardero.character.ai.impl.PatrolState;
-import it.unibo.bombardero.map.api.IntPair;
+import it.unibo.bombardero.map.api.GenPair;
 
 /**
  * Test class for Enemy behavior testing.
@@ -77,7 +77,7 @@ public class TestEnemy {
 
         // Verify enemy state is CHASE
         assertTrue(manager.getEnemy().isStateEqualTo(new ChaseState()));
-        assertEquals(new IntPair(1, 0), manager.getEnemy().getIntCoordinate());
+        assertEquals(new GenPair<Integer, Integer>(1, 0), manager.getEnemy().getIntCoordinate());
 
         // Set player moving away after initial detection
         // CHECKSTYLE: MagicNumber OFF
@@ -96,12 +96,12 @@ public class TestEnemy {
     public void testEnemyEscapeChangesToPatrol() {
         // Set enemy position inside a danger zone
         this.manager.getEnemy().setSpeed(NEWSPEED);
-        this.manager.addBomb(new MyBomb(new IntPair(0, 1)), null);
+        this.manager.addBomb(new MyBomb(new GenPair<Integer, Integer>(0, 1)), null);
         this.manager.getEnemy().update(STANDARD_ELAPSED_TIME, manager);
 
         assertTrue(manager.getEnemy().isStateEqualTo(new EscapeState()));
         this.manager.updateGame(STANDARD_ELAPSED_TIME);
-        assertEquals(new IntPair(1, 0), manager.getEnemy().getIntCoordinate());
+        assertEquals(new GenPair<Integer, Integer>(1, 0), manager.getEnemy().getIntCoordinate());
         this.manager.updateGame(STANDARD_ELAPSED_TIME);
         // Verify enemy state is Patrol
         assertTrue(manager.getEnemy().isStateEqualTo(new PatrolState()));
@@ -116,7 +116,7 @@ public class TestEnemy {
         // Set enemy next to a breakable wall
         manager.setPlayerCoord(1, 2);
         manager.getEnemy().setNumBomb(STARTING_BOMBS); // 1 bomb added to enemy
-        manager.getGameMap().addBreakableWall(new IntPair(0, 1));
+        manager.getGameMap().addBreakableWall(new GenPair<Integer, Integer>(0, 1));
         manager.getEnemy().update(STANDARD_ELAPSED_TIME, manager);
 
         assertTrue(manager.getEnemy().isStateEqualTo(new ChaseState()));
