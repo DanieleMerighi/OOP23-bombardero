@@ -5,13 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.event.KeyEvent;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.Direction;
@@ -34,88 +31,7 @@ class TestInput {
     @BeforeEach
     void setUp() {
         // Initialize the test controller
-        /*controller = new BombarderoController() {
-            private boolean escapeCalled;
-            private final Character mainPlayer = new Character(null, null, null) {
-
-                @Override
-                public void update(final long elapsedTime, final GameManager manager) {
-                    // TODO Auto-generated method stub
-                    throw new UnsupportedOperationException("Unimplemented method 'update'");
-                }
-
-            };
-
-            @Override
-            public void startGame() {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'startGame'");
-            }
-
-            @Override
-            public void endGame() {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'endGame'");
-            }
-
-            @Override
-            public void startGuide() {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'startGuide'");
-            }
-
-            @Override
-            public void endGuide() {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'endGuide'");
-            }
-
-            @Override
-            public void escape() {
-                this.escapeCalled = true;
-            }
-
-            @Override
-            public void toggleMessage(final BombarderoViewMessages message) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'toggleMessage'");
-            }
-
-            @Override
-            public boolean isGamePaused() {
-                return this.escapeCalled;
-            }
-
-            @Override
-            public Character getMainPlayer() {
-                return mainPlayer;
-            }
-
-            @Override
-            public List<Character> getEnemies() {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'getEnemies'");
-            }
-
-            @Override
-            public Map<IntPair, Cell> getMap() {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'getMap'");
-            }
-
-            @Override
-            public Optional<Long> getTimeLeft() {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'getTimeLeft'");
-            }
-
-            @Override
-            public void displayEndGuide() {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'displayEndGuide'");
-            }
-
-        };*/
+        controller = new ControllerForTesting();
         // Initialize KeyboardInput with the test controller
         this.keyboardInput = new KeyboardInput(controller);
     }
