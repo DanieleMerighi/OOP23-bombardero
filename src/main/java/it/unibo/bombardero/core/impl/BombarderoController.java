@@ -59,13 +59,11 @@ public final class BombarderoController implements Controller {
 
     @Override
     public void startGuide() {
-        if (isGameStarted) {
-            this.manager = new BombarderoGuideManager(this);
-            isGamePaused = false;
-            isGameStarted = true;
-            graphics.showCard(GraphicsEngine.viewCards.GUIDE);
-            toggleMessage(BombarderoViewMessages.EXPLAIN_MOVEMENT);
-        }
+        this.manager = new BombarderoGuideManager(this);
+        isGamePaused = false;
+        isGameStarted = true;
+        graphics.showCard(GraphicsEngine.viewCards.GUIDE);
+        toggleMessage(BombarderoViewMessages.EXPLAIN_MOVEMENT);
     }
 
     @Override

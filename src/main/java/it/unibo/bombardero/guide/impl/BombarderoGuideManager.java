@@ -57,7 +57,7 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
 
     private void initialiseProcedures() {
         guideProcedures.add(new GuideStep(
-            (map, manager) -> true /* manager.getEnemies().stream().allMatch(enemy -> !enemy.isAlive())*/,
+            (map, manager) -> manager.getEnemies().stream().allMatch(enemy -> !enemy.isAlive()),
             (manager, controller) -> {
                 controller.toggleMessage(BombarderoViewMessages.END_GUIDE);
                 controller.displayEndGuide();
@@ -75,7 +75,7 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
             (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.EXPLAIN_POWERUP)
         ));
         guideProcedures.add(new GuideStep(
-            (map, manager) -> !manager.getPlayer().isStationary(),
+            (map, manager) -> manager.getPlayer().isStationary(),
             (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.PLACE_BOMB)
         ));
     } 
