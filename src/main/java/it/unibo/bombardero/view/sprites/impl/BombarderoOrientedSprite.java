@@ -43,7 +43,7 @@ public final class BombarderoOrientedSprite extends SimpleBombarderoSprite imple
             getFramesFromPosition(facingDirection), facingDirection),
             getFramesFromPosition(facingDirection)
         );
-   
+
         this.resource = resource;
         this.rg = rg;
         this.currentFacingDirection = facingDirection;
