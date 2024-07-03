@@ -26,7 +26,7 @@ public class TimedBombarderoSprite extends SimpleBombarderoSprite {
      */
     public TimedBombarderoSprite(final Image[] asset, final int framesPerSprite, final int lifetime) {
         super(asset, framesPerSprite);
-        this.lifetime = lifetime * 7;
+        this.lifetime = lifetime * FOUR_FRAMES_TPS;
         this.framesPerSprite = framesPerSprite * 7;
     }
 
