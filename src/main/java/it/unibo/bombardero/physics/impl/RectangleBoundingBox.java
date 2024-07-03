@@ -69,6 +69,6 @@ public class RectangleBoundingBox implements BoundingBox{
 
     @Override
     public Rectangle2D getPhysicsBox() {
-        return this.physicsBox;
+        return this.physicsBox.getBounds2D();
     }
 }
