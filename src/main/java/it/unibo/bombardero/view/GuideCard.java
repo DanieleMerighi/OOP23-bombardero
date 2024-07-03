@@ -36,8 +36,8 @@ import it.unibo.bombardero.map.api.GenPair;
  */
 public final class GuideCard extends GamePlayCard {
 
-    private final static int LAYOUT_ROWS = 1;
-    private final static int LAYOUT_COLS = 1;
+    private static final int LAYOUT_ROWS = 1;
+    private static final int LAYOUT_COLS = 1;
 
     private transient Image startImage;
     private transient Image backImage;
@@ -50,7 +50,6 @@ public final class GuideCard extends GamePlayCard {
     private final JButton start;
     private final JLabel messageBox;
 
-    private final transient Dimension messageBoxSize = null;
     private final transient Sprite wasdSprite;
     private final transient Sprite spacebarSprite;
     private transient Optional<Sprite> currentShowedSprite;
@@ -58,7 +57,8 @@ public final class GuideCard extends GamePlayCard {
     private final transient Map<Sprite, Dimension> spritesPlacingPoint = new HashMap<>();
 
     /**
-     * Creates a new GuideCard using the passed arguments to build the button's actions and using the character's lists to build the view. 
+     * Creates a new GuideCard using the passed arguments to build the button's actions
+     * and using the character's lists to build the view. 
      * @param controller the {@link Controller} overseering the view.
      * @param graphics the {@link GraphicsEngine} that manages this card
      * @param gameMap the gamemap to render initially
