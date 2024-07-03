@@ -31,7 +31,7 @@ public interface MapGenerator {
      * in the map's corners and in occupied spaces in the {@link GameMap} passed
      * as argument. 
      * @param map the {@link GameMap} object on which the walls will be placed
-     * @param totalWallToGenerate the total number of walls that have to be generated
+     * @param totalWallsToGenerate the total number of walls that have to be generated
      * @return a {@link Set} containing all the positions of the walls.
      */
     Set<GenPair<Integer, Integer>> generateBreakableWalls(GameMap map, int totalWallsToGenerate);
