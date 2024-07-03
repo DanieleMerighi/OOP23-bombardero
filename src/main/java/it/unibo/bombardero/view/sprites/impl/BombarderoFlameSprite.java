@@ -61,6 +61,8 @@ public final class BombarderoFlameSprite implements FlameSprite {
      * {@link Flame.FlameType} requested.
      * <p>
      * The names returned are the ones of the resources.
+     * @param type the type of flame
+     * @return the name of the resource's type related to the flame's type
      */
     public static String getStringFromType(final Flame.FlameType type) {
         return switch (type) {
