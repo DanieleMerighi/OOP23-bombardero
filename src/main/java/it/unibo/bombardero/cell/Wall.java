@@ -1,5 +1,6 @@
 package it.unibo.bombardero.cell;
 
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.physics.api.BoundingBox;
 import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 /**
