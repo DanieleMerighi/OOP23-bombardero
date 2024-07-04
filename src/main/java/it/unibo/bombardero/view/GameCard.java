@@ -35,16 +35,14 @@ public final class GameCard extends GamePlayCard {
     private static final int LAYOUT_ROWS = 5;
 
     private final Image clockImage;
-    private final Image resumeButtonImage;
-    private final Image quitButtonImage;
-    private Font clockFont;
+    private final Font clockFont;
 
     /* Pause state buttons: */
     private final JButton resumeButton;
     private final JButton quitButton;
 
-    private Dimension imageClockPosition;
-    private Dimension timerPosition;
+    private final Dimension imageClockPosition;
+    private final Dimension timerPosition;
     private long timeLeft;
 
     /** 
@@ -60,8 +58,8 @@ public final class GameCard extends GamePlayCard {
             graphics.getResourceGetter().loadImage("overlay/clock")
         );
         clockFont = graphics.getResourceGetter().loadFont("mono");
-        resumeButtonImage = graphics.getResourceGetter().loadImage("overlay/buttons/RESUME");
-        quitButtonImage = graphics.getResourceGetter().loadImage("overlay/buttons/QUIT");
+        final Image resumeButtonImage = graphics.getResourceGetter().loadImage("overlay/buttons/RESUME");
+        final Image quitButtonImage = graphics.getResourceGetter().loadImage("overlay/buttons/QUIT");
 
         imageClockPosition = graphics.getResizingEngine().getImageClockPosition();
         timerPosition = graphics.getResizingEngine().getTimerPosition();
@@ -87,8 +85,8 @@ public final class GameCard extends GamePlayCard {
     @Override
     public void paintComponent(final Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g;
-        int fontYOffset = (int) (g.getFontMetrics(clockFont).getAscent() / 2);
+        final Graphics2D g2d = (Graphics2D) g;
+        final int fontYOffset = (int) (g.getFontMetrics(clockFont).getAscent() / 2);
         g2d.setFont(clockFont.deriveFont(Font.PLAIN, 16));
         g2d.drawString(getFormattedTime(), timerPosition.width, timerPosition.height + fontYOffset);
         g2d.drawImage(clockImage, imageClockPosition.width, imageClockPosition.height, null);
