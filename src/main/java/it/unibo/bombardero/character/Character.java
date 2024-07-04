@@ -241,7 +241,7 @@ public abstract class Character {
      * 
      * @return true if the character has to place a bomb, false otherwise
      */
-    public boolean getHasToPlaceBomb() {
+    public boolean isHasToPlaceBomb() {
         return hasToPlaceBomb;
     }
 
@@ -298,7 +298,7 @@ public abstract class Character {
      * 
      * @return true if the character has to explode a remote bomb, false otherwise
      */
-    public boolean getHasToExplodeRemoteBomb() {
+    public boolean isHasToExplodeRemoteBomb() {
         return hasToExplodeRemoteBomb;
     }
 
@@ -546,7 +546,7 @@ public abstract class Character {
      * 
      * @return true if the character has to place a line bomb, false otherwise
      */
-    public boolean getHasToPlaceLineBomb() {
+    public boolean isHasToPlaceLineBomb() {
         return hasToPlaceLineBomb;
     }
 

@@ -44,17 +44,17 @@ public class Player extends Character {
             setCharacterPosition(computeNewPlayerPosition());
         }
         // Place bomb:
-        if (getHasToPlaceBomb()) {
+        if (isHasToPlaceBomb()) {
             placeBomb(manager, CharacterType.PLAYER);
             setHasToPlaceBomb(false);
         }
         // Place line bomb:
-        if (getHasToPlaceLineBomb()) {
+        if (isHasToPlaceLineBomb()) {
             PowerUpImpl.placeLineBomb(this, manager.getGameMap().getMap(), getFacingDirection(), manager);
             setHasToPlaceLineBomb(false);
         }
         // Explode remote bomb:
-        if (getHasToExplodeRemoteBomb()) {
+        if (isHasToExplodeRemoteBomb()) {
             explodeRemoteBomb();
             setHasToExplodeRemoteBomb(false);
         }
