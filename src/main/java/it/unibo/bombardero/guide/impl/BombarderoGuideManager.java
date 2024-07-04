@@ -10,7 +10,6 @@ import it.unibo.bombardero.core.impl.BasicBombarderoGameManager;
 import it.unibo.bombardero.guide.api.GuideManager;
 import it.unibo.bombardero.guide.api.GuideStep;
 import it.unibo.bombardero.map.api.GenPair;
-import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 import it.unibo.bombardero.view.BombarderoViewMessages;
 
 /**

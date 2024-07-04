@@ -21,7 +21,7 @@ public class BombarderoCollision implements CollisionEngine {
     private static final int MIN_NUM_CELL = 0;
     private static final int MAX_NUM_CELL = 12;
     private final CollisionHandler cHandler = new CollisionHandlerImpl();
-    private final Map<Direction, Line2D.Float> MAP_OUTLINES = Map.of(
+    private final Map<Direction, Line2D.Float> mapOutlines = Map.of(
             Direction.UP, new Line2D.Float(new Point2D.Float(0, 0), new Point2D.Float(13, 0)),
             Direction.DOWN, new Line2D.Float(new Point2D.Float(0, 13), new Point2D.Float(13, 13)),
             Direction.LEFT, new Line2D.Float(new Point2D.Float(0, 0), new Point2D.Float(0, 13)),
@@ -50,7 +50,7 @@ public class BombarderoCollision implements CollisionEngine {
                     .findFirst();
             cHandler.applyCharacterBoundaryCollision(character, collidingCell);
         } else {
-            cHandler.applyCharacterBoundaryCollision(character, MAP_OUTLINES.get(character.getFacingDirection()));
+            cHandler.applyCharacterBoundaryCollision(character, mapOutlines.get(character.getFacingDirection()));
         }
     }
 

@@ -52,7 +52,7 @@ public interface Bomb extends Cell {
      * @param map
      * @return the EntrySet that contains the flames of the explosion
      */
-    public Set<Entry<GenPair<Integer, Integer>, FlameType>> computeFlame(final GameMap map);
+    Set<Entry<GenPair<Integer, Integer>, FlameType>> computeFlame(GameMap map);
 
     /**
      * 

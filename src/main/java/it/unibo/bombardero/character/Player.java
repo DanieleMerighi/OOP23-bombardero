@@ -5,7 +5,6 @@ import it.unibo.bombardero.cell.powerup.impl.PowerUpImpl;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Functions;
 import it.unibo.bombardero.map.api.GenPair;
-import it.unibo.bombardero.physics.api.BoundingBox;
 
 /**
  * This class represents a Player in the game.

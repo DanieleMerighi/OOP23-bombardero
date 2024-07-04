@@ -24,7 +24,7 @@ public class CollisionHandlerImpl implements CollisionHandler{
 
     @Override
     public void applyCharacterBoundaryCollision(final Character character, final Line2D.Float mapOutline) {
-        BoundingBox bBox = character.getBoundingBox();
+        final BoundingBox bBox = character.getBoundingBox();
         if(bBox.isColliding(mapOutline)) {
             character.setCharacterPosition(
                 character.getCharacterPosition().apply(Functions

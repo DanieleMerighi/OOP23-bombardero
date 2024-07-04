@@ -14,7 +14,6 @@ import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.map.api.Functions;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.GenPair;
-import it.unibo.bombardero.physics.api.BoundingBox;
 import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 
 //TODO cercare di dividere logica del character e del manager es: ritornare entryset di fiamme da aggiungere e numbob nel character 
@@ -80,7 +79,7 @@ public abstract class BasicBomb extends AbstractCell implements Bomb {
     @Override
     public Set<Entry<GenPair<Integer, Integer>, FlameType>> computeFlame(final GameMap map) {
         if (this.isExploded()) {
-            Map<GenPair<Integer, Integer>, FlameType> temp = new HashMap<>();
+            final Map<GenPair<Integer, Integer>, FlameType> temp = new HashMap<>();
             final List<Direction> allDirection = List.of(Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.DOWN);
             allDirection.stream()
                     .map(dir -> checkDirection(dir, map))
@@ -105,10 +104,10 @@ public abstract class BasicBomb extends AbstractCell implements Bomb {
     }
 
     private boolean stopFlamePropagation(final GenPair<Integer, Integer> pos, final GameMap map) {
-        return map.isEmpty(pos) || (isBomb(pos, map) && !map.isUnbreakableWall(pos) && !isBreckableWall(pos, map));
+        return map.isEmpty(pos) || isBomb(pos, map) && !map.isUnbreakableWall(pos) && !isBreckableWall(pos, map);
     }
 
-    public boolean isBreckableWall(final GenPair<Integer, Integer> pos, GameMap map) {
+    public boolean isBreckableWall(final GenPair<Integer, Integer> pos, final GameMap map) {
         if (map.isBreakableWall(pos)) {
             map.removeBreakableWall(pos);
             return true;
@@ -116,7 +115,7 @@ public abstract class BasicBomb extends AbstractCell implements Bomb {
         return false;
     }
 
-    private boolean isBomb(final GenPair<Integer, Integer> pos, GameMap map) {
+    private boolean isBomb(final GenPair<Integer, Integer> pos, final GameMap map) {
         if (map.isBomb(pos)) {
             final Bomb bomb = (Bomb) map.getMap().get(pos);
             if (!bomb.isExploded()) {

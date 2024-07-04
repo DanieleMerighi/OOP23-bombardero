@@ -17,7 +17,6 @@ import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Functions;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.GenPair;
-import it.unibo.bombardero.physics.api.BoundingBox;
 import it.unibo.bombardero.utils.Utils;
 
 /**

@@ -4,7 +4,6 @@ import it.unibo.bombardero.cell.Bomb.BombType;
 import it.unibo.bombardero.map.api.Functions;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.GenPair;
-import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 
 
 //TODO dividere la logica fare una factory normale
@@ -22,7 +21,7 @@ public class BombFactoryImpl implements BombFactory {
         return new BasicBomb(BombType.BOMB_PIERCING, range, pos) {
 
             @Override
-            public boolean isBreckableWall(final GenPair<Integer, Integer> pos, GameMap map) {
+            public boolean isBreckableWall(final GenPair<Integer, Integer> pos, final GameMap map) {
                 if (map.isBreakableWall(pos) && isLastWall(pos)) {
                     map.removeBreakableWall(pos);
                     return true;
@@ -51,14 +50,7 @@ public class BombFactoryImpl implements BombFactory {
         return new BasicBomb(BombType.BOMB_REMOTE, range, pos) {
 
             @Override
-            public void update() {
-
-            }
-
-            @Override
-            public void update(final boolean condition) {
-                super.update(condition);
-            }
+            public void update() {}
         };
     }
 

@@ -21,7 +21,6 @@ import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.physics.impl.BombarderoCollision;
-import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 
 /**
  * This class implements the concepts expressed in the
