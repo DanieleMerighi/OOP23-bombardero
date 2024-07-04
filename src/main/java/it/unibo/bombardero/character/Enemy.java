@@ -20,6 +20,10 @@ import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.utils.Utils;
 
 /**
+ * This class will never be serialised.
+ */
+@SuppressWarnings("serial")
+/**
  * Represents an enemy character within the game environment.
  * Enemies are intelligent entities that can move around the map, detect dangers
  * (bombs), and chase the player. Their behavior is governed by a state machine
