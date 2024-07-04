@@ -1,22 +1,22 @@
 package it.unibo.bombardero.view;
 
-import javax.swing.JPanel;
-import it.unibo.bombardero.core.api.Controller;
-import javax.swing.JLabel;
-
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.awt.image.BufferedImage;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import it.unibo.bombardero.core.api.Controller;
 
 public final class MenuCard extends JPanel {
 
@@ -41,7 +41,7 @@ public final class MenuCard extends JPanel {
         // CHECKSTYLE: MagicNumber ON
 
         this.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
+        final GridBagConstraints gbc = new GridBagConstraints();
         play = new JButton(new ImageIcon(playImage));
         guide = new JButton(new ImageIcon(guideImage));
         /* TODO: better style JButtons, in windows you can stil see the buttons highlight, in MacOS however no...  */
@@ -86,7 +86,7 @@ public final class MenuCard extends JPanel {
         play.addActionListener(new ActionListener() {
 
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 controller.startGame();
             }
             
@@ -95,7 +95,7 @@ public final class MenuCard extends JPanel {
         guide.addActionListener(new ActionListener() {
 
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 controller.startGuide();
             }
             
@@ -103,12 +103,12 @@ public final class MenuCard extends JPanel {
     }
 
     @Override
-    public void paintComponent(Graphics g) {
+    public void paintComponent(final Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D)g;
-        Dimension cropSize = graphicsEngine.getFrameSize();
+        final Graphics2D g2d = (Graphics2D)g;
+        final Dimension cropSize = graphicsEngine.getFrameSize();
         /* TODO: original background image is 4k, the image is to be scaled and the parameteres modified */
-        Image img = background.getSubimage(3840 - cropSize.width, 2160 - cropSize.height, cropSize.width, cropSize.height);
+        final Image img = background.getSubimage(3840 - cropSize.width, 2160 - cropSize.height, cropSize.width, cropSize.height);
         g2d.drawImage(img, 0, 0, null);
     }
 }

@@ -1,27 +1,27 @@
 package it.unibo.bombardero.view;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import javax.swing.JButton;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.List;
-
+import it.unibo.bombardero.cell.Cell;
+import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.core.api.Controller;
+import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.view.GraphicsEngine.viewCards;
 import it.unibo.bombardero.view.sprites.api.Sprite;
 import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
-import it.unibo.bombardero.cell.Cell;
-import it.unibo.bombardero.character.Character;
-import it.unibo.bombardero.map.api.GenPair;
 
 /**
  * This class contains the panel for the Guide of
@@ -58,19 +58,20 @@ public final class GuideCard extends GamePlayCard {
 
     /**
      * Creates a new GuideCard using the passed arguments to build the button's actions
-     * and using the character's lists to build the view. 
-     * @param controller the {@link Controller} overseering the view.
-     * @param graphics the {@link GraphicsEngine} that manages this card
-     * @param gameMap the gamemap to render initially
+     * and using the character's lists to build the view.
+     * 
+     * @param controller  the {@link Controller} overseering the view.
+     * @param graphics    the {@link GraphicsEngine} that manages this card
+     * @param gameMap     the gamemap to render initially
      * @param playersList the players to render initally
      * @param enemiesList the enemies to rendere initially
      */
     public GuideCard(
-        final Controller controller,
-        final GraphicsEngine graphics,
-        final Map<GenPair<Integer, Integer>, Cell> gameMap,
-        final List<Character> playersList,
-        final List<Character> enemiesList) {
+            final Controller controller,
+            final GraphicsEngine graphics,
+            final Map<GenPair<Integer, Integer>, Cell> gameMap,
+            final List<Character> playersList,
+            final List<Character> enemiesList) {
         super(graphics, gameMap, playersList, enemiesList);
 
         final ResourceGetter resourceGetter = graphics.getResourceGetter();
@@ -144,9 +145,11 @@ public final class GuideCard extends GamePlayCard {
         spacebarSprite.update();
     }
 
-    /** 
+    /**
      * Shows a message to the view. Only one message will be displayed
-     * at the time. The messages' content can be seen at {@link BombarderoViewMessages}.
+     * at the time. The messages' content can be seen at
+     * {@link BombarderoViewMessages}.
+     * 
      * @param message the message to be shown
      * @see BombarderoViewMessages
      */
@@ -155,8 +158,8 @@ public final class GuideCard extends GamePlayCard {
         showAnimatedKeys(message);
     }
 
-    /** 
-     * Displays the end of the guide: two buttons, one to proceed to the game, 
+    /**
+     * Displays the end of the guide: two buttons, one to proceed to the game,
      * the other to go back to the menu.
      */
     public void displayEndGuide() {
