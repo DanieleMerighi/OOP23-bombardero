@@ -41,7 +41,7 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      * Vertices in this graph represent cells (Pairs of x and column coordinates),
      * and edges represent valid connections between cells.
      */
-    private Graph<GenPair<Integer, Integer>, DefaultWeightedEdge> graph;
+    private final Graph<GenPair<Integer, Integer>, DefaultWeightedEdge> graph;
 
     /**
      * Constructs a new EnemyGraphReasoner instance for the given game map.
@@ -98,13 +98,13 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
             return true; // Diagonal paths not supported
         }
 
-        int dx = endCell.x() - startCell.x();
-        int dy = endCell.y() - startCell.y();
+        final int dx = endCell.x() - startCell.x();
+        final int dy = endCell.y() - startCell.y();
 
         return IntStream.rangeClosed(0, Math.max(Math.abs(dx), Math.abs(dy)))
                 .mapToObj(i -> {
-                    int x = startCell.x() + i * Integer.signum(dx);
-                    int y = startCell.y() + i * Integer.signum(dy);
+                    final int x = startCell.x() + i * Integer.signum(dx);
+                    final int y = startCell.y() + i * Integer.signum(dy);
                     return new GenPair<Integer, Integer>(x, y);
                 })
                 .anyMatch(p -> map.isBreakableWall(p) || map.isUnbreakableWall(p));
@@ -133,12 +133,12 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
         }
 
         // Use Dijkstra's algorithm to find the shortest path to the player
-        DijkstraShortestPath<GenPair<Integer, Integer>, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<>(
+        final DijkstraShortestPath<GenPair<Integer, Integer>, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<>(
                 graph);
         GraphPath<GenPair<Integer, Integer>, DefaultWeightedEdge> path = null;
         try {
             path = dijkstra.getPath(enemyCoord, playerCoord);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             System.out.println(e);
         }
 
@@ -161,7 +161,7 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
 
     private Optional<GenPair<Integer, Integer>> findNearestSafeCellRecursive(final GenPair<Integer, Integer> enemyCoord, final int explRad,
             final Set<GenPair<Integer, Integer>> visited) {
-        List<GenPair<Integer, Integer>> adjacentCells = EnumSet.allOf(Direction.class)
+        final List<GenPair<Integer, Integer>> adjacentCells = EnumSet.allOf(Direction.class)
                 .stream()
                 .map(d -> new GenPair<Integer, Integer>(enemyCoord.x() + d.x(), enemyCoord.y() + d.y()))
                 .filter(cell -> isValidCell(cell) && (map.isEmpty(cell)
@@ -170,7 +170,7 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
                         && !visited.contains(cell))
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        Optional<GenPair<Integer, Integer>> safeCell = adjacentCells.stream()
+        final Optional<GenPair<Integer, Integer>> safeCell = adjacentCells.stream()
                 .filter(c -> !isInDangerZone(c, explRad))
                 .min((cell1, cell2) -> Double.compare(calculateDistance(enemyCoord, cell1),
                         calculateDistance(enemyCoord, cell2)));
@@ -179,8 +179,8 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
             return safeCell;
         } else {
             visited.addAll(adjacentCells);
-            for (GenPair<Integer, Integer> cell : adjacentCells) {
-                Optional<GenPair<Integer, Integer>> recursiveResult = findNearestSafeCellRecursive(cell, explRad, visited);
+            for (final GenPair<Integer, Integer> cell : adjacentCells) {
+                final Optional<GenPair<Integer, Integer>> recursiveResult = findNearestSafeCellRecursive(cell, explRad, visited);
                 if (recursiveResult.isPresent()) {
                     return recursiveResult;
                 }
@@ -194,8 +194,8 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
     }
 
     private double calculateDistance(final GenPair<Integer, Integer> p1, final GenPair<Integer, Integer> p2) {
-        int dx = p2.x() - p1.x();
-        int dy = p2.y() - p1.y();
+        final int dx = p2.x() - p1.x();
+        final int dy = p2.y() - p1.y();
         return Math.sqrt(dx * dx + dy * dy);
     }
 
@@ -251,8 +251,8 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      * @param newMap the new game map to update to
      */
     public void updateGraph(final GameMap newMap) {
-        List<GenPair<Integer, Integer>> oldWalls = map.getMap().keySet().stream().filter(c -> map.isBreakableWall(c)).toList();
-        List<GenPair<Integer, Integer>> newWalls = newMap.getMap().keySet().stream().filter(c -> newMap.isBreakableWall(c)).toList();
+        final List<GenPair<Integer, Integer>> oldWalls = map.getMap().keySet().stream().filter(c -> map.isBreakableWall(c)).toList();
+        final List<GenPair<Integer, Integer>> newWalls = newMap.getMap().keySet().stream().filter(c -> newMap.isBreakableWall(c)).toList();
         if (oldWalls.size() != newWalls.size()) {
             oldWalls.stream().filter(c -> !newWalls.contains(c)).forEach(c -> updateEdges(c));
         }
