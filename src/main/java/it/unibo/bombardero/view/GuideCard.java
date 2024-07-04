@@ -43,12 +43,7 @@ public final class GuideCard extends GamePlayCard {
     private static final int LAYOUT_ROWS = 1;
     private static final int LAYOUT_COLS = 1;
 
-    private final transient Image startImage;
-    private final transient Image backImage;
-
     // private String message = "";
-    private final transient Image messageBoxImage;
-    private final Font font;
 
     private final JButton back;
     private final JButton start;
@@ -81,11 +76,11 @@ public final class GuideCard extends GamePlayCard {
         final ResourceGetter resourceGetter = graphics.getResourceGetter();
 
         // CHECKSTYLE: MagicNumber OFF
-        font = resourceGetter.loadFont("mono");
-        messageBoxImage = resourceGetter.loadImage("overlay/dialog");
-        startImage = graphics.getResizingEngine()
+        final Font font = resourceGetter.loadFont("mono");
+        final Image messageBoxImage = resourceGetter.loadImage("overlay/dialog");
+        final Image startImage = graphics.getResizingEngine()
                 .getScaledButtonImage(resourceGetter.loadImage("overlay/buttons/PLAY"));
-        backImage = graphics.getResizingEngine().getScaledButtonImage(resourceGetter.loadImage("overlay/buttons/BACK"));
+        final Image backImage = graphics.getResizingEngine().getScaledButtonImage(resourceGetter.loadImage("overlay/buttons/BACK"));
         wasdSprite = new SimpleBombarderoSprite(
                 SimpleBombarderoSprite.importAssets("WASD", "overlay/buttons/WASD", resourceGetter,
                         graphics.getResizingEngine()::getScaledWASDImage, 8),
