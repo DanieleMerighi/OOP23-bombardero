@@ -96,12 +96,12 @@ public final class MenuCard extends JPanel {
 
         play.addMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(MouseEvent e) {
+            public void mousePressed(final MouseEvent e) {
                 play.setBackground(Color.YELLOW); // Cambia colore quando viene premuto
             }
 
             @Override
-            public void mouseReleased(MouseEvent e) {
+            public void mouseReleased(final MouseEvent e) {
                 play.setBackground(Color.BLUE); // Ripristina colore originale quando viene rilasciato
             }
         });

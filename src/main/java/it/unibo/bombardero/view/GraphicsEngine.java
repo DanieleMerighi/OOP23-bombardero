@@ -20,7 +20,7 @@ public interface GraphicsEngine {
 
         private String id;
 
-        private ViewCards(final String cardName) {
+        ViewCards(final String cardName) {
             id = cardName;
         }
 
@@ -36,7 +36,7 @@ public interface GraphicsEngine {
 
     void showCard(ViewCards cardName);
 
-    void update(Map<GenPair<Integer, Integer>, Cell> map, List<Character> playerList, List<Character> enemiesList, final Optional<Long> timeLeft);
+    void update(Map<GenPair<Integer, Integer>, Cell> map, List<Character> playerList, List<Character> enemiesList, Optional<Long> timeLeft);
 
     void setPausedView();
 
