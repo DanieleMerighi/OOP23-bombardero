@@ -25,6 +25,10 @@ public final class FullBombarderoGameManager extends BasicBombarderoGameManager 
     @Override
     public void updateGame(final long elapsed) {
         gameTime += elapsed;
+        if (gameTime >= TOTAL_GAME_TIME) {
+            getGameMap().triggerCollapse();
+        }
+        getGameMap().update();
         super.updateGame(elapsed);
     }
 

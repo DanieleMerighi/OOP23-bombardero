@@ -60,7 +60,7 @@ public final class GameMapImpl implements GameMap {
     }
 
     @Override
-    public void update(final long timeLeft) {
+    public void update() {
         if (collapseStarted && !collapseOrder.isEmpty()) {
             counter = (counter + 1) % GameMap.COLLAPSE_RATE;
             if (counter == 0) {
