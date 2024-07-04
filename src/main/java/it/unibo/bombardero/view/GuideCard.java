@@ -24,6 +24,10 @@ import it.unibo.bombardero.view.sprites.api.Sprite;
 import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
 
 /**
+ * This class will never be serialised.
+ */
+@SuppressWarnings("serial")
+/**
  * This class contains the panel for the Guide of
  * the game. It essentially works the same as the {@link GameCard}
  * with minor adjustments; such as removal of the timer and the Graphics

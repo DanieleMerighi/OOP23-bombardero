@@ -18,6 +18,11 @@ import javax.swing.ImageIcon;
 
 import java.util.List;
 import java.util.Map;
+
+/**
+ * This class will never be serialised.
+ */
+@SuppressWarnings("serial")
 /** 
  * This class represents a JPanel containing a the view of some 
  * playable part of the game (e.g. guide, gameplay, sandbox... etc).

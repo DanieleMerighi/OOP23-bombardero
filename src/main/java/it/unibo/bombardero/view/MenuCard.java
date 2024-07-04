@@ -19,6 +19,13 @@ import javax.swing.JPanel;
 
 import it.unibo.bombardero.core.api.Controller;
 
+/**
+ * This class will never be serialised.
+ */
+@SuppressWarnings("serial")
+/**
+ * TODO: Javadoc
+ */
 public final class MenuCard extends JPanel {
 
     private final transient JButton play;
