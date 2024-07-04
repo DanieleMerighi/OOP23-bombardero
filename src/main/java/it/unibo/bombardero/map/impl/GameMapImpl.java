@@ -100,14 +100,14 @@ public final class GameMapImpl implements GameMap {
     @Override
     public void addUnbreakableWall(final GenPair<Integer, Integer> coordinate) {
         this.map.put(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()),
-                new Wall(Cell.CellType.WALL_UNBREAKABLE, coordinate,
+                new Wall(Cell.CellType.WALL_UNBREAKABLE,
                         new RectangleBoundingBox(coordinate.x(), coordinate.y(), 1.0f, 1.0f)));
     }
 
     @Override
     public void addBreakableWall(final GenPair<Integer, Integer> coordinate) {
         this.map.put(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()),
-                new Wall(Cell.CellType.WALL_BREAKABLE, coordinate,
+                new Wall(Cell.CellType.WALL_BREAKABLE,
                         new RectangleBoundingBox(coordinate.x(), coordinate.y(), 1.0f, 1.0f)));
     }
 
