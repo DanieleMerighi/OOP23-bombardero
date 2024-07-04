@@ -1,6 +1,5 @@
 package it.unibo.bombardero.cell;
 
-import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.physics.api.BoundingBox;
 /**
  * This class further expands the concept of a cell,
