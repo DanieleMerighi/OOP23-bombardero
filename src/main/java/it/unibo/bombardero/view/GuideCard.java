@@ -39,8 +39,8 @@ public final class GuideCard extends GamePlayCard {
     private static final int LAYOUT_ROWS = 1;
     private static final int LAYOUT_COLS = 1;
 
-    private transient Image startImage;
-    private transient Image backImage;
+    private final transient Image startImage;
+    private final transient Image backImage;
 
     // private String message = "";
     private final transient Image messageBoxImage;
@@ -138,13 +138,6 @@ public final class GuideCard extends GamePlayCard {
         }
     }
 
-    @Override
-    protected void updateSprites() {
-        super.updateSprites();
-        wasdSprite.update();
-        spacebarSprite.update();
-    }
-
     /**
      * Shows a message to the view. Only one message will be displayed
      * at the time. The messages' content can be seen at
@@ -170,6 +163,13 @@ public final class GuideCard extends GamePlayCard {
         this.add(back);
         this.revalidate();
         this.repaint();
+    }
+
+    @Override
+    protected void updateSprites() {
+        super.updateSprites();
+        wasdSprite.update();
+        spacebarSprite.update();
     }
 
     private void showAnimatedKeys(final BombarderoViewMessages message) {

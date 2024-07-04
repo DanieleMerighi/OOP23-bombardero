@@ -124,7 +124,7 @@ public class GamePlayCard extends JPanel {
      */
     @Override
     public void paintComponent(final Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
+        final Graphics2D g2d = (Graphics2D) g;
         /* Drawing the Map and the Background */
         // CHECKSTYLE: MagicNumber OFF
         g2d.drawImage(
@@ -142,7 +142,7 @@ public class GamePlayCard extends JPanel {
         for (int i = 0; i < Utils.MAP_ROWS; i++) {
             for (int j = 0; j < Utils.MAP_COLS; j++) {
                 if (cells.containsKey(new GenPair <>(i, j))) {
-                    Cell entry = cells.get(new GenPair <>(i, j));
+                    final Cell entry = cells.get(new GenPair <>(i, j));
                     Image img = unbreakable;
                     Dimension placingPoint = graphics.getResizingEngine().getCellPlacingPoint(new GenPair<>(i, j));
                     switch (entry.getCellType()) {
@@ -157,7 +157,7 @@ public class GamePlayCard extends JPanel {
                             placingPoint = graphics.getResizingEngine().getBombPlacingPoint(new GenPair<>(i, j));
                             break;
                         case POWERUP:
-                            PowerUp pu = (PowerUp) entry;
+                            final PowerUp pu = (PowerUp) entry;
                             img = switch (pu.getType()) {
                                 case REMOTE_BOMB -> bombRemote;
                                 case PIERCING_BOMB -> bombPierce;
@@ -175,7 +175,7 @@ public class GamePlayCard extends JPanel {
                             };
                             break;
                         case FLAME: 
-                            Flame fl = (Flame) entry;
+                            final Flame fl = (Flame) entry;
                             img = flamesSprite.getImage(fl.getTimePassed(), fl.getFlameType());
                             break;
                         default:
@@ -193,11 +193,11 @@ public class GamePlayCard extends JPanel {
         }
         /* Drawing the player and the enemies */
         charactersImages.entrySet().forEach(enemy -> {
-            Dimension enemyPos = graphics.getResizingEngine().getCharacterPlacingPoint(enemy.getKey().getCharacterPosition());
+            final Dimension enemyPos = graphics.getResizingEngine().getCharacterPlacingPoint(enemy.getKey().getCharacterPosition());
             g2d.drawImage(enemy.getValue().displayedImage(), enemyPos.width, enemyPos.height, null);
         });
         dyingCharactersMap.entrySet().forEach(entry -> {
-            Dimension pos = graphics.getResizingEngine().getCharacterPlacingPoint(entry.getKey().getCharacterPosition());
+            final Dimension pos = graphics.getResizingEngine().getCharacterPlacingPoint(entry.getKey().getCharacterPosition());
             g2d.drawImage(
                 entry.getValue().getImage(),
                 pos.width, pos.height,
@@ -298,9 +298,9 @@ public class GamePlayCard extends JPanel {
         enemiesList.stream()
             .filter(enemy -> !charactersImages.keySet().contains(enemy) && enemy.isAlive())
             .forEach(enemy -> {
-                String colorCode =  colorCodes.isEmpty() ? "red" : colorCodes.get(0);
+                final String colorCode =  colorCodes.isEmpty() ? "red" : colorCodes.get(0);
                 colorCodes = !colorCodes.isEmpty() ? colorCodes.subList(1, colorCodes.size()) : List.of();
-                OrientedSprite sprite = new BombarderoOrientedSprite(
+                final OrientedSprite sprite = new BombarderoOrientedSprite(
                     "character/" + colorCode + "/walking",
                     resourceGetter,
                     Direction.DOWN,
@@ -318,8 +318,8 @@ public class GamePlayCard extends JPanel {
         playersList.stream()
             .filter(player -> !charactersImages.keySet().contains(player) && player.isAlive())
             .forEach(player -> {
-                String colorCode = "main";
-                OrientedSprite playerSprite = new BombarderoOrientedSprite(
+                final String colorCode = "main";
+                final OrientedSprite playerSprite = new BombarderoOrientedSprite(
                     "character/main/walking",
                     resourceGetter, 
                     Direction.DOWN,
@@ -338,7 +338,7 @@ public class GamePlayCard extends JPanel {
 
     /* I had to do it in separates for-loops because of ConcurrentModificationException(s) */
     private void updateDeadCharacters() {
-        for (Entry<Character, TimedBombarderoSprite> entry : dyingCharactersMap.entrySet()) {
+        for (final Entry<Character, TimedBombarderoSprite> entry : dyingCharactersMap.entrySet()) {
             entry.getValue().update();
         }
         dyingCharactersMap = dyingCharactersMap.entrySet().stream()
@@ -346,7 +346,7 @@ public class GamePlayCard extends JPanel {
             .collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
         charactersImages.entrySet().forEach(entry -> {
             if (!entry.getKey().isAlive()) {
-                Image[] dyingAsset = SimpleBombarderoSprite.importAssets(
+                final Image[] dyingAsset = SimpleBombarderoSprite.importAssets(
                     "dying",
                     "character/" + entry.getValue().colorCode() + "/dying",
                     resourceGetter,
