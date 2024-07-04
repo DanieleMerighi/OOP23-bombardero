@@ -51,7 +51,6 @@ public final class BombarderoController implements Controller {
 
     @Override
     public void endGame() {
-        engine.endGameLoop();
         isGamePaused = true;
         isGameStarted = false;
         graphics.showCard(GraphicsEngine.viewCards.END);
@@ -69,7 +68,6 @@ public final class BombarderoController implements Controller {
     @Override
     public void endGuide() {
         if (isGameStarted) {
-            engine.endGameLoop();
             isGamePaused = true;
             isGameStarted = false;
             graphics.update(getMap(), List.of(), getEnemies(), getTimeLeft());

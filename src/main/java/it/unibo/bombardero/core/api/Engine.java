@@ -24,21 +24,4 @@ public interface Engine extends Runnable {
      */
     void run();
 
-    /** 
-     * Starts running the in the {@#run()} method in a separate
-     * thread. 
-     */
-    void startGameLoop();
-
-    /** 
-     * Ends the game loop, supposedly when the game has ended. 
-     */
-    void endGameLoop();
-
-    /**
-     * Wether the game loop is interrupted or not (and its waiting
-     * got a notification).
-     * @return wether the game loop thread is interrupted or not
-     */
-    boolean isInterrupted();
 }
