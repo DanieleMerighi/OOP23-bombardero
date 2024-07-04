@@ -186,14 +186,14 @@ public abstract class Character {
      * @return true if the character is alive, false otherwise
      */
     public boolean isAlive() {
-        return isAlive;
+        return this.isAlive;
     }
 
     /**
      * Kills the character, setting its alive status to false.
      */
     public void kill() {
-        isAlive = false;
+        this.isAlive = false;
     }
 
     /**
@@ -243,7 +243,7 @@ public abstract class Character {
      * @return true if the character has to place a bomb, false otherwise
      */
     public boolean isHasToPlaceBomb() {
-        return hasToPlaceBomb;
+        return this.hasToPlaceBomb;
     }
 
     /**
@@ -300,7 +300,7 @@ public abstract class Character {
      * @return true if the character has to explode a remote bomb, false otherwise
      */
     public boolean isHasToExplodeRemoteBomb() {
-        return hasToExplodeRemoteBomb;
+        return this.hasToExplodeRemoteBomb;
     }
 
     /**
@@ -332,7 +332,7 @@ public abstract class Character {
      * @return the bomb factory
      */
     public BombFactory getFactory() {
-        return bombFactory;
+        return this.bombFactory;
     }
 
     /**
@@ -341,7 +341,7 @@ public abstract class Character {
      * @return the character's float coordinates
      */
     public GenPair<Float, Float> getCharacterPosition() {
-        return coordinate;
+        return this.coordinate;
     }
 
     /**
@@ -379,7 +379,7 @@ public abstract class Character {
      * @return true if the character is stationary, false otherwise
      */
     public boolean isStationary() {
-        return stationary;
+        return this.stationary;
     }
 
     /**
@@ -397,7 +397,7 @@ public abstract class Character {
      * @return the number of bombs
      */
     public int getNumBomb() {
-        return numBomb;
+        return this.numBomb;
     }
 
     /**
@@ -435,7 +435,7 @@ public abstract class Character {
      * @return the flame range
      */
     public int getFlameRange() {
-        return flameRange;
+        return this.flameRange;
     }
 
     /**
@@ -473,7 +473,7 @@ public abstract class Character {
      * @return the speed
      */
     public float getSpeed() {
-        return speed;
+        return this.speed;
     }
 
     /**
@@ -511,7 +511,7 @@ public abstract class Character {
      * @return an Optional containing the bomb type
      */
     public Optional<PowerUpType> getBombType() {
-        return bombType;
+        return this.bombType;
     }
 
     /**
@@ -530,7 +530,7 @@ public abstract class Character {
      *         otherwise
      */
     public boolean hasLineBomb() {
-        return lineBomb;
+        return this.lineBomb;
     }
 
     /**
@@ -548,7 +548,7 @@ public abstract class Character {
      * @return true if the character has to place a line bomb, false otherwise
      */
     public boolean isHasToPlaceLineBomb() {
-        return hasToPlaceLineBomb;
+        return this.hasToPlaceLineBomb;
     }
 
     /**
@@ -570,7 +570,7 @@ public abstract class Character {
      * @return true if the character has constipation, false otherwise
      */
     public boolean hasConstipation() {
-        return constipation;
+        return this.constipation;
     }
 
     /**
@@ -589,7 +589,7 @@ public abstract class Character {
      * @return true if the character has butterfingers, false otherwise
      */
     public boolean hasButterfingers() {
-        return butterfingers;
+        return this.butterfingers;
     }
 
     /**
@@ -608,7 +608,7 @@ public abstract class Character {
      * @return the skeletonEffectDuration
      */
     public long getSkeletonEffectDuration() {
-        return skeletonEffectDuration;
+        return this.skeletonEffectDuration;
     }
 
     /**
@@ -627,7 +627,7 @@ public abstract class Character {
      * @return the reset effect
      */
     public Optional<Runnable> getResetEffect() {
-        return resetEffect;
+        return this.resetEffect;
     }
 
     /**
@@ -659,7 +659,7 @@ public abstract class Character {
      * Checks whether the character has placed a remote bomb or not.
      */
     private boolean hasPlacedRemoteBomb() {
-        return bombQueue.stream()
+        return this.bombQueue.stream()
                 .anyMatch(bomb -> bomb.getBombType().equals(BombType.BOMB_REMOTE));
     }
 
@@ -672,16 +672,16 @@ public abstract class Character {
      */
     private Bomb createBomb(final GenPair<Integer, Integer> coordinate, final CharacterType type) {
         if (!getBombType().isPresent()) {
-            return bombFactory.createBasicBomb(this.getFlameRange(), coordinate);
+            return this.bombFactory.createBasicBomb(this.getFlameRange(), coordinate);
         }
         switch (this.getBombType().get()) {
             case PIERCING_BOMB:
-                return bombFactory.createPiercingBomb(this.getFlameRange(), coordinate);
+                return this.bombFactory.createPiercingBomb(this.getFlameRange(), coordinate);
             case REMOTE_BOMB:
-                return type.equals(CharacterType.ENEMY) ? bombFactory.createBasicBomb(this.getFlameRange(), coordinate)
-                        : bombFactory.createRemoteBomb(this.getFlameRange(), coordinate);
+                return type.equals(CharacterType.ENEMY) ? this.bombFactory.createBasicBomb(this.getFlameRange(), coordinate)
+                        : this.bombFactory.createRemoteBomb(this.getFlameRange(), coordinate);
             case POWER_BOMB:
-                return bombFactory.createPowerBomb(coordinate);
+                return this.bombFactory.createPowerBomb(coordinate);
             default:
                 return null;
         }
