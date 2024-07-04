@@ -9,6 +9,7 @@ import java.util.Optional;
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.BombFactoryImpl;
+import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.FlameImpl;
 import it.unibo.bombardero.character.Character;
@@ -94,7 +95,7 @@ public class BasicBombarderoGameManager implements GameManager {
         if (!flames.isEmpty()) {
             flames.forEach(f -> f.update(elapsed));
             List.copyOf(flames).stream().filter(f -> f.isExpired()).peek(f -> flames.remove(f))
-                    .forEach(f -> removeFlame(f.getPos()));
+                    .forEach(f -> map.removeFlame(f.getPos()));
         }
         enemies.forEach(enemy -> {
             if (enemy.isAlive()) {
@@ -124,7 +125,7 @@ public class BasicBombarderoGameManager implements GameManager {
     public final Character getPlayer() {
         return this.player;
     }
-
+/* 
     @Override
     public boolean addBomb(final Bomb bomb, final Character character) {
         if (map.addBomb(bomb, bomb.getPos())) { // If the bomb is added to the map
@@ -168,7 +169,7 @@ public class BasicBombarderoGameManager implements GameManager {
             return true;
         }
         return false;
-    }
+    } */
 
     /**
      * If the time is being kept it returns the time passed. This implementation
@@ -194,7 +195,7 @@ public class BasicBombarderoGameManager implements GameManager {
                 .peek(entry -> boombs.remove(entry.getKey()))
                 .peek(entry -> entry.getValue().removeBombFromDeque(entry.getKey()))
                 .map(entry -> entry.getKey().computeFlame(this.getGameMap()))
-                .forEach(set -> set.forEach(entry -> addFlame(entry.getValue(), entry.getKey())));
+                .forEach(set -> set.forEach(entry -> map.addFlame(new FlameImpl(Cell.CellType.FLAME, entry.getValue(), entry.getKey()), entry.getKey())));
     }
 
 }
