@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.function.Function;
 
-import it.unibo.bombardero.cell.Flame;
+import it.unibo.bombardero.cell.FlameImpl;
 import it.unibo.bombardero.view.ResourceGetter;
 import it.unibo.bombardero.view.sprites.api.FlameSprite;
 
@@ -23,7 +23,7 @@ import it.unibo.bombardero.view.sprites.api.FlameSprite;
  */
 public final class BombarderoFlameSprite implements FlameSprite {
 
-    private final Map<Flame.FlameType, Image[]> assets = new HashMap<>();
+    private final Map<FlameImpl.FlameType, Image[]> assets = new HashMap<>();
     private final int coefficient;
     private final int framesPerSprite;
 
@@ -42,7 +42,7 @@ public final class BombarderoFlameSprite implements FlameSprite {
             final int framesPerSprite,
             final Function<Image, Image> imageResizer,
             final ResourceGetter rg) {
-        for (final Flame.FlameType type : Flame.FlameType.values()) {
+        for (final FlameImpl.FlameType type : FlameImpl.FlameType.values()) {
             assets.put(type, SimpleBombarderoSprite.importAssets(getStringFromType(type), type.getTypeString(), rg,
                     imageResizer, framesPerSprite));
         }
@@ -51,20 +51,20 @@ public final class BombarderoFlameSprite implements FlameSprite {
     }
 
     @Override
-    public Image getImage(final long elapsed, final Flame.FlameType flameType) {
+    public Image getImage(final long elapsed, final FlameImpl.FlameType flameType) {
         final int frameToDisplay = (int) (elapsed / coefficient);
         return assets.get(flameType)[frameToDisplay == framesPerSprite ? framesPerSprite - 1 : frameToDisplay];
     }
 
     /** 
      * This method returns the {@link String} name related to the
-     * {@link Flame.FlameType} requested.
+     * {@link FlameImpl.FlameType} requested.
      * <p>
      * The names returned are the ones of the resources.
      * @param type the type of flame
      * @return the name of the resource's type related to the flame's type
      */
-    public static String getStringFromType(final Flame.FlameType type) {
+    public static String getStringFromType(final FlameImpl.FlameType type) {
         return switch (type) {
             case FLAME_BODY_HORIZONTAL -> "hor";
             case FLAME_BODY_VERTICAL -> "vert";

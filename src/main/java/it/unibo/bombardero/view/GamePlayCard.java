@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import javax.swing.JPanel;
 
 import it.unibo.bombardero.cell.Cell;
+import it.unibo.bombardero.cell.FlameImpl;
 import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.utils.Utils;
@@ -175,7 +176,7 @@ public class GamePlayCard extends JPanel {
                             };
                             break;
                         case FLAME: 
-                            final Flame fl = (Flame) entry;
+                            final Flame fl = (FlameImpl) entry;
                             img = flamesSprite.getImage(fl.getTimePassed(), fl.getFlameType());
                             break;
                         default:

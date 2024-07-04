@@ -14,7 +14,7 @@ import it.unibo.bombardero.map.impl.GameMapImpl;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
-import it.unibo.bombardero.cell.Flame;
+import it.unibo.bombardero.cell.FlameImpl;
 import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.character.ai.impl.GraphBuilderImpl;
 
@@ -67,9 +67,9 @@ public class TestGraphBuilder {
     public void testMapSizeWithObastacles() {
         GameMap baseMap = new GameMapImpl(true);
         // CHECKSTYLE: MagicNumber OFF
-        baseMap.addFlame(new Flame(CellType.FLAME, null, new GenPair<Integer, Integer>(0, 2)), new GenPair<Integer, Integer>(0, 2));
-        baseMap.addFlame(new Flame(CellType.FLAME, null, new GenPair<Integer, Integer>(0, 4)), new GenPair<Integer, Integer>(0, 4));
-        baseMap.addFlame(new Flame(CellType.FLAME, null, new GenPair<Integer, Integer>(5, 6)), new GenPair<Integer, Integer>(5, 6));
+        baseMap.addFlame(new FlameImpl(CellType.FLAME, null, new GenPair<Integer, Integer>(0, 2)), new GenPair<Integer, Integer>(0, 2));
+        baseMap.addFlame(new FlameImpl(CellType.FLAME, null, new GenPair<Integer, Integer>(0, 4)), new GenPair<Integer, Integer>(0, 4));
+        baseMap.addFlame(new FlameImpl(CellType.FLAME, null, new GenPair<Integer, Integer>(5, 6)), new GenPair<Integer, Integer>(5, 6));
         // CHECKSTYLE: MagicNumber ON
         this.graph = GraphBuilderImpl.buildFromMap(baseMap);
         assertEquals(VERTEX_SIZE, this.graph.vertexSet().size());

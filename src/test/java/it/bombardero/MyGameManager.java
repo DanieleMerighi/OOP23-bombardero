@@ -2,7 +2,7 @@ package it.bombardero;
 
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.BombFactoryImpl;
-import it.unibo.bombardero.cell.Flame.FlameType;
+import it.unibo.bombardero.cell.FlameImpl.FlameType;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;

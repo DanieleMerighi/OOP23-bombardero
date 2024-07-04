@@ -1,7 +1,6 @@
 package it.unibo.bombardero.view;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -12,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -23,7 +21,6 @@ import it.unibo.bombardero.core.api.Controller;
 
 public final class MenuCard extends JPanel {
 
-    private final transient BombarderoGraphics graphicsEngine;
     private final transient JButton play;
     private final transient JButton guide;
 
@@ -31,8 +28,6 @@ public final class MenuCard extends JPanel {
     private final transient Image background;
 
     public MenuCard(final Controller controller, final BombarderoGraphics graphicsEngine, final ResourceGetter rg) {
-        this.graphicsEngine = graphicsEngine;
-
         // CHECKSTYLE: MagicNumber OFF
         final Image logo = graphicsEngine.getResizingEngine().getScaledMenuLogoImage(rg.loadImage("menu/logo"));
         final Image playImage = graphicsEngine.getResizingEngine().getScaledButtonImage(rg.loadImage("overlay/buttons/PLAY"));

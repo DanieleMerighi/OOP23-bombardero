@@ -10,7 +10,7 @@ import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.BombFactoryImpl;
 import it.unibo.bombardero.cell.Cell.CellType;
-import it.unibo.bombardero.cell.Flame;
+import it.unibo.bombardero.cell.FlameImpl;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;
@@ -35,7 +35,7 @@ public class BasicBombarderoGameManager implements GameManager {
 
     private final GameMap map;
     private final Map<Bomb, Character> boombs = new HashMap<>();
-    private final List<Flame> flames = new ArrayList<>();
+    private final List<FlameImpl> flames = new ArrayList<>();
     private final List<Character> enemies = new ArrayList<>();
     private final Character player;
     private final Controller controller;
@@ -150,8 +150,8 @@ public class BasicBombarderoGameManager implements GameManager {
     }
 
     @Override
-    public void addFlame(final Flame.FlameType type, final GenPair<Integer, Integer> pos) {
-        final Flame f = new Flame(CellType.FLAME, type, pos);
+    public void addFlame(final FlameImpl.FlameType type, final GenPair<Integer, Integer> pos) {
+        final FlameImpl f = new FlameImpl(CellType.FLAME, type, pos);
         flames.add(f);
         map.addFlame(f, pos);
     }

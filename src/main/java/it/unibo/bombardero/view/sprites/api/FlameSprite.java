@@ -2,7 +2,7 @@ package it.unibo.bombardero.view.sprites.api;
 
 import java.awt.Image;
 
-import it.unibo.bombardero.cell.Flame;
+import it.unibo.bombardero.cell.FlameImpl;
 
 /**
  * This interface models a specific sprite designed
@@ -31,6 +31,6 @@ public interface FlameSprite {
      * @param flameType the shape of flame that has to be returned
      * @return the image of the flame in the specific form and life moment
      */
-    Image getImage(long elapsed, Flame.FlameType flameType);
+    Image getImage(long elapsed, FlameImpl.FlameType flameType);
 
 }
