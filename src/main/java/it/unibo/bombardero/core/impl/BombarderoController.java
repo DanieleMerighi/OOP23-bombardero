@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.core.api.Controller;
-import it.unibo.bombardero.core.api.Engine;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.guide.impl.BombarderoGuideManager;
 import it.unibo.bombardero.map.api.GenPair;
@@ -27,7 +26,6 @@ public final class BombarderoController implements Controller {
 
     private final BombarderoGraphics graphics;
     private GameManager manager;
-    private Engine engine;
 
     private boolean isGamePaused = true;
     private boolean isGameStarted = false;

@@ -18,7 +18,7 @@ public final class BombarderoEngine extends Thread implements Engine {
  
     //private final GameManager manager;
     //private final BombarderoGraphics graphics;
-    private Controller controller;
+    private final Controller controller;
     private boolean isGameOver;
 
     /**

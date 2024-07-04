@@ -10,7 +10,6 @@ import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.BombFactory;
 import it.unibo.bombardero.cell.BombFactoryImpl;
 import it.unibo.bombardero.cell.Cell;
-import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.FlameImpl;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Enemy;
