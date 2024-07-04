@@ -57,6 +57,10 @@ public class MyGameManager implements GameManager {
         enemy.setCharacterPosition(new GenPair<Float, Float>(x + CENTER, y + CENTER));
     }
 
+    public void addBomb(final GenPair<Integer,Integer> pos) {
+        this.map.addBomb(new MyBomb(pos), pos);
+    }
+
     /**
      * Gets the player.
      *
