@@ -57,7 +57,7 @@ class TestInput {
         pressSpace();
 
         // Verify that the setHasToPlaceBomb method was called on the player
-        assertTrue(controller.getMainPlayer().getHasToPlaceBomb());
+        assertTrue(controller.getMainPlayer().isHasToPlaceBomb());
     }
 
     /**
@@ -73,7 +73,7 @@ class TestInput {
         keyboardInput.keyTyped(keyEvent);
 
         // Verify that the setHasToPlaceLineBomb method was called on the player
-        assertTrue(controller.getMainPlayer().getHasToPlaceLineBomb());
+        assertTrue(controller.getMainPlayer().isHasToPlaceLineBomb());
     }
 
     /**
@@ -89,7 +89,7 @@ class TestInput {
         keyboardInput.keyTyped(keyEvent);
 
         // Verify that the setHasToExplodeRemoteBomb method was called on the player
-        assertTrue(controller.getMainPlayer().getHasToExplodeRemoteBomb());
+        assertTrue(controller.getMainPlayer().isHasToExplodeRemoteBomb());
     }
 
     /**
@@ -201,7 +201,7 @@ class TestInput {
         // Verify that the player is facing the UP direction
         assertEquals(Direction.UP, controller.getMainPlayer().getFacingDirection());
         // Verify that the setHasToPlaceBomb method was called on the player
-        assertTrue(controller.getMainPlayer().getHasToPlaceBomb());
+        assertTrue(controller.getMainPlayer().isHasToPlaceBomb());
     }
 
     /**
