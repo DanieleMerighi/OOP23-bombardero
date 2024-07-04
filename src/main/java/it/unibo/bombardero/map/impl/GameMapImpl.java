@@ -116,7 +116,7 @@ public final class GameMapImpl implements GameMap {
         if (this.isBreakableWall(coordinate)) {
             this.map.remove(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()));
             this.map.put(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()),
-                    powerupFactory.createPowerUp(coordinate));
+                    powerupFactory.createPowerUp());
         }
     }
 

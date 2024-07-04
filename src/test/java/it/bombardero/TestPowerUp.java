@@ -29,12 +29,12 @@ import it.unibo.bombardero.map.api.GenPair;
 class TestPowerUp {
 
     private static final int FPS = 60;
-    private static final int SPAWN_INT_COORDINATES = 0;
+   // private static final int SPAWN_INT_COORDINATES = 0;
     private static final int STANDARD_ELAPSED_TIME = 100;
     private static final long SECONDS_TO_MILLISECONDS = 1000;
     private MyGameManager manager;
     private final PowerUpFactory factory = new PowerUpFactoryImpl();
-    private GenPair<Integer, Integer> powerUpSpawn;
+    // private GenPair<Integer, Integer> powerUpSpawn;
     private PowerUp powerUP;
 
     /**
@@ -44,7 +44,7 @@ class TestPowerUp {
     @BeforeEach
     void setUp() {
         this.manager = new MyGameManager();
-        powerUpSpawn = new GenPair<Integer, Integer>(SPAWN_INT_COORDINATES, SPAWN_INT_COORDINATES);
+        // powerUpSpawn = new GenPair<Integer, Integer>(SPAWN_INT_COORDINATES, SPAWN_INT_COORDINATES);
     }
 
     /**
@@ -55,7 +55,7 @@ class TestPowerUp {
         IntStream.range(0, 100)
             .forEach(n -> {
                 this.manager = new MyGameManager(); // Reset character
-                powerUP = factory.createPowerUp(powerUpSpawn);
+                powerUP = factory.createPowerUp();
                 powerUP.applyEffect(this.manager.getPlayer());
         });
         if (this.manager.getPlayer().getResetEffect().isPresent()) {
@@ -71,7 +71,7 @@ class TestPowerUp {
     @Test
     void testRandomSkullEffect() {
         // Create skull powerup
-        powerUP = new PowerUpImpl(PowerUpType.SKULL, powerUpSpawn, new SkullEffect());
+        powerUP = new PowerUpImpl(PowerUpType.SKULL, new SkullEffect());
         // Apply skull effect to the player
         powerUP.applyEffect(this.manager.getPlayer());
 

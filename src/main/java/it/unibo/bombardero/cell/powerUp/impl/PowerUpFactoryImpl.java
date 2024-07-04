@@ -14,7 +14,6 @@ import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.cell.powerup.api.PowerUpEffect;
 import it.unibo.bombardero.cell.powerup.api.PowerUpFactory;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
-import it.unibo.bombardero.map.api.GenPair;
 
 /**
  * Implementation of the PowerUpFactory interface.
@@ -48,24 +47,23 @@ public final class PowerUpFactoryImpl implements PowerUpFactory {
     }
 
     /**
-     * Creates a new PowerUp instance at the specified position with a randomly selected type.
+     * Creates a new PowerUp instance with a randomly selected type.
      * <p>
      * This method uses a weighted random selection process to determine the type of the PowerUp
-     * before instantiating it. The position of the new PowerUp is specified by the given coordinates.
+     * before instantiating it.
      * </p>
      * 
-     * @param position the coordinates where the PowerUp will be placed on the map
      * @return a new instance of PowerUp with a specific type and effect
-     * @throws IllegalArgumentException if there is no effect  for the selected PowerUp type
+     * @throws IllegalArgumentException if there is no effect for the selected PowerUp type
      */
     @Override
-    public PowerUp createPowerUp(final GenPair<Integer, Integer> position) {
+    public PowerUp createPowerUp() {
         final PowerUpType powerUpType = WEIGHTED_POWERUP_DISTRIBUTION.sample(); // Extract a random weighted PowerUp
         final Supplier<PowerUpEffect> supplier = powerUpEffectMap.get(powerUpType); // Get the power-Up effect
         if (supplier == null) { // Checks if the effect is null
             throw new IllegalArgumentException("Unknown power-up effect for: " + powerUpType);
         }
-        return new PowerUpImpl(powerUpType, position, supplier.get());
+        return new PowerUpImpl(powerUpType, supplier.get());
     }
 
     /**
