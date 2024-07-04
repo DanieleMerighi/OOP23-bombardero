@@ -90,6 +90,7 @@ public final class MapGeneratorImpl implements MapGenerator {
      * of spiral traversal to the game map.
      * @return the list of walls in collpase-order, the first element being the first to fall 
      */
+    @Override
     public List<GenPair<Integer, Integer>> generateCollapseOrder() {
         final List<GenPair<Integer, Integer>> order = new ArrayList<>();
         int top = 0, bottom = Utils.MAP_ROWS - 1, left = 0, right = Utils.MAP_COLS - 1;

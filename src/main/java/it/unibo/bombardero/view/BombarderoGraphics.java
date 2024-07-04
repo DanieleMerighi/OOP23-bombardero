@@ -31,9 +31,9 @@ public final class BombarderoGraphics implements GraphicsEngine {
     private final JPanel deck;
     private final CardLayout layout = new CardLayout();
 
-    private GameCard gameCard;
+    private final GameCard gameCard;
     private final MenuCard menuCard;
-    private GuideCard guideCard;
+    private final GuideCard guideCard;
     private viewCards currentShowedCard = viewCards.MENU;
 
     /**
