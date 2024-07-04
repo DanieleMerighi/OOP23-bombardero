@@ -48,7 +48,7 @@ public final class ResizingEngine {
     private final Dimension menuLogoSize;
 
     public ResizingEngine(final GraphicsEngine graphics) {
-        int resolution = Toolkit.getDefaultToolkit().getScreenResolution();
+        final int resolution = Toolkit.getDefaultToolkit().getScreenResolution();
         if (resolution >= 200) {
             currentScale = 1.25;
         }
@@ -72,7 +72,7 @@ public final class ResizingEngine {
      * The initial windows size is calculated scaling the map and adding some grass
      * on the sides, other than the insets
      */
-    public Dimension getGameWindowSize(JFrame frame) {
+    public Dimension getGameWindowSize(final JFrame frame) {
         return new Dimension(
                 gameWindowSize.width,
                 gameWindowSize.height);
@@ -181,14 +181,14 @@ public final class ResizingEngine {
     /**
      * Returns the upper-left corner of the cell at {@link #cooordinate}
      */
-    public Dimension getCellPlacingPoint(GenPair<Integer, Integer> coordinate) {
+    public Dimension getCellPlacingPoint(final GenPair<Integer, Integer> coordinate) {
         return new Dimension(
                 entityPlacingPoint.width + (int) (getScaledCellSize() * coordinate.x()),
                 entityPlacingPoint.height + (int) (getScaledCellSize() * coordinate.y()));
     }
 
-    public Dimension getBombPlacingPoint(GenPair<Integer, Integer> coordinate) {
-        Dimension placingPoint = getCellPlacingPoint(coordinate);
+    public Dimension getBombPlacingPoint(final GenPair<Integer, Integer> coordinate) {
+        final Dimension placingPoint = getCellPlacingPoint(coordinate);
         return new Dimension(
                 placingPoint.width + (int) (getScaledCellSize() / 2),
                 placingPoint.height + (int) (getScaledCellSize() / 2));
@@ -238,8 +238,8 @@ public final class ResizingEngine {
 
     private Dimension initMapPlacingPoint() {
         return new Dimension(
-                gameWindowSize.width / 2 - getMapSize().width / 2 - (frameInsets.right + frameInsets.left),
-                gameWindowSize.height / 2 - getMapSize().height / 2 - (frameInsets.top + frameInsets.bottom));
+                gameWindowSize.width / 2 - getMapSize().width / 2 - frameInsets.right + frameInsets.left,
+                gameWindowSize.height / 2 - getMapSize().height / 2 - frameInsets.top + frameInsets.bottom);
     }
 
     public Dimension initGameWindowSize(final JFrame frame) {
@@ -266,21 +266,21 @@ public final class ResizingEngine {
     }
 
     private Dimension initTimerPosition() {
-        Dimension clockPos = getImageClockPosition();
+        final Dimension clockPos = getImageClockPosition();
         return new Dimension(
                 (int) Math.floor(clockPos.width + getScaledCellSize() * 1.5),
                 (int) Math.floor(getMapPlacingPoint().height + getScaledCellSize() * 1.2));
     }
 
     private Dimension initWASDPosition() {
-        Dimension cell = getCharacterPlacingPoint(GuideManager.PLAYER_GUIDE_SPAWNPOINT);
+        final Dimension cell = getCharacterPlacingPoint(GuideManager.PLAYER_GUIDE_SPAWNPOINT);
         return new Dimension(
                 cell.width - 39,
                 cell.height + 2 * getScaledCellSize());
     }
 
     private Dimension initSpacePosition() {
-        Dimension cell = getCellPlacingPoint(GuideManager.CRATE_GUIDE_SPAWNPOINT);
+        final Dimension cell = getCellPlacingPoint(GuideManager.CRATE_GUIDE_SPAWNPOINT);
         return new Dimension(
                 cell.width - getScaledCellSize(),
                 (int) Math.floor(cell.height + 1.5 * getScaledCellSize()));
