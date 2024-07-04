@@ -75,6 +75,7 @@ public enum Direction {
      * @param characterPos The current position of the character.
      * @return A list of diagonal cells relative to the direction and character
      *         position.
+     * @throws IllegalArgumentException if the specified direction is invalid.
      */
     public List<GenPair<Integer, Integer>> getDiagonals(final Direction dir,
             final GenPair<Integer, Integer> characterPos) {
@@ -97,7 +98,7 @@ public enum Direction {
                         new GenPair<Integer, Integer>(characterPos.x() + 1, characterPos.y() + 1));
                 break;
             default:
-                return null;
+                throw new IllegalArgumentException("Invalid direction: " + dir);
         }
         return cells.stream()
                 .filter(c -> c.x() >= 0 && c.y() >= 0 && c.x() < Utils.MAP_COLS && c.y() < Utils.MAP_ROWS)
