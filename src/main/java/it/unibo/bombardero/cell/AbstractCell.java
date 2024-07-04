@@ -2,7 +2,6 @@ package it.unibo.bombardero.cell;
 
 import java.util.Optional;
 
-import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.physics.api.BoundingBox;
 
 /**
@@ -15,7 +14,7 @@ import it.unibo.bombardero.physics.api.BoundingBox;
  */
 public abstract class AbstractCell implements Cell {
 
-    private BoundingBox bBox;
+    private final Optional<BoundingBox> bBox;
     private final CellType type;
     private final boolean boundingCollision;
 
@@ -25,8 +24,10 @@ public abstract class AbstractCell implements Cell {
             final BoundingBox bBox) {
         this.type = type;
         this.boundingCollision = boundingCollision;
-        if (this.haveBoundingCollision()) {
-            this.bBox = bBox;
+        if (boundingCollision) {
+            this.bBox = Optional.of(bBox);
+        } else {
+            this.bBox = Optional.empty();
         }
     }
 
@@ -42,6 +43,6 @@ public abstract class AbstractCell implements Cell {
 
     @Override
     public Optional<BoundingBox> getBoundingBox() {
-        return Optional.of(bBox);
+        return this.bBox;
     }
 }
