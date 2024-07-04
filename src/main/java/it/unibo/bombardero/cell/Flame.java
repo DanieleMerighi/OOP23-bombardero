@@ -5,13 +5,13 @@ import it.unibo.bombardero.map.api.GenPair;
 
 public interface Flame extends Cell{
 
-    public void update(final long timeElapsed);
+    void update(long timeElapsed);
 
-    public boolean isExpired();
+    boolean isExpired();
 
-    public GenPair<Integer, Integer> getPos();
+    GenPair<Integer, Integer> getPos();
 
-    public FlameType getFlameType();
+    FlameType getFlameType();
 
-    public long getTimePassed();
+    long getTimePassed();
 }
