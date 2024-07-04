@@ -60,7 +60,7 @@ public class Flame extends AbstractCell {
         this.pos = pos;
     }
 
-    public void update(long timeElapsed) {
+    public void update(final long timeElapsed) {
         this.countTime += timeElapsed;
         if (countTime > 500) {
             expired = true;
