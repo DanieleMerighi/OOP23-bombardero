@@ -17,7 +17,6 @@ import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Functions;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.GenPair;
-import it.unibo.bombardero.physics.api.BoundingBox;
 import it.unibo.bombardero.utils.Utils;
 
 /**
@@ -44,8 +43,8 @@ public class Enemy extends Character {
      * 
      * @param bBox          the hitbox of the enemy
      */
-    public Enemy(final GenPair<Float, Float> coord, final BombFactory bombFactory, BoundingBox bBox) {
-        super(coord, bombFactory, bBox);
+    public Enemy(final GenPair<Float, Float> coord, final BombFactory bombFactory) {
+        super(coord, bombFactory);
         setStationary(true);
         setFacingDirection(Direction.UP);
     }

@@ -1,5 +1,6 @@
 package it.unibo.bombardero.view;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -9,6 +10,8 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
@@ -25,19 +28,16 @@ public final class MenuCard extends JPanel {
     private final transient JButton guide;
 
     /* Resources: */
-    private final transient Image logo;
-    private final transient Image playImage;
-    private final transient Image guideImage;
-    private final transient BufferedImage background;
+    private final transient Image background;
 
     public MenuCard(final Controller controller, final BombarderoGraphics graphicsEngine, final ResourceGetter rg) {
         this.graphicsEngine = graphicsEngine;
 
         // CHECKSTYLE: MagicNumber OFF
-        logo = graphicsEngine.getResizingEngine().getScaledMenuLogoImage(rg.loadImage("menu/logo"));
-        playImage = graphicsEngine.getResizingEngine().getScaledButtonImage(rg.loadImage("overlay/buttons/PLAY"));
-        guideImage = graphicsEngine.getResizingEngine().getScaledButtonImage(rg.loadImage("overlay/buttons/GUIDE"));
-        background = rg.loadImage("menu/background");
+        final Image logo = graphicsEngine.getResizingEngine().getScaledMenuLogoImage(rg.loadImage("menu/logo"));
+        final Image playImage = graphicsEngine.getResizingEngine().getScaledButtonImage(rg.loadImage("overlay/buttons/PLAY"));
+        final Image guideImage = graphicsEngine.getResizingEngine().getScaledButtonImage(rg.loadImage("overlay/buttons/GUIDE"));
+        background = graphicsEngine.getResizingEngine().getScaledBackgroundImage(rg.loadImage("menu/background"));
         // CHECKSTYLE: MagicNumber ON
 
         this.setLayout(new GridBagLayout());
@@ -75,7 +75,7 @@ public final class MenuCard extends JPanel {
 
         // Configurazione del bottone "Guide"
         gbc.gridx = 0;
-        gbc.gridy = 2; // Cambiato da 2 a 3 per evitare sovrapposizione con "Play"
+        gbc.gridy = 2;
         gbc.gridheight = 1;
         gbc.gridwidth = 1;
         gbc.anchor = GridBagConstraints.CENTER; // Utilizza anchor per centrare la componente
@@ -92,6 +92,17 @@ public final class MenuCard extends JPanel {
             
         });
 
+        play.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                play.setBackground(Color.YELLOW); // Cambia colore quando viene premuto
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                play.setBackground(Color.BLUE); // Ripristina colore originale quando viene rilasciato
+            }
+        });
         guide.addActionListener(new ActionListener() {
 
             @Override
@@ -106,9 +117,9 @@ public final class MenuCard extends JPanel {
     public void paintComponent(final Graphics g) {
         super.paintComponent(g);
         final Graphics2D g2d = (Graphics2D)g;
-        final Dimension cropSize = graphicsEngine.getFrameSize();
+        //final Dimension cropSize = graphicsEngine.getFrameSize();
         /* TODO: original background image is 4k, the image is to be scaled and the parameteres modified */
-        final Image img = background.getSubimage(3840 - cropSize.width, 2160 - cropSize.height, cropSize.width, cropSize.height);
-        g2d.drawImage(img, 0, 0, null);
+        //final Image img = background.getSubimage(3840 - cropSize.width, 2160 - cropSize.height, cropSize.width, cropSize.height);
+        g2d.drawImage(background, 0, 0, null);
     }
 }

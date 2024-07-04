@@ -21,7 +21,6 @@ import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.physics.impl.BombarderoCollision;
-import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 
 /**
  * This class implements the concepts expressed in the
@@ -63,10 +62,8 @@ public class BasicBombarderoGameManager implements GameManager {
         map = new GameMapImpl(generateWalls);
         ce = new BombarderoCollision();
         bombFactory = new BombFactoryImpl();
-        this.player = new Player(playerSpawnPoint, bombFactory,
-                new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
-        enemiesSpawnpoint.forEach(spawnpoint -> enemies.add(new Enemy(spawnpoint, bombFactory,
-                new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT))));
+        this.player = new Player(playerSpawnPoint, bombFactory);
+        enemiesSpawnpoint.forEach(spawnpoint -> enemies.add(new Enemy(spawnpoint, bombFactory)));
     }
 
     /**

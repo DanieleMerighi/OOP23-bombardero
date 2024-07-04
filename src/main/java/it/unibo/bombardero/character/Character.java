@@ -12,6 +12,7 @@ import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.physics.api.BoundingBox;
+import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 
 /**
  * Abstract class representing a character in the game.
@@ -142,10 +143,10 @@ public abstract class Character {
      * @param bombFactory   the factory to create bombs
      * @param bBox          the hitbox of the character
      */
-    public Character(final GenPair<Float, Float> coord, final BombFactory bombFactory, final BoundingBox bBox) {
+    public Character(final GenPair<Float, Float> coord, final BombFactory bombFactory) {
         this.coordinate = coord;
         this.bombFactory = bombFactory;
-        this.bBox = bBox;
+        this.bBox = new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT);
     }
 
     /**

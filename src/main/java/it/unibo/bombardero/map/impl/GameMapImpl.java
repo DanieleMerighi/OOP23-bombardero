@@ -17,7 +17,6 @@ import it.unibo.bombardero.cell.powerup.impl.PowerUpFactoryImpl;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.map.api.MapGenerator;
-import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 import it.unibo.bombardero.utils.Utils;
 
 /**
@@ -100,15 +99,13 @@ public final class GameMapImpl implements GameMap {
     @Override
     public void addUnbreakableWall(final GenPair<Integer, Integer> coordinate) {
         this.map.put(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()),
-                new Wall(Cell.CellType.WALL_UNBREAKABLE,
-                        new RectangleBoundingBox(coordinate.x(), coordinate.y(), 1.0f, 1.0f)));
+                new Wall(Cell.CellType.WALL_UNBREAKABLE, coordinate));
     }
 
     @Override
     public void addBreakableWall(final GenPair<Integer, Integer> coordinate) {
         this.map.put(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()),
-                new Wall(Cell.CellType.WALL_BREAKABLE,
-                        new RectangleBoundingBox(coordinate.x(), coordinate.y(), 1.0f, 1.0f)));
+                new Wall(Cell.CellType.WALL_BREAKABLE, coordinate));
     }
 
     @Override
