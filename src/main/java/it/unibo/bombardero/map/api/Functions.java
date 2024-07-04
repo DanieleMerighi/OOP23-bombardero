@@ -2,7 +2,12 @@ package it.unibo.bombardero.map.api;
 
 import java.util.function.Function;
 
-public class Functions {
+//utility classs, leave the constructor and the final
+public final class Functions {
+
+    private Functions(){
+
+    }
 
     public static Function<GenPair<Integer, Integer>, GenPair<Integer, Integer>> sumInt(
             final GenPair<Integer, Integer> p) {
@@ -10,7 +15,7 @@ public class Functions {
     }
 
     public static Function<GenPair<Integer, Integer>, GenPair<Integer, Integer>> multiplyInt(final int scale) {
-        return pair -> new GenPair<>((pair.x() * scale), (pair.y() * scale));
+        return pair -> new GenPair<>(pair.x() * scale, pair.y() * scale);
     }
 
     public static Function<GenPair<Float, Float>, GenPair<Float, Float>> sumFloat(final GenPair<Float, Float> p) {
@@ -18,16 +23,16 @@ public class Functions {
     }
 
     public static Function<GenPair<Float, Float>, GenPair<Float, Float>> multiplyFloat(final float scale) {
-        return pair -> new GenPair<>((pair.x() * scale), (pair.y() * scale));
+        return pair -> new GenPair<>(pair.x() * scale, pair.y() * scale);
     }
 
     public static Function<GenPair<Float, Float>, GenPair<Float, Float>> subtractFloat(final GenPair<Float, Float> p) {
-        return pair -> new GenPair<>((pair.x() - p.x()), (pair.y() - p.y()));
+        return pair -> new GenPair<>(pair.x() - p.x(), pair.y() - p.y());
     }
 
     public static Function<GenPair<Float, Float>, GenPair<Float, Float>> subtractFloatAndInt(
             final GenPair<Integer, Integer> p) {
-        return pair -> new GenPair<>((pair.x() - p.x()), (pair.y() - p.y()));
+        return pair -> new GenPair<>(pair.x() - p.x(), pair.y() - p.y());
     }
 
     public static Function<GenPair<Float, Float>, Float> distanceTo(final GenPair<Float, Float> p) {
