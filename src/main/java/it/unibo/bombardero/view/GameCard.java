@@ -11,7 +11,7 @@ import java.util.Date;
 import java.awt.GridLayout;
 import javax.swing.JLabel;
 
-import it.unibo.bombardero.view.GraphicsEngine.endGameState;
+import it.unibo.bombardero.view.GraphicsEngine.EndGameState;
 
 import java.awt.Font;
 import javax.swing.ImageIcon;
@@ -120,7 +120,7 @@ public final class GameCard extends GamePlayCard {
      * @param stateToDisplay the state to be displayed
      * @see {@link endGameState}
      */
-    public void displayEndGameState(final endGameState stateToDisplay) {
+    public void displayEndGameState(final EndGameState stateToDisplay) {
         blurView();
     }
 

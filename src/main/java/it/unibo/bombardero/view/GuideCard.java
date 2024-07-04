@@ -19,7 +19,7 @@ import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.map.api.GenPair;
-import it.unibo.bombardero.view.GraphicsEngine.viewCards;
+import it.unibo.bombardero.view.GraphicsEngine.ViewCards;
 import it.unibo.bombardero.view.sprites.api.Sprite;
 import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
 
@@ -124,7 +124,7 @@ public final class GuideCard extends GamePlayCard {
 
         back.addActionListener(e -> {
             controller.endGuide();
-            graphics.showCard(viewCards.MENU);
+            graphics.showCard(ViewCards.MENU);
         });
 
         start.addActionListener(e -> {

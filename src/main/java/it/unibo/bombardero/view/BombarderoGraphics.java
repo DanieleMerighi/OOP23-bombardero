@@ -33,7 +33,7 @@ public final class BombarderoGraphics implements GraphicsEngine {
 
     private final GameCard gameCard;
     private final GuideCard guideCard;
-    private viewCards currentShowedCard = viewCards.MENU;
+    private ViewCards currentShowedCard = ViewCards.MENU;
 
     /**
      * Creates a new Graphics engine, creating and showing the window frame toghether
@@ -59,23 +59,23 @@ public final class BombarderoGraphics implements GraphicsEngine {
         this.guideCard = new GuideCard(controller, this, Map.of(), List.of(), List.of());
         this.gameCard = new GameCard(this);
 
-        deck.add(viewCards.GUIDE.getStringId(), guideCard);
-        layout.addLayoutComponent(guideCard, viewCards.GUIDE.getStringId());
+        deck.add(ViewCards.GUIDE.getStringId(), guideCard);
+        layout.addLayoutComponent(guideCard, ViewCards.GUIDE.getStringId());
 
-        deck.add(viewCards.MENU.getStringId(), menuCard);
-        layout.addLayoutComponent(menuCard, viewCards.MENU.getStringId());
+        deck.add(ViewCards.MENU.getStringId(), menuCard);
+        layout.addLayoutComponent(menuCard, ViewCards.MENU.getStringId());
 
-        deck.add(viewCards.GAME.getStringId(), gameCard);
-        layout.addLayoutComponent(gameCard, viewCards.GAME.getStringId());
+        deck.add(ViewCards.GAME.getStringId(), gameCard);
+        layout.addLayoutComponent(gameCard, ViewCards.GAME.getStringId());
         deck.validate();
         
         frame.add(deck);
-        showCard(viewCards.MENU);
+        showCard(ViewCards.MENU);
         frame.setVisible(true);
     }
 
     @Override
-    public void showCard(final viewCards cardName) {
+    public void showCard(final ViewCards cardName) {
         layout.show(deck, cardName.getStringId());
         currentShowedCard = cardName;
         frame.requestFocus();
@@ -87,12 +87,12 @@ public final class BombarderoGraphics implements GraphicsEngine {
         final List<Character> playerList,
         final List<Character> enemiesList,
         final Optional<Long> timeLeft) {
-        if (viewCards.GAME.equals(currentShowedCard)) {
+        if (ViewCards.GAME.equals(currentShowedCard)) {
             gameCard.update(map, playerList, enemiesList);
             gameCard.setTimeLeft(timeLeft.get());
             gameCard.repaint(0);
         }
-        else if (viewCards.GUIDE.equals(currentShowedCard)) {
+        else if (ViewCards.GUIDE.equals(currentShowedCard)) {
             guideCard.update(map, playerList, enemiesList);
             guideCard.repaint(0);
         }
@@ -125,7 +125,7 @@ public final class BombarderoGraphics implements GraphicsEngine {
         guideCard.displayEndGuide();
     }
  
-    public void displayEndGame(final endGameState stateToDisplay) {
+    public void displayEndGame(final EndGameState stateToDisplay) {
         gameCard.displayEndGameState(stateToDisplay);
     }
 

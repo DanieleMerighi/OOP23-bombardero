@@ -12,7 +12,7 @@ import it.unibo.bombardero.map.api.GenPair;
 
 public interface GraphicsEngine {
 
-    enum viewCards {
+    enum ViewCards {
         GAME("game"),
         MENU("menu"),
         GUIDE("guide"),
@@ -20,7 +20,7 @@ public interface GraphicsEngine {
 
         private String id;
 
-        private viewCards(final String cardName) {
+        private ViewCards(final String cardName) {
             id = cardName;
         }
 
@@ -29,12 +29,12 @@ public interface GraphicsEngine {
         }
     }
 
-    enum endGameState {
+    enum EndGameState {
         WIN,
         LOSE;
     }
 
-    void showCard(viewCards cardName);
+    void showCard(ViewCards cardName);
 
     void update(Map<GenPair<Integer, Integer>, Cell> map, List<Character> playerList, List<Character> enemiesList, final Optional<Long> timeLeft);
 

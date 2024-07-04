@@ -44,14 +44,14 @@ public final class BombarderoController implements Controller {
         this.manager = new FullBombarderoGameManager(this);
         isGamePaused = false;
         isGameStarted = true;
-        graphics.showCard(GraphicsEngine.viewCards.GAME);
+        graphics.showCard(GraphicsEngine.ViewCards.GAME);
     }
 
     @Override
     public void endGame() {
         isGamePaused = true;
         isGameStarted = false;
-        graphics.showCard(GraphicsEngine.viewCards.END);
+        graphics.showCard(GraphicsEngine.ViewCards.END);
     }
 
     @Override
@@ -59,7 +59,7 @@ public final class BombarderoController implements Controller {
         this.manager = new BombarderoGuideManager(this);
         isGamePaused = false;
         isGameStarted = true;
-        graphics.showCard(GraphicsEngine.viewCards.GUIDE);
+        graphics.showCard(GraphicsEngine.ViewCards.GUIDE);
         toggleMessage(BombarderoViewMessages.EXPLAIN_MOVEMENT);
     }
 
