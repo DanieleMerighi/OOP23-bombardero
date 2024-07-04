@@ -22,7 +22,7 @@ public class BombFactoryImpl implements BombFactory {
         return new BasicBomb(BombType.BOMB_PIERCING, range, pos, new RectangleBoundingBox(pos.x(), pos.y(), 1.0f, 1.0f)) {
 
             @Override
-            public boolean isBreckableWall(final GenPair<Integer, Integer> pos, GameMap map) {
+            public boolean isBreckableWall(final GenPair<Integer, Integer> pos, final GameMap map) {
                 if (map.isBreakableWall(pos) && isLastWall(pos)) {
                     map.removeBreakableWall(pos);
                     return true;
