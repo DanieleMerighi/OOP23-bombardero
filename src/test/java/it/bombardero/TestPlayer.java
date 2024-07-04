@@ -69,7 +69,7 @@ class TestPlayer {
         // Setting player to not stationary
         this.manager.getPlayer().setStationary(false);
         // Setting player speed
-        this.manager.getPlayer().setSpeed(Character.getStartingSpeed());
+        this.manager.getPlayer().setSpeed(Character.STARTING_SPEED);
 
         // Setting the number of update and calling them
         final int updateNumeber = FPS; // Number of updates done

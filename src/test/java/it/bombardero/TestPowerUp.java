@@ -84,7 +84,7 @@ class TestPowerUp {
         // Asserts there is no Reset effect to run
         assertEquals(Optional.empty(), this.manager.getPlayer().getResetEffect());
         // Asserts the initial stats are resetted
-        assertEquals(Character.getStartingSpeed(), this.manager.getPlayer().getSpeed());
-        assertEquals(Character.getStartingFlameRange(), this.manager.getPlayer().getFlameRange());
+        assertEquals(Character.STARTING_SPEED, this.manager.getPlayer().getSpeed());
+        assertEquals(Character.STARTING_FLAME_RANGE, this.manager.getPlayer().getFlameRange());
     }
 }

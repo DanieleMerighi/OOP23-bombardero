@@ -23,6 +23,6 @@ public final class MaxFlameRangeEffect implements PowerUpEffect {
      */
     @Override
     public Consumer<Character> getEffect() {
-        return character -> character.setFlameRange(Character.getMaxFlameRange());
+        return character -> character.setFlameRange(Character.MAX_FLAME_RANGE);
     }
 }

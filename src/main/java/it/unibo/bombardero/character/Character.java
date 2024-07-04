@@ -41,7 +41,6 @@ public abstract class Character {
         ENEMY;
     }
 
-    // Constants for default settings
     /**
      * The character's hitbox height.
      */
@@ -50,16 +49,27 @@ public abstract class Character {
      * The character's hitbox width.
      */
     public static final float BOUNDING_BOX_WIDTH = 0.700f;
+    /**
+     * The starting speed of the character.
+     */
+    public static final float STARTING_SPEED = 0.05f;
+    /**
+     * The starting flame range of the character.
+     */
+    public static final int STARTING_FLAME_RANGE = 1;
+    /**
+     * The max speed of the character.
+     */
+    public static final float MAX_SPEED = 0.09f;
+    /**
+     * The max flame range of the character.
+     */
+    public static final int MAX_FLAME_RANGE = 8;
+
     private static final float BOUNDING_BOX_Y_OFFSET = 0.2f;
     private static final float BOUNDING_BOX_X_OFFSET = 0.3f;
-    private static final float STARTING_SPEED = 0.05f;
     private static final float INCREASE_SPEED = 0.005f;
-    private static final int STARTING_FLAME_RANGE = 1;
     private static final int STARTING_BOMBS = 1;
-
-    // Constants for controls
-    private static final float MAX_SPEED = 0.09f;
-    private static final int MAX_FLAME_RANGE = 8;
     private static final int MAX_BOMBS = 8;
 
     // Bomb Factory reference
@@ -86,62 +96,22 @@ public abstract class Character {
     private final Deque<Bomb> bombQueue = new ArrayDeque<>();
     // Update related
     private boolean hasToPlaceBomb;
-
     private boolean hasToPlaceLineBomb;
     private boolean hasToExplodeRemoteBomb;
 
     // Skull effects
     private boolean constipation; // The character is unable to lay down bombs
-
     private boolean butterfingers; // The character's hand becomes slippery. The character rapidly lays down bombs
 
     // Skull manager
     private long skeletonEffectDuration; // Indicates the duration of the skull effect
-
     private Optional<Runnable> resetEffect = Optional.empty(); // Restores all stats modified by the skull
-
-    /**
-     * Gets the starting flame range of the character.
-     * 
-     * @return the starting flame range
-     */
-    public static int getStartingFlameRange() {
-        return STARTING_FLAME_RANGE;
-    }
-
-    /**
-     * Gets the max flame range of the character.
-     * 
-     * @return the max flame range
-     */
-    public static int getMaxFlameRange() {
-        return MAX_FLAME_RANGE;
-    }
-
-    /**
-     * Gets the starting speed of the character.
-     * 
-     * @return the starting speed
-     */
-    public static float getStartingSpeed() {
-        return STARTING_SPEED;
-    }
-
-    /**
-     * Gets the max speed of the character.
-     * 
-     * @return the max speed
-     */
-    public static float getMaxSpeed() {
-        return MAX_SPEED;
-    }
 
     /**
      * Constructs a new Character with the specified parameters.
      * 
      * @param coord         the initial coordinates where the character is spawned
      * @param bombFactory   the factory to create bombs
-     * @param bBox          the hitbox of the character
      */
     public Character(final GenPair<Float, Float> coord, final BombFactory bombFactory) {
         this.coordinate = coord;
@@ -646,8 +616,8 @@ public abstract class Character {
      * @param bomb      the bomb that needs to be placed
      * @return          true if the bomb was placed
      */
-    private boolean placeBombImpl(final GameManager manager, final Bomb bomb) {
-        if (hasBombsLeft() && !this.constipation && manager.addBomb(bomb, this)) {
+    private boolean placeBombImpl(final GameManager manager, final Bomb bomb) { //TODO:
+        if (hasBombsLeft() && !this.constipation /*&& manager.addBomb(bomb, this)*/) {
             this.numBomb--;
             bombQueue.addLast(bomb);
             return true;
