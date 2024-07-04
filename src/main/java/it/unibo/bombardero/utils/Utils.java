@@ -14,12 +14,12 @@ public class Utils {
     public static final double WALL_PRESENCE_RATE = 0.8;
     public static final int MAX_RANGE_BOMB = 13;
 
-    public static final GenPair<Float, Float> PLAYER_SPAWNPOINT = new GenPair<Float, Float>(0.5f, 0.5f);
+    public static final GenPair<Float, Float> PLAYER_SPAWNPOINT = new GenPair<>(0.5f, 0.5f);
     public static final List<GenPair<Float, Float>> ENEMIES_SPAWNPOINT = List.of(
             new GenPair<Float, Float>(12.5f, 12.5f),
             new GenPair<Float, Float>(0.5f, 12.5f), new GenPair<Float, Float>(12.5f, 0.5f));
     // timers value
-    public static final long GAME_TIME = 120000L;
+    public static final long GAME_TIME = 120_000L;
     public static final int MAX_WAITING_TIME = 2000;
 
     // explosion value

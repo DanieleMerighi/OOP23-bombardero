@@ -1,19 +1,19 @@
 package it.unibo.bombardero.map.impl;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import it.unibo.bombardero.cell.Bomb;
 import it.unibo.bombardero.cell.Cell;
-import it.unibo.bombardero.cell.Wall;
 import it.unibo.bombardero.cell.Cell.CellType;
+import it.unibo.bombardero.cell.Flame;
+import it.unibo.bombardero.cell.Wall;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.cell.powerup.api.PowerUpFactory;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.cell.powerup.impl.PowerUpFactoryImpl;
-import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.map.api.MapGenerator;
@@ -113,7 +113,7 @@ public final class GameMapImpl implements GameMap {
         if (this.isBreakableWall(coordinate)) {
             this.map.remove(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()));
             this.map.put(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()),
-                    powerupFactory.createPowerUp(coordinate));
+                    powerupFactory.createPowerUp());
         }
     }
 
@@ -182,6 +182,15 @@ public final class GameMapImpl implements GameMap {
                         .equals(CellType.POWERUP);
     }
 
+    @Override
+    public Optional<PowerUpType> whichPowerUpType(final GenPair<Integer, Integer> coordinate) {
+        if (this.isPowerUp(coordinate)) {
+            final PowerUp powerup = (PowerUp) this.map.get(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()));
+            return Optional.of(powerup.getType());
+        }
+        return Optional.empty();
+    }
+
     private void placeUnbreakableWalls() {
         mapGenerator.generateUnbreakableWalls().forEach(wallPosition -> addUnbreakableWall(wallPosition));
     }
@@ -191,15 +200,6 @@ public final class GameMapImpl implements GameMap {
                 this,
                 mapGenerator.getTotalWallsToGenerate(Utils.WALL_PRESENCE_RATE))
                 .forEach(wallPosition -> addBreakableWall(wallPosition));
-    }
-
-    @Override
-    public Optional<PowerUpType> whichPowerUpType(final GenPair<Integer, Integer> coordinate) {
-        if (this.isPowerUp(coordinate)) {
-            PowerUp powerup = (PowerUp) this.map.get(new GenPair<Integer, Integer>(coordinate.x(), coordinate.y()));
-            return Optional.of(powerup.getType());
-        }
-        return Optional.empty();
     }
 
 }
