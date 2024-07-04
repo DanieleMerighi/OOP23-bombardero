@@ -5,15 +5,16 @@
 \usepackage[utf8]{inputenc}
 \usepackage{float}
 \usepackage{hyperref}
+\usepackage{markdown}
 
 % Questo commentalo se vuoi scrivere in inglese.
 \usepackage[italian]{babel}
 
 \usepackage[italian]{cleveref}
 
-\title{Meta-relazione per\\``Programmazione ad Oggetti''}
+\title{Relazione per\\"Bombardero: the Bomberman Remake"}
 
-\author{Danilo Pianini}
+\author{Bello Figo Gu}
 \date{\today}
 
 
@@ -58,215 +59,89 @@ Come per la prosa, non è importante quale strumento sia utilizzato, ma è vital
 \tableofcontents
 
 \chapter{Analisi}
-
-In questo capitolo andrà fatta l'analisi dei requisiti e quella del problema, ossia verranno elencate le cose che l'applicazione dovrà fare (requisiti) e verrà descritto il dominio applicativo (analisi del problema).
-%
-In fase di analisi, è molto importante tenere a mente che non vi deve essere alcun riferimento al design né tantomeno alle tecnologie implementative, ovvero, non si deve indicare come il software sarà internamente realizzato.
-%
-La fase di analisi, infatti, \textit{precede} qualunque azione di design o di implementazione.
-
 \section{Requisiti}
+Il collettivo mira alla creazione di un videogioco ispirato alla nota saga videoludica “Bomberman”.
+Il giocatore controlla un personaggio, in grado di muoversi liberamente nei confini della mappa e di piazzare delle bombe. L’obiettivo generale del gioco è quello di sconfiggere i nemici presenti sulla mappa piazzando strategicamente gli esplosivi, in grado di far saltare in aria eventuali ostacoli.
 
-Nell'analisi dei \emph{requisiti} dell'applicazione si dovrà spiegare cosa l'applicazione dovrà fare.
-%
-Non ci si deve concentrare sui particolari problemi, ma esclusivamente su cosa si desidera che l'applicazione faccia.
-%
-Al termine della lettura della sezione,
-il docente deve avere un'idea molto chiara di cosa l'applicazione sia.
-%
-È consigliato descrivere separatamente i requisiti funzionali (quelli che descrivono l'effettivo
-comportamento dell'applicazione) da quelli non funzionali (requisiti che non riguardano direttamente
-aspetti comportamentali, come sicurezza, performance, eccetera).
-
-\subsection*{Elementi positivi}
+\subsection*{Requisiti funzionali}
 \begin{itemize}
-	\item Si fornisce una descrizione in linguaggio naturale di ciò che il software dovrà fare.
-	\item Gli obiettivi sono spiegati con chiarezza, per punti.
-	\item Se il software è stato commissionato o è destinato ad un utente o compagnia specifici, il committente viene nominato.
-	\item Se vi sono termini il cui significato non è immediatamente intuibile, essi vengono spiegati.
-	\item Vengono descritti separatamente requisiti funzionali e non funzionali.
-	\item Considerato a un paio di pagine un limite ragionevole alla lunghezza della parte sui requisiti, in quello spazio si deve cercare di chiarire \textit{tutti} gli aspetti dell'applicazione, non lasciando decisioni che impattano la parte ``esterna'' alla discussione del design (che dovrebbe solo occuparsi della parte ``interna'').
+	\item L'applicazione dovrà fornire un ambiente di gioco virtuale rappresentato da una griglia bidimensionale. La griglia dovrà essere suddivisa in celle nelle quali i giocatori potranno muoversi solo orizzontalmente o verticalmente.
+            \begin{itemize}La griglia verrà riempita da due tipologie di ostacoli:
+                \item Muri indistruttibili: generati in maniera fissa a scacchiera
+                \item Muri deboli: che verranno piazzati casualmente per riempire parzialmente i restanti spazi vuoti della griglia
+            \end{itemize}
+	\item Dopo un minuto e mezzo dall’inizio della partita i muri indistruttibili che formano il confine dell’arena inizieranno a collassare verso il centro, riducendo l’area calpestabile ed eliminando i giocatori che si trovano nelle loro prossimità al momento del crollo. I muri cominciano il loro crollo a partire dall’angolo in basso a sinistra, uno per volta, procedendo in senso orario.
+	\item Si dovrà implementare un giocatore principale, controllabile da parte dell’utente mediante tastiera utilizzando i tasti W, A, S e D rispettivamente per il movimento verso l’alto, verso il sinistra, verso il basso e verso destra. Verrà utilizzato il tasto B per il piazzamento delle bombe.
+	\item Dovranno essere presenti tre nemici, controllati dal computer, il cui scopo sarà quello di sconfiggere gli altri giocatori presenti nella mappa.
+	\item Ogni entità presente potrà piazzare delle bombe nella propria posizione corrente, che esploderanno dopo qualche secondo (permettendo ai giocatori di allontanarsi)
+        \item L’esplosione causerà delle fiamme, che espandendosi verticalmente e orizzontalmente per un certo numero di caselle, cambieranno la conformazione dell’arena e danneggeranno le entità vicine. Inoltre, se la fiamma di una bomba ne colpisce un’altra, allora anche quest'ultima dovrà esplodere innestando un effetto a catena.
+        \item Normalmente, una volta piazzata una bomba in una cella non sarà possibile attraversarla fino a quando essa non esplode. 
+        \item I giocatori possono attraversare celle in cui sono presenti anche altri player senza che essi presentino un ostacolo.
+        \item Saranno presenti ostacoli nella griglia (muri deboli), che potranno essere distrutti dalle esplosioni delle bombe, permettendo al personaggio di passare attraverso lo spazio vuoto appena creato, diversamente dai muri indistruttibili che non potranno essere alterati.
+        \item Dalle esplosioni degli ostacoli si possono generare degli oggetti speciali (power up oppure dei malus), che cambieranno le abilità delle singole entità. Per ottenerli basterà raccoglierli passandoci sopra.
+        \item Il software deve includere una breve guida che insegni all'utente come giocare e come muoversi all'interno del gioco
 \end{itemize}
 
-\subsection*{Elementi negativi}
+\subsection*{Requisiti non funzionali}
 \begin{itemize}
-	\item Si forniscono indicazioni circa le soluzioni che si vogliono adottare.
-	\item Si forniscono dettagli di tipo tecnico o implementativo (parlando di classi, linguaggi di programmazione, librerie, eccetera).
-\end{itemize}
-
-\subsection*{Esempio}
-Il software, commissionato dal gestore del centro di ricerca ``Aperture Laboratories Inc.''\footnote{\url{http://aperturescience.com/}}, mira alla costruzione di una intelligenza artificiale di nome GLaDOS (Genetic Lifeform and Disk Operating System).
-%
-Per intelligenza artificiale si intende un software in grado di assumere decisioni complesse in maniera semi autonoma sugli argomenti di sua competenza, a partire dai vincoli e dagli obiettivi datigli dall'utente.
-
-\subsubsection{Requisiti funzionali}
-\begin{itemize}
-	\item La suddetta intelligenza artificiale dovrà occuparsi di coordinare le attività all'interno
-delle camere di test di Aperture, guidando l'utente attraverso un certo numero di sfide di
-difficoltà crescente. Una camera di test è un ambiente realizzato da Aperture Laboratories Inc. al
-fine di mettere alla prova le proprie tecnologie di manipolazione dell'ambiente. All'interno della
-camera di test, un soggetto qualificato è incaricato di sfruttare gli strumenti messi a
-disposizione da Aperture per risolvere alcuni rompicapi. I rompicapi sono di tipo fisico (ad
-esempio, manipolazione di oggetti, pressione di pulsanti, azionamento di leve), e si ritengono
-conclusi una volta che il soggetto riesce a trovare l'uscita dalla camera di test.
-	\item Il piano preciso ed il numero delle sfide sarà variabile, e GLaDOS dovrà essere in grado di adattarsi dinamicamente e di fornire indicazioni di guida.
-	\item La personalità di GLaDOS dovrà essere modificabile.
-	\item GLaDOS dovrà essere in grado di comunicare col reparto cucina di Aperture, per ordinare torte da donare agli utenti che completassero l'ultima camera di test con successo.
-\end{itemize}
-
-\subsubsection{Requisiti non funzionali}
-\begin{itemize}
-	\item GLaDOS dovrà essere estremamente efficiente nell'uso delle risorse. Le specifiche tecniche parlano della possibilità di funzionare su dispositivi alimentati da una batteria a patata.
+    \item L’applicazione dovrà essere ottimizzata al fine di permettere un’esperienza di gioco fluida 
 \end{itemize}
 
 \section{Analisi e modello del dominio}
 
-In questa sezione si descrive il modello del \textit{dominio
-applicativo}, descrivendo le \textit{entità} in gioco ed i rapporti fra loro.
-%
-Si possono sollevare eventuali aspetti particolarmente impegnativi, descrivendo perché lo sono, senza inserire idee circa possibili soluzioni, ovvero sull'organizzazione interna del software.
-%
-Infatti, la fase di analisi va effettuata \textbf{prima} del progetto: né il progetto né il software esistono nel momento in cui si effettua l'analisi.
-%
-La discussione di aspetti propri del software (ossia, della \textit{soluzione} al problema e non del problema stesso) appartengono alla sfera della progettazione, e vanno discussi successivamente.
+L'arena di gioco detta \verb|Game Map| sarà composta da \verb|Cell|. 
+Queste \verb|Cell| potranno essere di diverso tipo: 
 
-È obbligatorio fornire uno schema UML del dominio, che diventerà anche lo scheletro della
-parte ``entity'' del modello dell'applicazione, ovvero degli elementi costitutivi del modello (in ottica MVC - Model View Controller): se l'analisi è ben fatta, dovreste ottenere una gerarchia di concetti che rappresentano le entità che compongono il problema da risolvere.
-%
-Un'analisi ben svolta \textbf{prima} di cimentarsi con lo sviluppo rappresenta un notevole aiuto per
-le fasi successive: è sufficiente descrivere a parole il dominio, quindi estrarre i sostantivi
-utilizzati, capire il loro ruolo all'interno del problema, le relazioni che intercorrono fra loro, e
-reificarli in interfacce.
-
-\subsection*{Elementi positivi}
 \begin{itemize}
-	\item Viene descritto accuratamente il modello del dominio.
-	\item Si modella il dominio in forma di UML, descrivendolo appropriatamente.
+    \item Muri indistruttibili, chiamati nel dominio \verb|Unbreakable Wall|
+    \item Muri distruttibili, chiamati nel dominio \verb|Breakable Wall|
+    \item Potenziamenti, che possono essere raccolti dai \verb|Character|, chiamati nel dominio \verb|PowerUp|
+    \item Bombe, chiamate nel dominio \verb|Bomb|
+    \item Fiamme, generate dall'esposione delle bombe chiamate nel dominio \verb|Flame|
 \end{itemize}
 
-\subsection*{Elementi negativi}
-\begin{itemize}
-	\item Manca una descrizione a parole del modello del dominio.
-	\item Manca una descrizione UML delle entità del dominio e delle relazioni che intercorrono fra loro.
-	\item Vengono elencate soluzioni ai problemi, invece della descrizione degli stessi.
-	\item Vengono presentati elementi di design, o peggio, aspetti implementativi.
-	\item Viene mostrato uno schema UML che include elementi implementativi o non utili alla descrizione del dominio, ma volti alla soluzione (non devono vedersi, ad esempio, campi o metodi privati, o cose che non siano equivalenti ad interfacce).
-\end{itemize}
-
-\subsection*{Esempio}
-GLaDOS dovrà essere in grado di accedere ad un'insieme di camere di test.
-%
-Tale insieme di camere prende il nome di percorso.
-%
-Ciascuna camera è composta di challenge successivi.
-%
-GLaDOS è responsabile di associare a ciascun challenge un insieme di consigli (suggestions) destinati all'utente (subject), dipendenti da possibili eventi.
-%
-GLaDOS dovrà poter comunicare coi locali cucina per approntare le torte.
-%
-Le torte potranno essere dolci, oppure semplici promesse di dolci che verranno disattese.
-%
-Gli elementi costitutivi il problema sono sintetizzati in \Cref{img:analysis}.
-
-Data la complessità di elaborare consigli via AI senza intervento umano, la prima versione del software fornita prevederà una serie di consigli forniti dall'utente.
-%
-Il requisito non funzionale riguardante il consumo energetico richiederà studi specifici sulle performance di GLaDOS che non potranno essere effettuati all'interno del monte ore previsto: tale feature sarà oggetto di futuri lavori.
-
-\begin{figure}[H]
+\begin{figure}[h]
 \centering{}
-\includegraphics{img/analysis.pdf}
-\caption{Schema UML dell'analisi del problema, con rappresentate le entità principali ed i rapporti fra loro}
-\label{img:analysis}
+\includegraphics[width=\textwidth]{img/interface-cell.png}
+\caption{Schema UML sulle relazioni tra le varie entità di tipo Cell}
+\end{figure}
+
+Il \verb|Character| si divide in \verb|Player| e \verb|Enemy|. Qualsiasi personaggio può piazzare delle bombe sulle celle libere della mappa che una volta esplose generano una serie di fiamme. Le fiamme interagiscono con , con i muri, i potenziamenti e con le bomb modificando la struttura della mappa, distruggendo ciò che ci trova nella stessa Cell ed espandendosi attraverso le celle libere. Un muro, se distrutto, può lasciare un potenziamento al suo posto. 
+
+Il tutto viene racchiuso nell'interfaccia \verb|GameManager|, di cui si parlerà in dettaglio nella prossima sezione, nella seguente maniera: 
+
+\begin{figure}[h]
+\centering{}
+\includegraphics[width=\textwidth]{img/manager-riassunto.png}
+\caption{Schema UML riassuntivo sulla composizione generale del model}
 \end{figure}
 
 \chapter{Design}
 
-In questo capitolo si spiegano le strategie messe in campo per soddisfare i requisiti identificati nell'analisi.
-
-Si parte da una visione architetturale, il cui scopo è informare il lettore di quale sia il funzionamento dell'applicativo realizzato ad alto livello.
-%
-In particolare, è necessario descrivere accuratamente in che modo i componenti principali del sistema si coordinano fra loro.
-%
-A seguire, si dettagliano alcune parti del design, quelle maggiormente rilevanti al fine di chiarificare la logica con cui sono stati affrontati i principali aspetti dell'applicazione.
-
 \section{Architettura}
 
-Questa sezione spiega come le componenti principali del software interagiscono fra loro.
-%
-In particolare, qui va spiegato \textbf{se} e \textbf{come} è stato utilizzato il pattern
-architetturale model-view-controller (e/o alcune sue declinazioni specifiche, come entity-control-boundary).
-
-Se non è stato utilizzato MVC, va spiegata in maniera molto accurata l'architettura scelta, giustificandola in modo appropriato.
-
-Se è stato scelto MVC, vanno identificate con precisione le interfacce e classi che rappresentano i punti d'ingresso per modello, view, e controller.
-Raccomandiamo di sfruttare la definizione del dominio fatta in fase di analisi per capire quale sia l'entry point del model, e di non realizzare un'unica macro-interfaccia che, spesso, finisce con l'essere il prodromo ad una ``God class''.
-%
-Consigliamo anche di separare bene controller e model, facendo attenzione a non includere nel secondo strategie d'uso che appartengono al primo.
-
-In questa sezione vanno descritte, per ciascun componente architetturale che ruoli ricopre (due o tre ruoli al massimo), ed in che modo interagisce (ossia, scambia informazioni) con gli altri componenti dell'architettura.
-%
-Raccomandiamo di porre particolare attenzione al design dell'interazione fra view e controller: se ben progettato, sostituire in blocco la view non dovrebbe causare alcuna modifica nel controller (tantomeno nel model).
-
-\subsection*{Elementi positivi}
-\begin{itemize}
- \item Si mostrano pochi, mirati schemi UML dai quali si deduce con chiarezza quali sono le parti principali del software e come interagiscono fra loro.
- \item Si mette in evidenza se e come il pattern architetturale model-view-controller è stato applicato, anche con l'uso di un UML che mostri le interfacce principali ed i rapporti fra loro.
- \item Si discute se sia semplice o meno, con l'architettura scelta, sostituire in blocco la view: in un MVC ben fatto, controller e modello non dovrebbero in alcun modo cambiare se si transitasse da una libreria grafica ad un'altra (ad esempio, da Swing a JavaFX, o viceversa).
-\end{itemize}
-
-\subsection*{Elementi negativi}
-\begin{itemize}
- \item L'architettura è fatta in modo che sia impossibile riusare il modello per un software diverso che affronta lo stesso problema.
- \item L'architettura è tale che l'aggiunta di una funzionalità sul controller impatta pesantemente su view e/o modello.
- \item L'architettura è tale che la sostituzione in blocco della view impatta sul controller o, peggio ancora, sul modello.
- \item Si presentano UML caotici, difficili da leggere.
- \item Si presentano UML in cui sono mostrati elementi di dettaglio non appartenenti all'architettura, ad esempio includenti campi o con metodi che non interessano la parte di interazione fra le componenti principali del software.
- \item Si presentano schemi UML con classi (nel senso UML del termine) che ``galleggiano'' nello schema, non connesse, ossia senza relazioni con il resto degli elementi inseriti.
- \item Si presentano elementi di design di dettaglio, ad esempio tutte le classi e interfacce del modello o della view.
- \item Si discutono aspetti implementativi, ad esempio eventuali librerie usate oppure dettagli di codice.
-\end{itemize}
-
-\subsection*{Esempio}
-
-L'architettura di GLaDOS segue il pattern architetturale MVC.
-%
-Più nello specifico, a livello architetturale, si è scelto di utilizzare MVC in forma ``ECB'', ossia ``entity-control-boundary''\footnote{
-Si fa presente che il pattern ECB effettivamente esiste in letteratura come ``istanza'' di MVC, e chi volesse può utilizzarlo come reificazione di MVC.
-}.
-%
-GLaDOS implementa l'interfaccia AI, ed è il controller del sistema.
-Essendo una intelligenza artificiale, è una classe attiva.
-%
-GLaDOS accetta la registrazione di Input ed Output, che fanno parte della ``view'' di MVC, e sono il ``boundary'' di ECB.
-Gli Input rappresentano delle nuove informazioni che vengono fornite all'IA, ad esempio delle modifiche nel valore di un sensore, oppure un comando da parte dell'operatore.
-Questi input infatti forniscono eventi.
-Ottenere un evento è un'operazione bloccante: chi la esegue resta in attesa di un effettivo evento.
-Di fatto, quindi, GLaDOS si configura come entità \textit{reattiva}.
-Ogni volta che c'è un cambio alla situazione del soggetto, GLaDOS notifica i suoi Output,
-informandoli su quale sia la situazione corrente.
-%
-Conseguentemente, GLaDOS è un ``observable'' per Output.
+In questo applicativo è stato utilizzato il pattern architetturale model-view-controller. Le interfacce che compongono in pattern sono \verb|Controller|, \verb|GraphicsEngine| e 
+\verb|GameManager| mentre per quanto riguarda il game loop necessario ad aggiornare ciclicamente le componenti di gioco sia di model che di view è stata creata l'interfaccia \verb|Engine|.
+\par
+L'interfaccia \verb|GameManager| è il punto d'ingresso al model. Si occupa dell'aggiornamento degli aspetti dinamici delle componenti del dominio e della gestione delle dinamiche di gioco.
+\par
+\verb|Controller| è l'interfaccia rappresentante omonimo componente dell'architettura M.V.C. esso fa da tramite tra la view, rappresentata da \verb|GraphicsEngine|, \verb|GameManager| e l'interfaccia di gestione degli input dell'utente \verb|KeyListener| 
 
 \begin{figure}[h]
 \centering{}
-\includegraphics[width=\textwidth]{img/arch}
-\caption{Schema UML architetturale di GLaDOS. L'interfaccia \texttt{GLaDOS} è il controller del sistema, mentre \texttt{Input} ed \texttt{Output} sono le interfacce che mappano la view (o, più correttamente in questo specifico esempio, il boundary). Un'eventuale interfaccia grafica interattiva dovrà implementarle entrambe.}
-\label{img:goodarch}
+\includegraphics[width=\textwidth]{img/mvc.png}
+\caption{Schema UML riassuntivo dell'architettura M.V.C. dell'applicativo}
 \end{figure}
 
-Con questa architettura, possono essere aggiunti un numero arbitrario di input ed output
-all'intelligenza artificiale.
-%
-Ovviamente, mentre l'aggiunta di output è semplice e non richiede alcuna modifica all'IA, la
-presenza di nuovi tipi di evento richiede invece in potenza aggiunte o rifiniture a GLaDOS.
-%
-Questo è dovuto al fatto che nuovi Input rappresentano di fatto nuovi elementi della business
-logic, la cui alterazione od espansione inevitabilmente impatta il controller del progetto.
-
-In \Cref{img:goodarch} è esemplificato il diagramma UML architetturale.
-
+\par 
+Per quanto riguarda la indipendenza degli elementi di questa architettura l'interfaccia grafica, il controller mette a disposizione i metodi necessari per poter comunicare all'interfaccia grafica quali sono gli elementi da mostrare. A sua volta l'interfaccia grafica mette a disposizione diversi metodi per permettere al controller di modificare la vista ed impostare visuali diverse.
 
 \section{Design dettagliato}
+
+\subsection{qualcosa di Federico Bagattoni}
+\subsection{qualcosa di Luca Venturini}
+\subsection{qualcosa di Jacopo Turchi}
+\subsection{qualcosa di Daniele Merighi}
 
 In questa sezione si possono approfondire alcuni elementi del design con maggior dettaglio.
 %
@@ -455,6 +330,11 @@ Questa sezione, come quella riguardante il design dettagliato va svolta \textbf{
 %
 Nella prima parte, ciascuno dovrà mostrare degli esempi di codice particolarmente ben realizzati,
 che dimostrino proefficienza con funzionalità avanzate del linguaggio e capacità di spingersi oltre le librerie mostrate a lezione.
+
+\subsection{qualcosa di Federico Bagattoni}
+\subsection{qualcosa di Luca Venturini}
+\subsection{qualcosa di Jacopo Turchi}
+\subsection{qualcosa di Daniele Merighi}
 
 \begin{itemize}
 	\item \textbf{Elencare} (fare un semplice elenco per punti, non un testo!) le feature \textit{avanzate} del linguaggio e dell'ecosistema Java che sono state
