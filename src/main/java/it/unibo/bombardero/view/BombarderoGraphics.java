@@ -32,7 +32,6 @@ public final class BombarderoGraphics implements GraphicsEngine {
     private final CardLayout layout = new CardLayout();
 
     private final GameCard gameCard;
-    private final MenuCard menuCard;
     private final GuideCard guideCard;
     private viewCards currentShowedCard = viewCards.MENU;
 
@@ -56,7 +55,7 @@ public final class BombarderoGraphics implements GraphicsEngine {
         frame.setLocationRelativeTo(null);
         frame.setIconImage(gameIconImage.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
 
-        this.menuCard = new MenuCard(controller, this, resourceGetter);
+        final MenuCard menuCard = new MenuCard(controller, this, resourceGetter);
         this.guideCard = new GuideCard(controller, this, Map.of(), List.of(), List.of());
         this.gameCard = new GameCard(this);
 
