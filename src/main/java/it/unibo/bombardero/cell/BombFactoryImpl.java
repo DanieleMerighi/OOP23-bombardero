@@ -14,12 +14,12 @@ public class BombFactoryImpl implements BombFactory {
 
     @Override
     public Bomb createBasicBomb(final int range, final GenPair<Integer, Integer> pos) {
-        return new BasicBomb(BombType.BOMB_BASIC, range, pos, new RectangleBoundingBox(pos.x(), pos.y(), 1.0f, 1.0f)) {};
+        return new BasicBomb(BombType.BOMB_BASIC, range, pos) {};
     }
 
     @Override
     public Bomb createPiercingBomb(final int range, final GenPair<Integer, Integer> pos) {
-        return new BasicBomb(BombType.BOMB_PIERCING, range, pos, new RectangleBoundingBox(pos.x(), pos.y(), 1.0f, 1.0f)) {
+        return new BasicBomb(BombType.BOMB_PIERCING, range, pos) {
 
             @Override
             public boolean isBreckableWall(final GenPair<Integer, Integer> pos, GameMap map) {
@@ -41,14 +41,14 @@ public class BombFactoryImpl implements BombFactory {
 
     @Override
     public Bomb createPowerBomb(final GenPair<Integer, Integer> pos) {
-        return new BasicBomb(BombType.BOMB_POWER, BasicBomb.MAX_RANGE, pos, new RectangleBoundingBox(pos.x(), pos.y(), 1.0f, 1.0f)) {
+        return new BasicBomb(BombType.BOMB_POWER, BasicBomb.MAX_RANGE, pos) {
 
         };
     }
 
     @Override
     public Bomb createRemoteBomb(final int range, final GenPair<Integer, Integer> pos) {
-        return new BasicBomb(BombType.BOMB_REMOTE, range, pos, new RectangleBoundingBox(pos.x(), pos.y(), 1.0f, 1.0f)) {
+        return new BasicBomb(BombType.BOMB_REMOTE, range, pos) {
 
             @Override
             public void update() {

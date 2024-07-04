@@ -12,7 +12,6 @@ import it.unibo.bombardero.character.Player;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GenPair;
-import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 import it.unibo.bombardero.view.BombarderoViewMessages;
 
 import java.util.Arrays;
@@ -23,10 +22,8 @@ import java.util.Arrays;
  */
 public final class ControllerForTesting implements Controller {
     private final GameManager manager = new MyGameManager();
-    private final Player player = new Player(new GenPair<Float, Float>(0f, 0f), new BombFactoryImpl(),
-            new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
-    private final Enemy enemy = new Enemy(new GenPair<Float, Float>(0f, 0f), new BombFactoryImpl(),
-            new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
+    private final Player player = new Player(new GenPair<Float, Float>(0f, 0f), new BombFactoryImpl());
+    private final Enemy enemy = new Enemy(new GenPair<Float, Float>(0f, 0f), new BombFactoryImpl());
     private boolean escapeCalled;
 
     @Override

@@ -44,8 +44,8 @@ public class Enemy extends Character {
      * 
      * @param bBox          the hitbox of the enemy
      */
-    public Enemy(final GenPair<Float, Float> coord, final BombFactory bombFactory, BoundingBox bBox) {
-        super(coord, bombFactory, bBox);
+    public Enemy(final GenPair<Float, Float> coord, final BombFactory bombFactory) {
+        super(coord, bombFactory);
         setStationary(true);
         setFacingDirection(Direction.UP);
     }

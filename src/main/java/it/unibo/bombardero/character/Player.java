@@ -21,8 +21,8 @@ public class Player extends Character {
      * @param bombFactory   the factory to create bombs
      * @param bBox          the hit box of the player
      */
-    public Player(final GenPair<Float, Float> coord, final BombFactory bombFactory, final BoundingBox bBox) {
-        super(coord, bombFactory, bBox);
+    public Player(final GenPair<Float, Float> coord, final BombFactory bombFactory) {
+        super(coord, bombFactory);
     }
 
     /**

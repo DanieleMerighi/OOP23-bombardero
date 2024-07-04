@@ -36,10 +36,8 @@ public class MyGameManager implements GameManager {
      */
     MyGameManager() {
         this.map = new GameMapImpl(false);
-        this.enemy = new Enemy(new GenPair<Float, Float>(0f, 0f), new BombFactoryImpl(),
-                new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
-        this.player = new Player(new GenPair<Float, Float>(0f, PLAYERY), new BombFactoryImpl(),
-                new RectangleBoundingBox(0, 0, Character.BOUNDING_BOX_WIDTH, Character.BOUNDING_BOX_HEIGHT));
+        this.enemy = new Enemy(new GenPair<Float, Float>(0f, 0f), new BombFactoryImpl());
+        this.player = new Player(new GenPair<Float, Float>(0f, PLAYERY), new BombFactoryImpl());
     }
 
     /**
