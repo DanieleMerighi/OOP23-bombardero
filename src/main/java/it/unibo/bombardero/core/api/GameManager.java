@@ -54,19 +54,5 @@ public interface GameManager {
      */
     GameMap getGameMap();
 
-    boolean addBomb(Bomb bomb, Character character);
-
-    void removeBomb(GenPair<Integer, Integer> pos);
-
-    Optional<Bomb> getBomb(GenPair<Integer, Integer> pos);
-
-    void addFlame(FlameType type, GenPair<Integer, Integer> pos);
-
-    void removePowerUp(GenPair<Integer, Integer> pos);
-
-    void removeFlame(GenPair<Integer, Integer> pos);
-
-    boolean removeWall(GenPair<Integer, Integer> pos);
-
     Optional<Long> getTimeLeft();
 }
