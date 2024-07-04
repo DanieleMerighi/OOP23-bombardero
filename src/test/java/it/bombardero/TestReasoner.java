@@ -21,7 +21,7 @@ import it.unibo.bombardero.map.impl.GameMapImpl;
 /**
  * Unit tests for the EnemyGraphReasonerImpl class.
  */
-public class TestReasoner {
+class TestReasoner {
 
     private GameMap map;
 
@@ -29,7 +29,7 @@ public class TestReasoner {
      * Setup method executed before each test.
      */
     @BeforeEach
-    public void setup() {
+    void setup() {
         map = new GameMapImpl(false);
     }
 
@@ -53,15 +53,15 @@ public class TestReasoner {
             "0,0, 3,0, 2, false",
             "1,0, 0,0, 4, true"
     })
-    public void testIsInDangerZone(final int enemyX, final int enemyY, final int bombX, final int bombY,
+    void testIsInDangerZone(final int enemyX, final int enemyY, final int bombX, final int bombY,
             final int explRadius, final boolean expected) {
-        GenPair<Integer, Integer> enemyCoord = new GenPair<Integer, Integer>(enemyX, enemyY);
-        GenPair<Integer, Integer> bombCell = new GenPair<Integer, Integer>(bombX, bombY);
+        final GenPair<Integer, Integer> enemyCoord = new GenPair<>(enemyX, enemyY);
+        final GenPair<Integer, Integer> bombCell = new GenPair<>(bombX, bombY);
 
         map.addBomb(new MyBomb(enemyCoord), bombCell);
         assertTrue(map.isBomb(bombCell));
 
-        EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
+        final EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
         assertFalse(reasoner.isPathBlockedByWalls(enemyCoord, bombCell));
 
         assertEquals(expected, reasoner.isInDangerZone(enemyCoord, explRadius));
@@ -85,14 +85,14 @@ public class TestReasoner {
             "0,1, 2,1, true", // Wall vertically blocking the path
             "2,1, 0,1, true" // even in the reverse order
     })
-    public void testIsPathBlockedByWalls(final int enemyX, final int enemyY, final int endCellX, final int endCellY,
+    void testIsPathBlockedByWalls(final int enemyX, final int enemyY, final int endCellX, final int endCellY,
             final boolean expectedBlocked) {
-        GenPair<Integer, Integer> enemyCoord = new GenPair<Integer, Integer>(enemyX, enemyY);
-        GenPair<Integer, Integer> endCell = new GenPair<Integer, Integer>(endCellX, endCellY);
+        final GenPair<Integer, Integer> enemyCoord = new GenPair<>(enemyX, enemyY);
+        final GenPair<Integer, Integer> endCell = new GenPair<>(endCellX, endCellY);
 
-        EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
+        final EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
 
-        boolean isBlocked = reasoner.isPathBlockedByWalls(enemyCoord, endCell);
+        final boolean isBlocked = reasoner.isPathBlockedByWalls(enemyCoord, endCell);
         assertEquals(expectedBlocked, isBlocked);
     }
 
@@ -121,36 +121,23 @@ public class TestReasoner {
             "0,0, 2,0, 2, 1:0;2:0", // Player 2 cells down, path length 2
             "4,0, 1,2, 5, 3:0;2:0;2:1;2:2;1:2", // a path block by a wall
     })
-    public void testFindShortestPathToPlayer(final int enemyX, final int enemyY, final int playerX, final int playerY,
+    void testFindShortestPathToPlayer(final int enemyX, final int enemyY, final int playerX, final int playerY,
             final int expectedPathLength, final String expectedPathString) {
-        GenPair<Integer, Integer> enemyCoord = new GenPair<Integer, Integer>(enemyX, enemyY);
-        GenPair<Integer, Integer> playerCoord = new GenPair<Integer, Integer>(playerX, playerY);
+        final GenPair<Integer, Integer> enemyCoord = new GenPair<>(enemyX, enemyY);
+        final GenPair<Integer, Integer> playerCoord = new GenPair<>(playerX, playerY);
 
         map.addBreakableWall(new GenPair<Integer, Integer>(4, 1));
 
-        EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
+        final EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
 
-        List<GenPair<Integer, Integer>> actualPath = reasoner.findShortestPathToPlayer(enemyCoord, playerCoord);
+        final List<GenPair<Integer, Integer>> actualPath = reasoner.findShortestPathToPlayer(enemyCoord, playerCoord);
         assertEquals(expectedPathLength, actualPath.size());
 
         // parse the expected path string into a List<Pair>
-        List<GenPair<Integer, Integer>> expectedPath = parseExpectedPath(expectedPathString);
+        final List<GenPair<Integer, Integer>> expectedPath = parseExpectedPath(expectedPathString);
         for (int i = 0; i < expectedPathLength; i++) {
             assertEquals(expectedPath.get(i), actualPath.get(i));
         }
-    }
-
-    // Helper method to parse the expected path string
-    private List<GenPair<Integer, Integer>> parseExpectedPath(final String pathString) {
-        List<GenPair<Integer, Integer>> path = new ArrayList<>();
-        String[] coordinates = pathString.split(";"); // Split on comma only if preceded by colon
-        for (String coordinate : coordinates) {
-            String[] xy = coordinate.split(":"); // Assuming format "x:y" for each coordinate
-            int x = Integer.parseInt(xy[0]);
-            int y = Integer.parseInt(xy[1]);
-            path.add(new GenPair<Integer, Integer>(x, y));
-        }
-        return path;
     }
 
     /**
@@ -170,22 +157,35 @@ public class TestReasoner {
             "0,0, 0,2, 3, 1,0", // Bomb to the right, safe space down
             "12,0, 12,2, 2, 11,0", // Bomb to the left, safe space above
     })
-    public void testFindNearestSafeSpace(final int enemyX, final int enemyY, final int bombX, final int bombY,
+    void testFindNearestSafeSpace(final int enemyX, final int enemyY, final int bombX, final int bombY,
             final int explRadius,
             final int expectedSafeSpaceX, final int expectedSafeSpaceY) {
-        GenPair<Integer, Integer> enemyCoord = new GenPair<Integer, Integer>(enemyX, enemyY);
-        GenPair<Integer, Integer> bombCell = new GenPair<Integer, Integer>(bombX, bombY);
+        final GenPair<Integer, Integer> enemyCoord = new GenPair<>(enemyX, enemyY);
+        final GenPair<Integer, Integer> bombCell = new GenPair<>(bombX, bombY);
 
         map.addBomb(new MyBomb(enemyCoord), bombCell);
         assertTrue(map.isBomb(bombCell));
 
-        EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
+        final EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
 
-        Optional<GenPair<Integer, Integer>> safeSpace = reasoner.findNearestSafeCell(enemyCoord, explRadius);
+        final Optional<GenPair<Integer, Integer>> safeSpace = reasoner.findNearestSafeCell(enemyCoord, explRadius);
 
         assertTrue(safeSpace.isPresent());
         assertEquals(expectedSafeSpaceX, safeSpace.get().x());
         assertEquals(expectedSafeSpaceY, safeSpace.get().y());
 
+    }
+
+    // Helper method to parse the expected path string
+    private List<GenPair<Integer, Integer>> parseExpectedPath(final String pathString) {
+        final List<GenPair<Integer, Integer>> path = new ArrayList<>();
+        final String[] coordinates = pathString.split(";"); // Split on comma only if preceded by colon
+        for (final String coordinate : coordinates) {
+            final String[] xy = coordinate.split(":"); // Assuming format "x:y" for each coordinate
+            final int x = Integer.parseInt(xy[0]);
+            final int y = Integer.parseInt(xy[1]);
+            path.add(new GenPair<Integer, Integer>(x, y));
+        }
+        return path;
     }
 }

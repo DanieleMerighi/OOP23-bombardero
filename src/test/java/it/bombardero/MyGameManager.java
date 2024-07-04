@@ -23,9 +23,9 @@ public class MyGameManager implements GameManager {
     private static final int LENGHT = 60;
     private static final float PLAYERY = 12f;
 
-    private Player player;
-    private Enemy enemy;
-    private GameMap map;
+    private final Player player;
+    private final Enemy enemy;
+    private final GameMap map;
 
     /**
      * Constructs a new {@link MyGameManager}.
