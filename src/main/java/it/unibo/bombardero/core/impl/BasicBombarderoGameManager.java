@@ -88,16 +88,6 @@ public class BasicBombarderoGameManager implements GameManager {
             ce.checkCharacterCollision(player, this.getGameMap());
             ce.checkFlameAndPowerUpCollision(player, this.getGameMap());
         }
-        if (!flames.isEmpty()) {
-            flames.forEach(f -> f.update(elapsed));
-            flames.stream().filter(f -> f.isExpired())
-                    .forEach(f -> map.removeFlame(f.getPos()));
-            flames.removeIf(f -> f.isExpired());
-        }
-        if (!boombs.isEmpty()) {
-            boombs.entrySet().forEach(entry -> entry.getKey().update());
-            placeBombExplosion();
-        }
         enemies.forEach(enemy -> {
             if (enemy.isAlive()) {
                 enemy.update(this, elapsed);
