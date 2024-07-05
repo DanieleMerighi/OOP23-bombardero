@@ -24,8 +24,8 @@ public class WaitingState extends AbstractEnemyState {
         enemy.setStationary(true);
         enemy.setNextMove(Optional.empty());
 
-        GenPair<Integer, Integer> currentCoord = enemy.getIntCoordinate();
-        int flameRange = enemy.getFlameRange();
+        final GenPair<Integer, Integer> currentCoord = enemy.getIntCoordinate();
+        final int flameRange = enemy.getFlameRange();
 
         if (enemy.getGraph().isInDangerZone(manager.getGameMap(), currentCoord, flameRange)) {
             enemy.setState(new EscapeState());

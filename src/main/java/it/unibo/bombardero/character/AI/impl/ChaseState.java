@@ -29,7 +29,7 @@ public class ChaseState extends AbstractEnemyState {
         } else {
             final GenPair<Integer, Integer> closeEnemy = enemy.getClosestEntity(manager).get();
             final GenPair<Integer, Integer> currPos = enemy.getIntCoordinate();
-            if ((closeEnemy.x() == currPos.x() || closeEnemy.y() == currPos.y())) {
+            if (closeEnemy.x().equals(currPos.x()) || closeEnemy.y().equals(currPos.y())) {
                 if (enemy.calculateDistance(currPos, closeEnemy) <= enemy.getFlameRange()) {
                     enemy.placeBomb(manager, CharacterType.ENEMY);
                 } else {

@@ -13,7 +13,7 @@ public abstract class AbstractEnemyState implements EnemyState {
      * @return true if the specified object is of the same class as this state; false otherwise
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         return obj != null && this.getClass() == obj.getClass();
     }
 

@@ -33,7 +33,7 @@ public class EscapeState extends AbstractEnemyState {
                     final GenPair<Integer, Integer> closeEnemy = enemy.getClosestEntity(manager).get();
                     final Optional<Character> c = enemy.getClosestEntity(manager, closeEnemy);
                     if (c.isPresent()) {
-                        final GenPair<Integer, Integer> newdir = new GenPair<Integer, Integer>(
+                        final GenPair<Integer, Integer> newdir = new GenPair<>(
                                 -c.get().getFacingDirection().x(),
                                 -c.get().getFacingDirection().y());
                         final GenPair<Integer, Integer> currPos = enemy.getIntCoordinate();

@@ -34,7 +34,7 @@ public class Enemy extends Character {
     private EnemyState currentState = new PatrolState(); // Initial state
     private EnemyGraphReasonerImpl graph;
     private int waitTimer = -1;
-    private boolean attemptedPowerUp = false; // flag to indicate if power-up attempt failed
+    private boolean attemptedPowerUp; // flag to indicate if power-up attempt failed
     private static final float TOLERANCE = 0.0001f; // A small tolerance value
 
     /**
@@ -144,11 +144,10 @@ public class Enemy extends Character {
      * and potentially updates the `nextMove` target based on danger zone detection
      * or pathfinding results.
      * 
-     * @param time    the elapsed time
      * @param manager the game manager
      */
-    private void computeNextDir(final long time, final GameManager manager) {
-        GameMap gameMap = manager.getGameMap();
+    private void computeNextDir(final GameManager manager) {
+        final GameMap gameMap = manager.getGameMap();
         currentState.execute(this, manager);
         if (nextMove.isPresent()) {
             if (calculateDistance(getIntCoordinate(), nextMove.get()) > 1) {
@@ -183,10 +182,10 @@ public class Enemy extends Character {
         updateGraph(manager.getGameMap());
         updateSkeleton(manager, elapsedTime, CharacterType.ENEMY);
         if (nextMove.isEmpty()) {
-            computeNextDir(elapsedTime, manager);
+            computeNextDir(manager);
         } else if (canMoveOn(manager.getGameMap(), nextMove.get())) {
             setStationary(false);
-            final GenPair<Float, Float> target = new GenPair<Float, Float>(nextMove.get().x() + 0.5f,
+            final GenPair<Float, Float> target = new GenPair<>(nextMove.get().x() + 0.5f,
                     nextMove.get().y() + 0.5f);
             final GenPair<Float, Float> currentPos = getCharacterPosition();
 
@@ -223,7 +222,7 @@ public class Enemy extends Character {
 
     private boolean canMoveOn(final GameMap gameMap, final GenPair<Integer, Integer> cell) {
         return gameMap.isEmpty(cell) || gameMap.isPowerUp(cell)
-                || (gameMap.isBomb(cell) && getIntCoordinate().equals(cell));
+                || gameMap.isBomb(cell) && getIntCoordinate().equals(cell);
     }
 
     private boolean isReachedTarget(final GenPair<Float, Float> currentPos, final GenPair<Float, Float> target) {
@@ -233,9 +232,9 @@ public class Enemy extends Character {
     }
 
     private GenPair<Float, Float> restrictToGridDirections(final GenPair<Float, Float> direction) {
-        final Direction newDirection = (Math.abs(direction.x()) > Math.abs(direction.y()))
-                ? (direction.x() > 0 ? Direction.RIGHT : Direction.LEFT)
-                : (direction.y() > 0 ? Direction.DOWN : Direction.UP);
+        final Direction newDirection = Math.abs(direction.x()) > Math.abs(direction.y())
+                ? direction.x() > 0 ? Direction.RIGHT : Direction.LEFT
+                : direction.y() > 0 ? Direction.DOWN : Direction.UP;
         setFacingDirection(newDirection);
         return new GenPair<Float, Float>((float) newDirection.x(), (float) newDirection.y());
     }
