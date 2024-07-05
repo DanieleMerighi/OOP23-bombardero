@@ -4,10 +4,11 @@ import it.unibo.bombardero.map.api.GenPair;
 
 /**
  * This is an actual flame that takes time to expire and kill characters that is
- * above it
+ * above it.
  */
 public final class FlameImpl extends AbstractCell implements Flame {
 
+    private static final int TIME_TO_LIVE = 500;
     private boolean expired;
     private final FlameType specificFlameType;
     private final GenPair<Integer, Integer> pos;
@@ -28,7 +29,7 @@ public final class FlameImpl extends AbstractCell implements Flame {
     @Override
     public void update(final long timeElapsed) {
         this.countTime += timeElapsed;
-        if (countTime > 500) {
+        if (countTime > TIME_TO_LIVE) {
             expired = true;
         }
     }

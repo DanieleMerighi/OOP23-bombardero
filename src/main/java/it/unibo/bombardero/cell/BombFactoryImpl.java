@@ -5,15 +5,14 @@ import it.unibo.bombardero.map.api.Functions;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.GenPair;
 
-
-//TODO dividere la logica fare una factory normale
-//chiedere a baga del menu fare un po di grafica rendere Pair generico e magari fare due classi specifiche
-//in generale cercare di rendere il tutto piu generico
-public class BombFactoryImpl implements BombFactory {
+/**
+ * This is a Factory that creates different types of Bomb.
+ */
+public final class BombFactoryImpl implements BombFactory {
 
     @Override
     public Bomb createBasicBomb(final int range, final GenPair<Integer, Integer> pos) {
-        return new BasicBomb(BombType.BOMB_BASIC, range, pos) {};
+        return new BasicBomb(BombType.BOMB_BASIC, range, pos) { };
     }
 
     @Override
@@ -30,10 +29,14 @@ public class BombFactoryImpl implements BombFactory {
             }
 
             private boolean isLastWall(final GenPair<Integer, Integer> pos) {
-                return pos.equals(this.getPos().apply(Functions.sumInt(new GenPair<Integer, Integer>(this.getRange(), 0))))
-                        || pos.equals(this.getPos().apply(Functions.sumInt(new GenPair<Integer, Integer>(0, this.getRange()))))
-                        || pos.equals(this.getPos().apply(Functions.sumInt(new GenPair<Integer, Integer>(-this.getRange(), 0))))
-                        || pos.equals(this.getPos().apply(Functions.sumInt(new GenPair<Integer, Integer>(0, -this.getRange()))));
+                return pos.equals(
+                        this.getPos().apply(Functions.sumInt(new GenPair<Integer, Integer>(this.getRange(), 0))))
+                        || pos.equals(this.getPos()
+                                .apply(Functions.sumInt(new GenPair<Integer, Integer>(0, this.getRange()))))
+                        || pos.equals(this.getPos()
+                                .apply(Functions.sumInt(new GenPair<Integer, Integer>(-this.getRange(), 0))))
+                        || pos.equals(this.getPos()
+                                .apply(Functions.sumInt(new GenPair<Integer, Integer>(0, -this.getRange()))));
             }
         };
     }
@@ -50,7 +53,8 @@ public class BombFactoryImpl implements BombFactory {
         return new BasicBomb(BombType.BOMB_REMOTE, range, pos) {
 
             @Override
-            public void update() {}
+            public void update() {
+            }
         };
     }
 
