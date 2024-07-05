@@ -32,7 +32,7 @@ public class WaitingState extends AbstractEnemyState {
         } else if (!enemy.isAttemptedPowerUp() && enemy.getGraph().findNearestPowerUp(currentCoord).isPresent()) {
             enemy.setAttemptedPowerUp(true);
             enemy.setState(new ExploringState());
-        } else if (enemy.getBombQueue().isEmpty()) {
+        } else if (enemy.getQueuedBombs().isEmpty()) {
             enemy.setState(new PatrolState());
         }
 

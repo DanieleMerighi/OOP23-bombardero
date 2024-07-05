@@ -26,7 +26,7 @@ public class EscapeState extends AbstractEnemyState {
     @Override
     public void execute(final Enemy enemy, final GameManager manager) {
         if (!enemy.getGraph().isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) { // Safe now
-            if (!enemy.getBombQueue().isEmpty()) {
+            if (!enemy.getQueuedBombs().isEmpty()) {
                 enemy.setState(new WaitingState());
             } else {
                 if (enemy.isEnemyClose(manager)) {

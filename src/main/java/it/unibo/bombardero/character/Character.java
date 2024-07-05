@@ -2,7 +2,9 @@ package it.unibo.bombardero.character;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 import java.util.Optional;
 
 import it.unibo.bombardero.cell.Bomb;
@@ -93,7 +95,9 @@ public abstract class Character {
     private Optional<PowerUpType> bombType = Optional.empty();
     private boolean lineBomb; // False by default
 
-    private final Deque<Bomb> bombQueue = new ArrayDeque<>();
+    private final Deque<Bomb> queuedBombs = new ArrayDeque<>();
+    private final List<Bomb> bombsToBePlaced = new ArrayList<>();
+
     // Update related
     private boolean hasToPlaceBomb;
     private boolean hasToPlaceLineBomb;
@@ -232,7 +236,7 @@ public abstract class Character {
     public void explodeRemoteBomb() {
         if (hasPlacedRemoteBomb()) { // Checks if there's a remote bomb to explode.
             // Finds the first remote bomb occurrence.
-            final Bomb remoteBomb = bombQueue.stream()
+            final Bomb remoteBomb = queuedBombs.stream()
                     .filter(bomb -> bomb.getBombType().equals(BombType.BOMB_REMOTE))
                     .findFirst()
                     .get();
@@ -248,7 +252,7 @@ public abstract class Character {
      * @param explodedBomb the exploded bomb that needs to be removed
      */
     public void removeBombFromDeque(final Bomb explodedBomb) {
-        if (!bombQueue.isEmpty() && bombQueue.removeFirstOccurrence(explodedBomb)) {
+        if (!queuedBombs.isEmpty() && queuedBombs.removeFirstOccurrence(explodedBomb)) {
             // System.out.println("removed bomb\n\n");
             this.increaseNumBomb();
 
@@ -260,8 +264,8 @@ public abstract class Character {
      * 
      * @return the bomb deque
      */
-    public Deque<Bomb> getBombQueue() {
-        return new ArrayDeque<>(bombQueue);
+    public Deque<Bomb> getQueuedBombs() {
+        return new ArrayDeque<>(queuedBombs);
     }
 
     /**
@@ -610,26 +614,58 @@ public abstract class Character {
     }
 
     /**
+     * Gets the list of bombs pending to be placed.
+     * 
+     * @return the list of bombs
+     */
+    public List<Bomb> getBombsToBePlaced() {
+        return this.bombsToBePlaced;
+    }
+
+    /**
+     * Resets the list of bombs pending to be placed.
+     * 
+     */
+    public void resetBombsList() {
+        this.bombsToBePlaced.clear();
+    }
+
+    /**
      * General implementation of the placeBomb method.
      * 
      * @param manager   the game manager
      * @param bomb      the bomb that needs to be placed
      * @return          true if the bomb was placed
      */
-    private boolean placeBombImpl(final GameManager manager, final Bomb bomb) { //TODO:
-        if (hasBombsLeft() && !this.constipation /*&& manager.addBomb(bomb, this)*/) {
+    private boolean placeBombImpl(final GameManager manager, final Bomb bomb) {
+        if (hasBombsLeft() && !this.constipation && canPlaceBomb(manager, bomb.getPos())) {
             this.numBomb--;
-            bombQueue.addLast(bomb);
+            bombsToBePlaced.add(bomb);
+            queuedBombs.addLast(bomb);
             return true;
         }
         return false;
     }
 
-    /*
+    /**
+     * Checks whether the character can place a bomb at the given coordinates.
+     * 
+     * @param manager       the manager
+     * @param coordinate    the bomb's coordinates
+     * 
+     * @return true if he can place the bomb at the given coordinates.
+     */
+    private boolean canPlaceBomb(final GameManager manager, final GenPair<Integer, Integer> coordinate) {
+        return manager.getGameMap().isEmpty(coordinate);
+    }
+
+    /**
      * Checks whether the character has placed a remote bomb or not.
+     * 
+     * @return true if he has to
      */
     private boolean hasPlacedRemoteBomb() {
-        return this.bombQueue.stream()
+        return this.queuedBombs.stream()
                 .anyMatch(bomb -> bomb.getBombType().equals(BombType.BOMB_REMOTE));
     }
 
@@ -638,6 +674,7 @@ public abstract class Character {
      * 
      * @param coordinate    the coordinate of the bomb
      * @param type          the type of character who creates it
+     * 
      * @return              the bomb created
      */
     private Bomb createBomb(final GenPair<Integer, Integer> coordinate, final CharacterType type) {

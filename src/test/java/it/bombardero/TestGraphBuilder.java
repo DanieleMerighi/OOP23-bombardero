@@ -21,7 +21,7 @@ import it.unibo.bombardero.character.ai.impl.GraphBuilderImpl;
 /**
  * Unit tests for the GraphBuilderImpl class.
  */
-public class TestGraphBuilder {
+class TestGraphBuilder {
 
     private GameMap map;
     private Graph<GenPair<Integer, Integer>, DefaultWeightedEdge> graph;
@@ -35,7 +35,7 @@ public class TestGraphBuilder {
      * Setup method executed before each test.
      */
     @BeforeEach
-    public void setup() {
+    void setup() {
         map = new GameMapImpl(false);
     }
 
@@ -43,7 +43,7 @@ public class TestGraphBuilder {
      * Test case to verify base map size and structure.
      */
     @Test
-    public void testBaseMapSize() {
+    void testBaseMapSize() {
         this.graph = GraphBuilderImpl.buildFromMap(map);
         // the base map (built with only unbreakable wall) have 133 vertex
         assertEquals(VERTEX_SIZE, this.graph.vertexSet().size());
@@ -64,8 +64,8 @@ public class TestGraphBuilder {
      * Test case to verify map size and structure with obstacles.
      */
     @Test
-    public void testMapSizeWithObastacles() {
-        GameMap baseMap = new GameMapImpl(true);
+    void testMapSizeWithObastacles() {
+        final GameMap baseMap = new GameMapImpl(true);
         // CHECKSTYLE: MagicNumber OFF
         baseMap.addFlame(new FlameImpl(CellType.FLAME, null, new GenPair<Integer, Integer>(0, 2)), new GenPair<Integer, Integer>(0, 2));
         baseMap.addFlame(new FlameImpl(CellType.FLAME, null, new GenPair<Integer, Integer>(0, 4)), new GenPair<Integer, Integer>(0, 4));
@@ -80,15 +80,15 @@ public class TestGraphBuilder {
      * Test case to verify edge weights in the graph.
      */
     @Test
-    public void testEdgeWeights() {
+    void testEdgeWeights() {
         map.addBreakableWall(new GenPair<Integer, Integer>(1, 2));
         graph = GraphBuilderImpl.buildFromMap(map);
 
-        GenPair<Integer, Integer> p1 = new GenPair<Integer, Integer>(0, 2); // grass
-        GenPair<Integer, Integer> p2 = new GenPair<Integer, Integer>(1, 2); // Breakable wall
-        GenPair<Integer, Integer> p3 = new GenPair<Integer, Integer>(2, 2); // Grass
-        GenPair<Integer, Integer> p4 = new GenPair<Integer, Integer>(3, 2); // Grass
-        GenPair<Integer, Integer> p5 = new GenPair<Integer, Integer>(1, 1); // Unbreakable wall
+        final GenPair<Integer, Integer> p1 = new GenPair<>(0, 2); // grass
+        final GenPair<Integer, Integer> p2 = new GenPair<>(1, 2); // Breakable wall
+        final GenPair<Integer, Integer> p3 = new GenPair<>(2, 2); // Grass
+        final GenPair<Integer, Integer> p4 = new GenPair<>(3, 2); // Grass
+        final GenPair<Integer, Integer> p5 = new GenPair<>(1, 1); // Unbreakable wall
 
         assertTrue(map.isEmpty(p1));
         assertTrue(map.isBreakableWall(p2));

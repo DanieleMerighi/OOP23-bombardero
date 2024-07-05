@@ -15,7 +15,7 @@ import it.unibo.bombardero.physics.api.BoundingBox;
  */
 public class MyBomb implements Bomb {
 
-    private GenPair<Integer, Integer> pos;
+    private final GenPair<Integer, Integer> pos;
 
     /**
      * Constructs a new {@link MyBomb}.
