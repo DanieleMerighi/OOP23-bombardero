@@ -1,4 +1,4 @@
-package it.unibo.bombardero.cell;
+package it.unibo.bombardero.bomb.api;
 
 import it.unibo.bombardero.map.api.GenPair;
 

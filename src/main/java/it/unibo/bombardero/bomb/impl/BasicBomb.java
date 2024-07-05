@@ -1,4 +1,4 @@
-package it.unibo.bombardero.cell;
+package it.unibo.bombardero.bomb.impl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +9,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import it.unibo.bombardero.bomb.api.Bomb;
+import it.unibo.bombardero.cell.AbstractCell;
 import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.map.api.Functions;

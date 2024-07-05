@@ -1,6 +1,8 @@
-package it.unibo.bombardero.cell;
+package it.unibo.bombardero.bomb.impl;
 
-import it.unibo.bombardero.cell.Bomb.BombType;
+import it.unibo.bombardero.bomb.api.Bomb;
+import it.unibo.bombardero.bomb.api.BombFactory;
+import it.unibo.bombardero.bomb.api.Bomb.BombType;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.map.api.Functions;
 import it.unibo.bombardero.map.api.GameMap;

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import it.unibo.bombardero.cell.BombFactoryImpl;
+import it.unibo.bombardero.bomb.impl.BombFactoryImpl;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Enemy;

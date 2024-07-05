@@ -1,8 +1,9 @@
-package it.unibo.bombardero.cell;
+package it.unibo.bombardero.bomb.api;
 
 import java.util.Set;
 import java.util.Map.Entry;
 
+import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.GenPair;

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import it.unibo.bombardero.cell.Bomb;
+import it.unibo.bombardero.bomb.api.Bomb;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Cell.CellType;
 import it.unibo.bombardero.cell.Flame;

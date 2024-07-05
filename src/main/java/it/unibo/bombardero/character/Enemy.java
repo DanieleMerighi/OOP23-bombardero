@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import it.unibo.bombardero.cell.BombFactory;
+import it.unibo.bombardero.bomb.api.BombFactory;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.ai.api.EnemyState;
 import it.unibo.bombardero.character.ai.impl.EnemyGraphReasonerImpl;

@@ -2,7 +2,7 @@ package it.unibo.bombardero.cell.powerup.api;
 
 import java.util.Map;
 
-import it.unibo.bombardero.cell.Bomb.BombType;
+import it.unibo.bombardero.bomb.api.Bomb.BombType;
 
 /**
  * Enumeration representing the different types of power-ups in the game.

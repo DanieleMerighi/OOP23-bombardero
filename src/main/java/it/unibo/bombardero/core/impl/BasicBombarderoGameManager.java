@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import it.unibo.bombardero.cell.Bomb;
-import it.unibo.bombardero.cell.BombFactory;
-import it.unibo.bombardero.cell.BombFactoryImpl;
+import it.unibo.bombardero.bomb.api.Bomb;
+import it.unibo.bombardero.bomb.api.BombFactory;
+import it.unibo.bombardero.bomb.impl.BombFactoryImpl;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.FlameImpl;
 import it.unibo.bombardero.character.Character;
