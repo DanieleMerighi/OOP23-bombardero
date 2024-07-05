@@ -57,7 +57,12 @@ public class MyGameManager implements GameManager {
         enemy.setCharacterPosition(new GenPair<Float, Float>(x + CENTER, y + CENTER));
     }
 
-    public void addBomb(final GenPair<Integer,Integer> pos) {
+    /**
+     * Add a bomb in the map.
+     * 
+     * @param pos the position of the bomb
+     */
+    public void addBomb(final GenPair<Integer, Integer> pos) {
         this.map.addBomb(new MyBomb(pos), pos);
     }
 

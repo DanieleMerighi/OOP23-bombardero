@@ -96,7 +96,7 @@ class TestEnemy {
     void testEnemyEscapeChangesToPatrol() {
         // Set enemy position inside a danger zone
         this.manager.getEnemy().setSpeed(NEWSPEED);
-        this.manager.addBomb(new GenPair<Integer,Integer>(0, 1));
+        this.manager.addBomb(new GenPair<Integer, Integer>(0, 1));
         this.manager.getEnemy().update(manager, STANDARD_ELAPSED_TIME);
 
         assertTrue(manager.getEnemy().isStateEqualTo(new EscapeState()));

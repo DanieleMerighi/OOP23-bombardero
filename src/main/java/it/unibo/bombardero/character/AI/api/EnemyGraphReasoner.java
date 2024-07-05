@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * This interface defines the functionalities for pathfinding and danger zone analysis for enemies
- * within the game map. It utilizes the JGraphT library to represent the game map as a graph
+ * This interface defines the functionalities for pathfinding and danger zone
+ * analysis for enemies
+ * within the game map. It utilizes the JGraphT library to represent the game
+ * map as a graph
  * and performs graph traversals and shortest path calculations.
  */
 public interface EnemyGraphReasoner {
@@ -59,7 +61,8 @@ public interface EnemyGraphReasoner {
      *         (excluding starting position)
      *         or an empty list if no path exists
      */
-    List<GenPair<Integer, Integer>> findShortestPathToPlayer(GenPair<Integer, Integer> enemyCoord, GenPair<Integer, Integer> playerCoord);
+    List<GenPair<Integer, Integer>> findShortestPathToPlayer(GenPair<Integer, Integer> enemyCoord,
+            GenPair<Integer, Integer> playerCoord);
 
     /**
      * Finds the nearest safe cell for the enemy to move to, given its current

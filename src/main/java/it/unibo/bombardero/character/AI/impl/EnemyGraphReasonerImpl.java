@@ -93,7 +93,8 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      * @param endCell   the ending cell of the path
      * @return true if the path is blocked by walls, false otherwise
      */
-    public boolean isPathBlockedByWalls(final GenPair<Integer, Integer> startCell, final GenPair<Integer, Integer> endCell) {
+    public boolean isPathBlockedByWalls(final GenPair<Integer, Integer> startCell,
+            final GenPair<Integer, Integer> endCell) {
         if (startCell.x() != endCell.x() && startCell.y() != endCell.y()) {
             return true; // Diagonal paths not supported
         }
@@ -127,7 +128,8 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      *         (excluding starting position)
      *         or an empty list if no path exists
      */
-    public List<GenPair<Integer, Integer>> findShortestPathToPlayer(final GenPair<Integer, Integer> enemyCoord, final GenPair<Integer, Integer> playerCoord) {
+    public List<GenPair<Integer, Integer>> findShortestPathToPlayer(final GenPair<Integer, Integer> enemyCoord,
+            final GenPair<Integer, Integer> playerCoord) {
         if (enemyCoord.equals(playerCoord)) {
             return Collections.emptyList();
         }
@@ -155,11 +157,13 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      * @return an {@code Optional<Pair>} containing the coordinates of the nearest
      *         safe cell if found, otherwise an empty {@code Optional}
      */
-    public Optional<GenPair<Integer, Integer>> findNearestSafeCell(final GenPair<Integer, Integer> enemyCoord, final int explRad) {
+    public Optional<GenPair<Integer, Integer>> findNearestSafeCell(final GenPair<Integer, Integer> enemyCoord,
+            final int explRad) {
         return findNearestSafeCellRecursive(enemyCoord, explRad, new HashSet<>());
     }
 
-    private Optional<GenPair<Integer, Integer>> findNearestSafeCellRecursive(final GenPair<Integer, Integer> enemyCoord, final int explRad,
+    private Optional<GenPair<Integer, Integer>> findNearestSafeCellRecursive(final GenPair<Integer, Integer> enemyCoord,
+            final int explRad,
             final Set<GenPair<Integer, Integer>> visited) {
         final List<GenPair<Integer, Integer>> adjacentCells = EnumSet.allOf(Direction.class)
                 .stream()
@@ -180,7 +184,8 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
         } else {
             visited.addAll(adjacentCells);
             for (final GenPair<Integer, Integer> cell : adjacentCells) {
-                final Optional<GenPair<Integer, Integer>> recursiveResult = findNearestSafeCellRecursive(cell, explRad, visited);
+                final Optional<GenPair<Integer, Integer>> recursiveResult = findNearestSafeCellRecursive(cell, explRad,
+                        visited);
                 if (recursiveResult.isPresent()) {
                     return recursiveResult;
                 }
@@ -251,8 +256,10 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
      * @param newMap the new game map to update to
      */
     public void updateGraph(final GameMap newMap) {
-        final List<GenPair<Integer, Integer>> oldWalls = map.getMap().keySet().stream().filter(c -> map.isBreakableWall(c)).toList();
-        final List<GenPair<Integer, Integer>> newWalls = newMap.getMap().keySet().stream().filter(c -> newMap.isBreakableWall(c)).toList();
+        final List<GenPair<Integer, Integer>> oldWalls = map.getMap().keySet().stream()
+                .filter(c -> map.isBreakableWall(c)).toList();
+        final List<GenPair<Integer, Integer>> newWalls = newMap.getMap().keySet().stream()
+                .filter(c -> newMap.isBreakableWall(c)).toList();
         if (oldWalls.size() != newWalls.size()) {
             oldWalls.stream().filter(c -> !newWalls.contains(c)).forEach(c -> updateEdges(c));
         }

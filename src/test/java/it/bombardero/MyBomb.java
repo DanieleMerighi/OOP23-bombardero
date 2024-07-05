@@ -101,12 +101,20 @@ public class MyBomb implements Bomb {
         return this.pos;
     }
 
+    /**
+     * {@inheritDoc}
+     * @throws UnsupportedOperationException as this method is not implemented
+     */
     @Override
     public boolean haveBoundingCollision() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'haveBoundingCollision'");
     }
 
+    /**
+     * {@inheritDoc}
+     * @throws UnsupportedOperationException as this method is not implemented
+     */
     @Override
     public Set<Entry<GenPair<Integer, Integer>, FlameType>> computeFlame(final GameMap map) {
         // TODO Auto-generated method stub

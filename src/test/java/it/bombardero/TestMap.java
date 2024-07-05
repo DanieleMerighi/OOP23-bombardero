@@ -107,7 +107,7 @@ class TestMap {
     /**
      * Begins the collapsing phase and tests if it goes as expected, one block at a
      * time util all the map has collapsed.
-     * TODO: check, step-by-step if the collpase goes well
+     * 
      */
     // @Test
     // void testMapCollapse() {
@@ -132,6 +132,11 @@ class TestMap {
     // );
     // }
 
+    /**
+     * 
+     * @param coordinate
+     * @return a String
+     */
     private String fromClassToInteger(final GenPair<Integer, Integer> coordinate) {
         if (this.map.isBreakableWall(coordinate)) {
             return "B";

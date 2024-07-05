@@ -18,7 +18,7 @@ public class ShortestMovementStrategy implements MovementStrategy {
      * Calculates the next move for the given enemy, it tooks the first coordinate
      * in a shortest path.
      *
-     * @param enemy the enemy for which the next move is to be calculated
+     * @param enemy   the enemy for which the next move is to be calculated
      * @param manager the game manager
      * @return an Optional containing the next move as a Pair of coordinates, or an
      *         empty Optional if no move is available
@@ -28,7 +28,8 @@ public class ShortestMovementStrategy implements MovementStrategy {
         if (enemy.getNextMove().isEmpty()) {
             return new RandomMovementStrategy().getNextMove(enemy, manager);
         }
-        final List<GenPair<Integer, Integer>> l = enemy.getGraph().findShortestPathToPlayer(enemy.getIntCoordinate(), enemy.getNextMove().get());
+        final List<GenPair<Integer, Integer>> l = enemy.getGraph().findShortestPathToPlayer(enemy.getIntCoordinate(),
+                enemy.getNextMove().get());
         if (l.isEmpty()) {
             return new RandomMovementStrategy().getNextMove(enemy, manager);
         } else {

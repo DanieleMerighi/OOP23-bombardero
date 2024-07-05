@@ -41,11 +41,9 @@ public class Enemy extends Character {
     /**
      * Constructs a new Enemy with the specified parameters.
      * 
-     * @param coord         the initial coordinates where the enemy is spawned
+     * @param coord       the initial coordinates where the enemy is spawned
      * 
-     * @param bombFactory   the factory to create bombs
-     * 
-     * @param bBox          the hitbox of the enemy
+     * @param bombFactory the factory to create bombs
      */
     public Enemy(final GenPair<Float, Float> coord, final BombFactory bombFactory) {
         super(coord, bombFactory);
@@ -106,7 +104,7 @@ public class Enemy extends Character {
      * excluding itself and the player character.
      *
      * @param manager the game manager
-     * @param enemy the position of the enemy to find the closest entity to
+     * @param enemy   the position of the enemy to find the closest entity to
      * 
      * @return An Optional containing the closest entity, or empty if no other
      *         entities exist at the specified position.
@@ -147,7 +145,7 @@ public class Enemy extends Character {
      * and potentially updates the `nextMove` target based on danger zone detection
      * or pathfinding results.
      * 
-     * @param time the elapsed time
+     * @param time    the elapsed time
      * @param manager the game manager
      */
     private void computeNextDir(final long time, final GameManager manager) {
@@ -178,7 +176,7 @@ public class Enemy extends Character {
      * Updates the enemy's position and behavior within the game environment.
      * This method is called every frame to handle enemy movement and actions.
      * 
-     * @param manager the game manager
+     * @param manager     the game manager
      * @param elapsedTime the time elapsed since the last update
      */
     @Override
@@ -187,9 +185,10 @@ public class Enemy extends Character {
         updateSkeleton(manager, elapsedTime, CharacterType.ENEMY);
         if (nextMove.isEmpty()) {
             computeNextDir(elapsedTime, manager);
-        } else if (canMoveOn(manager.getGameMap() ,nextMove.get())) {
+        } else if (canMoveOn(manager.getGameMap(), nextMove.get())) {
             setStationary(false);
-            final GenPair<Float, Float> target = new GenPair<Float, Float>(nextMove.get().x() + 0.5f, nextMove.get().y() + 0.5f);
+            final GenPair<Float, Float> target = new GenPair<Float, Float>(nextMove.get().x() + 0.5f,
+                    nextMove.get().y() + 0.5f);
             final GenPair<Float, Float> currentPos = getCharacterPosition();
 
             // Calculate direction vector
@@ -199,7 +198,8 @@ public class Enemy extends Character {
             dir = restrictToGridDirections(dir);
 
             // Aggiorna la posizione del nemico
-            final GenPair<Float, Float> newPos = currentPos.apply(Functions.sumFloat(dir.apply(Functions.multiplyFloat(getSpeed()))));
+            final GenPair<Float, Float> newPos = currentPos
+                    .apply(Functions.sumFloat(dir.apply(Functions.multiplyFloat(getSpeed()))));
 
             // Check if reached the target cell using a small tolerance
             if (isReachedTarget(newPos, target)) {
@@ -215,8 +215,8 @@ public class Enemy extends Character {
     }
 
     private boolean canMoveOn(final GameMap gameMap, final GenPair<Integer, Integer> cell) {
-        return gameMap.isEmpty(cell) || gameMap.isPowerUp(cell) 
-        || (gameMap.isBomb(cell) && getIntCoordinate().equals(cell));
+        return gameMap.isEmpty(cell) || gameMap.isPowerUp(cell)
+                || (gameMap.isBomb(cell) && getIntCoordinate().equals(cell));
     }
 
     private boolean isReachedTarget(final GenPair<Float, Float> currentPos, final GenPair<Float, Float> target) {
@@ -230,7 +230,7 @@ public class Enemy extends Character {
                 ? (direction.x() > 0 ? Direction.RIGHT : Direction.LEFT)
                 : (direction.y() > 0 ? Direction.DOWN : Direction.UP);
         setFacingDirection(newDirection);
-        return new GenPair<Float, Float>((float)newDirection.x(), (float)newDirection.y());
+        return new GenPair<Float, Float>((float) newDirection.x(), (float) newDirection.y());
     }
 
     /**
