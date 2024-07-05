@@ -34,7 +34,7 @@ public class BasicBombarderoGameManager implements GameManager {
     public static final long GAME_OVER_TIME = 0L;
 
     private final GameMap map;
-    private final Map<Bomb, Character> boombs = new HashMap<>();
+    private final Map<Bomb, Character> bombs = new HashMap<>();
     private final List<FlameImpl> flames = new ArrayList<>();
     private final List<Character> enemies = new ArrayList<>();
     private final Character player;
@@ -82,39 +82,10 @@ public class BasicBombarderoGameManager implements GameManager {
      */
     @Override
     public void updateGame(final long elapsed) {
-        if (player.isAlive()) {
-            player.update(this, elapsed);
-            addCharacterBombsToMap(player);
-            ce.checkCharacterCollision(player, this.getGameMap());
-            ce.checkFlameAndPowerUpCollision(player, this.getGameMap());
-        }
-        enemies.forEach(enemy -> {
-            if (enemy.isAlive()) {
-                enemy.update(this, elapsed);
-                addCharacterBombsToMap(enemy);
-                ce.checkCharacterCollision(enemy, this.getGameMap());
-                ce.checkFlameAndPowerUpCollision(enemy, this.getGameMap());
-            }
-        });
-        if (!boombs.isEmpty()) {
-            boombs.entrySet().forEach(entry -> entry.getKey().update());
-            placeBombExplosion();
-        }
-        if (!flames.isEmpty()) {
-            flames.forEach(f -> f.update(elapsed));
-            flames.stream()
-                .filter(f -> f.isExpired())
-                .forEach(f -> map.removeFlame(f.getPos()));
-            flames.removeIf(f -> f.isExpired());
-        }
-    }
-
-    private void addCharacterBombsToMap(final Character character) {
-        character.getBombsToBePlaced()
-            .stream()
-            .filter(bomb -> map.addBomb(bomb, bomb.getPos()))
-            .forEach(bomb -> boombs.put(bomb, character));
-        character.resetBombsList();
+        updatePlayer(elapsed);
+        updateEnemies(elapsed);
+        updateBombs();
+        updateFlames(elapsed);
     }
 
     @Override
@@ -136,54 +107,6 @@ public class BasicBombarderoGameManager implements GameManager {
     public final Character getPlayer() {
         return this.player;
     }
-    /*
-     * @Override
-     * public boolean addBomb(final Bomb bomb, final Character character) {
-     * if (map.addBomb(bomb, bomb.getPos())) { // If the bomb is added to the map
-     * boombs.put(bomb, character); // The bomb is added to the Map bombs
-     * return true;
-     * }
-     * return false;
-     * }
-     * 
-     * @Override
-     * public void removeBomb(final GenPair<Integer, Integer> pos) {
-     * map.removeBomb(pos);
-     * }
-     * 
-     * @Override
-     * public Optional<Bomb> getBomb(final GenPair<Integer, Integer> pos) {
-     * return boombs.entrySet().stream().map(entry -> entry.getKey()).filter(b ->
-     * b.getPos().equals(pos)).findAny();
-     * }
-     * 
-     * @Override
-     * public void removePowerUp(final GenPair<Integer, Integer> pos) {
-     * map.removePowerUp(pos);
-     * }
-     * 
-     * @Override
-     * public void addFlame(final FlameImpl.FlameType type, final GenPair<Integer,
-     * Integer> pos) {
-     * final FlameImpl f = new FlameImpl(CellType.FLAME, type, pos);
-     * flames.add(f);
-     * map.addFlame(f, pos);
-     * }
-     * 
-     * @Override
-     * public void removeFlame(final GenPair<Integer, Integer> pos) {
-     * map.removeFlame(pos);
-     * }
-     * 
-     * @Override
-     * public boolean removeWall(final GenPair<Integer, Integer> pos) {
-     * if (map.isBreakableWall(pos)) {
-     * map.removeBreakableWall(pos);
-     * return true;
-     * }
-     * return false;
-     * }
-     */
 
     /**
      * If the time is being kept it returns the time passed. This implementation
@@ -203,10 +126,55 @@ public class BasicBombarderoGameManager implements GameManager {
         return this.bombFactory;
     }
 
+    private void updateFlames(final long elapsed) {
+        if (!flames.isEmpty()) {
+            flames.forEach(f -> f.update(elapsed));
+            flames.stream()
+                .filter(f -> f.isExpired())
+                .forEach(f -> map.removeFlame(f.getPos()));
+            flames.removeIf(f -> f.isExpired());
+        }
+    }
+
+    private void updateBombs() {
+        if (!bombs.isEmpty()) {
+            bombs.entrySet().forEach(entry -> entry.getKey().update());
+            placeBombExplosion();
+        }
+    }
+
+    private void updateEnemies(final long elapsed) {
+        enemies.forEach(enemy -> {
+            if (enemy.isAlive()) {
+                enemy.update(this, elapsed);
+                addCharacterBombsToMap(enemy);
+                ce.checkCharacterCollision(enemy, this.getGameMap());
+                ce.checkFlameAndPowerUpCollision(enemy, this.getGameMap());
+            }
+        });
+    }
+
+    private void updatePlayer(final long elapsed) {
+        if (player.isAlive()) {
+            player.update(this, elapsed);
+            addCharacterBombsToMap(player);
+            ce.checkCharacterCollision(player, this.getGameMap());
+            ce.checkFlameAndPowerUpCollision(player, this.getGameMap());
+        }
+    }
+
+    private void addCharacterBombsToMap(final Character character) {
+        character.getBombsToBePlaced()
+            .stream()
+            .filter(bomb -> map.addBomb(bomb, bomb.getPos()))
+            .forEach(bomb -> bombs.put(bomb, character));
+        character.resetBombsList();
+    }
+
     private void placeBombExplosion() {
-        Map.copyOf(boombs).entrySet().stream()
+        Map.copyOf(bombs).entrySet().stream()
                 .filter(entry -> entry.getKey().isExploded())
-                .peek(entry -> boombs.remove(entry.getKey()))
+                .peek(entry -> bombs.remove(entry.getKey()))
                 .peek(entry -> entry.getValue().removeBombFromDeque(entry.getKey()))
                 .map(entry -> entry.getKey().computeFlame(this.getGameMap()))
                 .forEach(set -> set.stream()
