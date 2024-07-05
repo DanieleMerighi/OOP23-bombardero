@@ -242,7 +242,6 @@ public abstract class Character {
                     .get();
             remoteBomb.update(true); // Initialises the explosion process.
             removeBombFromDeque(remoteBomb); // Removes the bomb from the deque.
-            // System.out.println("exploded remote bomb\n\n");
         }
     }
 
@@ -253,7 +252,6 @@ public abstract class Character {
      */
     public void removeBombFromDeque(final Bomb explodedBomb) {
         if (!queuedBombs.isEmpty() && queuedBombs.removeFirstOccurrence(explodedBomb)) {
-            // System.out.println("removed bomb\n\n");
             this.increaseNumBomb();
 
         }
@@ -619,7 +617,7 @@ public abstract class Character {
      * @return the list of bombs
      */
     public List<Bomb> getBombsToBePlaced() {
-        return this.bombsToBePlaced;
+        return List.copyOf(this.bombsToBePlaced);
     }
 
     /**

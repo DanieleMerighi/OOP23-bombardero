@@ -53,19 +53,15 @@ public class KeyboardInput implements KeyListener {
         switch (e.getKeyChar()) {
             // Opens the menu
             case KeyEvent.VK_ESCAPE -> controller.escape();
-            // System.out.println("ESC");
             // calls player method to place a bomb
             case KeyEvent.VK_SPACE -> controller.getMainPlayer().setHasToPlaceBomb(true);
-            // System.out.println("spazio");
             // calls powerup method to use line bomb powerup
             case 'l', 'L' -> {
                 controller.getMainPlayer().setHasToPlaceLineBomb(true);
-                // System.out.println("l");
             }
             // calls player method to explode remote bomb powerup
             case 'p', 'P' -> {
                 controller.getMainPlayer().setHasToExplodeRemoteBomb(true);
-                // System.out.println("p");
             }
             default -> {
             }
@@ -94,25 +90,21 @@ public class KeyboardInput implements KeyListener {
                 up = true;
                 controller.getMainPlayer().setStationary(false);
                 controller.getMainPlayer().setFacingDirection(Direction.UP);
-                // System.out.println("UP");
             }
             case KeyEvent.VK_A -> {
                 left = true;
                 controller.getMainPlayer().setStationary(false);
                 controller.getMainPlayer().setFacingDirection(Direction.LEFT);
-                // System.out.println("LEFT");
             }
             case KeyEvent.VK_S -> {
                 down = true;
                 controller.getMainPlayer().setStationary(false);
                 controller.getMainPlayer().setFacingDirection(Direction.DOWN);
-                // System.out.println("DOWN");
             }
             case KeyEvent.VK_D -> {
                 right = true;
                 controller.getMainPlayer().setStationary(false);
                 controller.getMainPlayer().setFacingDirection(Direction.RIGHT);
-                // System.out.println("RIGHT");
             }
             default -> {
             }
