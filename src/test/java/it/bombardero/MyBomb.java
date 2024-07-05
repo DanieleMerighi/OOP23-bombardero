@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import it.unibo.bombardero.cell.Bomb;
-import it.unibo.bombardero.cell.FlameImpl.FlameType;
+import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.physics.api.BoundingBox;

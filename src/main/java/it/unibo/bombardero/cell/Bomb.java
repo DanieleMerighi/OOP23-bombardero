@@ -3,7 +3,7 @@ package it.unibo.bombardero.cell;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import it.unibo.bombardero.cell.FlameImpl.FlameType;
+import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.GenPair;
 

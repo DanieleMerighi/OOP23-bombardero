@@ -9,7 +9,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import it.unibo.bombardero.cell.FlameImpl.FlameType;
+import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.map.api.Functions;
 import it.unibo.bombardero.map.api.GameMap;
