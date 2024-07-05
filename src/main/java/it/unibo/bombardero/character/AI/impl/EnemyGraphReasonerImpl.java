@@ -146,7 +146,8 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
         // Use Dijkstra's algorithm to find the shortest path to the player
         final DijkstraShortestPath<GenPair<Integer, Integer>, DefaultWeightedEdge> dijkstra = new DijkstraShortestPath<>(
                 graph);
-        final GraphPath<GenPair<Integer, Integer>, DefaultWeightedEdge> path = dijkstra.getPath(enemyCoord, playerCoord);
+        final GraphPath<GenPair<Integer, Integer>, DefaultWeightedEdge> path = dijkstra.getPath(enemyCoord,
+                playerCoord);
         return path == null ? Collections.emptyList()
                 : path.getVertexList().subList(1, path.getVertexList().size());
     }
@@ -172,13 +173,15 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
             final GenPair<Integer, Integer> enemyCoord,
             final int explRad,
             final Set<GenPair<Integer, Integer>> visited) {
+
+        visited.add(enemyCoord);
+
         final List<GenPair<Integer, Integer>> adjacentCells = EnumSet.allOf(Direction.class)
                 .stream()
                 .map(d -> new GenPair<Integer, Integer>(enemyCoord.x() + d.x(), enemyCoord.y() + d.y()))
-                .filter(cell -> isValidCell(cell) && map.isEmpty(cell)
+                .filter(cell -> isValidCell(cell) && !visited.contains(cell) && (map.isEmpty(cell)
                         || (map.isPowerUp(cell)
-                                && map.whichPowerUpType(cell).filter(type -> type != PowerUpType.SKULL).isPresent())
-                        && !visited.contains(cell))
+                                && map.whichPowerUpType(cell).filter(type -> type != PowerUpType.SKULL).isPresent())))
                 .collect(Collectors.toCollection(ArrayList::new));
 
         final Optional<GenPair<Integer, Integer>> safeCell = adjacentCells.stream()
@@ -188,17 +191,18 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
 
         if (safeCell.isPresent()) {
             return safeCell;
-        } else {
-            visited.addAll(adjacentCells);
-            for (final GenPair<Integer, Integer> cell : adjacentCells) {
+        }
+
+        for (final GenPair<Integer, Integer> cell : adjacentCells) {
+            if (!visited.contains(cell)) {
                 final Optional<GenPair<Integer, Integer>> recursiveResult = findNearestSafeCellRecursive(map, cell,
-                        explRad,
-                        visited);
+                        explRad, visited);
                 if (recursiveResult.isPresent()) {
                     return recursiveResult;
                 }
             }
         }
+        
         return Optional.empty();
     }
 
