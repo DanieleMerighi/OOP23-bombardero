@@ -27,8 +27,6 @@ class TestPlayer {
     private static final int STANDARD_ELAPSED_TIME = 100;
     private MyGameManager manager;
 
-    private float spawnX;
-    private float spawnY;
     private GenPair<Float, Float> spawnCoord;
     private GenPair<Float, Float> expectedCoord;
 
@@ -39,10 +37,8 @@ class TestPlayer {
     @BeforeEach
     void setUp() {
         this.manager = new MyGameManager();
-        spawnX = STARTING_COORD;
-        spawnY = STARTING_COORD;
-        spawnCoord  = new GenPair<Float, Float>(spawnX, spawnY);
-        expectedCoord = new GenPair<Float, Float>(spawnX, spawnY);
+        spawnCoord  = new GenPair<>(STARTING_COORD, STARTING_COORD);
+        expectedCoord = new GenPair<>(STARTING_COORD, STARTING_COORD);
         this.manager.getPlayer().setCharacterPosition(spawnCoord);
     }
 
@@ -69,7 +65,7 @@ class TestPlayer {
         // Setting player to not stationary
         this.manager.getPlayer().setStationary(false);
         // Setting player speed
-        this.manager.getPlayer().setSpeed(Character.getStartingSpeed());
+        this.manager.getPlayer().setSpeed(Character.STARTING_SPEED);
 
         // Setting the number of update and calling them
         final int updateNumeber = FPS; // Number of updates done

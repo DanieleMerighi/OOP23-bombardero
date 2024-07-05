@@ -3,10 +3,7 @@ package it.unibo.bombardero.core.api;
 import java.util.List;
 import java.util.Optional;
 
-import it.unibo.bombardero.cell.Bomb;
-import it.unibo.bombardero.cell.FlameImpl.FlameType;
 import it.unibo.bombardero.map.api.GameMap;
-import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.character.Character;
 
 /** 

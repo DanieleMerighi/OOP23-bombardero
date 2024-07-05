@@ -26,7 +26,7 @@ public class ChaseMovementStrategy implements MovementStrategy {
     public Optional<GenPair<Integer, Integer>> getNextMove(final Enemy enemy, final GameManager manager) {
         return enemy.getClosestEntity(manager).flatMap(closestEntity -> {
             final List<GenPair<Integer, Integer>> path = enemy.getGraph()
-                    .findShortestPathToPlayer(enemy.getIntCoordinate(), closestEntity);
+                    .findShortestPathToPlayer(manager.getGameMap(), enemy.getIntCoordinate(), closestEntity);
             if (!path.isEmpty()) {
                 return Optional.of(path.get(0));
             }

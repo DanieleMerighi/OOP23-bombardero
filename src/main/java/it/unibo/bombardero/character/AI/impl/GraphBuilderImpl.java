@@ -43,9 +43,10 @@ public final class GraphBuilderImpl {
      * @return a weighted graph representing the game map
      */
     public static Graph<GenPair<Integer, Integer>, DefaultWeightedEdge> buildFromMap(final GameMap map) {
-        Graph<GenPair<Integer, Integer>, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
+        final Graph<GenPair<Integer, Integer>, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(
+                DefaultWeightedEdge.class);
 
-        Stream<GenPair<Integer, Integer>> validcells = IntStream.range(0, Utils.MAP_ROWS)
+        final Stream<GenPair<Integer, Integer>> validcells = IntStream.range(0, Utils.MAP_ROWS)
                 .boxed()
                 .flatMap(r -> IntStream.range(0, Utils.MAP_COLS).mapToObj(c -> new GenPair<Integer, Integer>(r, c))
                         .filter(p -> !map.isUnbreakableWall(p)));
@@ -65,17 +66,17 @@ public final class GraphBuilderImpl {
      * @param map   the game map object used to identify walkable cells and walls
      */
     private static void connectWithNeighbors(
-            final Graph<GenPair<Integer, Integer>,
-            DefaultWeightedEdge> graph,
+            final Graph<GenPair<Integer, Integer>, DefaultWeightedEdge> graph,
             final GenPair<Integer, Integer> p,
             final GameMap map) {
         EnumSet.allOf(Direction.class)
                 .stream()
                 .forEach(direction -> {
-                    GenPair<Integer, Integer> newCoord = new GenPair<Integer, Integer>(p.x() + direction.x(), p.y() + direction.y());
+                    final GenPair<Integer, Integer> newCoord = new GenPair<>(p.x() + direction.x(),
+                            p.y() + direction.y());
                     if (isValidCell(newCoord.x(), newCoord.y())
                             && graph.containsVertex(newCoord)) {
-                        DefaultWeightedEdge e = graph.addEdge(p, newCoord);
+                        final DefaultWeightedEdge e = graph.addEdge(p, newCoord);
                         if (map.isBreakableWall(newCoord) || map.isBreakableWall(p)) {
                             graph.setEdgeWeight(e, BREAKABLEWALL_WEIGHT);
                         } else {

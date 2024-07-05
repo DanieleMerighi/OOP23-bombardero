@@ -14,7 +14,7 @@ public interface GuideManager extends GameManager {
     /** 
      * The player's spawnpoint coordinates during the guide.
      */
-    GenPair<Float, Float> PLAYER_GUIDE_SPAWNPOINT = new GenPair<Float, Float>(4.5f, 6.5f);
+    GenPair<Float, Float> PLAYER_GUIDE_SPAWNPOINT = new GenPair<>(4.5f, 6.5f);
 
     /**
      * The coordinate where the guide's crate have to be spawned.
@@ -24,7 +24,7 @@ public interface GuideManager extends GameManager {
     /** 
      * The coordinate where the dummy character have to be spawned.
      */
-    GenPair<Float, Float> DUMMY_GUIDE_SPAWNPOINT = new GenPair<Float, Float>(8.5f, 6.5f);
+    GenPair<Float, Float> DUMMY_GUIDE_SPAWNPOINT = new GenPair<>(8.5f, 6.5f);
 
     /**
      * Spawns a dummy {@link Character} in the game. The

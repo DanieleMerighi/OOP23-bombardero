@@ -17,14 +17,17 @@ import javax.swing.JPanel;
 import it.unibo.bombardero.core.api.Controller;
 
 /**
- * This class is a JPanel that rapresent the initial menu.
+ * This class will never be serialised.
+ */
+@SuppressWarnings("serial")
+/**
+ * TODO: Javadoc
  */
 public final class MenuCard extends JPanel {
 
     private static final int DISTANCE_FROM_LOGO = 60;
     private static final int DISTANCE_FROM_PLAY = 80;
     private final transient JButton play;
-    private final transient JButton guide;
 
     /* Resources: */
     private final transient Image background;
@@ -56,8 +59,8 @@ public final class MenuCard extends JPanel {
         this.setLayout(new GridBagLayout());
         final GridBagConstraints gbc = new GridBagConstraints();
         play = new JButton(new ImageIcon(playImage));
-        guide = new JButton(new ImageIcon(guideImage));
-
+        final JButton guide = new JButton(new ImageIcon(guideImage));
+        /* TODO: better style JButtons, in windows you can stil see the buttons highlight, in MacOS however no...  */
         guide.setBorder(null);
         play.setBorder(null);
         guide.setBorderPainted(false);

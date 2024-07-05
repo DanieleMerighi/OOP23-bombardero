@@ -2,7 +2,9 @@ package it.unibo.bombardero.character;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 import java.util.Optional;
 
 import it.unibo.bombardero.cell.Bomb;
@@ -41,7 +43,6 @@ public abstract class Character {
         ENEMY;
     }
 
-    // Constants for default settings
     /**
      * The character's hitbox height.
      */
@@ -50,16 +51,27 @@ public abstract class Character {
      * The character's hitbox width.
      */
     public static final float BOUNDING_BOX_WIDTH = 0.700f;
+    /**
+     * The starting speed of the character.
+     */
+    public static final float STARTING_SPEED = 0.05f;
+    /**
+     * The starting flame range of the character.
+     */
+    public static final int STARTING_FLAME_RANGE = 1;
+    /**
+     * The max speed of the character.
+     */
+    public static final float MAX_SPEED = 0.09f;
+    /**
+     * The max flame range of the character.
+     */
+    public static final int MAX_FLAME_RANGE = 8;
+
     private static final float BOUNDING_BOX_Y_OFFSET = 0.2f;
     private static final float BOUNDING_BOX_X_OFFSET = 0.3f;
-    private static final float STARTING_SPEED = 0.05f;
     private static final float INCREASE_SPEED = 0.005f;
-    private static final int STARTING_FLAME_RANGE = 1;
     private static final int STARTING_BOMBS = 1;
-
-    // Constants for controls
-    private static final float MAX_SPEED = 0.09f;
-    private static final int MAX_FLAME_RANGE = 8;
     private static final int MAX_BOMBS = 8;
 
     // Bomb Factory reference
@@ -83,65 +95,27 @@ public abstract class Character {
     private Optional<PowerUpType> bombType = Optional.empty();
     private boolean lineBomb; // False by default
 
-    private final Deque<Bomb> bombQueue = new ArrayDeque<>();
+    private final Deque<Bomb> queuedBombs = new ArrayDeque<>();
+    private final List<Bomb> bombsToBePlaced = new ArrayList<>();
+
     // Update related
     private boolean hasToPlaceBomb;
-
     private boolean hasToPlaceLineBomb;
     private boolean hasToExplodeRemoteBomb;
 
     // Skull effects
     private boolean constipation; // The character is unable to lay down bombs
-
     private boolean butterfingers; // The character's hand becomes slippery. The character rapidly lays down bombs
 
     // Skull manager
     private long skeletonEffectDuration; // Indicates the duration of the skull effect
-
     private Optional<Runnable> resetEffect = Optional.empty(); // Restores all stats modified by the skull
-
-    /**
-     * Gets the starting flame range of the character.
-     * 
-     * @return the starting flame range
-     */
-    public static int getStartingFlameRange() {
-        return STARTING_FLAME_RANGE;
-    }
-
-    /**
-     * Gets the max flame range of the character.
-     * 
-     * @return the max flame range
-     */
-    public static int getMaxFlameRange() {
-        return MAX_FLAME_RANGE;
-    }
-
-    /**
-     * Gets the starting speed of the character.
-     * 
-     * @return the starting speed
-     */
-    public static float getStartingSpeed() {
-        return STARTING_SPEED;
-    }
-
-    /**
-     * Gets the max speed of the character.
-     * 
-     * @return the max speed
-     */
-    public static float getMaxSpeed() {
-        return MAX_SPEED;
-    }
 
     /**
      * Constructs a new Character with the specified parameters.
      * 
      * @param coord         the initial coordinates where the character is spawned
      * @param bombFactory   the factory to create bombs
-     * @param bBox          the hitbox of the character
      */
     public Character(final GenPair<Float, Float> coord, final BombFactory bombFactory) {
         this.coordinate = coord;
@@ -262,7 +236,7 @@ public abstract class Character {
     public void explodeRemoteBomb() {
         if (hasPlacedRemoteBomb()) { // Checks if there's a remote bomb to explode.
             // Finds the first remote bomb occurrence.
-            final Bomb remoteBomb = bombQueue.stream()
+            final Bomb remoteBomb = queuedBombs.stream()
                     .filter(bomb -> bomb.getBombType().equals(BombType.BOMB_REMOTE))
                     .findFirst()
                     .get();
@@ -278,7 +252,7 @@ public abstract class Character {
      * @param explodedBomb the exploded bomb that needs to be removed
      */
     public void removeBombFromDeque(final Bomb explodedBomb) {
-        if (!bombQueue.isEmpty() && bombQueue.removeFirstOccurrence(explodedBomb)) {
+        if (!queuedBombs.isEmpty() && queuedBombs.removeFirstOccurrence(explodedBomb)) {
             // System.out.println("removed bomb\n\n");
             this.increaseNumBomb();
 
@@ -290,8 +264,8 @@ public abstract class Character {
      * 
      * @return the bomb deque
      */
-    public Deque<Bomb> getBombQueue() {
-        return new ArrayDeque<>(bombQueue);
+    public Deque<Bomb> getQueuedBombs() {
+        return new ArrayDeque<>(queuedBombs);
     }
 
     /**
@@ -640,6 +614,23 @@ public abstract class Character {
     }
 
     /**
+     * Gets the list of bombs pending to be placed.
+     * 
+     * @return the list of bombs
+     */
+    public List<Bomb> getBombsToBePlaced() {
+        return this.bombsToBePlaced;
+    }
+
+    /**
+     * Resets the list of bombs pending to be placed.
+     * 
+     */
+    public void resetBombsList() {
+        this.bombsToBePlaced.clear();
+    }
+
+    /**
      * General implementation of the placeBomb method.
      * 
      * @param manager   the game manager
@@ -647,19 +638,34 @@ public abstract class Character {
      * @return          true if the bomb was placed
      */
     private boolean placeBombImpl(final GameManager manager, final Bomb bomb) {
-        if (hasBombsLeft() && !this.constipation && manager.addBomb(bomb, this)) {
+        if (hasBombsLeft() && !this.constipation && canPlaceBomb(manager, bomb.getPos())) {
             this.numBomb--;
-            bombQueue.addLast(bomb);
+            bombsToBePlaced.add(bomb);
+            queuedBombs.addLast(bomb);
             return true;
         }
         return false;
     }
 
-    /*
+    /**
+     * Checks whether the character can place a bomb at the given coordinates.
+     * 
+     * @param manager       the manager
+     * @param coordinate    the bomb's coordinates
+     * 
+     * @return true if he can place the bomb at the given coordinates.
+     */
+    private boolean canPlaceBomb(final GameManager manager, final GenPair<Integer, Integer> coordinate) {
+        return manager.getGameMap().isEmpty(coordinate);
+    }
+
+    /**
      * Checks whether the character has placed a remote bomb or not.
+     * 
+     * @return true if he has to
      */
     private boolean hasPlacedRemoteBomb() {
-        return this.bombQueue.stream()
+        return this.queuedBombs.stream()
                 .anyMatch(bomb -> bomb.getBombType().equals(BombType.BOMB_REMOTE));
     }
 
@@ -668,6 +674,7 @@ public abstract class Character {
      * 
      * @param coordinate    the coordinate of the bomb
      * @param type          the type of character who creates it
+     * 
      * @return              the bomb created
      */
     private Bomb createBomb(final GenPair<Integer, Integer> coordinate, final CharacterType type) {

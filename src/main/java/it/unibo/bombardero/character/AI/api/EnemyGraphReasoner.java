@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * This interface defines the functionalities for pathfinding and danger zone analysis for enemies
- * within the game map. It utilizes the JGraphT library to represent the game map as a graph
+ * This interface defines the functionalities for pathfinding and danger zone
+ * analysis for enemies
+ * within the game map. It utilizes the JGraphT library to represent the game
+ * map as a graph
  * and performs graph traversals and shortest path calculations.
  */
 public interface EnemyGraphReasoner {
@@ -21,11 +23,12 @@ public interface EnemyGraphReasoner {
      * explosion radius
      * and checks if any of them contain a reachable bomb (not blocked by walls).
      *
+     * @param map the game map
      * @param enemyCoord the enemy's current coordinates
      * @param explRadius the explosion radius of the danger zone
      * @return true if the enemy is within a danger zone, false otherwise
      */
-    boolean isInDangerZone(GenPair<Integer, Integer> enemyCoord, int explRadius);
+    boolean isInDangerZone(GameMap map, GenPair<Integer, Integer> enemyCoord, int explRadius);
 
     /**
      * Checks if a path between two cells is blocked by walls (breakable or
@@ -36,11 +39,12 @@ public interface EnemyGraphReasoner {
      * are not
      * supported.
      *
+     * @param map the game map
      * @param startCell the starting cell of the path
      * @param endCell   the ending cell of the path
      * @return true if the path is blocked by walls, false otherwise
      */
-    boolean isPathBlockedByWalls(GenPair<Integer, Integer> startCell, GenPair<Integer, Integer> endCell);
+    boolean isPathBlockedByWalls(GameMap map, GenPair<Integer, Integer> startCell, GenPair<Integer, Integer> endCell);
 
     /**
      * Finds the shortest path from the enemy's current location to the player's
@@ -53,40 +57,27 @@ public interface EnemyGraphReasoner {
      * empty list
      * is returned.
      *
+     * @param map the game map
      * @param enemyCoord  the enemy's current coordinates
      * @param playerCoord the player's current coordinates
      * @return a list of cells representing the shortest path to the player
      *         (excluding starting position)
      *         or an empty list if no path exists
      */
-    List<GenPair<Integer, Integer>> findShortestPathToPlayer(GenPair<Integer, Integer> enemyCoord, GenPair<Integer, Integer> playerCoord);
+    List<GenPair<Integer, Integer>> findShortestPathToPlayer(GameMap map, GenPair<Integer, Integer> enemyCoord,
+            GenPair<Integer, Integer> playerCoord);
 
     /**
      * Finds the nearest safe cell for the enemy to move to, given its current
      * coordinates and explosion radius.
      *
+     * @param map the game map
      * @param enemyCoord the current coordinates of the enemy
      * @param explRad    the explosion radius to consider for safety
      * @return an {@code Optional<Pair>} containing the coordinates of the nearest
      *         safe cell if found, otherwise an empty {@code Optional}
      */
-    Optional<GenPair<Integer, Integer>> findNearestSafeCell(GenPair<Integer, Integer> enemyCoord, int explRad);
-
-    /**
-     * Finds the nearest reachable bomb from the enemy's current location.
-     * This method performs a Breadth-First Search (BFS) traversal on the graph
-     * starting
-     * from the enemy's coordinates. It explores cells within the map and checks if
-     * any
-     * of them contain a reachable bomb (not blocked by walls). If a reachable bomb
-     * is found, its coordinates are returned as an Optional object. Otherwise, an
-     * empty Optional is returned.
-     *
-     * @param enemyCoord the enemy's current coordinates
-     * @return an Optional containing the nearest reachable bomb (Pair) or empty if
-     *         none found
-     */
-    Optional<GenPair<Integer, Integer>> findNearestBomb(GenPair<Integer, Integer> enemyCoord);
+    Optional<GenPair<Integer, Integer>> findNearestSafeCell(GameMap map, GenPair<Integer, Integer> enemyCoord, int explRad);
 
     /**
      * Updates the internal graph representation of the game map with a new map.
@@ -99,9 +90,10 @@ public interface EnemyGraphReasoner {
      * Finds the nearest power-up within a limited radius from the enemy's current
      * coordinates.
      *
+     * @param map the game map
      * @param enemyCoord the current coordinates of the enemy
      * @return an {@code Optional<Pair>} containing the coordinates of the nearest
      *         power-up if found, otherwise an empty {@code Optional}
      */
-    Optional<GenPair<Integer, Integer>> findNearestPowerUp(GenPair<Integer, Integer> enemyCoord);
+    Optional<GenPair<Integer, Integer>> findNearestPowerUp(GameMap map, GenPair<Integer, Integer> enemyCoord);
 }

@@ -9,7 +9,6 @@ import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.ai.api.EnemyState;
 import it.unibo.bombardero.character.ai.impl.EnemyGraphReasonerImpl;
 import it.unibo.bombardero.character.ai.impl.EscapeState;
-import it.unibo.bombardero.character.ai.impl.GraphManagerImpl;
 import it.unibo.bombardero.character.ai.impl.PatrolState;
 import it.unibo.bombardero.character.ai.impl.RandomMovementStrategy;
 import it.unibo.bombardero.character.ai.impl.ShortestMovementStrategy;
@@ -19,6 +18,10 @@ import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.utils.Utils;
 
+/**
+ * This class will never be serialised.
+ */
+@SuppressWarnings("serial")
 /**
  * Represents an enemy character within the game environment.
  * Enemies are intelligent entities that can move around the map, detect dangers
@@ -31,17 +34,15 @@ public class Enemy extends Character {
     private EnemyState currentState = new PatrolState(); // Initial state
     private EnemyGraphReasonerImpl graph;
     private int waitTimer = -1;
-    private boolean attemptedPowerUp = false; // flag to indicate if power-up attempt failed
+    private boolean attemptedPowerUp; // flag to indicate if power-up attempt failed
     private static final float TOLERANCE = 0.0001f; // A small tolerance value
 
     /**
      * Constructs a new Enemy with the specified parameters.
      * 
-     * @param coord         the initial coordinates where the enemy is spawned
+     * @param coord       the initial coordinates where the enemy is spawned
      * 
-     * @param bombFactory   the factory to create bombs
-     * 
-     * @param bBox          the hitbox of the enemy
+     * @param bombFactory the factory to create bombs
      */
     public Enemy(final GenPair<Float, Float> coord, final BombFactory bombFactory) {
         super(coord, bombFactory);
@@ -102,7 +103,7 @@ public class Enemy extends Character {
      * excluding itself and the player character.
      *
      * @param manager the game manager
-     * @param enemy the position of the enemy to find the closest entity to
+     * @param enemy   the position of the enemy to find the closest entity to
      * 
      * @return An Optional containing the closest entity, or empty if no other
      *         entities exist at the specified position.
@@ -143,12 +144,10 @@ public class Enemy extends Character {
      * and potentially updates the `nextMove` target based on danger zone detection
      * or pathfinding results.
      * 
-     * @param time the elapsed time
      * @param manager the game manager
      */
-    private void computeNextDir(final long time, final GameManager manager) {
-        GameMap gameMap = manager.getGameMap();
-        graph = GraphManagerImpl.getGraphReasoner(gameMap, time);
+    private void computeNextDir(final GameManager manager) {
+        final GameMap gameMap = manager.getGameMap();
         currentState.execute(this, manager);
         if (nextMove.isPresent()) {
             if (calculateDistance(getIntCoordinate(), nextMove.get()) > 1) {
@@ -159,7 +158,8 @@ public class Enemy extends Character {
                 placeBomb(manager, CharacterType.ENEMY);
                 nextMove = Optional.empty();
             } else if (gameMap.isBreakableWall(nextMove.get())
-                    && graph.findNearestSafeCell(getIntCoordinate(), getFlameRange()).isPresent()) {
+                    && graph.findNearestSafeCell(manager.getGameMap(), getIntCoordinate(), getFlameRange())
+                            .isPresent()) {
                 placeBomb(manager, CharacterType.ENEMY);
             }
         } else {
@@ -174,18 +174,19 @@ public class Enemy extends Character {
      * Updates the enemy's position and behavior within the game environment.
      * This method is called every frame to handle enemy movement and actions.
      * 
-     * @param manager the game manager
+     * @param manager     the game manager
      * @param elapsedTime the time elapsed since the last update
      */
     @Override
     public void update(final GameManager manager, final long elapsedTime) {
-        GraphManagerImpl.initialize(manager.getGameMap());
+        updateGraph(manager.getGameMap());
         updateSkeleton(manager, elapsedTime, CharacterType.ENEMY);
         if (nextMove.isEmpty()) {
-            computeNextDir(elapsedTime, manager);
-        } else if (canMoveOn(manager.getGameMap() ,nextMove.get())) {
+            computeNextDir(manager);
+        } else if (canMoveOn(manager.getGameMap(), nextMove.get())) {
             setStationary(false);
-            final GenPair<Float, Float> target = new GenPair<Float, Float>(nextMove.get().x() + 0.5f, nextMove.get().y() + 0.5f);
+            final GenPair<Float, Float> target = new GenPair<>(nextMove.get().x() + 0.5f,
+                    nextMove.get().y() + 0.5f);
             final GenPair<Float, Float> currentPos = getCharacterPosition();
 
             // Calculate direction vector
@@ -195,7 +196,8 @@ public class Enemy extends Character {
             dir = restrictToGridDirections(dir);
 
             // Aggiorna la posizione del nemico
-            final GenPair<Float, Float> newPos = currentPos.apply(Functions.sumFloat(dir.apply(Functions.multiplyFloat(getSpeed()))));
+            final GenPair<Float, Float> newPos = currentPos
+                    .apply(Functions.sumFloat(dir.apply(Functions.multiplyFloat(getSpeed()))));
 
             // Check if reached the target cell using a small tolerance
             if (isReachedTarget(newPos, target)) {
@@ -210,9 +212,17 @@ public class Enemy extends Character {
         }
     }
 
+    private void updateGraph(final GameMap map) {
+        if (graph == null) {
+            graph = new EnemyGraphReasonerImpl(map);
+        } else {
+            graph.updateGraph(map);
+        }
+    }
+
     private boolean canMoveOn(final GameMap gameMap, final GenPair<Integer, Integer> cell) {
-        return gameMap.isEmpty(cell) || gameMap.isPowerUp(cell) 
-        || (gameMap.isBomb(cell) && getIntCoordinate().equals(cell));
+        return gameMap.isEmpty(cell) || gameMap.isPowerUp(cell)
+                || gameMap.isBomb(cell) && getIntCoordinate().equals(cell);
     }
 
     private boolean isReachedTarget(final GenPair<Float, Float> currentPos, final GenPair<Float, Float> target) {
@@ -222,11 +232,11 @@ public class Enemy extends Character {
     }
 
     private GenPair<Float, Float> restrictToGridDirections(final GenPair<Float, Float> direction) {
-        final Direction newDirection = (Math.abs(direction.x()) > Math.abs(direction.y()))
-                ? (direction.x() > 0 ? Direction.RIGHT : Direction.LEFT)
-                : (direction.y() > 0 ? Direction.DOWN : Direction.UP);
+        final Direction newDirection = Math.abs(direction.x()) > Math.abs(direction.y())
+                ? direction.x() > 0 ? Direction.RIGHT : Direction.LEFT
+                : direction.y() > 0 ? Direction.DOWN : Direction.UP;
         setFacingDirection(newDirection);
-        return new GenPair<Float, Float>((float)newDirection.x(), (float)newDirection.y());
+        return new GenPair<Float, Float>((float) newDirection.x(), (float) newDirection.y());
     }
 
     /**

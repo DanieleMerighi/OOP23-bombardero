@@ -17,33 +17,37 @@ import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.utils.Utils;
 
 /**
+ * Unit tests for the {@link GameMap} class.
+ * <p>
+ * This class contains tests to verify the behavior of the GameMap, including
+ * initiation and features like the wall collapse.
+ * </p>
  * @author Federico Bagattoni
  */
-public class TestMap {
+class TestMap {
 
-    private static int TOTAL_CELLS;
-    private static int EXPECTED_UNBREAKABLE_WALLS_NUMBER;
-    private static int EXPECTED_BREAKABLE_WALLS_NUMBER;
-    private final static int MAP_CORNERS_QTY = 12;
+    private static int totalCells;
+    private static int expectedUnbreakableWallsNumber;
+    private static int expectedBreakableWallsNumber;
+    private static final int MAP_CORNERS_QTY = 12;
 
-    private final Set<GenPair<Integer, Integer>> MAP_CORNERS = new HashSet<>();
-    private final Set<GenPair<Integer, Integer>> EXPECTED_UNBREAKABLE_WALLS_COORDINATES = new HashSet<>();
+    private final Set<GenPair<Integer, Integer>> mapCorners = new HashSet<>();
+    private final Set<GenPair<Integer, Integer>> expectedUnbreakableWallsCoordinates = new HashSet<>();
 
     private GameMap map;
 
     @BeforeAll
     static void initConstants() {
-        TOTAL_CELLS = Utils.MAP_ROWS * Utils.MAP_COLS;
-        EXPECTED_UNBREAKABLE_WALLS_NUMBER = (int)Math.floor(
-            Math.floorDiv(Utils.MAP_ROWS, 2) * Math.floorDiv(Utils.MAP_COLS, 2)
-        );
-        EXPECTED_BREAKABLE_WALLS_NUMBER = (int)Math.floor(
-            (TOTAL_CELLS - EXPECTED_UNBREAKABLE_WALLS_NUMBER - MAP_CORNERS_QTY) * Utils.WALL_PRESENCE_RATE
-        );
+        totalCells = Utils.MAP_ROWS * Utils.MAP_COLS;
+        expectedUnbreakableWallsNumber = (int) Math.floor(
+                Math.floorDiv(Utils.MAP_ROWS, 2) * Math.floorDiv(Utils.MAP_COLS, 2));
+        expectedBreakableWallsNumber = (int) Math.floor(
+                (totalCells - expectedUnbreakableWallsNumber - MAP_CORNERS_QTY) * Utils.WALL_PRESENCE_RATE);
     }
 
     /**
-     * Computes the numbers to check according to the map size reported on the Utils class.
+     * Computes the numbers to check according to the map size reported on the Utils
+     * class.
      */
     @BeforeEach
     void init() {
@@ -51,41 +55,41 @@ public class TestMap {
         computeMapCorners();
         computeUnbreakableWallsCoordinates();
         /* print2DArray(generatePrintableMap()); */
-    } 
+    }
 
-    /** 
-     * Tests wether the unbreakable walls have been correctly placed, according to the standard scheme.
+    /**
+     * Tests wether the unbreakable walls have been correctly placed, according to
+     * the standard scheme.
      */
     @Test
     void testUnbreakableWallsInitialization() {
-        long unbreakableWallsPresent = this.map.getMap().entrySet().stream()
-            .filter(entry -> this.map.isUnbreakableWall(entry.getKey()))
-            .count();
+        final long unbreakableWallsPresent = this.map.getMap().entrySet().stream()
+                .filter(entry -> this.map.isUnbreakableWall(entry.getKey()))
+                .count();
 
-        assertEquals(EXPECTED_UNBREAKABLE_WALLS_NUMBER, unbreakableWallsPresent);
+        assertEquals(expectedUnbreakableWallsNumber, unbreakableWallsPresent);
         System.out.println("OK, all the unbreakable walls are present: " + unbreakableWallsPresent);
 
         assertEquals(
-            EXPECTED_UNBREAKABLE_WALLS_COORDINATES,
-            map.getMap().entrySet().stream()
-                .map(entry -> entry.getKey())
-                .filter(pair -> map.isUnbreakableWall(pair))
-                .collect(Collectors.toSet())
-        );
+                expectedUnbreakableWallsCoordinates,
+                map.getMap().entrySet().stream()
+                        .map(entry -> entry.getKey())
+                        .filter(pair -> map.isUnbreakableWall(pair))
+                        .collect(Collectors.toSet()));
         System.out.println("OK, all the unbreakable walls are in the right position");
     }
 
-    /** 
-     * Tests wether all the breakable walls that had to be placed were correctly placed.
+    /**
+     * Tests wether all the breakable walls that had to be placed were correctly
+     * placed.
      */
     @Test
     void testBreakableWallsNumber() {
         assertEquals(
-            EXPECTED_BREAKABLE_WALLS_NUMBER,
-            map.getMap().entrySet().stream()
-                .filter(entry -> map.isBreakableWall(entry.getKey()))
-                .count()
-        );
+                expectedBreakableWallsNumber,
+                map.getMap().entrySet().stream()
+                        .filter(entry -> map.isBreakableWall(entry.getKey()))
+                        .count());
     }
 
     /**
@@ -95,64 +99,67 @@ public class TestMap {
     @Test
     void checkBreakableWallsInCorners() {
         assertTrue(
-            map.getMap().entrySet().stream()
-                .filter(entry -> this.map.isBreakableWall(entry.getKey()))
-                .anyMatch(entry -> !this.MAP_CORNERS.contains(entry.getKey()))
-        );
+                map.getMap().entrySet().stream()
+                        .filter(entry -> this.map.isBreakableWall(entry.getKey()))
+                        .anyMatch(entry -> !this.mapCorners.contains(entry.getKey())));
     }
 
-    /** 
-     * Begins the collapsing phase and tests if it goes as expected, one block at a time 
-     * util all the map has collapsed
-     * TODO: check, step-by-step if the collpase goes well
+    /**
+     * Begins the collapsing phase and tests if it goes as expected, one block at a
+     * time util all the map has collapsed.
+     * 
      */
     // @Test
     // void testMapCollapse() {
-    //     /* Create the manager and print the map before the collapse */
-    //     MapManager manager = new MapManagerImpl(this.map);
-    //     String[][] collapsingMap = generatePrintableMap();
-    //     print2DArray(collapsingMap);
+    // /* Create the manager and print the map before the collapse */
+    // MapManager manager = new MapManagerImpl(this.map);
+    // String[][] collapsingMap = generatePrintableMap();
+    // print2DArray(collapsingMap);
 
-    //     manager.triggerCollapse();
-    //     for(int i = 0; i < TOTAL_CELLS; i++) {
-    //         manager.update();
+    // manager.triggerCollapse();
+    // for(int i = 0; i < TOTAL_CELLS; i++) {
+    // manager.update();
 
-    //     }
-
-    //     computeMatrixTraversal();
-
-    //     /* Final check if every cell is a wall (print the map to make sure) */
-    //     print2DArray(generatePrintableMap());
-    //     assertTrue(
-    //         map.getMap().entrySet().stream()
-    //             .allMatch(entry -> map.isUnbreakableWall(entry.getKey()))
-    //     );
     // }
 
-    private String fromClassToInteger(GenPair<Integer, Integer> coordinate) {
-        if(this.map.isBreakableWall(coordinate)) {
+    // computeMatrixTraversal();
+
+    // /* Final check if every cell is a wall (print the map to make sure) */
+    // print2DArray(generatePrintableMap());
+    // assertTrue(
+    // map.getMap().entrySet().stream()
+    // .allMatch(entry -> map.isUnbreakableWall(entry.getKey()))
+    // );
+    // }
+
+    /**
+     * 
+     * @param coordinate
+     * @return a String
+     */
+    private String fromClassToInteger(final GenPair<Integer, Integer> coordinate) {
+        if (this.map.isBreakableWall(coordinate)) {
             return "B";
-        }
-        else if(this.map.isUnbreakableWall(coordinate)) {
+        } else if (this.map.isUnbreakableWall(coordinate)) {
             return "U";
-        }
-        else if(this.map.isEmpty(coordinate)) {
+        } else if (this.map.isEmpty(coordinate)) {
             return "E";
         }
         return "O";
     }
 
     private String[][] generatePrintableMap() {
-        String[][] printableMap = new String[Utils.MAP_ROWS][Utils.MAP_COLS];
+        final String[][] printableMap = new String[Utils.MAP_ROWS][Utils.MAP_COLS];
         this.map.getMap().entrySet().stream()
-            .forEach(entry -> printableMap[entry.getKey().x()][entry.getKey().y()] = fromClassToInteger(entry.getKey()));
+                .forEach(entry -> printableMap[entry.getKey().x()][entry.getKey().y()] = fromClassToInteger(
+                        entry.getKey()));
         return printableMap;
     }
 
-    private void print2DArray(String[][] arr) {
-        for(int i = 0; i < Utils.MAP_ROWS; i++) {
-            for(int j = 0; j < Utils.MAP_COLS; j++) {
-                String output = arr[i][j] == null ? "E" : arr[i][j];
+    private void print2DArray(final String[][] arr) {
+        for (int i = 0; i < Utils.MAP_ROWS; i++) {
+            for (int j = 0; j < Utils.MAP_COLS; j++) {
+                final String output = arr[i][j] == null ? "E" : arr[i][j];
                 System.out.print(output + "  ");
             }
             System.out.println();
@@ -160,9 +167,9 @@ public class TestMap {
         System.out.print("\n\n");
     }
 
-    private void printPlain2DArray(String[][] arr) {
-        for(int i = 0; i < Utils.MAP_ROWS; i++) {
-            for(int j = 0; j < Utils.MAP_COLS; j++) {
+    private void printPlain2DArray(final String[][] arr) {
+        for (int i = 0; i < Utils.MAP_ROWS; i++) {
+            for (int j = 0; j < Utils.MAP_COLS; j++) {
                 System.out.print(arr[i][j] + "  ");
             }
             System.out.println();
@@ -171,34 +178,36 @@ public class TestMap {
     }
 
     private void computeUnbreakableWallsCoordinates() {
-        for(int i = 1; i < Utils.MAP_ROWS; i += 2) {
-            for(int j = 1; j < Utils.MAP_COLS; j += 2) {
-                this.EXPECTED_UNBREAKABLE_WALLS_COORDINATES.add(new GenPair<Integer, Integer>(i, j));
+        for (int i = 1; i < Utils.MAP_ROWS; i += 2) {
+            for (int j = 1; j < Utils.MAP_COLS; j += 2) {
+                this.expectedUnbreakableWallsCoordinates.add(new GenPair<Integer, Integer>(i, j));
             }
         }
     }
 
     private void computeMapCorners() {
-        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(0, 0));
-        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(0, 1));
-        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(1, 0));
+        this.mapCorners.add(new GenPair<Integer, Integer>(0, 0));
+        this.mapCorners.add(new GenPair<Integer, Integer>(0, 1));
+        this.mapCorners.add(new GenPair<Integer, Integer>(1, 0));
 
-        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(Utils.MAP_ROWS - 1, Utils.MAP_COLS - 1));
-        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(Utils.MAP_ROWS - 1, Utils.MAP_COLS - 2));
-        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(Utils.MAP_ROWS - 2, Utils.MAP_COLS - 1));
-        
-        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(Utils.MAP_ROWS - 1, 0));
-        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(Utils.MAP_ROWS - 1, 1));
-        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(Utils.MAP_ROWS - 2, 0));
-        
-        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(0, Utils.MAP_COLS - 1));
-        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(1, Utils.MAP_COLS - 1));
-        this.MAP_CORNERS.add(new GenPair<Integer, Integer>(0, Utils.MAP_COLS - 2));
+        this.mapCorners.add(new GenPair<Integer, Integer>(Utils.MAP_ROWS - 1, Utils.MAP_COLS - 1));
+        this.mapCorners.add(new GenPair<Integer, Integer>(Utils.MAP_ROWS - 1, Utils.MAP_COLS - 2));
+        this.mapCorners.add(new GenPair<Integer, Integer>(Utils.MAP_ROWS - 2, Utils.MAP_COLS - 1));
+
+        this.mapCorners.add(new GenPair<Integer, Integer>(Utils.MAP_ROWS - 1, 0));
+        this.mapCorners.add(new GenPair<Integer, Integer>(Utils.MAP_ROWS - 1, 1));
+        this.mapCorners.add(new GenPair<Integer, Integer>(Utils.MAP_ROWS - 2, 0));
+
+        this.mapCorners.add(new GenPair<Integer, Integer>(0, Utils.MAP_COLS - 1));
+        this.mapCorners.add(new GenPair<Integer, Integer>(1, Utils.MAP_COLS - 1));
+        this.mapCorners.add(new GenPair<Integer, Integer>(0, Utils.MAP_COLS - 2));
     }
 
     private void computeMatrixTraversal() {
-        String[][] matrixTraversal = new String[Utils.MAP_ROWS][Utils.MAP_COLS];
-        int top = 0, left = 0, bottom = Utils.MAP_COLS - 1, right = Utils.MAP_ROWS - 1, count = 0;
+        final String[][] matrixTraversal = new String[Utils.MAP_ROWS][Utils.MAP_COLS];
+        int top = 0, left = 0;
+        final int bottom = Utils.MAP_COLS - 1;
+        int right = Utils.MAP_ROWS - 1, count = 0;
         while (top <= bottom && left <= right) {
             for (int i = left; i <= right; i++) {
                 matrixTraversal[top][i] = Integer.toString(count);
@@ -210,14 +219,14 @@ public class TestMap {
                 count++;
             }
             right--;
-            if(top <= bottom) {
-                for(int i = bottom; i >= top; i--) {
+            if (top <= bottom) {
+                for (int i = bottom; i >= top; i--) {
                     matrixTraversal[i][left] = Integer.toString(count);
                     count++;
                 }
                 left++;
             }
-            
+
             if (left <= right) {
                 for (int i = bottom; i >= top; i--) {
                     matrixTraversal[i][left] = Integer.toString(count);
@@ -227,6 +236,6 @@ public class TestMap {
             }
         }
         printPlain2DArray(matrixTraversal);
-    } 
+    }
 
 }

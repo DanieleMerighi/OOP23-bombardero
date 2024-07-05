@@ -7,6 +7,10 @@ import it.unibo.bombardero.map.api.Functions;
 import it.unibo.bombardero.map.api.GenPair;
 
 /**
+ * This class will never be serialised.
+ */
+@SuppressWarnings("serial")
+/**
  * This class represents a Player in the game.
  * This class extends the Character class and is responsible for handling
  * player-specific actions and behaviors.
@@ -18,7 +22,6 @@ public class Player extends Character {
      * 
      * @param coord         the initial coordinates where the player is spawned
      * @param bombFactory   the factory to create bombs
-     * @param bBox          the hit box of the player
      */
     public Player(final GenPair<Float, Float> coord, final BombFactory bombFactory) {
         super(coord, bombFactory);

@@ -14,7 +14,7 @@ import it.unibo.bombardero.map.api.GenPair;
 /**
  * Test class for Enemy behavior testing.
  */
-public class TestEnemy {
+class TestEnemy {
 
     private static final int STANDARD_ELAPSED_TIME = 100;
     private static final int STARTING_BOMBS = 1;
@@ -27,7 +27,7 @@ public class TestEnemy {
      * Setup method executed before each test.
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         this.manager = new MyGameManager();
         this.manager.setEnemyCoord(0, 0);
         this.manager.getEnemy().setSpeed(SPEED);
@@ -37,7 +37,7 @@ public class TestEnemy {
      * Test case: Enemy moves randomly when player is not in detection radius.
      */
     @Test
-    public void testEnemyPatrolPlayerNotInDetectionRadiusMovesRandomly() {
+    void testEnemyPatrolPlayerNotInDetectionRadiusMovesRandomly() {
         // outside ENEMY_DETECTION_RADIUS
         // CHECKSTYLE: MagicNumber OFF
         manager.setPlayerCoord(0, 5);
@@ -55,7 +55,7 @@ public class TestEnemy {
      * Test case: Enemy changes to CHASE state when player is in detection radius.
      */
     @Test
-    public void testEnemyPatrolPlayerInDetectionRadiusChangesToChaseState() {
+    void testEnemyPatrolPlayerInDetectionRadiusChangesToChaseState() {
         // Set player position within detection radius in TestGameManager
         manager.setPlayerCoord(0, 4);
         manager.updateGame(STANDARD_ELAPSED_TIME);
@@ -68,7 +68,7 @@ public class TestEnemy {
      * Test case: Enemy changes back to PATROL state when losing the player.
      */
     @Test
-    public void testEnemyChaseLosesPlayerChangesToPatrolState() {
+    void testEnemyChaseLosesPlayerChangesToPatrolState() {
         // Set initial player position within detection radius in TestGameManager
         manager.setPlayerCoord(2, 1);
         manager.getEnemy().setNumBomb(0);
@@ -93,10 +93,10 @@ public class TestEnemy {
      * Test case: Enemy escapes and then returns to PATROL state.
      */
     @Test
-    public void testEnemyEscapeChangesToPatrol() {
+    void testEnemyEscapeChangesToPatrol() {
         // Set enemy position inside a danger zone
         this.manager.getEnemy().setSpeed(NEWSPEED);
-        this.manager.addBomb(new MyBomb(new GenPair<Integer, Integer>(0, 1)), null);
+        this.manager.addBomb(new GenPair<Integer, Integer>(0, 1));
         this.manager.getEnemy().update(manager, STANDARD_ELAPSED_TIME);
 
         assertTrue(manager.getEnemy().isStateEqualTo(new EscapeState()));
@@ -112,11 +112,12 @@ public class TestEnemy {
      * Test case: Enemy places bomb when next to a breakable wall.
      */
     @Test
-    public void testEnemyPatrolBreakableWallNextToEnemyPlacesBomb() {
+    void testEnemyPatrolBreakableWallNextToEnemyPlacesBomb() {
         // Set enemy next to a breakable wall
         manager.setPlayerCoord(1, 2);
         manager.getEnemy().setNumBomb(STARTING_BOMBS); // 1 bomb added to enemy
         manager.getGameMap().addBreakableWall(new GenPair<Integer, Integer>(0, 1));
+        manager.getGameMap().addBreakableWall(new GenPair<Integer, Integer>(2, 0));
         manager.getEnemy().update(manager, STANDARD_ELAPSED_TIME);
 
         assertTrue(manager.getEnemy().isStateEqualTo(new ChaseState()));

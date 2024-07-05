@@ -21,15 +21,15 @@ public final class ResizingEngine {
     private static final double MENU_LOGO_SCALE = 0.90;
 
     /* A mischevious padding no one knows its reason to exist: */
-    private final static int MISCHIEVOUS_PADDING = 23;
+    private static final int MISCHIEVOUS_PADDING = 23;
 
     /* Constants for resources: */
-    private final static int BUTTON_WIDTH = 346;
-    private final static int BUTTON_HEIGHT = 92;
-    private final static int MENU_BACKGROUND_WIDTH = 3840;
-    private final static int MENU_BACKGROUND_HEIGHT = 2160;
-    private final static int MENU_LOGO_WIDTH = 1522;
-    private final static int MENU_LOGO_HEIGHT = 362;
+    private static final int BUTTON_WIDTH = 346;
+    private static final int BUTTON_HEIGHT = 92;
+    private static final int MENU_BACKGROUND_WIDTH = 3840;
+    private static final int MENU_BACKGROUND_HEIGHT = 2160;
+    private static final int MENU_LOGO_WIDTH = 1522;
+    private static final int MENU_LOGO_HEIGHT = 362;
 
     private double currentScale = 1.125; /* default scale size for every device */
     private final int scaledCellSize;
@@ -236,18 +236,18 @@ public final class ResizingEngine {
                 menuLogoSize.height);
     }
 
-    private Dimension initMapPlacingPoint() {
-        return new Dimension(
-                gameWindowSize.width / 2 - getMapSize().width / 2 - frameInsets.right + frameInsets.left,
-                gameWindowSize.height / 2 - getMapSize().height / 2 - frameInsets.top + frameInsets.bottom);
-    }
-
     public Dimension initGameWindowSize(final JFrame frame) {
         return new Dimension(
                 frame.getInsets().left + frame.getInsets().right
                         + (int) (Utils.MAP_WIDTH * currentScale + Utils.GRASS_PADDING_RATIO * Utils.MAP_WIDTH),
                 frame.getInsets().top + frame.getInsets().bottom
                         + (int) (Utils.MAP_HEIGHT * currentScale + Utils.GRASS_PADDING_RATIO * Utils.MAP_HEIGHT));
+    }
+
+    private Dimension initMapPlacingPoint() {
+        return new Dimension(
+                gameWindowSize.width / 2 - getMapSize().width / 2 - frameInsets.right + frameInsets.left,
+                gameWindowSize.height / 2 - getMapSize().height / 2 - frameInsets.top + frameInsets.bottom);
     }
 
     /**

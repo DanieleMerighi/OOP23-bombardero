@@ -42,17 +42,17 @@ public final class RectangleBoundingBox implements BoundingBox {
     public GenPair<Float, Float> computeCollision(final BoundingBox bBox, final Direction dir) {
         switch (dir) {
             case LEFT:
-                return new GenPair<Float, Float>((float) this.physicsBox.createIntersection(bBox.getPhysicsBox()).getWidth(), 
-                    0f);
+                return new GenPair<Float, Float>(
+                        (float) this.physicsBox.createIntersection(bBox.getPhysicsBox()).getWidth(), 0f);
             case RIGHT:
-                return new GenPair<Float, Float>(-(float) this.physicsBox.createIntersection(bBox.getPhysicsBox()).getWidth(), 
-                    0f);
+                return new GenPair<Float, Float>(
+                        (float) -this.physicsBox.createIntersection(bBox.getPhysicsBox()).getWidth(), 0f);
             case UP:
-                return new GenPair<Float, Float>(0f, 
-                    (float) this.physicsBox.createIntersection(bBox.getPhysicsBox()).getHeight());
+                return new GenPair<Float, Float>(0f,
+                        (float) this.physicsBox.createIntersection(bBox.getPhysicsBox()).getHeight());
             case DOWN:
-                return new GenPair<Float, Float>(0f, 
-                    -(float) this.physicsBox.createIntersection(bBox.getPhysicsBox()).getHeight());
+                return new GenPair<Float, Float>(0f,
+                        -(float) this.physicsBox.createIntersection(bBox.getPhysicsBox()).getHeight());
             default:
                 return new GenPair<Float, Float>(0f, 0f);
         }

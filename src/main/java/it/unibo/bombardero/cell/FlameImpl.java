@@ -70,6 +70,7 @@ public final class FlameImpl extends AbstractCell implements Flame {
         this.pos = pos;
     }
 
+    @Override
     public void update(final long timeElapsed) {
         this.countTime += timeElapsed;
         if (countTime > 500) {
@@ -77,18 +78,22 @@ public final class FlameImpl extends AbstractCell implements Flame {
         }
     }
 
+    @Override
     public boolean isExpired() {
         return this.expired;
     }
 
+    @Override
     public GenPair<Integer, Integer> getPos() {
         return this.pos;
     }
 
+    @Override
     public FlameType getFlameType() {
         return specificFlameType;
     }
 
+    @Override
     public long getTimePassed() {
         return countTime;
     }

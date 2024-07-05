@@ -30,6 +30,10 @@ import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
 
 /**
+ * This class will never be serialised.
+ */
+@SuppressWarnings("serial")
+/**
  * This class is the panel containing the game view.
  * @author Federico Bagattoni
  */
