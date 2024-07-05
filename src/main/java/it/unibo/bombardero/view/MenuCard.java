@@ -16,22 +16,41 @@ import javax.swing.JPanel;
 
 import it.unibo.bombardero.core.api.Controller;
 
+/**
+ * This class is a JPanel that rapresent the initial menu.
+ */
 public final class MenuCard extends JPanel {
 
+    private static final int DISTANCE_FROM_LOGO = 60;
+    private static final int DISTANCE_FROM_PLAY = 80;
     private final transient JButton play;
     private final transient JButton guide;
 
     /* Resources: */
     private final transient Image background;
 
+    /**
+     * Resize the immages thank to the ResizeEngine, set the style and function of
+     * button play and guide.
+     * 
+     * @param controller     to initialize the game when the button play is pressed
+     * @param graphicsEngine to get the ResizeEngine
+     * @param rg             to take the images from the resouces
+     */
     public MenuCard(final Controller controller, final BombarderoGraphics graphicsEngine, final ResourceGetter rg) {
         // CHECKSTYLE: MagicNumber OFF
-        final Image logo = graphicsEngine.getResizingEngine().getScaledMenuLogoImage(rg.loadImage("menu/logo"));
-        final Image playImage = graphicsEngine.getResizingEngine().getScaledButtonImage(rg.loadImage("overlay/buttons/PLAY"));
-        final Image guideImage = graphicsEngine.getResizingEngine().getScaledButtonImage(rg.loadImage("overlay/buttons/GUIDE"));
-        final Image playPressedImage = graphicsEngine.getResizingEngine().getScaledButtonImage(rg.loadImage("overlay/buttons/PLAY_PRESSED"));
-        final Image guidePressedImage = graphicsEngine.getResizingEngine().getScaledButtonImage(rg.loadImage("overlay/buttons/GUIDE_PRESSED"));
-        background = graphicsEngine.getResizingEngine().getScaledBackgroundImage(rg.loadImage("menu/background"));
+        final Image logo = graphicsEngine.getResizingEngine()
+                .getScaledMenuLogoImage(rg.loadImage("menu/logo"));
+        final Image playImage = graphicsEngine.getResizingEngine()
+                .getScaledButtonImage(rg.loadImage("overlay/buttons/PLAY"));
+        final Image guideImage = graphicsEngine.getResizingEngine()
+                .getScaledButtonImage(rg.loadImage("overlay/buttons/GUIDE"));
+        final Image playPressedImage = graphicsEngine.getResizingEngine()
+                .getScaledButtonImage(rg.loadImage("overlay/buttons/PLAY_PRESSED"));
+        final Image guidePressedImage = graphicsEngine.getResizingEngine()
+                .getScaledButtonImage(rg.loadImage("overlay/buttons/GUIDE_PRESSED"));
+        background = graphicsEngine.getResizingEngine()
+                .getScaledBackgroundImage(rg.loadImage("menu/background"));
         // CHECKSTYLE: MagicNumber ON
 
         this.setLayout(new GridBagLayout());
@@ -65,7 +84,7 @@ public final class MenuCard extends JPanel {
         gbc.gridwidth = 1;
         gbc.anchor = GridBagConstraints.CENTER; // Utilizza anchor per centrare la componente
         gbc.fill = GridBagConstraints.NONE; // Nessun riempimento, lascia la componente nella sua dimensione preferita
-        gbc.insets = new Insets(80, 0, 0, 0);
+        gbc.insets = new Insets(DISTANCE_FROM_PLAY, 0, 0, 0);
         this.add(play, gbc);
 
         // Configurazione del bottone "Guide"
@@ -75,7 +94,7 @@ public final class MenuCard extends JPanel {
         gbc.gridwidth = 1;
         gbc.anchor = GridBagConstraints.CENTER; // Utilizza anchor per centrare la componente
         gbc.fill = GridBagConstraints.NONE; // Nessun riempimento, lascia la componente nella sua dimensione preferita
-        gbc.insets = new Insets(60, 0, 0, 0);
+        gbc.insets = new Insets(DISTANCE_FROM_LOGO, 0, 0, 0);
         this.add(guide, gbc);
 
         play.addActionListener(new ActionListener() {
@@ -84,7 +103,6 @@ public final class MenuCard extends JPanel {
             public void actionPerformed(final ActionEvent e) {
                 controller.startGame();
             }
-            
         });
 
         guide.addActionListener(new ActionListener() {
@@ -93,17 +111,20 @@ public final class MenuCard extends JPanel {
             public void actionPerformed(final ActionEvent e) {
                 controller.startGuide();
             }
-            
         });
     }
 
     @Override
     public void paintComponent(final Graphics g) {
         super.paintComponent(g);
-        final Graphics2D g2d = (Graphics2D)g;
-        //final Dimension cropSize = graphicsEngine.getFrameSize();
-        /* TODO: original background image is 4k, the image is to be scaled and the parameteres modified */
-        //final Image img = background.getSubimage(3840 - cropSize.width, 2160 - cropSize.height, cropSize.width, cropSize.height);
+        final Graphics2D g2d = (Graphics2D) g;
+        // final Dimension cropSize = graphicsEngine.getFrameSize();
+        /*
+         * TODO: original background image is 4k, the image is to be scaled and the
+         * parameteres modified
+         */
+        // final Image img = background.getSubimage(3840 - cropSize.width, 2160 -
+        // cropSize.height, cropSize.width, cropSize.height);
         g2d.drawImage(background, 0, 0, null);
     }
 }

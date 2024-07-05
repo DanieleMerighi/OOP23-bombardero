@@ -7,6 +7,9 @@ import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.character.Character;
 
+/**
+ * This interface take objects that are colliding with somethig and apply the effect of the collision.
+ */
 public interface CollisionHandler {
 
     /**

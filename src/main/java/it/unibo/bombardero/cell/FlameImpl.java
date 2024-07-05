@@ -5,7 +5,11 @@ import java.util.Map;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.map.api.GenPair;
 
-public class FlameImpl extends AbstractCell implements Flame{
+/**
+ * This is an actual flame that takes time to expire and kill characters that is
+ * above it
+ */
+public final class FlameImpl extends AbstractCell implements Flame {
 
     public enum FlameType {
 
@@ -54,6 +58,12 @@ public class FlameImpl extends AbstractCell implements Flame{
     private final GenPair<Integer, Integer> pos;
     private long countTime;
 
+    /**
+     * 
+     * @param type            Flame
+     * @param specfiFlameType if it's a CrossFlame, Orizzontal, Vertical
+     * @param pos             position on the map
+     */
     public FlameImpl(final CellType type, final FlameType specfiFlameType, final GenPair<Integer, Integer> pos) {
         super(type, false, null);
         this.specificFlameType = specfiFlameType;

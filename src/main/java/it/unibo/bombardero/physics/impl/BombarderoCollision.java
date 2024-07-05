@@ -17,7 +17,10 @@ import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.physics.api.CollisionHandler;
 import it.unibo.bombardero.character.Character;
 
-public class BombarderoCollision implements CollisionEngine {
+/**
+ * Detect every type of collision between characters and cells
+ */
+public final class BombarderoCollision implements CollisionEngine {
     private static final int MIN_NUM_CELL = 0;
     private static final int MAX_NUM_CELL = 12;
     private final CollisionHandler cHandler = new CollisionHandlerImpl();
