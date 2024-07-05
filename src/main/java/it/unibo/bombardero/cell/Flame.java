@@ -15,12 +15,39 @@ public interface Flame extends Cell {
      */
     enum FlameType {
 
+        /**
+         * Center.
+         */
         FLAME_CROSS("explosion/cross"),
+
+        /**
+         * Vertical body.
+         */
         FLAME_BODY_VERTICAL("explosion/body/vert"),
+
+        /**
+         * Horizzontal body.
+         */
         FLAME_BODY_HORIZONTAL("explosion/body/hor"),
+
+        /**
+         * Final top part.
+         */
         FLAME_END_TOP("explosion/end/up"),
+
+        /**
+         * Final bottom part.
+         */
         FLAME_END_BOTTOM("explosion/end/down"),
+
+        /**
+         * Final right part.
+         */
         FLAME_END_RIGHT("explosion/end/right"),
+
+        /**
+         * Final left part.
+         */
         FLAME_END_LEFT("explosion/end/left");
 
         private final String typeString;
