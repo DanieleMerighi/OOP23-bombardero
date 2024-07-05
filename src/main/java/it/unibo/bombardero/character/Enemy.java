@@ -180,7 +180,7 @@ public class Enemy extends Character {
     @Override
     public void update(final GameManager manager, final long elapsedTime) {
         updateGraph(manager.getGameMap());
-        updateSkeleton(manager, elapsedTime, CharacterType.ENEMY);
+        updateSkull(manager, elapsedTime, CharacterType.ENEMY);
         if (nextMove.isEmpty()) {
             computeNextDir(manager);
         } else if (canMoveOn(manager.getGameMap(), nextMove.get())) {
