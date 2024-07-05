@@ -71,9 +71,9 @@ public class BasicBombarderoGameManager implements GameManager {
      * <ul>
      * <li>The map
      * <li>The main character
+     * <li>The enemies
      * <li>The bombs
      * <li>The flames
-     * <li>The enemies
      * </ul>
      * The argument passed can be passed to the synchronous entities
      * to synchronize them to the game's time.
@@ -106,6 +106,18 @@ public class BasicBombarderoGameManager implements GameManager {
                 ce.checkFlameAndPowerUpCollision(enemy, this.getGameMap());
             }
         });
+        if (!boombs.isEmpty()) {
+            boombs.entrySet().forEach(entry -> entry.getKey().update());
+            placeBombExplosion();
+        }
+        if (!flames.isEmpty()) {
+            flames.forEach(f -> f.update(elapsed));
+            List.copyOf(flames)
+                .stream()
+                .filter(f -> f.isExpired())
+                .peek(f -> flames.remove(f))
+                .forEach(f -> map.removeFlame(f.getPos()));
+        }
     }
 
     private void addCharacterBombsToMap(final Character character) {
