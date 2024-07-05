@@ -10,7 +10,10 @@ import it.unibo.bombardero.map.api.GenPair;
  */
 public interface Flame extends Cell {
 
-    public enum FlameType {
+    /**
+     * This enum describe the type of flame and return the type based of the direction.
+     */
+    enum FlameType {
 
         FLAME_CROSS("explosion/cross"),
         FLAME_BODY_VERTICAL("explosion/body/vert"),
@@ -34,18 +37,36 @@ public interface Flame extends Cell {
                 Direction.UP, FlameType.FLAME_END_TOP,
                 Direction.DOWN, FlameType.FLAME_END_BOTTOM);
 
+        /**
+         * set the the string for the specified type.
+         * @param typeString
+         */
         FlameType(final String typeString) {
             this.typeString = typeString;
         }
 
+        /**
+         * 
+         * @return the typeString
+         */
         public String getTypeString() {
             return this.typeString;
         }
 
+        /**
+         * 
+         * @param dir
+         * @return a bodyType based of the direction
+         */
         public static FlameType getFlameBodyType(final Direction dir) {
             return FLAME_BODY_TYPES_MAP.get(dir);
         }
 
+        /**
+         * 
+         * @param dir
+         * @return a endBodyType based of the direction
+         */
         public static FlameType getFlameEndType(final Direction dir) {
             return FLAME_END_TYPES_MAP.get(dir);
         }
