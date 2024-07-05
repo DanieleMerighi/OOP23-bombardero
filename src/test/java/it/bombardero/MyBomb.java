@@ -69,7 +69,7 @@ public class MyBomb implements Bomb {
      * @throws UnsupportedOperationException as this method is not implemented
      */
     @Override
-    public void update() {
+    public void update(final long timeElapsed) {
         throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
 

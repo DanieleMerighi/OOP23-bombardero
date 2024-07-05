@@ -5,8 +5,10 @@ import java.util.function.Function;
 import org.apache.commons.math3.util.Pair;
 
 /**
- * This is a generic Pair whith method that require Function to apply at the
- * Pair
+ * This is a generic Pair whith methods that require Function to apply to the
+ * Pair.
+ * @param <K>
+ * @param <V>
  */
 public class GenPair<K, V> extends Pair<K, V> {
 

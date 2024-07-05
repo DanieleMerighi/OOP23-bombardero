@@ -36,16 +36,16 @@ public interface Bomb extends Cell {
     boolean isExploded();
 
     /**
-     * the bomb explode if the condition is true
-     * 
+     * the bomb explode if the condition is true.
      * @param condition
      */
     void update(boolean condition);
 
     /**
      * update the bomb
+     * @param timeElapsed time passed after last update
      */
-    void update();
+    void update(long timeElapsed);
 
     /**
      * 

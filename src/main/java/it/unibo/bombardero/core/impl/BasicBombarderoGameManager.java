@@ -84,7 +84,7 @@ public class BasicBombarderoGameManager implements GameManager {
     public void updateGame(final long elapsed) {
         updatePlayer(elapsed);
         updateEnemies(elapsed);
-        updateBombs();
+        updateBombs(elapsed);
         updateFlames(elapsed);
     }
 
@@ -136,9 +136,9 @@ public class BasicBombarderoGameManager implements GameManager {
         }
     }
 
-    private void updateBombs() {
+    private void updateBombs(final long elapsed) {
         if (!bombs.isEmpty()) {
-            bombs.entrySet().forEach(entry -> entry.getKey().update());
+            bombs.entrySet().forEach(entry -> entry.getKey().update(elapsed));
             placeBombExplosion();
         }
     }

@@ -27,12 +27,10 @@ public final class Utils {
         public static final long GAME_TIME = 120_000L;
         /** Maximum waiting time in milliseconds. */
         public static final int MAX_WAITING_TIME = 2000;
-    
         /** Detection radius for enemies. */
         public static final int ENEMY_DETECTION_RADIUS = 4;
         /** Initial numbers of bombs for enemies. */
         public static final int ENEMY_STARTING_BOMBS = 1;
-    
         /** Width of the map in pixels. */
         public static final int MAP_WIDTH = 524; 
         /** Height of the map in pixels. */

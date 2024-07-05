@@ -53,7 +53,7 @@ public final class BombFactoryImpl implements BombFactory {
         return new BasicBomb(BombType.BOMB_REMOTE, range, pos) {
 
             @Override
-            public void update() {
+            public void update(long timeElapsed) {
             }
         };
     }
