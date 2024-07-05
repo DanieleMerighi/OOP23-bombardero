@@ -21,8 +21,6 @@ import it.unibo.bombardero.character.Character;
  * Detect every type of collision between characters and cells
  */
 public final class BombarderoCollision implements CollisionEngine {
-    private static final int MIN_NUM_CELL = 0;
-    private static final int MAX_NUM_CELL = 12;
     private final CollisionHandler cHandler = new CollisionHandlerImpl();
     private final Map<Direction, Line2D.Float> mapOutlines = Map.of(
             Direction.UP, new Line2D.Float(new Point2D.Float(0, 0), new Point2D.Float(13, 0)),
@@ -79,6 +77,7 @@ public final class BombarderoCollision implements CollisionEngine {
     }
 
     private boolean isOutOfBound(final GenPair<Integer, Integer> p) {
-        return p.x() < MIN_NUM_CELL || p.y() < MIN_NUM_CELL || p.x() > MAX_NUM_CELL || p.y() > MAX_NUM_CELL;
+        return p.x() < GameMap.MIN_NUM_CELL || p.y() < GameMap.MIN_NUM_CELL 
+            || p.x() > GameMap.MAX_NUM_CELL || p.y() > GameMap.MAX_NUM_CELL;
     }
 }

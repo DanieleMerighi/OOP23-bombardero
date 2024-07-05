@@ -94,8 +94,9 @@ public class BasicBombarderoGameManager implements GameManager {
         }
         if (!flames.isEmpty()) {
             flames.forEach(f -> f.update(elapsed));
-            List.copyOf(flames).stream().filter(f -> f.isExpired()).peek(f -> flames.remove(f))
+            flames.stream().filter(f -> f.isExpired())
                     .forEach(f -> map.removeFlame(f.getPos()));
+            flames.removeIf(f -> f.isExpired());
         }
         enemies.forEach(enemy -> {
             if (enemy.isAlive()) {
@@ -207,8 +208,10 @@ public class BasicBombarderoGameManager implements GameManager {
                 .peek(entry -> boombs.remove(entry.getKey()))
                 .peek(entry -> entry.getValue().removeBombFromDeque(entry.getKey()))
                 .map(entry -> entry.getKey().computeFlame(this.getGameMap()))
-                .forEach(set -> set.forEach(entry -> map.addFlame(
-                        new FlameImpl(Cell.CellType.FLAME, entry.getValue(), entry.getKey()), entry.getKey())));
+                .forEach(set -> set.stream()
+                    .map(entry -> new FlameImpl(Cell.CellType.FLAME, entry.getValue(), entry.getKey()))
+                    .peek(flame -> flames.add(flame))
+                    .forEach(flame -> map.addFlame(flame, flame.getPos())));
     }
 
 }

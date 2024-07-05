@@ -13,7 +13,8 @@ import it.unibo.bombardero.cell.powerup.api.PowerUpType;
  * @author Federico Bagattoni
  */
 public interface GameMap {
-
+    static final int MIN_NUM_CELL = 0;
+    static final int MAX_NUM_CELL = 12;
     int COLLAPSE_RATE = 5;
 
     /**

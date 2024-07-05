@@ -59,11 +59,8 @@ public abstract class BasicBomb extends AbstractCell implements Bomb {
         }
     }
 
-    private void explode() {// TODO ritornare delle fiammeà o in update o in explode e provare a tenere la
-                            // logica del character
+    private void explode() {
         exploded = true;
-        // character.increaseNumBomb();
-        // character.removeBombFromDeque(this);//TODO cavare mgr e character
     }
 
     @Override
@@ -93,11 +90,13 @@ public abstract class BasicBomb extends AbstractCell implements Bomb {
     private Set<Entry<GenPair<Integer, Integer>, FlameType>> checkDirection(final Direction dir, final GameMap map) {
         return IntStream.iterate(1, i -> i <= this.getRange(), i -> i + 1)
                 .mapToObj(i -> getPos().apply(Functions.sumInt(dir.getPair().apply(Functions.multiplyInt(i)))))
+                .filter(p -> p.x() >= GameMap.MIN_NUM_CELL && p.x() <= GameMap.MAX_NUM_CELL
+                    && p.y() >= GameMap.MIN_NUM_CELL && p.y() <= GameMap.MAX_NUM_CELL)
                 .takeWhile(p -> stopFlamePropagation(p, map))
                 .collect(Collectors.toMap(
                         Function.identity(),
                         p -> p.equals(
-                                getPos().apply(Functions.sumInt(position.apply(Functions.multiplyInt(getRange())))))
+                                getPos().apply(Functions.sumInt(dir.getPair().apply(Functions.multiplyInt(getRange())))))
                                         ? FlameType.getFlameEndType(dir)
                                         : FlameType.getFlameBodyType(dir)))
                 .entrySet();
