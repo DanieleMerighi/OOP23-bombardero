@@ -9,7 +9,6 @@ import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.ai.api.EnemyState;
 import it.unibo.bombardero.character.ai.impl.EnemyGraphReasonerImpl;
 import it.unibo.bombardero.character.ai.impl.EscapeState;
-import it.unibo.bombardero.character.ai.impl.GraphManagerImpl;
 import it.unibo.bombardero.character.ai.impl.PatrolState;
 import it.unibo.bombardero.character.ai.impl.RandomMovementStrategy;
 import it.unibo.bombardero.character.ai.impl.ShortestMovementStrategy;
@@ -150,7 +149,6 @@ public class Enemy extends Character {
      */
     private void computeNextDir(final long time, final GameManager manager) {
         GameMap gameMap = manager.getGameMap();
-        graph = GraphManagerImpl.getGraphReasoner(gameMap, time);
         currentState.execute(this, manager);
         if (nextMove.isPresent()) {
             if (calculateDistance(getIntCoordinate(), nextMove.get()) > 1) {
@@ -161,7 +159,8 @@ public class Enemy extends Character {
                 placeBomb(manager, CharacterType.ENEMY);
                 nextMove = Optional.empty();
             } else if (gameMap.isBreakableWall(nextMove.get())
-                    && graph.findNearestSafeCell(getIntCoordinate(), getFlameRange()).isPresent()) {
+                    && graph.findNearestSafeCell(manager.getGameMap(), getIntCoordinate(), getFlameRange())
+                            .isPresent()) {
                 placeBomb(manager, CharacterType.ENEMY);
             }
         } else {
@@ -181,7 +180,7 @@ public class Enemy extends Character {
      */
     @Override
     public void update(final GameManager manager, final long elapsedTime) {
-        GraphManagerImpl.initialize(manager.getGameMap());
+        updateGraph(manager.getGameMap());
         updateSkeleton(manager, elapsedTime, CharacterType.ENEMY);
         if (nextMove.isEmpty()) {
             computeNextDir(elapsedTime, manager);
@@ -211,6 +210,14 @@ public class Enemy extends Character {
         } else {
             nextMove = Optional.empty();
             setStationary(true);
+        }
+    }
+
+    private void updateGraph(final GameMap map) {
+        if (graph == null) {
+            graph = new EnemyGraphReasonerImpl(map);
+        } else {
+            graph.updateGraph(map);
         }
     }
 

@@ -20,12 +20,12 @@ public class EscapeState extends AbstractEnemyState {
     /**
      * Executes the behavior associated with this enemy state.
      *
-     * @param enemy the enemy character to execute the state behavior on
+     * @param enemy   the enemy character to execute the state behavior on
      * @param manager the game manager
      */
     @Override
     public void execute(final Enemy enemy, final GameManager manager) {
-        if (!enemy.getGraph().isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) { // Safe now
+        if (!enemy.getGraph().isInDangerZone(manager.getGameMap(), enemy.getIntCoordinate(), enemy.getFlameRange())) {
             if (!enemy.getQueuedBombs().isEmpty()) {
                 enemy.setState(new WaitingState());
             } else {
@@ -33,7 +33,8 @@ public class EscapeState extends AbstractEnemyState {
                     final GenPair<Integer, Integer> closeEnemy = enemy.getClosestEntity(manager).get();
                     final Optional<Character> c = enemy.getClosestEntity(manager, closeEnemy);
                     if (c.isPresent()) {
-                        final GenPair<Integer, Integer> newdir = new GenPair<Integer, Integer>(-c.get().getFacingDirection().x(),
+                        final GenPair<Integer, Integer> newdir = new GenPair<Integer, Integer>(
+                                -c.get().getFacingDirection().x(),
                                 -c.get().getFacingDirection().y());
                         final GenPair<Integer, Integer> currPos = enemy.getIntCoordinate();
                         enemy.setNextMove(Optional.of(currPos.apply(Functions.sumInt(newdir))));

@@ -17,12 +17,12 @@ public class ChaseState extends AbstractEnemyState {
     /**
      * Executes the behavior associated with this enemy state.
      *
-     * @param enemy the enemy character to execute the state behavior on
+     * @param enemy   the enemy character to execute the state behavior on
      * @param manager the game manager
      */
     @Override
     public void execute(final Enemy enemy, final GameManager manager) {
-        if (enemy.getGraph().isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) { // Detected bomb
+        if (enemy.getGraph().isInDangerZone(manager.getGameMap(), enemy.getIntCoordinate(), enemy.getFlameRange())) {
             enemy.setState(new EscapeState());
         } else if (!enemy.isEnemyClose(manager)) { // Lost sight of player
             enemy.setState(new PatrolState());

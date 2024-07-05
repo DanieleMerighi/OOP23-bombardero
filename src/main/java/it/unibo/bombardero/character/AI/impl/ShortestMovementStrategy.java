@@ -28,7 +28,8 @@ public class ShortestMovementStrategy implements MovementStrategy {
         if (enemy.getNextMove().isEmpty()) {
             return new RandomMovementStrategy().getNextMove(enemy, manager);
         }
-        final List<GenPair<Integer, Integer>> l = enemy.getGraph().findShortestPathToPlayer(enemy.getIntCoordinate(),
+        final List<GenPair<Integer, Integer>> l = enemy.getGraph().findShortestPathToPlayer(manager.getGameMap(),
+                enemy.getIntCoordinate(),
                 enemy.getNextMove().get());
         if (l.isEmpty()) {
             return new RandomMovementStrategy().getNextMove(enemy, manager);

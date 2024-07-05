@@ -15,12 +15,13 @@ public class PatrolState extends AbstractEnemyState {
     /**
      * Executes the behavior associated with this enemy state.
      *
-     * @param enemy     the enemy character to execute the state behavior on
-     * @param manager   the game manager
+     * @param enemy   the enemy character to execute the state behavior on
+     * @param manager the game manager
      */
     @Override
     public void execute(final Enemy enemy, final GameManager manager) {
-        if (enemy.getGraph().isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) { // Detected bomb
+        if (enemy.getGraph().isInDangerZone(manager.getGameMap(), enemy.getIntCoordinate(), enemy.getFlameRange())) { // Detected
+                                                                                                                      // bomb
             enemy.setState(new EscapeState());
         } else if (enemy.isEnemyClose(manager)) { // Detected player
             enemy.setState(new ChaseState());

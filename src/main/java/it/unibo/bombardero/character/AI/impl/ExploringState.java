@@ -26,14 +26,15 @@ public class ExploringState extends AbstractEnemyState {
     @Override
     public void execute(final Enemy enemy, final GameManager manager) {
         final GameMap map = manager.getGameMap();
-        final Optional<GenPair<Integer, Integer>> powerUp = enemy.getGraph().findNearestPowerUp(enemy.getIntCoordinate());
+        final Optional<GenPair<Integer, Integer>> powerUp = enemy.getGraph().findNearestPowerUp(map, enemy.getIntCoordinate());
         if (powerUp.isPresent()
-                && !enemy.getGraph().isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) {
+                && !enemy.getGraph().isInDangerZone(map, enemy.getIntCoordinate(), enemy.getFlameRange())) {
             enemy.setNextMove(powerUp);
             final List<GenPair<Integer, Integer>> l = enemy.getGraph().findShortestPathToPlayer(
+                    map,
                     enemy.getIntCoordinate(),
                     enemy.getNextMove().get());
-            if (l.stream().anyMatch(c -> enemy.getGraph().isInDangerZone(c, enemy.getFlameRange())
+            if (l.stream().anyMatch(c -> enemy.getGraph().isInDangerZone(map, c, enemy.getFlameRange())
                     || map.isBreakableWall(c)
                     || map.whichPowerUpType(c).map(PowerUpType.SKULL::equals).orElse(false))) {
                 enemy.setState(new WaitingState());
@@ -43,7 +44,7 @@ public class ExploringState extends AbstractEnemyState {
                 enemy.setAttemptedPowerUp(false);
             }
 
-        } else if (enemy.getGraph().isInDangerZone(enemy.getIntCoordinate(), enemy.getFlameRange())) {
+        } else if (enemy.getGraph().isInDangerZone(map, enemy.getIntCoordinate(), enemy.getFlameRange())) {
             enemy.setState(new EscapeState());
         } else {
             enemy.setState(new PatrolState());

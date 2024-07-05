@@ -16,7 +16,7 @@ public class WaitingState extends AbstractEnemyState {
     /**
      * Executes the behavior associated with this enemy state.
      *
-     * @param enemy the enemy character to execute the state behavior on
+     * @param enemy   the enemy character to execute the state behavior on
      * @param manager the game manager
      */
     @Override
@@ -27,9 +27,10 @@ public class WaitingState extends AbstractEnemyState {
         GenPair<Integer, Integer> currentCoord = enemy.getIntCoordinate();
         int flameRange = enemy.getFlameRange();
 
-        if (enemy.getGraph().isInDangerZone(currentCoord, flameRange)) {
+        if (enemy.getGraph().isInDangerZone(manager.getGameMap(), currentCoord, flameRange)) {
             enemy.setState(new EscapeState());
-        } else if (!enemy.isAttemptedPowerUp() && enemy.getGraph().findNearestPowerUp(currentCoord).isPresent()) {
+        } else if (!enemy.isAttemptedPowerUp()
+                && enemy.getGraph().findNearestPowerUp(manager.getGameMap(), currentCoord).isPresent()) {
             enemy.setAttemptedPowerUp(true);
             enemy.setState(new ExploringState());
         } else if (enemy.getQueuedBombs().isEmpty()) {

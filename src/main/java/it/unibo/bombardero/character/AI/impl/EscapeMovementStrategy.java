@@ -23,6 +23,7 @@ public class EscapeMovementStrategy implements MovementStrategy {
      */
     @Override
     public Optional<GenPair<Integer, Integer>> getNextMove(final Enemy enemy, final GameManager manager) {
-        return enemy.getGraph().findNearestSafeCell(enemy.getIntCoordinate(), enemy.getFlameRange());
+        return enemy.getGraph().findNearestSafeCell(manager.getGameMap(), enemy.getIntCoordinate(),
+                enemy.getFlameRange());
     }
 }

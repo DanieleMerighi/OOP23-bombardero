@@ -117,6 +117,7 @@ class TestEnemy {
         manager.setPlayerCoord(1, 2);
         manager.getEnemy().setNumBomb(STARTING_BOMBS); // 1 bomb added to enemy
         manager.getGameMap().addBreakableWall(new GenPair<Integer, Integer>(0, 1));
+        manager.getGameMap().addBreakableWall(new GenPair<Integer, Integer>(2, 0));
         manager.getEnemy().update(manager, STANDARD_ELAPSED_TIME);
 
         assertTrue(manager.getEnemy().isStateEqualTo(new ChaseState()));

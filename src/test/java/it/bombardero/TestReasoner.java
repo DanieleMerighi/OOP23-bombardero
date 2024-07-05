@@ -62,9 +62,9 @@ class TestReasoner {
         assertTrue(map.isBomb(bombCell));
 
         final EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
-        assertFalse(reasoner.isPathBlockedByWalls(enemyCoord, bombCell));
+        assertFalse(reasoner.isPathBlockedByWalls(map, enemyCoord, bombCell));
 
-        assertEquals(expected, reasoner.isInDangerZone(enemyCoord, explRadius));
+        assertEquals(expected, reasoner.isInDangerZone(map, enemyCoord, explRadius));
     }
 
     /**
@@ -92,7 +92,7 @@ class TestReasoner {
 
         final EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
 
-        final boolean isBlocked = reasoner.isPathBlockedByWalls(enemyCoord, endCell);
+        final boolean isBlocked = reasoner.isPathBlockedByWalls(map, enemyCoord, endCell);
         assertEquals(expectedBlocked, isBlocked);
     }
 
@@ -130,7 +130,7 @@ class TestReasoner {
 
         final EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
 
-        final List<GenPair<Integer, Integer>> actualPath = reasoner.findShortestPathToPlayer(enemyCoord, playerCoord);
+        final List<GenPair<Integer, Integer>> actualPath = reasoner.findShortestPathToPlayer(map, enemyCoord, playerCoord);
         assertEquals(expectedPathLength, actualPath.size());
 
         // parse the expected path string into a List<Pair>
@@ -168,7 +168,7 @@ class TestReasoner {
 
         final EnemyGraphReasoner reasoner = new EnemyGraphReasonerImpl(map);
 
-        final Optional<GenPair<Integer, Integer>> safeSpace = reasoner.findNearestSafeCell(enemyCoord, explRadius);
+        final Optional<GenPair<Integer, Integer>> safeSpace = reasoner.findNearestSafeCell(map, enemyCoord, explRadius);
 
         assertTrue(safeSpace.isPresent());
         assertEquals(expectedSafeSpaceX, safeSpace.get().x());
