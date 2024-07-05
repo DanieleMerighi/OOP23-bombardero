@@ -7,6 +7,7 @@ import org.apache.commons.math3.util.Pair;
 /**
  * This is a generic Pair whith methods that require Function to apply to the
  * Pair.
+ * 
  * @param <K>
  * @param <V>
  */

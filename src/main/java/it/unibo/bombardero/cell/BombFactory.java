@@ -3,7 +3,7 @@ package it.unibo.bombardero.cell;
 import it.unibo.bombardero.map.api.GenPair;
 
 /**
- * Rapresent a Factory that creates different types of Bomb(basic, power, remote, pircing)
+ * Rapresent a Factory that creates different types of Bomb(basic, power, remote, pircing).
  */
 public interface BombFactory {
 

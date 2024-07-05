@@ -20,9 +20,8 @@ import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
  * This rapresent a Bomb an object that after placed start a timer and after 3 sec explode.
  */
 public abstract class BasicBomb extends AbstractCell implements Bomb {
-    public final static long TIME_TO_EXPLODE = 2000L;
-    public final static int MAX_RANGE = 3; // TO-DO: decide the max bomb range
 
+    private static final long timeToExplode = 2000L;
     private boolean exploded;
     private final int range;
     private long timer;
@@ -72,13 +71,13 @@ public abstract class BasicBomb extends AbstractCell implements Bomb {
     }
 
     /**
-     * update the bomb
+     * update the bomb.
      * @param timeElapsed time passed after last update
      */
     @Override
-    public void update(long timeElapsed) {
+    public void update(final long timeElapsed) {
         timer += timeElapsed;
-        if (timer >= TIME_TO_EXPLODE) {
+        if (timer >= timeToExplode) {
             explode();
         }
     }
@@ -143,6 +142,12 @@ public abstract class BasicBomb extends AbstractCell implements Bomb {
         return map.isEmpty(pos) || isBomb(pos, map) && !map.isUnbreakableWall(pos) && !isBreckableWall(pos, map);
     }
 
+    /**
+     * 
+     * @param pos
+     * @param map
+     * @return true if in that position there is a breckable wall and remove the first BreckableWall
+     */
     public boolean isBreckableWall(final GenPair<Integer, Integer> pos, final GameMap map) {
         if (map.isBreakableWall(pos)) {
             map.removeBreakableWall(pos);

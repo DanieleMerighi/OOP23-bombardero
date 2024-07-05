@@ -1,6 +1,7 @@
 package it.unibo.bombardero.cell;
 
 import it.unibo.bombardero.cell.Bomb.BombType;
+import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.map.api.Functions;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.GenPair;
@@ -43,7 +44,7 @@ public final class BombFactoryImpl implements BombFactory {
 
     @Override
     public Bomb createPowerBomb(final GenPair<Integer, Integer> pos) {
-        return new BasicBomb(BombType.BOMB_POWER, BasicBomb.MAX_RANGE, pos) {
+        return new BasicBomb(BombType.BOMB_POWER, Character.MAX_FLAME_RANGE, pos) {
 
         };
     }
@@ -53,7 +54,7 @@ public final class BombFactoryImpl implements BombFactory {
         return new BasicBomb(BombType.BOMB_REMOTE, range, pos) {
 
             @Override
-            public void update(long timeElapsed) {
+            public void update(final long timeElapsed) {
             }
         };
     }
