@@ -92,6 +92,7 @@ public class Enemy extends Character {
         allEntities.add(manager.getPlayer());
 
         return allEntities.stream()
+                .filter(Character::isAlive)
                 .map(Character::getIntCoordinate)
                 .filter(coord -> !coord.equals(enemyCoord))
                 .min((coord1, coord2) -> Integer.compare(calculateDistance(enemyCoord, coord1),
@@ -139,6 +140,17 @@ public class Enemy extends Character {
     }
 
     /**
+     * Get the flame range based on power ups.
+     *
+     * @return the flame range
+     */
+    @Override
+    public int getFlameRange() {
+        return super.getBombType().equals(Optional.of(PowerUpType.POWER_BOMB)) ? Character.MAX_FLAME_RANGE
+                : super.getFlameRange();
+    }
+
+    /**
      * Calculates the next move target based on the current enemy state.
      * This method delegates the behavior to the current state's `execute` method
      * and potentially updates the `nextMove` target based on danger zone detection
@@ -180,7 +192,7 @@ public class Enemy extends Character {
     @Override
     public void update(final GameManager manager, final long elapsedTime) {
         updateGraph(manager.getGameMap());
-        updateSkeleton(manager, elapsedTime, CharacterType.ENEMY);
+        updateSkull(manager, elapsedTime, CharacterType.ENEMY);
         if (nextMove.isEmpty()) {
             computeNextDir(manager);
         } else if (canMoveOn(manager.getGameMap(), nextMove.get())) {

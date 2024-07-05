@@ -108,7 +108,7 @@ public abstract class Character {
     private boolean butterfingers; // The character's hand becomes slippery. The character rapidly lays down bombs
 
     // Skull manager
-    private long skeletonEffectDuration; // Indicates the duration of the skull effect
+    private long skullEffectDuration; // Indicates the duration of the skull effect
     private Optional<Runnable> resetEffect = Optional.empty(); // Restores all stats modified by the skull
 
     /**
@@ -134,17 +134,17 @@ public abstract class Character {
     public abstract void update(GameManager manager, long elapsedTime);
 
     /**
-     * Updates the skeleton's effects.
+     * Updates the skull's effects.
      * 
      * @param manager       the game manager
      * @param elapsedTime   the time elapsed since the last update
      * @param type          the type of character
      */
-    public void updateSkeleton(final GameManager manager, final long elapsedTime, final CharacterType type) {
-        if (this.skeletonEffectDuration > 0) { // Continues until the duration reaches zero
-            this.skeletonEffectDuration -= elapsedTime;
-            if (this.skeletonEffectDuration <= 0) { // When the effect ends the character's stats get resetted
-                setSkeletonEffectDuration(0);
+    public void updateSkull(final GameManager manager, final long elapsedTime, final CharacterType type) {
+        if (this.skullEffectDuration > 0) { // Continues until the duration reaches zero
+            this.skullEffectDuration -= elapsedTime;
+            if (this.skullEffectDuration <= 0) { // When the effect ends the character's stats get resetted
+                setSkullEffectDuration(0);
                 this.resetEffect.ifPresent(Runnable::run); // If there's a effect to reset, it runs the reset effect
                 this.resetEffect = Optional.empty(); // Clear the reset effect after it has run
             }
@@ -575,26 +575,26 @@ public abstract class Character {
     }
 
     /**
-     * Gets the duration of the skeleton effect.
+     * Gets the duration of the skull effect.
      * 
-     * @return the skeletonEffectDuration
+     * @return the skullEffectDuration
      */
-    public long getSkeletonEffectDuration() {
-        return this.skeletonEffectDuration;
+    public long getSkullEffectDuration() {
+        return this.skullEffectDuration;
     }
 
     /**
-     * Sets the skeleton effect's duration.
+     * Sets the skull effect's duration.
      * 
-     * @param duration the duration of the skeleton effect
+     * @param duration the duration of the skull effect
      */
-    public void setSkeletonEffectDuration(final long duration) {
-        this.skeletonEffectDuration = duration;
+    public void setSkullEffectDuration(final long duration) {
+        this.skullEffectDuration = duration;
     }
 
     // TODO: write better javadoc
     /**
-     * Gets the reset effect.
+     * Gets the reset effect used to reset the Character's stats after the skull effect ends.
      * 
      * @return the reset effect
      */
@@ -603,7 +603,7 @@ public abstract class Character {
     }
 
     /**
-     * Sets the reset effect.
+     * Sets the reset effect used to reset the Character's stats after the skull effect ends.
      * 
      * @param resetEffect the reset effect
      */

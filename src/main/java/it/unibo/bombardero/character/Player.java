@@ -39,7 +39,7 @@ public class Player extends Character {
     public void update(final GameManager manager, final long elapsedTime) {
         // Skeleton effect:
         if (getResetEffect().isPresent()) { // If there's a Task to reset
-            updateSkeleton(manager, elapsedTime, CharacterType.PLAYER);
+            updateSkull(manager, elapsedTime, CharacterType.PLAYER);
         }
         // Player movement:
         if (!isStationary()) { // If he's not stationary, computes the new position
