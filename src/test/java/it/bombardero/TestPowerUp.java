@@ -55,8 +55,8 @@ class TestPowerUp {
                 powerUP.applyEffect(this.manager.getPlayer());
         });
         if (this.manager.getPlayer().getResetEffect().isPresent()) {
-            while (this.manager.getPlayer().getSkeletonEffectDuration() > 0) {
-                this.manager.getPlayer().updateSkeleton(manager, STANDARD_ELAPSED_TIME, CharacterType.PLAYER);
+            while (this.manager.getPlayer().getSkullEffectDuration() > 0) {
+                this.manager.getPlayer().updateSkull(manager, STANDARD_ELAPSED_TIME, CharacterType.PLAYER);
             }
         }
     }
@@ -72,15 +72,15 @@ class TestPowerUp {
         powerUP.applyEffect(this.manager.getPlayer());
 
         assertEquals(SkullEffect.getEffectDurationInSeconds() * SECONDS_TO_MILLISECONDS,
-            this.manager.getPlayer().getSkeletonEffectDuration());
+            this.manager.getPlayer().getSkullEffectDuration());
         assertTrue(this.manager.getPlayer().getResetEffect().isPresent());
 
-        while (this.manager.getPlayer().getSkeletonEffectDuration() > 0) {
-            this.manager.getPlayer().updateSkeleton(manager, STANDARD_ELAPSED_TIME, CharacterType.PLAYER);
+        while (this.manager.getPlayer().getSkullEffectDuration() > 0) {
+            this.manager.getPlayer().updateSkull(manager, STANDARD_ELAPSED_TIME, CharacterType.PLAYER);
         }
 
         // Asserts the skull duration is 0
-        assertEquals(0L, this.manager.getPlayer().getSkeletonEffectDuration());
+        assertEquals(0L, this.manager.getPlayer().getSkullEffectDuration());
         // Asserts there is no Reset effect to run
         assertEquals(Optional.empty(), this.manager.getPlayer().getResetEffect());
         // Asserts the initial stats are resetted
