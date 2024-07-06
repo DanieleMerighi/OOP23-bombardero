@@ -20,8 +20,8 @@ public final class FlameImpl extends AbstractCell implements Flame {
      * @param specfiFlameType if it's a CrossFlame, Orizzontal, Vertical
      * @param pos             position on the map
      */
-    public FlameImpl(final CellType type, final FlameType specfiFlameType, final GenPair<Integer, Integer> pos) {
-        super(type, false, null);
+    public FlameImpl(final FlameType specfiFlameType, final GenPair<Integer, Integer> pos) {
+        super(CellType.FLAME, false, null);
         this.specificFlameType = specfiFlameType;
         this.pos = pos;
     }

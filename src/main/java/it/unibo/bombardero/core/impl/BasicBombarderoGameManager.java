@@ -9,7 +9,6 @@ import java.util.Optional;
 import it.unibo.bombardero.bomb.api.Bomb;
 import it.unibo.bombardero.bomb.api.BombFactory;
 import it.unibo.bombardero.bomb.impl.BombFactoryImpl;
-import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.FlameImpl;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Enemy;
@@ -20,8 +19,6 @@ import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.physics.api.CollisionEngine;
-import it.unibo.bombardero.physics.impl.BombarderoCollision;
-import it.unibo.bombardero.physics.impl.CollisionHandlerImpl;
 
 /**
  * This class implements the concepts expressed in the
@@ -180,7 +177,7 @@ public class BasicBombarderoGameManager implements GameManager {
                 .peek(entry -> entry.getValue().removeBombFromDeque(entry.getKey()))
                 .map(entry -> entry.getKey().computeFlame(this.getGameMap()))
                 .forEach(set -> set.stream()
-                    .map(entry -> new FlameImpl(Cell.CellType.FLAME, entry.getValue(), entry.getKey()))
+                    .map(entry -> new FlameImpl(entry.getValue(), entry.getKey()))
                     .peek(flame -> flames.add(flame))
                     .forEach(flame -> map.addFlame(flame, flame.getPos())));
     }
