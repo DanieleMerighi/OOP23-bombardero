@@ -592,7 +592,6 @@ public abstract class Character {
         this.skullEffectDuration = duration;
     }
 
-    // TODO: write better javadoc
     /**
      * Gets the reset effect used to reset the Character's stats after the skull effect ends.
      * 
