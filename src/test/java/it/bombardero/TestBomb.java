@@ -49,7 +49,7 @@ public class TestBomb {
         bomb.update(3000);
         assertTrue(bomb.isExploded());
         bomb.computeFlame(mgr.getGameMap())
-            .forEach(entry -> mgr.getGameMap().addFlame(new FlameImpl(CellType.FLAME, entry.getValue()
+            .forEach(entry -> mgr.getGameMap().addFlame(new FlameImpl(entry.getValue()
                 , entry.getKey()), entry.getKey()));
         assertTrue(mgr.getGameMap().isPowerUp(new GenPair<Integer,Integer>(2, 1)));
         assertTrue(mgr.getGameMap().isUnbreakableWall(new GenPair<Integer,Integer>(1, 2)));
@@ -72,7 +72,7 @@ public class TestBomb {
         piercingBomb.update(3000);
         assertTrue(piercingBomb.isExploded());
         piercingBomb.computeFlame(mgr.getGameMap())
-            .forEach(entry -> mgr.getGameMap().addFlame(new FlameImpl(CellType.FLAME, entry.getValue()
+            .forEach(entry -> mgr.getGameMap().addFlame(new FlameImpl(entry.getValue()
                 , entry.getKey()), entry.getKey()));
         assertTrue(mgr.getGameMap().isFlame(new GenPair<Integer,Integer>(2, 3)));
         assertTrue(mgr.getGameMap().isPowerUp(new GenPair<Integer,Integer>(2, 4)));

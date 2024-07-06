@@ -8,6 +8,9 @@ import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
+import it.unibo.bombardero.physics.api.CollisionEngine;
+import it.unibo.bombardero.physics.impl.BombarderoCollision;
+import it.unibo.bombardero.physics.impl.CollisionHandlerImpl;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +29,7 @@ public class MyGameManager implements GameManager {
     private final Player player;
     private final Enemy enemy;
     private final GameMap map;
+    private final CollisionEngine cEngine;
 
     /**
      * Constructs a new {@link MyGameManager}.
@@ -35,6 +39,7 @@ public class MyGameManager implements GameManager {
         this.map = new GameMapImpl(false);
         this.enemy = new Enemy(new GenPair<Float, Float>(0f, 0f), new BombFactoryImpl());
         this.player = new Player(new GenPair<Float, Float>(0f, PLAYERY), new BombFactoryImpl());
+        this.cEngine = new BombarderoCollision(new CollisionHandlerImpl());
     }
 
     /**
@@ -64,6 +69,23 @@ public class MyGameManager implements GameManager {
      */
     public void addBomb(final GenPair<Integer, Integer> pos) {
         this.map.addBomb(new MyBomb(pos), pos);
+    }
+
+
+    /**
+     * add a power up to the map
+     * @return
+     */
+    public void addPowerUp(GenPair<Integer, Integer> pos) {
+        map.addBreakableWall(pos);
+        map.removeBreakableWall(pos);
+    }
+    
+    /**
+     * @return the CollisionEngine
+     */
+    public CollisionEngine getCollisionEngine() {
+        return cEngine;
     }
 
     /**
