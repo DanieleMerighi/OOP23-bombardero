@@ -58,11 +58,12 @@ public class BasicBombarderoGameManager implements GameManager {
             final Controller controller,
             final GenPair<Float, Float> playerSpawnPoint,
             final List<GenPair<Float, Float>> enemiesSpawnpoint,
-            final boolean generateWalls) {
+            final boolean generateWalls,
+            final CollisionEngine cEngine) {
         this.controller = controller;
-        map = new GameMapImpl(generateWalls);
-        ce = new BombarderoCollision(new CollisionHandlerImpl());
-        bombFactory = new BombFactoryImpl();
+        this.map = new GameMapImpl(generateWalls);
+        this.ce = cEngine;
+        this.bombFactory = new BombFactoryImpl();
         this.player = new Player(playerSpawnPoint, bombFactory);
         enemiesSpawnpoint.forEach(spawnpoint -> enemies.add(new Enemy(spawnpoint, bombFactory)));
     }

@@ -9,6 +9,8 @@ import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.guide.impl.BombarderoGuideManager;
 import it.unibo.bombardero.map.api.GenPair;
+import it.unibo.bombardero.physics.impl.BombarderoCollision;
+import it.unibo.bombardero.physics.impl.CollisionHandlerImpl;
 import it.unibo.bombardero.view.BombarderoGraphics;
 import it.unibo.bombardero.view.BombarderoViewMessages;
 import it.unibo.bombardero.view.GraphicsEngine;
@@ -41,7 +43,7 @@ public final class BombarderoController implements Controller {
 
     @Override
     public void startGame() {
-        this.manager = new FullBombarderoGameManager(this);
+        this.manager = new FullBombarderoGameManager(this, new BombarderoCollision(new CollisionHandlerImpl()));
         isGamePaused = false;
         isGameStarted = true;
         graphics.showCard(GraphicsEngine.ViewCards.GAME);
@@ -56,7 +58,7 @@ public final class BombarderoController implements Controller {
 
     @Override
     public void startGuide() {
-        this.manager = new BombarderoGuideManager(this);
+        this.manager = new BombarderoGuideManager(this,  new BombarderoCollision(new CollisionHandlerImpl()));
         isGamePaused = false;
         isGameStarted = true;
         graphics.showCard(GraphicsEngine.ViewCards.GUIDE);

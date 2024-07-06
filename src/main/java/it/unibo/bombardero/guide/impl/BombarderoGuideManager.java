@@ -10,6 +10,7 @@ import it.unibo.bombardero.core.impl.BasicBombarderoGameManager;
 import it.unibo.bombardero.guide.api.GuideManager;
 import it.unibo.bombardero.guide.api.GuideStep;
 import it.unibo.bombardero.map.api.GenPair;
+import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.view.BombarderoViewMessages;
 
 /**
@@ -35,8 +36,8 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
      * and {@link #CRATE_GUIDE_SPAWNPOINT}
      * @param controller the reference to the game's {@link Controller}.
      */
-    public BombarderoGuideManager(final Controller controller) {
-        super(controller, GuideManager.PLAYER_GUIDE_SPAWNPOINT, List.of(), false);
+    public BombarderoGuideManager(final Controller controller, final CollisionEngine cEngine) {
+        super(controller, GuideManager.PLAYER_GUIDE_SPAWNPOINT, List.of(), false, cEngine);
         this.getGameMap().addBreakableWall(CRATE_GUIDE_SPAWNPOINT);
         initialiseProcedures();
     }

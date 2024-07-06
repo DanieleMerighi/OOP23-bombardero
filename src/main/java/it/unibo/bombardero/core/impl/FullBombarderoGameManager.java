@@ -3,6 +3,7 @@ package it.unibo.bombardero.core.impl;
 import java.util.Optional;
 
 import it.unibo.bombardero.core.api.Controller;
+import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.utils.Utils;
 /**
  * This class extends the {@link BasicBombarderoGameManager} class
@@ -18,8 +19,11 @@ public final class FullBombarderoGameManager extends BasicBombarderoGameManager 
      * generating the breakable walls in the map.
      * @param controller the game's controller
      */
-    public FullBombarderoGameManager(final Controller controller) {
-        super(controller, Utils.PLAYER_SPAWNPOINT, Utils.ENEMIES_SPAWNPOINT.subList(0, 1), true);
+    public FullBombarderoGameManager(final Controller controller, final CollisionEngine cEngine) {
+        super(controller, Utils.PLAYER_SPAWNPOINT,
+            Utils.ENEMIES_SPAWNPOINT.subList(0, 1),
+            true,
+            cEngine);
     }
 
     @Override
