@@ -21,12 +21,16 @@ import it.unibo.bombardero.character.Character;
  * Detect every type of collision between characters and cells.
  */
 public final class BombarderoCollision implements CollisionEngine {
-    private final CollisionHandler cHandler = new CollisionHandlerImpl();
+    private final CollisionHandler cHandler;
     private final Map<Direction, Line2D.Float> mapOutlines = Map.of(
             Direction.UP, new Line2D.Float(new Point2D.Float(0, 0), new Point2D.Float(13, 0)),
             Direction.DOWN, new Line2D.Float(new Point2D.Float(0, 13), new Point2D.Float(13, 13)),
             Direction.LEFT, new Line2D.Float(new Point2D.Float(0, 0), new Point2D.Float(0, 13)),
             Direction.RIGHT, new Line2D.Float(new Point2D.Float(13, 0), new Point2D.Float(13, 13)));
+
+    public BombarderoCollision(CollisionHandler cHandler) {
+        this.cHandler = cHandler;
+    }
 
     @Override
     public void checkFlameAndPowerUpCollision(final Character character, final GameMap gMap) {

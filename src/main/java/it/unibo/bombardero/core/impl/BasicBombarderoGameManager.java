@@ -21,6 +21,7 @@ import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.physics.impl.BombarderoCollision;
+import it.unibo.bombardero.physics.impl.CollisionHandlerImpl;
 
 /**
  * This class implements the concepts expressed in the
@@ -60,7 +61,7 @@ public class BasicBombarderoGameManager implements GameManager {
             final boolean generateWalls) {
         this.controller = controller;
         map = new GameMapImpl(generateWalls);
-        ce = new BombarderoCollision();
+        ce = new BombarderoCollision(new CollisionHandlerImpl());
         bombFactory = new BombFactoryImpl();
         this.player = new Player(playerSpawnPoint, bombFactory);
         enemiesSpawnpoint.forEach(spawnpoint -> enemies.add(new Enemy(spawnpoint, bombFactory)));
