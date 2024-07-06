@@ -71,7 +71,7 @@ class TestPowerUp {
         // Apply skull effect to the player
         powerUP.applyEffect(this.manager.getPlayer());
 
-        assertEquals(SkullEffect.getEffectDurationInSeconds() * SECONDS_TO_MILLISECONDS,
+        assertEquals(SkullEffect.EFFECT_DURATION_IN_SECONDS * SECONDS_TO_MILLISECONDS,
             this.manager.getPlayer().getSkullEffectDuration());
         assertTrue(this.manager.getPlayer().getResetEffect().isPresent());
 
