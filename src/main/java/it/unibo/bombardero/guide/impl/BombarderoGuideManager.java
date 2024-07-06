@@ -100,7 +100,6 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
         public void update(final GameManager manager, final long elapsedTime) {
 
         }
-   
     }
 
 }

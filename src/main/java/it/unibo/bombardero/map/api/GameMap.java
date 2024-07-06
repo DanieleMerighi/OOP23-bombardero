@@ -3,7 +3,7 @@ package it.unibo.bombardero.map.api;
 import java.util.Map;
 import java.util.Optional;
 
-import it.unibo.bombardero.cell.Bomb;
+import it.unibo.bombardero.bomb.api.Bomb;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;

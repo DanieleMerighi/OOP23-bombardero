@@ -1,4 +1,4 @@
-package it.unibo.bombardero.cell;
+package it.unibo.bombardero.bomb.impl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,24 +9,33 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import it.unibo.bombardero.cell.FlameImpl.FlameType;
+import it.unibo.bombardero.bomb.api.Bomb;
+import it.unibo.bombardero.cell.AbstractCell;
+import it.unibo.bombardero.cell.Flame.FlameType;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.map.api.Functions;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
 
-//TODO cercare di dividere logica del character e del manager es: ritornare entryset di fiamme da aggiungere e numbob nel character 
+/**
+ * This rapresent a Bomb an object that after placed start a timer and after 3 sec explode.
+ */
 public abstract class BasicBomb extends AbstractCell implements Bomb {
-    public final static long TIME_TO_EXPLODE = 2000L;
-    public final static int MAX_RANGE = 3; // TO-DO: decide the max bomb range
 
+    private static final long timeToExplode = 2000L;
     private boolean exploded;
     private final int range;
-    private int countTick;
+    private long timer;
     private final GenPair<Integer, Integer> position;
     private final BombType bombType;
 
+    /**
+     * Set bombTypo the position and the range of the bomb.
+     * @param bombType
+     * @param range
+     * @param pos
+     */
     public BasicBomb(final BombType bombType, final int range, final GenPair<Integer, Integer> pos) {
         super(CellType.BOMB, true, new RectangleBoundingBox(pos.x(), pos.y(), 1.0f, 1.0f));
         this.position = pos;
@@ -34,16 +43,28 @@ public abstract class BasicBomb extends AbstractCell implements Bomb {
         this.bombType = bombType;
     }
 
+    /**
+     * 
+     * @return the BombType of this Bomb
+     */
     @Override
     public BombType getBombType() {
         return this.bombType;
     }
 
+    /**
+     * 
+     * @return true if th ebomb is exploded
+     */
     @Override
     public boolean isExploded() {
         return exploded;
     }
 
+    /**
+     * the bomb explode if the condition is true.
+     * @param condition
+     */
     @Override
     public void update(final boolean condition) {
         if (condition) {
@@ -51,10 +72,14 @@ public abstract class BasicBomb extends AbstractCell implements Bomb {
         }
     }
 
+    /**
+     * update the bomb.
+     * @param timeElapsed time passed after last update
+     */
     @Override
-    public void update() {
-        countTick++;
-        if (countTick * 16f >= TIME_TO_EXPLODE) {
+    public void update(final long timeElapsed) {
+        timer += timeElapsed;
+        if (timer >= timeToExplode) {
             explode();
         }
     }
@@ -63,16 +88,29 @@ public abstract class BasicBomb extends AbstractCell implements Bomb {
         exploded = true;
     }
 
+    /**
+     * 
+     * @return the range of this Bomb
+     */
     @Override
     public int getRange() {
         return range;
     }
 
+    /**
+     * 
+     * @return the position of this Bomb
+     */
     @Override
     public GenPair<Integer, Integer> getPos() {
         return position;
     }
 
+    /**
+     * 
+     * @param map
+     * @return the EntrySet that contains the flames of the explosion
+     */
     @Override
     public Set<Entry<GenPair<Integer, Integer>, FlameType>> computeFlame(final GameMap map) {
         if (this.isExploded()) {
@@ -106,6 +144,12 @@ public abstract class BasicBomb extends AbstractCell implements Bomb {
         return map.isEmpty(pos) || isBomb(pos, map) && !map.isUnbreakableWall(pos) && !isBreckableWall(pos, map);
     }
 
+    /**
+     * 
+     * @param pos
+     * @param map
+     * @return true if in that position there is a breckable wall and remove the first BreckableWall
+     */
     public boolean isBreckableWall(final GenPair<Integer, Integer> pos, final GameMap map) {
         if (map.isBreakableWall(pos)) {
             map.removeBreakableWall(pos);

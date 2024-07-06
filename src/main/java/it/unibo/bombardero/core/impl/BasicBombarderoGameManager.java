@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import it.unibo.bombardero.cell.Bomb;
-import it.unibo.bombardero.cell.BombFactory;
-import it.unibo.bombardero.cell.BombFactoryImpl;
+import it.unibo.bombardero.bomb.api.Bomb;
+import it.unibo.bombardero.bomb.api.BombFactory;
+import it.unibo.bombardero.bomb.impl.BombFactoryImpl;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.FlameImpl;
 import it.unibo.bombardero.character.Character;
@@ -84,7 +84,7 @@ public class BasicBombarderoGameManager implements GameManager {
     public void updateGame(final long elapsed) {
         updatePlayer(elapsed);
         updateEnemies(elapsed);
-        updateBombs();
+        updateBombs(elapsed);
         updateFlames(elapsed);
     }
 
@@ -136,9 +136,9 @@ public class BasicBombarderoGameManager implements GameManager {
         }
     }
 
-    private void updateBombs() {
+    private void updateBombs(final long elapsed) {
         if (!bombs.isEmpty()) {
-            bombs.entrySet().forEach(entry -> entry.getKey().update());
+            bombs.entrySet().forEach(entry -> entry.getKey().update(elapsed));
             placeBombExplosion();
         }
     }

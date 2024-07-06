@@ -18,7 +18,7 @@ import it.unibo.bombardero.physics.api.CollisionHandler;
 import it.unibo.bombardero.character.Character;
 
 /**
- * Detect every type of collision between characters and cells
+ * Detect every type of collision between characters and cells.
  */
 public final class BombarderoCollision implements CollisionEngine {
     private final CollisionHandler cHandler = new CollisionHandlerImpl();

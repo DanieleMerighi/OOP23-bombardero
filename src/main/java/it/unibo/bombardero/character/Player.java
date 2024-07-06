@@ -1,6 +1,6 @@
 package it.unibo.bombardero.character;
 
-import it.unibo.bombardero.cell.BombFactory;
+import it.unibo.bombardero.bomb.api.BombFactory;
 import it.unibo.bombardero.cell.powerup.impl.PowerUpImpl;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.Functions;

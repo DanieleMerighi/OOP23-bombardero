@@ -3,6 +3,10 @@ package it.unibo.bombardero.map.api;
 import java.util.function.Function;
 
 //utility classs, leave the constructor and the final
+/**
+ * utility class that return Function for different type of GenPair for example to sum two 
+ * Pair<Integer, Integer>.
+ */
 public final class Functions {
 
     private Functions() {

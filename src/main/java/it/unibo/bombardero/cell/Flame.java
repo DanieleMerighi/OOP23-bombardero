@@ -1,6 +1,8 @@
 package it.unibo.bombardero.cell;
 
-import it.unibo.bombardero.cell.FlameImpl.FlameType;
+import java.util.Map;
+
+import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.map.api.GenPair;
 
 /**
@@ -9,11 +11,101 @@ import it.unibo.bombardero.map.api.GenPair;
 public interface Flame extends Cell {
 
     /**
+     * This enum describe the type of flame and return the type based of the direction.
+     */
+    enum FlameType {
+
+        /**
+         * Center.
+         */
+        FLAME_CROSS("explosion/cross"),
+
+        /**
+         * Vertical body.
+         */
+        FLAME_BODY_VERTICAL("explosion/body/vert"),
+
+        /**
+         * Horizzontal body.
+         */
+        FLAME_BODY_HORIZONTAL("explosion/body/hor"),
+
+        /**
+         * Final top part.
+         */
+        FLAME_END_TOP("explosion/end/up"),
+
+        /**
+         * Final bottom part.
+         */
+        FLAME_END_BOTTOM("explosion/end/down"),
+
+        /**
+         * Final right part.
+         */
+        FLAME_END_RIGHT("explosion/end/right"),
+
+        /**
+         * Final left part.
+         */
+        FLAME_END_LEFT("explosion/end/left");
+
+        private final String typeString;
+
+        private static final Map<Direction, FlameType> FLAME_BODY_TYPES_MAP = Map.of(
+                Direction.LEFT, FlameType.FLAME_BODY_HORIZONTAL,
+                Direction.RIGHT, FlameType.FLAME_BODY_HORIZONTAL,
+                Direction.UP, FlameType.FLAME_BODY_VERTICAL,
+                Direction.DOWN, FlameType.FLAME_BODY_VERTICAL);
+
+        private static final Map<Direction, FlameType> FLAME_END_TYPES_MAP = Map.of(
+                Direction.LEFT, FlameType.FLAME_END_LEFT,
+                Direction.RIGHT, FlameType.FLAME_END_RIGHT,
+                Direction.UP, FlameType.FLAME_END_TOP,
+                Direction.DOWN, FlameType.FLAME_END_BOTTOM);
+
+        /**
+         * set the the string for the specified type.
+         * @param typeString
+         */
+        FlameType(final String typeString) {
+            this.typeString = typeString;
+        }
+
+        /**
+         * 
+         * @return the typeString
+         */
+        public String getTypeString() {
+            return this.typeString;
+        }
+
+        /**
+         * 
+         * @param dir
+         * @return a bodyType based of the direction
+         */
+        public static FlameType getFlameBodyType(final Direction dir) {
+            return FLAME_BODY_TYPES_MAP.get(dir);
+        }
+
+        /**
+         * 
+         * @param dir
+         * @return a endBodyType based of the direction
+         */
+        public static FlameType getFlameEndType(final Direction dir) {
+            return FLAME_END_TYPES_MAP.get(dir);
+        }
+
+    }
+
+    /**
      * add timeElapsed to the timer.
      * 
      * @param timeElapsed
      */
-    void update(final long timeElapsed);
+    void update(long timeElapsed);
 
     /**
      * Flames after 0.5 sec expires.

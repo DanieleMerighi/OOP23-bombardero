@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import it.unibo.bombardero.cell.BombFactory;
+import it.unibo.bombardero.bomb.api.BombFactory;
 import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.ai.api.EnemyState;
 import it.unibo.bombardero.character.ai.impl.EnemyGraphReasonerImpl;
@@ -92,6 +92,7 @@ public class Enemy extends Character {
         allEntities.add(manager.getPlayer());
 
         return allEntities.stream()
+                .filter(Character::isAlive)
                 .map(Character::getIntCoordinate)
                 .filter(coord -> !coord.equals(enemyCoord))
                 .min((coord1, coord2) -> Integer.compare(calculateDistance(enemyCoord, coord1),
@@ -136,6 +137,17 @@ public class Enemy extends Character {
      */
     public boolean isStateEqualTo(final EnemyState otherState) {
         return currentState.equals(otherState);
+    }
+
+    /**
+     * Get the flame range based on power ups.
+     *
+     * @return the flame range
+     */
+    @Override
+    public int getFlameRange() {
+        return super.getBombType().equals(Optional.of(PowerUpType.POWER_BOMB)) ? Character.MAX_FLAME_RANGE
+                : super.getFlameRange();
     }
 
     /**
