@@ -73,14 +73,14 @@ public class MyGameManager implements GameManager {
 
 
     /**
-     * add a power up to the map
-     * @return
+     * add a power up to the map.
+     * @param pos position
      */
-    public void addPowerUp(GenPair<Integer, Integer> pos) {
+    public void addPowerUp(final GenPair<Integer, Integer> pos) {
         map.addBreakableWall(pos);
         map.removeBreakableWall(pos);
     }
-    
+
     /**
      * @return the CollisionEngine
      */
