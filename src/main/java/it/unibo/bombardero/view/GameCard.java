@@ -1,7 +1,5 @@
 package it.unibo.bombardero.view;
 
-import javax.swing.JButton;
-
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Dimension;
@@ -21,8 +19,9 @@ import java.util.Map;
  */
 @SuppressWarnings("serial")
 /** 
- * This class represents a JPanel containing a the view of some 
- * playable part of the game (e.g. guide, gameplay, sandbox... etc).
+ * This class represents a JPanel containing a the view of the main  
+ * playable part of the game. It adds time displaying and personalized 
+ * end game based on cases. 
  * @author Federico Bagattoni
  */
 public final class GameCard extends GamePlayCard {
