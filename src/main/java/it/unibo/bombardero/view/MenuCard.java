@@ -51,7 +51,7 @@ public final class MenuCard extends JPanel {
         final Image guidePressedImage = graphicsEngine.getResizingEngine()
                 .getScaledButtonImage(rg.loadImage("overlay/buttons/GUIDE_PRESSED"));
         background = graphicsEngine.getResizingEngine()
-                .getScaledBackgroundImage(rg.loadImage("menu/background"));
+                .getSubImageFromBackground(rg.loadImage("menu/background"));
         // CHECKSTYLE: MagicNumber ON
 
         this.setLayout(new GridBagLayout());
