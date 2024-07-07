@@ -1,8 +1,5 @@
 package it.unibo.bombardero.cell.powerup.api;
 
-import java.util.Map;
-
-import it.unibo.bombardero.bomb.api.Bomb.BombType;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.character.Character;
 
@@ -113,10 +110,6 @@ public interface PowerUp extends Cell {
          */
         SKULL(20);
 
-        private static final Map<PowerUpType, BombType> TO_BOMB_TYPE = Map.of(
-                PowerUpType.REMOTE_BOMB, BombType.BOMB_REMOTE,
-                PowerUpType.PIERCING_BOMB, BombType.BOMB_PIERCING,
-                PowerUpType.POWER_BOMB, BombType.BOMB_POWER);
         private final double weight;
 
         /**
@@ -135,20 +128,6 @@ public interface PowerUp extends Cell {
          */
         public double getWeight() {
             return this.weight;
-        }
-
-        /**
-         * 
-         * @return the corresponding BombType ,if no rapresent any type of bomb return
-         *         BOMB_BASIC
-         */
-        public BombType toBombType() {
-            if (TO_BOMB_TYPE.containsKey(this)) {
-                return TO_BOMB_TYPE.get(this);
-            } else {
-                return BombType.BOMB_BASIC;
-            }
-
         }
     }
 
