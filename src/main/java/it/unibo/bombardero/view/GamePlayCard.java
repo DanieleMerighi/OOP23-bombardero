@@ -40,9 +40,14 @@ import it.unibo.bombardero.character.Direction;
  * This class will never be serialised.
  */
 @SuppressWarnings("serial")
+
 /**
- * This class is the panel containing the game view.
- * @author Federico Bagattoni
+ * This abstract class implements the basic idea of a generic 
+ * container to display the game elements. Imports the various items,
+ * is updatable and the "pause screen" can be set from the outside. 
+ * <p> 
+ * This class leaves several methods as abstract so the subclasses can personalize
+ * the response to precise actions.
  */
 public abstract class GamePlayCard extends JPanel {
 
