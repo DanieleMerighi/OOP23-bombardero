@@ -1,19 +1,14 @@
 package it.unibo.bombardero.cell.powerup.impl;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import org.apache.commons.math3.distribution.EnumeratedDistribution;
-import org.apache.commons.math3.util.Pair;
 
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.cell.powerup.api.PowerUp.PowerUpType;
 import it.unibo.bombardero.cell.powerup.api.PowerUpEffect;
 import it.unibo.bombardero.cell.powerup.api.PowerUpFactory;
+import it.unibo.bombardero.cell.powerup.api.PowerUpTypeExtractor;
 
 /**
  * Implementation of the PowerUpFactory interface.
@@ -24,26 +19,18 @@ import it.unibo.bombardero.cell.powerup.api.PowerUpFactory;
  */
 public final class PowerUpFactoryImpl implements PowerUpFactory {
 
-    /**
-     * Generate a list of power-ups with their weights (the probability mass function enumeration, pmf).
-     */
-    private static final List<Pair<PowerUpType, Double>> WEIGHTED_POWERUP_LIST = Arrays.stream(PowerUpType.values())
-            .map(type -> new Pair<>(type, type.getWeight()))
-            .collect(Collectors.toList());
-
-    /** Create an enumerated distribution using the given pmf. */
-    private static final EnumeratedDistribution<PowerUpType> WEIGHTED_POWERUP_DISTRIBUTION = new EnumeratedDistribution<>(
-            WEIGHTED_POWERUP_LIST);
-
     /** A map that stores the power-up types and their corresponding effect.*/
     private final Map<PowerUpType, Supplier<PowerUpEffect>> powerUpEffectMap;
+
+    private final PowerUpTypeExtractor extractor;
 
     /**
      * Constructs a new PowerUpFactoryImpl and initializes the power-up effect map.
      */
     public PowerUpFactoryImpl() {
         this.powerUpEffectMap = new HashMap<>();
-        initializePowerUps();
+        this.extractor = new PowerUpEnumeratedDistribution();
+        initializePowerUpEffectMap();
     }
 
     /**
@@ -58,7 +45,22 @@ public final class PowerUpFactoryImpl implements PowerUpFactory {
      */
     @Override
     public PowerUp createPowerUp() {
-        final PowerUpType powerUpType = WEIGHTED_POWERUP_DISTRIBUTION.sample(); // Extract a random weighted PowerUp
+        final PowerUpType powerUpType = extractor.extractPowerUpType(); // Extract a random weighted PowerUp
+        return createPowerUpImpl(powerUpType);
+    }
+
+    /**
+     * Creates a new PowerUp instance with a selected type passed as an argument.
+     * 
+     * @return a new instance of PowerUp with a specific type and effect
+     * @throws IllegalArgumentException if there is no effect for the selected PowerUp type
+     */
+    @Override
+    public PowerUp createPowerUp(final PowerUpType powerUpType) {
+        return createPowerUpImpl(powerUpType);
+    }
+
+    private PowerUp createPowerUpImpl(final PowerUpType powerUpType) {
         final Supplier<PowerUpEffect> supplier = powerUpEffectMap.get(powerUpType); // Get the power-Up effect
         if (supplier == null) { // Checks if the effect is null
             throw new IllegalArgumentException("Unknown power-up effect for: " + powerUpType);
@@ -70,7 +72,7 @@ public final class PowerUpFactoryImpl implements PowerUpFactory {
      * Initializes the map with power-up types and their corresponding effect.
      * This method is called in the constructor to populate the powerUpEffectMap.
      */
-    private void initializePowerUps() {
+    private void initializePowerUpEffectMap() {
         powerUpEffectMap.put(PowerUpType.REMOTE_BOMB, () -> new RemoteBombEffect());
         powerUpEffectMap.put(PowerUpType.PIERCING_BOMB, () -> new PiercingBombEffect());
         powerUpEffectMap.put(PowerUpType.POWER_BOMB, () -> new PowerBombEffect());

@@ -15,7 +15,7 @@ public interface PowerUp extends Cell {
     /**
      * Enumeration representing the different types of power-ups in the game.
      */
-    public enum PowerUpType {
+    enum PowerUpType {
         // Bomb type-related P.U.
         /**
          * The remote bomb power-up.
