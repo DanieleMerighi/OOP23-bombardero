@@ -83,6 +83,12 @@ public final class GuideCard extends GamePlayCard {
         final Image startImage = graphics.getResizingEngine()
                 .getScaledButtonImage(resourceGetter.loadImage("overlay/buttons/PLAY"));
         final Image backImage = graphics.getResizingEngine().getScaledButtonImage(resourceGetter.loadImage("overlay/buttons/BACK"));
+        final Image backImagePressed = graphics.getResizingEngine().getScaledButtonImage(
+            resourceGetter.loadImage("overlay/buttons/BACK_PRESSED")
+        );
+        final Image startImagePressed = graphics.getResizingEngine().getScaledButtonImage(
+            resourceGetter.loadImage("overlay/buttons/PLAY_PRESSED")
+        );
         wasdSprite = new SimpleBombarderoSprite(
                 SimpleBombarderoSprite.importAssets("WASD", "overlay/buttons/WASD", resourceGetter,
                         graphics.getResizingEngine()::getScaledWASDImage, 8),
@@ -116,6 +122,8 @@ public final class GuideCard extends GamePlayCard {
         back.setContentAreaFilled(false);
         start.setFocusPainted(false);
         back.setFocusPainted(false);
+        back.setPressedIcon(new ImageIcon(backImagePressed));
+        start.setPressedIcon(new ImageIcon(startImagePressed));
         this.add(messageBox);
 
         back.addActionListener(e -> {
@@ -150,9 +158,7 @@ public final class GuideCard extends GamePlayCard {
      */
     @Override
     public void displayEndView() {
-        this.remove(messageBox);
-        this.add(new JLabel());
-        this.add(new JLabel());
+        
         this.add(start);
         this.add(back);
         this.revalidate();
