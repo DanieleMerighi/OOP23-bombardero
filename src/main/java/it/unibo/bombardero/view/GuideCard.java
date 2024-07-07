@@ -73,7 +73,7 @@ public final class GuideCard extends GamePlayCard {
             final Map<GenPair<Integer, Integer>, Cell> gameMap,
             final List<Character> playersList,
             final List<Character> enemiesList) {
-        super(graphics, gameMap, playersList, enemiesList);
+        super(controller, graphics, gameMap, playersList, enemiesList);
 
         final ResourceGetter resourceGetter = graphics.getResourceGetter();
 
@@ -116,7 +116,6 @@ public final class GuideCard extends GamePlayCard {
         back.setContentAreaFilled(false);
         start.setFocusPainted(false);
         back.setFocusPainted(false);
-        this.add(new JLabel());
         this.add(messageBox);
 
         back.addActionListener(e -> {

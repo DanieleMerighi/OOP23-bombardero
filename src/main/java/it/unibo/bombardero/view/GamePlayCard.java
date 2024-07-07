@@ -39,6 +39,7 @@ import it.unibo.bombardero.view.sprites.impl.TimedBombarderoSprite;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
+import it.unibo.bombardero.core.api.Controller;
 
 /*
  * This class will never be serialised.
@@ -116,6 +117,7 @@ public abstract class GamePlayCard extends JPanel {
      * @param enemies the enemies initally rendered by this class
      */
     public GamePlayCard(
+        final Controller controller,
         final GraphicsEngine graphics,
         final Map<GenPair <Integer, Integer>, Cell> map,
         final List<Character> playersList,
@@ -161,6 +163,9 @@ public abstract class GamePlayCard extends JPanel {
 
         this.add(new JLabel());
         this.setLayout(new GridLayout(LAYOUT_ROWS, LAYOUT_COLS));
+
+        quitButton.addActionListener(e -> controller.endGame());
+        resumeButton.addActionListener(e -> controller.escape());
     }
 
     // CHECKSTYLE: MagicNumber ON

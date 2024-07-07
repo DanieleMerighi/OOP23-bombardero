@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.view.api.GraphicsEngine;
 import it.unibo.bombardero.view.api.GraphicsEngine.EndGameState;
 
@@ -41,8 +42,8 @@ public final class GameCard extends GamePlayCard {
      * method.
      * @param graphics the {@link GraphicsEngine} managing this class
      */
-    public GameCard(final GraphicsEngine graphics) {
-        super(graphics, Map.of(), List.of(), List.of());
+    public GameCard(final Controller controller, final GraphicsEngine graphics) {
+        super(controller, graphics, Map.of(), List.of(), List.of());
  
         clockImage = graphics.getResizingEngine().getScaledClockImage(
             graphics.getResourceGetter().loadImage("overlay/clock")

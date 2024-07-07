@@ -8,8 +8,11 @@ import java.awt.Image;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Optional;
 
 import it.unibo.bombardero.cell.Cell;
@@ -35,7 +38,8 @@ public final class BombarderoGraphics implements GraphicsEngine {
     private final GamePlayCard gameCard;
     private final GamePlayCard guideCard;
     private final MenuCard menuCard;
-    private ViewCards currentShowedCard = ViewCards.MENU;
+    private ViewCards currentCard;
+    private final Map<ViewCards, GamePlayCard> cardsMap = new HashMap<>();
 
     /**
      * Creates a new Graphics engine, creating and showing the window frame toghether
@@ -59,16 +63,18 @@ public final class BombarderoGraphics implements GraphicsEngine {
 
         menuCard = new MenuCard(controller, this, resourceGetter);
         this.guideCard = new GuideCard(controller, this, Map.of(), List.of(), List.of());
-        this.gameCard = new GameCard(this);
+        this.gameCard = new GameCard(controller, this);
 
         deck.add(ViewCards.GUIDE.getStringId(), guideCard);
         layout.addLayoutComponent(guideCard, ViewCards.GUIDE.getStringId());
+        cardsMap.put(ViewCards.GUIDE, guideCard);
 
         deck.add(ViewCards.MENU.getStringId(), menuCard);
         layout.addLayoutComponent(menuCard, ViewCards.MENU.getStringId());
 
         deck.add(ViewCards.GAME.getStringId(), gameCard);
         layout.addLayoutComponent(gameCard, ViewCards.GAME.getStringId());
+        cardsMap.put(ViewCards.GAME, gameCard);
         deck.validate();
         
         frame.add(deck);
@@ -79,7 +85,7 @@ public final class BombarderoGraphics implements GraphicsEngine {
     @Override
     public void showGameScreen(final ViewCards cardName) {
         layout.show(deck, cardName.getStringId());
-        currentShowedCard = cardName;
+        currentCard = cardName;
         frame.requestFocus();
     }
 
@@ -89,13 +95,9 @@ public final class BombarderoGraphics implements GraphicsEngine {
         final List<Character> playerList,
         final List<Character> enemiesList,
         final Optional<Long> timeLeft) {
-        if (ViewCards.GAME.equals(currentShowedCard)) {
-            gameCard.update(map, playerList, enemiesList);
-            gameCard.setTimeLeft(timeLeft.get());
-        }
-        else if (ViewCards.GUIDE.equals(currentShowedCard)) {
-            guideCard.update(map, playerList, enemiesList);
-        }
+        cardsMap.get(currentCard).update(map, playerList, enemiesList);
+        cardsMap.get(currentCard).setTimeLeft(timeLeft.orElse(0l));
+        cardsMap.get(currentCard).repaint(0);
     }
 
     public Dimension getFrameSize() {
@@ -108,25 +110,21 @@ public final class BombarderoGraphics implements GraphicsEngine {
 
     @Override
     public void setPausedView() {
-        gameCard.setPausedView();
+        cardsMap.get(currentCard).setPausedView();
     }
 
     @Override
     public void setUnpausedView() {
-        gameCard.setUnpausedView();
+        cardsMap.get(currentCard).setUnpausedView();
     }
 
     @Override
     public void setMessage(final BombarderoViewMessages message) {
-        guideCard.showMessage(message);
+        cardsMap.get(currentCard).showMessage(message);
     }
 
     public void displayEndGuide() {
-        guideCard.displayEndView();
-    }
- 
-    public void displayEndGame(final EndGameState stateToDisplay) {
-        gameCard.displayEndView(stateToDisplay);
+        cardsMap.get(currentCard).displayEndView();
     }
 
     @Override
