@@ -92,7 +92,7 @@ public final class BombarderoController implements Controller {
 
     @Override
     public void update(final long elapsed) {
-        manager.updateGame(elapsed);
+        manager.updateGame(elapsed, this);
         graphics.update(getMap(), List.of(getMainPlayer()), getEnemies(), getTimeLeft());
     }
 

@@ -84,7 +84,7 @@ public class BasicBombarderoGameManager implements GameManager {
      * @param elapsed the time passed since the last update.
      */
     @Override
-    public void updateGame(final long elapsed) {
+    public void updateGame(final long elapsed, final Controller controller) {
         updatePlayer(elapsed);
         updateEnemies(elapsed);
         updateBombs(elapsed);

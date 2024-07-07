@@ -43,7 +43,7 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
 
     @Override
     public void updateGame(final long elapsed, final Controller controller) {
-        super.updateGame(elapsed);
+        super.updateGame(elapsed, controller);
         if (!guideProcedures.isEmpty() && guideProcedures.peek().condition().test(getGameMap(), this)) {
             guideProcedures.pop().action().accept(this, controller);
         }
@@ -74,7 +74,7 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
             (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.EXPLAIN_POWERUP)
         ));
         guideProcedures.add(new GuideStep(
-            (map, manager) -> manager.getPlayer().isStationary(),
+            (map, manager) -> true /*manager.getPlayer().isStationary()*/,
             (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.PLACE_BOMB)
         ));
     } 
