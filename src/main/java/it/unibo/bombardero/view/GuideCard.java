@@ -158,7 +158,7 @@ public final class GuideCard extends GamePlayCard {
      */
     @Override
     public void displayEndView() {
-        
+        darkenView(GamePlayCard.PAUSE_DARKEN_ALPHA);
         this.add(start);
         this.add(back);
         this.revalidate();

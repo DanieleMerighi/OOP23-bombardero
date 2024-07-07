@@ -56,7 +56,11 @@ import it.unibo.bombardero.core.api.Controller;
  */
 public abstract class GamePlayCard extends JPanel {
 
-    private static final float BLUR_ALPHA_RATE = 0.35f;
+    /**
+     * The optimal alpha channel value to use when darkening the background, 
+     * for example when the pause menu is displayed.
+     */
+    public static final float PAUSE_DARKEN_ALPHA = 0.35f;
     private static final int LAYOUT_COLS = 1;
     private static final int LAYOUT_ROWS = 5;
     /** 
@@ -270,10 +274,8 @@ public abstract class GamePlayCard extends JPanel {
                 null
             );
         });
-        if (isGamePaused) {
-            g2d.setColor(new Color(0, 0, 0, darkenValue));
-            g2d.fillRect(0, 0, getSize().width, getSize().height);
-        }
+        g2d.setColor(new Color(0, 0, 0, darkenValue));
+        g2d.fillRect(0, 0, getSize().width, getSize().height);
     }
 
     /**
@@ -294,7 +296,7 @@ public abstract class GamePlayCard extends JPanel {
      * paused and displays alterantives for the user to choose.
      */
     public final void setPausedView() {
-        darkenValue = GamePlayCard.BLUR_ALPHA_RATE;
+        darkenView(PAUSE_DARKEN_ALPHA);
         isGamePaused = true;
         this.add(resumeButton);
         this.add(quitButton);
@@ -307,12 +309,22 @@ public abstract class GamePlayCard extends JPanel {
      * otherwise does nothing.
      */
     public final void setUnpausedView() {
-        darkenValue = 0.0f;
+        darkenView(0.0f);
         isGamePaused = false;
         this.remove(resumeButton);
         this.remove(quitButton);
         this.revalidate();
         this.repaint(0);
+    }
+
+    /**
+     * Darkens the view by a certain parameter valued between one (1) and 
+     * zero (0), corresponding to the alpha channel.
+     * @param amount the amount to darken the whole view
+     * @see Color
+     */
+    public final void darkenView(final float amount) {
+        darkenValue = amount;
     }
 
     /** 
