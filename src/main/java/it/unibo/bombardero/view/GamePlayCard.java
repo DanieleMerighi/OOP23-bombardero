@@ -14,6 +14,10 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.swing.JPanel;
+
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+
+import javax.swing.JLayeredPane;
 import javax.swing.JButton;
 import java.awt.GridLayout;
 import javax.swing.JLabel;
@@ -78,6 +82,7 @@ public abstract class GamePlayCard extends JPanel {
     private transient Image skatesPlusOne = resourceGetter.loadImage("powerup/skates_plus_one");
     private transient Image skateMinusOne = resourceGetter.loadImage("powerup/skates_minus_one");
     private transient Image skull = resourceGetter.loadImage("powerup/skull");
+    private transient Image pausePanelImage = resourceGetter.loadImage("overlay/victory-panel");
 
     /* References to model components: */
     private final transient GraphicsEngine graphics;
@@ -99,6 +104,8 @@ public abstract class GamePlayCard extends JPanel {
     /* Pause state buttons: */
     private final JButton resumeButton;
     private final JButton quitButton;
+    private boolean isGamePaused = false;
+    private float darkenValue = 0.0f;
 
     /**
      * Creates a new GamePlayCard creating all the sprites needed and setting the initial state 
@@ -128,6 +135,12 @@ public abstract class GamePlayCard extends JPanel {
         final Image quitButtonImage = graphics.getResizingEngine().getScaledButtonImage(
             graphics.getResourceGetter().loadImage("overlay/buttons/QUIT")
         );
+        final Image quitButtonPressedImage = graphics.getResizingEngine().getScaledButtonImage(
+            graphics.getResourceGetter().loadImage("overlay/buttons/QUIT_PRESSED")
+        );
+        final Image resumeButtonPressedImage = graphics.getResizingEngine().getScaledButtonImage(
+            graphics.getResourceGetter().loadImage("overlay/buttons/RESUME_PRESSED")
+        );
 
         updateGameState(map, playersList, enemies);
         scaleEverything();
@@ -143,9 +156,10 @@ public abstract class GamePlayCard extends JPanel {
         quitButton.setContentAreaFilled(false);
         resumeButton.setFocusPainted(false);
         quitButton.setFocusPainted(false);
-        this.add(new JLabel());
-        this.add(new JLabel());
+        quitButton.setPressedIcon(new ImageIcon(quitButtonPressedImage));
+        resumeButton.setPressedIcon(new ImageIcon(resumeButtonPressedImage));
 
+        this.add(new JLabel());
         this.setLayout(new GridLayout(LAYOUT_ROWS, LAYOUT_COLS));
     }
 
@@ -250,11 +264,11 @@ public abstract class GamePlayCard extends JPanel {
                 pos.width, pos.height,
                 null
             );
-        }); /*
-        if (blurEntireWindow) {
-            g2d.setColor(new Color(0, 0, 0, BLUR_ALPHA_RATE));
+        });
+        if (isGamePaused) {
+            g2d.setColor(new Color(0, 0, 0, darkenValue));
             g2d.fillRect(0, 0, getSize().width, getSize().height);
-        }*/
+        }
     }
 
     /**
@@ -275,6 +289,8 @@ public abstract class GamePlayCard extends JPanel {
      * paused and displays alterantives for the user to choose.
      */
     public final void setPausedView() {
+        darkenValue = GamePlayCard.BLUR_ALPHA_RATE;
+        isGamePaused = true;
         this.add(resumeButton);
         this.add(quitButton);
         this.revalidate();
@@ -286,8 +302,10 @@ public abstract class GamePlayCard extends JPanel {
      * otherwise does nothing.
      */
     public final void setUnpausedView() {
-        this.remove(quitButton);
+        darkenValue = 0.0f;
+        isGamePaused = false;
         this.remove(resumeButton);
+        this.remove(quitButton);
         this.revalidate();
         this.repaint(0);
     }
