@@ -19,7 +19,7 @@ import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.traverse.BreadthFirstIterator;
 
-import it.unibo.bombardero.cell.powerup.api.PowerUpType;
+import it.unibo.bombardero.cell.powerup.api.PowerUp.PowerUpType;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.character.ai.api.EnemyGraphReasoner;
 import it.unibo.bombardero.map.api.GameMap;

@@ -19,7 +19,7 @@ public final class FullBombarderoGameManager extends BasicBombarderoGameManager 
      * @param controller the game's controller
      */
     public FullBombarderoGameManager(final Controller controller) {
-        super(controller, Utils.PLAYER_SPAWNPOINT, Utils.ENEMIES_SPAWNPOINT.subList(0, 1), true);
+        super(controller, Utils.PLAYER_SPAWNPOINT, Utils.ENEMIES_SPAWNPOINT, true);
     }
 
     @Override

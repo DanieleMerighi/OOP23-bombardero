@@ -3,8 +3,8 @@ package it.unibo.bombardero.cell.powerup.impl;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import it.unibo.bombardero.cell.powerup.api.PowerUp.PowerUpType;
 import it.unibo.bombardero.cell.powerup.api.PowerUpEffect;
-import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.character.Character;
 
 /**

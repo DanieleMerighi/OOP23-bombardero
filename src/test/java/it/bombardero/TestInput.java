@@ -10,7 +10,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import it.unibo.bombardero.cell.powerup.api.PowerUpType;
+import it.unibo.bombardero.cell.powerup.api.PowerUp.PowerUpType;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.KeyboardInput;
 import it.unibo.bombardero.core.api.Controller;

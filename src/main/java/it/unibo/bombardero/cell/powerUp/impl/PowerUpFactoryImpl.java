@@ -11,9 +11,9 @@ import org.apache.commons.math3.distribution.EnumeratedDistribution;
 import org.apache.commons.math3.util.Pair;
 
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
+import it.unibo.bombardero.cell.powerup.api.PowerUp.PowerUpType;
 import it.unibo.bombardero.cell.powerup.api.PowerUpEffect;
 import it.unibo.bombardero.cell.powerup.api.PowerUpFactory;
-import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 
 /**
  * Implementation of the PowerUpFactory interface.
