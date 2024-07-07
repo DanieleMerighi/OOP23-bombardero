@@ -16,6 +16,7 @@ import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.core.KeyboardInput;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.map.api.GenPair;
+import it.unibo.bombardero.view.api.GraphicsEngine;
 import it.unibo.bombardero.character.Character;
 
 /** 
@@ -31,8 +32,9 @@ public final class BombarderoGraphics implements GraphicsEngine {
     private final JPanel deck;
     private final CardLayout layout = new CardLayout();
 
-    private final GameCard gameCard;
-    private final GuideCard guideCard;
+    private final GamePlayCard gameCard;
+    private final GamePlayCard guideCard;
+    private final MenuCard menuCard;
     private ViewCards currentShowedCard = ViewCards.MENU;
 
     /**
@@ -55,7 +57,7 @@ public final class BombarderoGraphics implements GraphicsEngine {
         frame.setLocationRelativeTo(null);
         frame.setIconImage(gameIconImage.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
 
-        final MenuCard menuCard = new MenuCard(controller, this, resourceGetter);
+        menuCard = new MenuCard(controller, this, resourceGetter);
         this.guideCard = new GuideCard(controller, this, Map.of(), List.of(), List.of());
         this.gameCard = new GameCard(this);
 
@@ -70,12 +72,12 @@ public final class BombarderoGraphics implements GraphicsEngine {
         deck.validate();
         
         frame.add(deck);
-        showCard(ViewCards.MENU);
+        showGameScreen(ViewCards.MENU);
         frame.setVisible(true);
     }
 
     @Override
-    public void showCard(final ViewCards cardName) {
+    public void showGameScreen(final ViewCards cardName) {
         layout.show(deck, cardName.getStringId());
         currentShowedCard = cardName;
         frame.requestFocus();
@@ -90,11 +92,9 @@ public final class BombarderoGraphics implements GraphicsEngine {
         if (ViewCards.GAME.equals(currentShowedCard)) {
             gameCard.update(map, playerList, enemiesList);
             gameCard.setTimeLeft(timeLeft.get());
-            gameCard.repaint(0);
         }
         else if (ViewCards.GUIDE.equals(currentShowedCard)) {
             guideCard.update(map, playerList, enemiesList);
-            guideCard.repaint(0);
         }
     }
 
@@ -122,11 +122,16 @@ public final class BombarderoGraphics implements GraphicsEngine {
     }
 
     public void displayEndGuide() {
-        guideCard.displayEndGuide();
+        guideCard.displayEndView();
     }
  
     public void displayEndGame(final EndGameState stateToDisplay) {
-        gameCard.displayEndGameState(stateToDisplay);
+        gameCard.displayEndView(stateToDisplay);
+    }
+
+    @Override
+    public void showEndScreen(final EndGameState gameState) {
+        
     }
 
     @Override
