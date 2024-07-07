@@ -42,7 +42,7 @@ import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
  */
 public final class GuideCard extends GamePlayCard {
 
-    private static final int LAYOUT_ROWS = 1;
+    private static final int LAYOUT_ROWS = 5;
     private static final int LAYOUT_COLS = 1;
 
     // private String message = "";
