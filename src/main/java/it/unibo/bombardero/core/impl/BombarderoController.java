@@ -11,7 +11,7 @@ import it.unibo.bombardero.guide.impl.BombarderoGuideManager;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.view.BombarderoGraphics;
 import it.unibo.bombardero.view.BombarderoViewMessages;
-import it.unibo.bombardero.view.GraphicsEngine;
+import it.unibo.bombardero.view.api.GraphicsEngine;
 import it.unibo.bombardero.character.Character;
 
 /**
@@ -44,14 +44,14 @@ public final class BombarderoController implements Controller {
         this.manager = new FullBombarderoGameManager(this);
         isGamePaused = false;
         isGameStarted = true;
-        graphics.showCard(GraphicsEngine.ViewCards.GAME);
+        graphics.showGameScreen(GraphicsEngine.ViewCards.GAME);
     }
 
     @Override
     public void endGame() {
         isGamePaused = true;
         isGameStarted = false;
-        graphics.showCard(GraphicsEngine.ViewCards.END);
+        graphics.showGameScreen(GraphicsEngine.ViewCards.END);
     }
 
     @Override
@@ -59,7 +59,7 @@ public final class BombarderoController implements Controller {
         this.manager = new BombarderoGuideManager(this);
         isGamePaused = false;
         isGameStarted = true;
-        graphics.showCard(GraphicsEngine.ViewCards.GUIDE);
+        graphics.showGameScreen(GraphicsEngine.ViewCards.GUIDE);
         toggleMessage(BombarderoViewMessages.EXPLAIN_MOVEMENT);
     }
 
