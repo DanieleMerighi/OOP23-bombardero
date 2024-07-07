@@ -30,6 +30,9 @@ import it.unibo.bombardero.physics.impl.BombarderoCollision;
  */
 public class BasicBombarderoGameManager implements GameManager {
 
+    /**
+     * The total length in time of one match: 2 minutes. 
+     */
     public static final long TOTAL_GAME_TIME = 120_000L;
     public static final long GAME_OVER_TIME = 0L;
 
