@@ -36,7 +36,10 @@ public final class BombarderoController implements Controller {
     private boolean isGameOver = false;
 
     /**
-     * TODO
+     * Creates a new controller, creating and storing the {@GraphicsEngine} that will
+     * display the model's elements. The {@link GraphicsEngine} creation results in 
+     * the creation of the game's window and the main menu.
+     * @see {@link GraphicsEngine} and {@link BombarderoGraphics} for the graphic's behaviour.
      */
     public BombarderoController() {
         this.graphics = new BombarderoGraphics(this);
