@@ -8,8 +8,6 @@ import java.awt.Image;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -54,7 +52,7 @@ public final class BombarderoGraphics implements GraphicsEngine {
 
         frame.addKeyListener(new KeyboardInput(controller, 0));
 
-        resizingEngine = new ResizingEngine(this);
+        resizingEngine = new ResizingEngine(this, frame.getInsets());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(resizingEngine.getGameWindowSize(frame));
         frame.setResizable(false);
@@ -141,9 +139,5 @@ public final class BombarderoGraphics implements GraphicsEngine {
     public ResourceGetter getResourceGetter() {
         return this.resourceGetter;
     }
-
-    @Override
-    public JFrame getParentFrame() {
-        return this.frame;
-    }
+    
 }

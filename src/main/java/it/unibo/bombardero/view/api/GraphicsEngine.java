@@ -53,6 +53,4 @@ public interface GraphicsEngine {
 
     ResourceGetter getResourceGetter();
 
-    JFrame getParentFrame();
-
 }
