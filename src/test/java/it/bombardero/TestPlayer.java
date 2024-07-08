@@ -77,7 +77,8 @@ class TestPlayer {
 
         roundPlayerCoordinateToThreeDecimal();
         // Sums the spawn coordinates with the movement done
-        expectedCoord = expectedCoord.apply(Functions.sumFloat(calculateExpectedDeltaMovement(updateNumeber)));
+        final GenPair<Float, Float> tempCoord = expectedCoord.apply(Functions.sumFloat(calculateExpectedDeltaMovement(updateNumeber)));
+        expectedCoord = tempCoord;
 
         assertEquals(expectedCoord, manager.getPlayers().get(playerIndex).getCharacterPosition());
     }
