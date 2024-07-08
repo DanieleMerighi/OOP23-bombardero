@@ -40,5 +40,5 @@ public final class SpiralTraversalStrategy implements MatrixTraversalStrategy {
         }
         return order;
     }
-    
+
 }

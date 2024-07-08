@@ -26,5 +26,5 @@ public final class SideToSideTraversalStrategy implements MatrixTraversalStrateg
             )
             .collect(Collectors.toList());
     }
-    
+
 }
