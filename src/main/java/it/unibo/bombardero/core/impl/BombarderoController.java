@@ -32,8 +32,8 @@ public final class BombarderoController implements Controller {
     private GameManager manager;
 
     private boolean isGamePaused = true;
-    private boolean isGameStarted = false;
-    private boolean isGameOver = false;
+    private boolean isGameStarted;
+    private boolean isGameOver;
 
     /**
      * Creates a new controller, creating and storing the {@GraphicsEngine} that will
