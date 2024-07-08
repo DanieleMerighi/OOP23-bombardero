@@ -133,4 +133,10 @@ public interface GameMap {
      */
     Map<GenPair<Integer, Integer>, Cell> getMap();
 
+    /**
+     * Retuns a copy of the game map. 
+     * @return
+     */
+    GameMap getCopiedGameMap();
+
 }
