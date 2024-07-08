@@ -36,7 +36,7 @@ import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.Controller;
 
-/*
+/**
  * This class will never be serialised.
  */
 @SuppressWarnings("serial")
@@ -85,7 +85,7 @@ public abstract class GamePlayCard extends JPanel {
 
     /* References to model components: */
     private final transient ResizingEngine resizingEngine;
-    private transient Map<GenPair <Integer, Integer>, Cell> cells;
+    private transient Map<GenPair<Integer, Integer>, Cell> cells;
     private transient List<Character> playersList;
     private final transient Map<Character, SpriteImageCombo> charactersImages = new HashMap<>();
     private transient List<Character> enemiesList;
@@ -112,11 +112,12 @@ public abstract class GamePlayCard extends JPanel {
      * @param map the game map initally rendered by this class
      * @param playersList the players initally rendered by this class
      * @param enemies the enemies initally rendered by this class
+     * @param controller the game's controller
      */
     public GamePlayCard(
         final Controller controller,
         final GraphicsEngine graphics,
-        final Map<GenPair <Integer, Integer>, Cell> map,
+        final Map<GenPair<Integer, Integer>, Cell> map,
         final List<Character> playersList,
         final List<Character> enemies
         ) {
@@ -279,7 +280,11 @@ public abstract class GamePlayCard extends JPanel {
      * @param playersList the list of players present in the game
      * @param enemiesList the list of enemies present in the game
      */
-    public void update(final Map<GenPair<Integer, Integer>, Cell> map, final List<Character> playersList, final List<Character> enemiesList) {
+    public void update(
+        final Map<GenPair<Integer, Integer>, Cell> map,
+        final List<Character> playersList,
+        final List<Character> enemiesList
+        ) {
         updateGameState(map, playersList, enemiesList);
         updateSprites();
         repaint(0);
@@ -290,7 +295,7 @@ public abstract class GamePlayCard extends JPanel {
      * paused and displays alterantives for the user to choose.
      */
     public final void setPausedView() {
-        darkenView(PAUSE_DARKEN_ALPHA);;
+        darkenView(PAUSE_DARKEN_ALPHA);
         this.add(resumeButton);
         this.add(quitButton);
         this.revalidate();
