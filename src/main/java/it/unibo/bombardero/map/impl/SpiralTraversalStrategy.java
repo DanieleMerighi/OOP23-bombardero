@@ -6,7 +6,10 @@ import java.util.List;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.map.api.MatrixTraversalStrategy;
 
-public class SpiralTraversalStrategy implements MatrixTraversalStrategy {
+/** 
+ * An algorithm that traverses a matrix in a spiral form.
+ */
+public final class SpiralTraversalStrategy implements MatrixTraversalStrategy {
 
     @Override
     public List<GenPair<Integer, Integer>> compute(int rows, int cols) {

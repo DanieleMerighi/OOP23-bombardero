@@ -7,7 +7,10 @@ import java.util.stream.IntStream;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.map.api.MatrixTraversalStrategy;
 
-public class SideToSideTraversalStrategy implements MatrixTraversalStrategy {
+/**
+ * An algorithm that traverses a matrix from side to side.
+ */
+public final class SideToSideTraversalStrategy implements MatrixTraversalStrategy {
 
     @Override
     public List<GenPair<Integer, Integer>> compute(int rows, int cols) {
