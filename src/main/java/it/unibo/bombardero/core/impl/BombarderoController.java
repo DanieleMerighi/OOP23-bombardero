@@ -14,6 +14,8 @@ import it.unibo.bombardero.physics.impl.CollisionHandlerImpl;
 import it.unibo.bombardero.view.BombarderoGraphics;
 import it.unibo.bombardero.view.BombarderoViewMessages;
 import it.unibo.bombardero.view.api.GraphicsEngine;
+import it.unibo.bombardero.view.api.GraphicsEngine.EndGameState;
+import it.unibo.bombardero.view.api.GraphicsEngine.ViewCards;
 import it.unibo.bombardero.character.Character;
 
 /**
@@ -50,9 +52,11 @@ public final class BombarderoController implements Controller {
 
     @Override
     public void endGame() {
-        isGamePaused = true;
-        isGameStarted = false;
-        graphics.showGameScreen(GraphicsEngine.ViewCards.END);
+        if (isGameStarted) {
+            isGamePaused = true;
+            isGameStarted = false;
+        }
+        graphics.showGameScreen(ViewCards.MENU);
     }
 
     @Override
@@ -74,8 +78,8 @@ public final class BombarderoController implements Controller {
     }
 
     @Override
-    public void displayEndGuide() {
-        graphics.displayEndGuide();
+    public void displayEndScreen(final EndGameState endGameState) {
+        graphics.showEndScreen(endGameState);
     }
     
 
@@ -92,10 +96,15 @@ public final class BombarderoController implements Controller {
     }
 
     @Override
-    public void update(final long elapsed) {
+    public void updateGame(final long elapsed) {
         manager.updateGame(elapsed, this);
+    }
+
+    @Override
+    public void updateGraphics(final long elapsed) {
         graphics.update(getMap(), List.of(getMainPlayer()), getEnemies(), getTimeLeft());
     }
+
 
     @Override
     public void toggleMessage(final BombarderoViewMessages message) {
