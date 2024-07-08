@@ -21,6 +21,7 @@ import java.awt.image.BufferedImage;
  */
 public final class ResizingEngine {
 
+    private static final double SPACE_DISTANCE_FROM_CELL = 1.5;
     private static final double DEFAULT_SCALE = 1.125;
     private static final int HIGH_RES_THRESHOLD = 200;
     private static final double HIGH_RES_SCALE = 1.25;
@@ -414,7 +415,7 @@ public final class ResizingEngine {
         final Dimension cell = getCellPlacingPoint(GuideManager.CRATE_GUIDE_SPAWNPOINT);
         return new Dimension(
                 cell.width - getScaledCellSize(),
-                (int) Math.floor(cell.height + 1.5 * getScaledCellSize()));
+                (int) Math.floor(cell.height + SPACE_DISTANCE_FROM_CELL * getScaledCellSize()));
     }
 
     private Dimension initButtonSize() {
