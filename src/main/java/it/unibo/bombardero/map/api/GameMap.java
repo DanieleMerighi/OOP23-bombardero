@@ -14,6 +14,18 @@ import it.unibo.bombardero.cell.powerup.api.PowerUp.PowerUpType;
  * @author Federico Bagattoni
  */
 public interface GameMap {
+
+    /** 
+     * The number of total rows in the map.
+     */
+    int ROWS = 13;
+
+    /** 
+     * The number of total columns in the map.
+     */
+    int COLS = 13;
+
+
     /**
      * The beginnig coordinate for the cells.
      */

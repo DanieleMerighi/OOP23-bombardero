@@ -39,9 +39,12 @@ public interface MapGenerator {
     /** 
      * Generates the order of cell on which an Unbreakable wall has to be spawned
      * during the map's collpase.
+     * @param collapseStrategy the strategy used to compute the collapse order (e.g. spiral 
+     * alternating rows and columns, up and down)
      * @return a list of positions, the first position being the first wall to collapse.
+     * @see MatrixTraversalStrategy
      */
-    List<GenPair<Integer, Integer>> generateCollapseOrder();
+    List<GenPair<Integer, Integer>> generateCollapseOrder(MatrixTraversalStrategy collpaseStrategy);
 
 
 }
