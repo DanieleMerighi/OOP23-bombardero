@@ -54,6 +54,14 @@ public final class ResizingEngine {
     private final Dimension buttonSize;
     private final Dimension menuLogoSize;
 
+    /**
+     * The class that manages the dynamic resizing of the game, choosing and setting 
+     * a {@link #currentScale} that uses to proportionally enlarge every item in the game.
+     * <p>
+     * The scale is choosen by checking the display's resolution.
+     * @param graphics the {@link GraphicsEngine} related to this instance
+     * @param insets the insets of the frame, used to compute the total window size
+     */
     public ResizingEngine(final GraphicsEngine graphics, final Insets insets) {
         final int resolution = Toolkit.getDefaultToolkit().getScreenResolution();
         if (resolution >= HIGH_RES_THRESHOLD) {
@@ -73,17 +81,23 @@ public final class ResizingEngine {
         menuLogoSize = initLogoSize();
     }
 
+    /**
+     * Returns a cloned version of the current instance with the same values.
+     * @param graphics the {@link GraphicsEngine} related to this instance
+     * @return a new cloned {@link ResizingEngine}
+     */
     public ResizingEngine getNewEngine(final GraphicsEngine graphics) {
         return new ResizingEngine(graphics, frameInsets);
     }
 
     /* FRAME-RELATED METHODS */
 
-    /*
-     * The initial windows size is calculated scaling the map and adding some grass
-     * on the sides, other than the insets
+    /**
+     * Returns the size of the whole window, taking into account insets,
+     * map's size and a little bit of grass.
+     * @return the width and height of the game's window
      */
-    public Dimension getGameWindowSize(final JFrame frame) {
+    public Dimension getGameWindowSize() {
         return new Dimension(
                 gameWindowSize.width,
                 gameWindowSize.height);
@@ -200,17 +214,17 @@ public final class ResizingEngine {
 
     /** 
      * Scales the sprite's image using the view's scale.
-     * @param wasdImage the image to scale
+     * @param spaceBarImage the image to scale
      * @return the sprite's scaled image
      */
-    public Image getScaledSpaceImage(final Image wasdImage) {
-        return wasdImage.getScaledInstance((int) Math.floor(30 * 2 * getScale()), (int) Math.floor(12 * 2 * getScale()),
+    public Image getScaledSpaceImage(final Image spaceBarImage) {
+        return spaceBarImage.getScaledInstance((int) Math.floor(30 * 2 * getScale()), (int) Math.floor(12 * 2 * getScale()),
                 Image.SCALE_SMOOTH);
     }
     // CHECKSTYLE: MagicNumber ON
     /** 
      * Scales the button's image using the view's scale.
-     * @param wasdImage the image to scale
+     * @param buttonImage the image to scale
      * @return the sprite's scaled image
      */
     public Image getScaledButtonImage(final Image buttonImage) {
@@ -219,7 +233,7 @@ public final class ResizingEngine {
 
     /** 
      * Scales the menu's image using the view's scale.
-     * @param wasdImage the image to scale
+     * @param menuLogoImage the image to scale
      * @return the sprite's scaled image
      */
     public Image getScaledMenuLogoImage(final Image menuLogoImage) {
@@ -228,7 +242,7 @@ public final class ResizingEngine {
 
     /** 
      * Crops the background image passed.
-     * @param wasdImage the image to scale
+     * @param menuBackgroundImage the image to scale
      * @return the sprite's scaled image
      */
     public Image getSubImageFromBackground(final BufferedImage menuBackgroundImage) {
@@ -265,6 +279,7 @@ public final class ResizingEngine {
 
     /**
      * Returns the upper-left corner of the cell at the {@link #cooordinate} of the map.
+     * @param coordinate the position of the cell on the map
      * @return the coordinate of the top-left corner of the requested cell.
      */
     public Dimension getCellPlacingPoint(final GenPair<Integer, Integer> coordinate) {
@@ -368,9 +383,6 @@ public final class ResizingEngine {
                 gameWindowSize.height / 2 - getMapSize().height / 2 - frameInsets.top + frameInsets.bottom);
     }
 
-    /**
-     * Returns the corner of the north-eastern cell of the map
-     */
     // CHECKSTYLE: MagicNumber OFF
     private Dimension initEntityPlacingPoint() {
         return new Dimension(

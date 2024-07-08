@@ -53,7 +53,7 @@ public final class BombarderoGraphics implements GraphicsEngine {
 
         resizingEngine = new ResizingEngine(this, frame.getInsets());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(resizingEngine.getGameWindowSize(frame));
+        frame.setSize(resizingEngine.getGameWindowSize());
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setIconImage(gameIconImage.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
