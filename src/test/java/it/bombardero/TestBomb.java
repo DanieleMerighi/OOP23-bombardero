@@ -19,7 +19,7 @@ import it.unibo.bombardero.character.Character;
  * this class test bomb interaction whith the map and if they are
  * placed well.
  */
-public class TestBomb {
+class TestBomb {
 
     private static final int TIME_TO_EXPLODE = 3000;
     private BombFactory bombFactory;
