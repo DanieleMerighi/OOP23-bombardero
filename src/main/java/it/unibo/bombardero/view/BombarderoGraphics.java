@@ -55,9 +55,9 @@ public final class BombarderoGraphics implements GraphicsEngine {
         frame.setLocationRelativeTo(null);
         frame.setIconImage(gameIconImage.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
 
-        MenuCard menuCard = new MenuCard(controller, this, resourceGetter);
-        GamePlayCard guideCard = new GuideCard(controller, this, Map.of(), List.of(), List.of());
-        GamePlayCard gameCard = new GameCard(controller, this);
+        final MenuCard menuCard = new MenuCard(controller, this, resourceGetter);
+        final GamePlayCard guideCard = new GuideCard(controller, this, Map.of(), List.of(), List.of());
+        final GamePlayCard gameCard = new GameCard(controller, this);
 
         deck.add(ViewCards.GUIDE.getStringId(), guideCard);
         layout.addLayoutComponent(guideCard, ViewCards.GUIDE.getStringId());

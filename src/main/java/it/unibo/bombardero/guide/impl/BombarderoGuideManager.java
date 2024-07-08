@@ -39,8 +39,8 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
      * @param controller the reference to the game's {@link Controller}.
      * @param cEngine the collision engine related to this instance of the game.
      */
-    public BombarderoGuideManager(final Controller controller, final CollisionEngine cEngine) {
-        super(controller, GuideManager.PLAYER_GUIDE_SPAWNPOINT, List.of(), false, cEngine);
+    public BombarderoGuideManager(final CollisionEngine cEngine) {
+        super(GuideManager.PLAYER_GUIDE_SPAWNPOINT, List.of(), false, cEngine);
         this.getGameMap().addBreakableWall(CRATE_GUIDE_SPAWNPOINT);
         initialiseProcedures();
     }

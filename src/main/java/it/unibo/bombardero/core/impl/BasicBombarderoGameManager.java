@@ -55,7 +55,6 @@ public class BasicBombarderoGameManager implements GameManager {
      * @param cEngine the collision engine linked to this instance of the game.
      */
     public BasicBombarderoGameManager(
-            final Controller controller,
             final GenPair<Float, Float> playerSpawnPoint,
             final List<GenPair<Float, Float>> enemiesSpawnpoint,
             final boolean generateWalls,
