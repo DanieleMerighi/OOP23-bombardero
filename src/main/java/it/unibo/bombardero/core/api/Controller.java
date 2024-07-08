@@ -7,6 +7,7 @@ import java.util.List;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.view.BombarderoViewMessages;
+import it.unibo.bombardero.view.api.GraphicsEngine.EndGameState;
 import it.unibo.bombardero.character.Character;
 
 /**
@@ -44,7 +45,7 @@ public interface Controller {
     /** 
      *  Signals the View to display the end of the Guide game mode.
      */
-    void displayEndGuide();
+    void displayEndScreen(EndGameState endGameState);
 
     /**
      * Handles the reaction of the game once the user's presses the 
@@ -54,10 +55,16 @@ public interface Controller {
     void escape();
 
     /** 
-     * Updates the model and the view. 
+     * Updates the model.
      * @param elapsed the time elapsed since the last update
      */
-    void update(long elapsed);
+    void updateGame(long elapsed);
+
+        /** 
+     * Updates the view
+     * @param elapsed the time elapsed since the last update
+     */
+    void updateGraphics(long elapsed);
 
     /** 
      * Requests the view to display the message passed as argument.
