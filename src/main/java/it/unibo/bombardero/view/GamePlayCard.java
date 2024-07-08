@@ -192,15 +192,14 @@ public abstract class GamePlayCard extends JPanel {
      */
     @Override
     public void paintComponent(final Graphics g) {
-        final Graphics2D g2d = (Graphics2D) g;
         /* Drawing the Map and the Background */
         // CHECKSTYLE: MagicNumber OFF
-        g2d.drawImage(
+        g.drawImage(
             grassBackgroundImage,
             0, 0,
             null);
         // CHECKSTYLE: MagicNumber ON
-        g2d.drawImage(
+        g.drawImage(
             mapImage,
             mapPlacingPoint.width,
             mapPlacingPoint.height,
@@ -256,7 +255,7 @@ public abstract class GamePlayCard extends JPanel {
                         img = unbreakable;
                         break;
                 }
-                g2d.drawImage(
+                g.drawImage(
                     img,
                     placingPoint.width,
                     placingPoint.height,
@@ -266,18 +265,18 @@ public abstract class GamePlayCard extends JPanel {
         /* Drawing the player and the enemies */
         charactersImages.entrySet().forEach(enemy -> {
             final Dimension enemyPos = graphics.getResizingEngine().getCharacterPlacingPoint(enemy.getKey().getCharacterPosition());
-            g2d.drawImage(enemy.getValue().displayedImage(), enemyPos.width, enemyPos.height, null);
+            g.drawImage(enemy.getValue().displayedImage(), enemyPos.width, enemyPos.height, null);
         });
         dyingCharactersMap.entrySet().forEach(entry -> {
             final Dimension pos = graphics.getResizingEngine().getCharacterPlacingPoint(entry.getKey().getCharacterPosition());
-            g2d.drawImage(
+            g.drawImage(
                 entry.getValue().getImage(),
                 pos.width, pos.height,
                 null
             );
         });
-        g2d.setColor(new Color(0, 0, 0, darkenValue));
-        g2d.fillRect(0, 0, getSize().width, getSize().height);
+        g.setColor(new Color(0, 0, 0, darkenValue));
+        g.fillRect(0, 0, getSize().width, getSize().height);
     }
 
     /**
