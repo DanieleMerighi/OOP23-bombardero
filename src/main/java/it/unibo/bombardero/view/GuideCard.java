@@ -29,6 +29,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 /**
  * This class will never be serialised.
  */
+@SuppressWarnings("serial")
 @SuppressFBWarnings(
     value="SE_TRANSIENT_FIELD_NOT_RESTORED",
     justification = "This class will never be serialized"
