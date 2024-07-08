@@ -12,6 +12,7 @@ import it.unibo.bombardero.guide.api.GuideStep;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.view.BombarderoViewMessages;
+import it.unibo.bombardero.view.api.GraphicsEngine.EndGameState;
 
 /**
  * This class represents a single instance of the game's guide
@@ -60,7 +61,7 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
             (map, manager) -> manager.getEnemies().stream().allMatch(enemy -> !enemy.isAlive()),
             (manager, controller) -> {
                 controller.toggleMessage(BombarderoViewMessages.END_GUIDE);
-                controller.displayEndGuide();
+                controller.displayEndScreen(EndGameState.LOSE);
             }
         ));
         guideProcedures.add(new GuideStep(
