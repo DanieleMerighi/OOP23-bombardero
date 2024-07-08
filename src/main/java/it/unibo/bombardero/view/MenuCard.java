@@ -20,7 +20,7 @@ import it.unibo.bombardero.core.api.Controller;
  */
 @SuppressWarnings("serial")
 /**
- * TODO: Javadoc
+ * The class containing the main menu of the game.
  */
 public final class MenuCard extends JPanel {
 
@@ -57,7 +57,6 @@ public final class MenuCard extends JPanel {
         final GridBagConstraints gbc = new GridBagConstraints();
         final JButton play = new JButton(new ImageIcon(playImage));
         final JButton guide = new JButton(new ImageIcon(guideImage));
-        /* TODO: better style JButtons, in windows you can stil see the buttons highlight, in MacOS however no...  */
         guide.setBorder(null);
         play.setBorder(null);
         guide.setBorderPainted(false);
@@ -117,13 +116,6 @@ public final class MenuCard extends JPanel {
     @Override
     public void paintComponent(final Graphics g) {
         super.paintComponent(g);
-        // final Dimension cropSize = graphicsEngine.getFrameSize();
-        /*
-         * TODO: original background image is 4k, the image is to be scaled and the
-         * parameteres modified
-         */
-        // final Image img = background.getSubimage(3840 - cropSize.width, 2160 -
-        // cropSize.height, cropSize.width, cropSize.height);
         g.drawImage(background, 0, 0, null);
     }
 }
