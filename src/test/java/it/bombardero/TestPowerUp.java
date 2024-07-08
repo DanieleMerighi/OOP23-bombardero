@@ -1,6 +1,7 @@
 package it.bombardero;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
@@ -48,18 +49,14 @@ class TestPowerUp {
      * Tests that the PowerUp gets created correctly.
      */
     @Test
-    void testCreating100PowerUp() {
-        IntStream.range(0, 100)
-            .forEach(n -> {
-                this.manager = new MyGameManager(); // Reset character
-                powerUP = factory.createPowerUp();
-                powerUP.applyEffect(this.manager.getPlayers().get(playerIndex));
-        });
-        if (this.manager.getPlayers().get(playerIndex).getResetEffect().isPresent()) {
-            while (this.manager.getPlayers().get(playerIndex).getSkullEffectDuration() > 0) {
-                this.manager.getPlayers().get(playerIndex).update(manager, STANDARD_ELAPSED_TIME, CharacterType.PLAYER);
-            }
-        }
+    void testPowerUpcREATION() {
+        powerUP = factory.createPowerUp();
+        assertNotNull(powerUP);
+
+        powerUP = factory.createPowerUp(PowerUpType.PLUS_ONE_BOMB);
+        assertNotNull(powerUP);
+        assertEquals(PowerUpType.PLUS_ONE_BOMB, powerUP.getType());
+
     }
 
     /**

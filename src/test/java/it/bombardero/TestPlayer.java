@@ -1,6 +1,7 @@
 package it.bombardero;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.stream.IntStream;
 
@@ -84,6 +85,16 @@ class TestPlayer {
         expectedCoord = tempCoord;
 
         assertEquals(expectedCoord, manager.getPlayers().get(playerIndex).getCharacterPosition());
+    }
+
+    /**
+     * Tests the player's ability to place bomb.
+     */
+    @Test
+    void testPlayerPlacingBomb() {
+        assertEquals(1, manager.getPlayers().get(playerIndex).getNumBomb());
+        assertTrue(this.manager.getPlayers().get(playerIndex).placeBomb(manager, new GenPair<>(0, 0)));
+        assertEquals(0, manager.getPlayers().get(playerIndex).getNumBomb());
     }
 
     /**
