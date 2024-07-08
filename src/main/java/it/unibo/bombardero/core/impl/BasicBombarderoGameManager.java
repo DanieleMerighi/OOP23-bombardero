@@ -102,7 +102,7 @@ public class BasicBombarderoGameManager implements GameManager {
 
     @Override
     public final GameMap getGameMap() {
-        return this.map;
+        return map.getCopiedGameMap();
     }
 
     @Override
@@ -150,8 +150,8 @@ public class BasicBombarderoGameManager implements GameManager {
             if (enemy.isAlive()) {
                 enemy.update(this, elapsed);
                 addCharacterBombsToMap(enemy);
-                ce.checkCharacterCollision(enemy, this.getGameMap());
-                ce.checkFlameAndPowerUpCollision(enemy, this.getGameMap());
+                ce.checkCharacterCollision(enemy, map);
+                ce.checkFlameAndPowerUpCollision(enemy, map);
             }
         });
     }
@@ -160,8 +160,8 @@ public class BasicBombarderoGameManager implements GameManager {
         if (player.isAlive()) {
             player.update(this, elapsed);
             addCharacterBombsToMap(player);
-            ce.checkCharacterCollision(player, this.getGameMap());
-            ce.checkFlameAndPowerUpCollision(player, this.getGameMap());
+            ce.checkCharacterCollision(player, map);
+            ce.checkFlameAndPowerUpCollision(player, map);
         }
     }
 
@@ -178,7 +178,7 @@ public class BasicBombarderoGameManager implements GameManager {
                 .filter(entry -> entry.getKey().isExploded())
                 .peek(entry -> bombs.remove(entry.getKey()))
                 .peek(entry -> entry.getValue().removeBombFromDeque(entry.getKey()))
-                .map(entry -> entry.getKey().computeFlame(this.getGameMap()))
+                .map(entry -> entry.getKey().computeFlame(map))
                 .forEach(set -> set.stream()
                     .map(entry -> new FlameImpl(entry.getValue(), entry.getKey()))
                     .peek(flame -> flames.add(flame))
