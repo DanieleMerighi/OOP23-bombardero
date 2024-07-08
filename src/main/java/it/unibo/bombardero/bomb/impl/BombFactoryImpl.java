@@ -46,9 +46,7 @@ public final class BombFactoryImpl implements BombFactory {
 
     @Override
     public Bomb createPowerBomb(final GenPair<Integer, Integer> pos) {
-        return new BasicBomb(BombType.BOMB_POWER, Character.MAX_FLAME_RANGE, pos) {
-
-        };
+        return new BasicBomb(BombType.BOMB_POWER, Character.MAX_FLAME_RANGE, pos) { };
     }
 
     @Override

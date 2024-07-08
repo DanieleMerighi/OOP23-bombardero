@@ -17,11 +17,11 @@ import it.unibo.bombardero.physics.api.CollisionEngine;
  * This class will test bounding Box.
  */
 class TestCollision {
-    private static final GenPair<Float, Float> TR_CORNER_CELL_0_2 = new GenPair<>(0.9f, 2f);
+    private static final GenPair<Float, Float> TR_CORNER_CELL_0_2 = new GenPair<>(0.99f, 2f);
     private static final GenPair<Float, Float> CELL_1_0 = new GenPair<>(1.5f, 0.5f);
     private static final GenPair<Float, Float> CELL_0_1 = new GenPair<>(0.5f, 1.5f);
     private static final GenPair<Float, Float> TR_CORNER_CELL_2_0 = new GenPair<>(2f, 0.9f);
-    private static final GenPair<Float, Float> DR_CORNER_CELL_0_0 = new GenPair<>(09f, 0.9f);
+    private static final GenPair<Float, Float> DR_CORNER_CELL_0_0 = new GenPair<>(0.9f, 0.9f);
     private Character character;
     private GameMap gMap;
     private MyGameManager mgr;
