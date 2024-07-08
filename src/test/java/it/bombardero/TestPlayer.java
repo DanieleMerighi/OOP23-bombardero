@@ -74,11 +74,13 @@ class TestPlayer {
         // Setting the number of update and calling them
         final int updateNumeber = FPS; // Number of updates done
         IntStream.range(0, updateNumeber)
-                .forEach(n -> this.manager.getPlayers().get(playerIndex).update(manager, STANDARD_ELAPSED_TIME, CharacterType.PLAYER));
+                .forEach(n -> this.manager.getPlayers().get(playerIndex).update(manager, STANDARD_ELAPSED_TIME,
+                        CharacterType.PLAYER));
 
         roundPlayerCoordinateToThreeDecimal();
         // Sums the spawn coordinates with the movement done
-        final GenPair<Float, Float> tempCoord = expectedCoord.apply(Functions.sumFloat(calculateExpectedDeltaMovement(updateNumeber)));
+        final GenPair<Float, Float> tempCoord = expectedCoord
+                .apply(Functions.sumFloat(calculateExpectedDeltaMovement(updateNumeber)));
         expectedCoord = tempCoord;
 
         assertEquals(expectedCoord, manager.getPlayers().get(playerIndex).getCharacterPosition());
