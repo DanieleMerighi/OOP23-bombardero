@@ -31,6 +31,7 @@ public final class BombarderoController implements Controller {
 
     private boolean isGamePaused = true;
     private boolean isGameStarted = false;
+    private boolean isGameOver = false;
 
     /**
      * TODO
@@ -109,6 +110,11 @@ public final class BombarderoController implements Controller {
     @Override
     public boolean isGameStarted() {
         return isGameStarted;
+    }
+
+    @Override
+    public boolean isGameOver() {
+        return isGameOver;
     }
 
     @Override

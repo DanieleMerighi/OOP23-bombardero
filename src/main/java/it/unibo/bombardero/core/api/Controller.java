@@ -78,6 +78,13 @@ public interface Controller {
      */
     boolean isGameStarted();
 
+    /** 
+     * Returns true if the game is over, therefore the loop has
+     * to be stopped.
+     * @return true if the game is over
+     */
+    boolean isGameOver();
+
     /**
      * Returns the main player of the current game instance. 
      * @return the main {@link Character}
