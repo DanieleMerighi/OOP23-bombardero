@@ -96,4 +96,9 @@ public final class ControllerForTesting implements Controller {
         throw new UnsupportedOperationException("Unimplemented method 'getTimeLeft'");
     }
 
+    @Override
+    public boolean isGameOver() {
+        throw new UnsupportedOperationException("Unimplemented method 'isGameOver'");
+    }
+
 }
