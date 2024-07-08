@@ -51,7 +51,7 @@ public final class BombarderoEngine extends Thread implements Engine {
             try {
                 Thread.sleep(BombarderoEngine.SLEEP_TIME - currentCycleElapsedTime);
             } catch (IllegalArgumentException | InterruptedException e) {
-                System.out.println("Exception in thread sleeping: " + e.getMessage());
+                e.printStackTrace();
             }
         }
     }
