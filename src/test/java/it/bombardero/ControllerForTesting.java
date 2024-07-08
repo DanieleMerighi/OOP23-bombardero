@@ -1,5 +1,6 @@
 package it.bombardero;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,8 +15,6 @@ import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.view.BombarderoViewMessages;
 import it.unibo.bombardero.view.api.GraphicsEngine.EndGameState;
-
-import java.util.Arrays;
 
 /**
  * A simulation of an implementation of the {@link #Controller} interface
@@ -47,20 +46,20 @@ public final class ControllerForTesting implements Controller {
         throw new UnsupportedOperationException("Unimplemented method 'endGuide'");
     }
 
-        @Override
-    public void displayEndScreen(EndGameState endGameState) {
+    @Override
+    public void displayEndScreen(final EndGameState endGameState) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'displayEndScreen'");
     }
 
     @Override
-    public void updateGame(long elapsed) {
+    public void updateGame(final long elapsed) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateGame'");
     }
 
     @Override
-    public void updateGraphics(long elapsed) {
+    public void updateGraphics(final long elapsed) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateGraphics'");
     }

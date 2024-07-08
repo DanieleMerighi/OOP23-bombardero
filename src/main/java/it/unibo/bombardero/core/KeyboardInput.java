@@ -19,7 +19,7 @@ public class KeyboardInput implements KeyListener {
     private final Controller controller;
 
     // The index of the player
-    private int playerIndex;
+    private final int playerIndex;
 
     // Directions for checks
     private boolean up;
