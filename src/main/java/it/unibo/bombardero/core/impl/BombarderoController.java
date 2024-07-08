@@ -13,7 +13,7 @@ import it.unibo.bombardero.physics.impl.BombarderoCollision;
 import it.unibo.bombardero.physics.impl.CollisionHandlerImpl;
 import it.unibo.bombardero.view.BombarderoGraphics;
 import it.unibo.bombardero.view.BombarderoViewMessages;
-import it.unibo.bombardero.view.GraphicsEngine;
+import it.unibo.bombardero.view.api.GraphicsEngine;
 import it.unibo.bombardero.character.Character;
 
 /**
@@ -46,14 +46,14 @@ public final class BombarderoController implements Controller {
         this.manager = new FullBombarderoGameManager(this, new BombarderoCollision(new CollisionHandlerImpl()));
         isGamePaused = false;
         isGameStarted = true;
-        graphics.showCard(GraphicsEngine.ViewCards.GAME);
+        graphics.showGameScreen(GraphicsEngine.ViewCards.GAME);
     }
 
     @Override
     public void endGame() {
         isGamePaused = true;
         isGameStarted = false;
-        graphics.showCard(GraphicsEngine.ViewCards.END);
+        graphics.showGameScreen(GraphicsEngine.ViewCards.END);
     }
 
     @Override
@@ -61,7 +61,7 @@ public final class BombarderoController implements Controller {
         this.manager = new BombarderoGuideManager(this,  new BombarderoCollision(new CollisionHandlerImpl()));
         isGamePaused = false;
         isGameStarted = true;
-        graphics.showCard(GraphicsEngine.ViewCards.GUIDE);
+        graphics.showGameScreen(GraphicsEngine.ViewCards.GUIDE);
         toggleMessage(BombarderoViewMessages.EXPLAIN_MOVEMENT);
     }
 
@@ -94,7 +94,7 @@ public final class BombarderoController implements Controller {
 
     @Override
     public void update(final long elapsed) {
-        manager.updateGame(elapsed);
+        manager.updateGame(elapsed, this);
         graphics.update(getMap(), List.of(getMainPlayer()), getEnemies(), getTimeLeft());
     }
 

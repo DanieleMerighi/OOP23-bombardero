@@ -18,17 +18,17 @@ public enum BombarderoViewMessages {
     /** 
      * The message to explain the basis of powerups to a new user. 
      */
-    EXPLAIN_POWERUP("Under the crates you can find powerups to enhance your abilities"),
+    EXPLAIN_POWERUP("<html>Under the crates you can find powerups<br>to enhance your abilities</html>"),
 
     /**
      * The message to explain how bombs work to a new user.
      */
-    KILL_ENEMY("Bombs have a certain range, place a bomb near an enemy to kill him"),
+    KILL_ENEMY("<html>Bombs have a certain range,<br>place a bomb near an enemy to kill him<html>"),
 
     /**
      * The message to end the guide and prompt the user into choosing what to do next.
      */
-    END_GUIDE("Good! The guide has endend, you can go back to the menu or start a new game!");
+    END_GUIDE("<html>Good!<br>The guide has endend, you can go back to the menu or start a new game!</html>");
 
     private String message;
 

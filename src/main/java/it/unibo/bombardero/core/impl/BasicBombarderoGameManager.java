@@ -28,6 +28,9 @@ import it.unibo.bombardero.physics.api.CollisionEngine;
  */
 public class BasicBombarderoGameManager implements GameManager {
 
+    /**
+     * The total length in time of one match: 2 minutes. 
+     */
     public static final long TOTAL_GAME_TIME = 120_000L;
     public static final long GAME_OVER_TIME = 0L;
 
@@ -80,7 +83,7 @@ public class BasicBombarderoGameManager implements GameManager {
      * @param elapsed the time passed since the last update.
      */
     @Override
-    public void updateGame(final long elapsed) {
+    public void updateGame(final long elapsed, final Controller controller) {
         updatePlayer(elapsed);
         updateEnemies(elapsed);
         updateBombs(elapsed);

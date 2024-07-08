@@ -6,7 +6,7 @@ import java.util.Optional;
 import it.unibo.bombardero.bomb.api.Bomb;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.Flame;
-import it.unibo.bombardero.cell.powerup.api.PowerUpType;
+import it.unibo.bombardero.cell.powerup.api.PowerUp.PowerUpType;
 
 /**
  * The main class for managing all the aspects of the game arena.

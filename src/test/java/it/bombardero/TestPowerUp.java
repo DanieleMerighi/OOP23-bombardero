@@ -10,8 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
+import it.unibo.bombardero.cell.powerup.api.PowerUp.PowerUpType;
 import it.unibo.bombardero.cell.powerup.api.PowerUpFactory;
-import it.unibo.bombardero.cell.powerup.api.PowerUpType;
 import it.unibo.bombardero.cell.powerup.impl.PowerUpFactoryImpl;
 import it.unibo.bombardero.cell.powerup.impl.PowerUpImpl;
 import it.unibo.bombardero.cell.powerup.impl.SkullEffect;
@@ -71,7 +71,7 @@ class TestPowerUp {
         // Apply skull effect to the player
         powerUP.applyEffect(this.manager.getPlayer());
 
-        assertEquals(SkullEffect.getEffectDurationInSeconds() * SECONDS_TO_MILLISECONDS,
+        assertEquals(SkullEffect.EFFECT_DURATION_IN_SECONDS * SECONDS_TO_MILLISECONDS,
             this.manager.getPlayer().getSkullEffectDuration());
         assertTrue(this.manager.getPlayer().getResetEffect().isPresent());
 

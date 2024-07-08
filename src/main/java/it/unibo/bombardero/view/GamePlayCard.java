@@ -11,14 +11,25 @@ import java.util.Map.Entry;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.swing.JPanel;
+
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+
+import javax.swing.JLayeredPane;
+import javax.swing.JButton;
+import java.awt.GridLayout;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
 
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.cell.FlameImpl;
 import it.unibo.bombardero.cell.Flame;
 import it.unibo.bombardero.cell.powerup.api.PowerUp;
 import it.unibo.bombardero.utils.Utils;
+import it.unibo.bombardero.view.api.GraphicsEngine;
+import it.unibo.bombardero.view.api.GraphicsEngine.EndGameState;
 import it.unibo.bombardero.view.sprites.api.OrientedSprite;
 import it.unibo.bombardero.view.sprites.api.Sprite;
 import it.unibo.bombardero.view.sprites.impl.BombarderoFlameSprite;
@@ -28,18 +39,30 @@ import it.unibo.bombardero.view.sprites.impl.TimedBombarderoSprite;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
+import it.unibo.bombardero.core.api.Controller;
 
-/**
+/*
  * This class will never be serialised.
  */
 @SuppressWarnings("serial")
-/**
- * This class is the panel containing the game view.
- * @author Federico Bagattoni
- */
-public class GamePlayCard extends JPanel {
 
-    private static final float BLUR_ALPHA_RATE = 0.35f;
+/**
+ * This abstract class implements the basic idea of a generic 
+ * container to display the game elements. Imports the various items,
+ * is updatable and the "pause screen" can be set from the outside. 
+ * <p> 
+ * This class leaves several methods as abstract so the subclasses can personalize
+ * the response to precise actions.
+ */
+public abstract class GamePlayCard extends JPanel {
+
+    /**
+     * The optimal alpha channel value to use when darkening the background, 
+     * for example when the pause menu is displayed.
+     */
+    public static final float PAUSE_DARKEN_ALPHA = 0.35f;
+    private static final int LAYOUT_COLS = 1;
+    private static final int LAYOUT_ROWS = 5;
     /** 
      * For the first part of the class, the magic number checkstyle will be 
      * deactivated, as the resource are imported with their file name.
@@ -64,6 +87,7 @@ public class GamePlayCard extends JPanel {
     private transient Image skatesPlusOne = resourceGetter.loadImage("powerup/skates_plus_one");
     private transient Image skateMinusOne = resourceGetter.loadImage("powerup/skates_minus_one");
     private transient Image skull = resourceGetter.loadImage("powerup/skull");
+    private transient Image pausePanelImage = resourceGetter.loadImage("overlay/victory-panel");
 
     /* References to model components: */
     private final transient GraphicsEngine graphics;
@@ -82,7 +106,11 @@ public class GamePlayCard extends JPanel {
     /* Static positions for quicker access: */
     private final Dimension mapPlacingPoint;
 
-    private boolean blurEntireWindow = true;
+    /* Pause state buttons: */
+    private final JButton resumeButton;
+    private final JButton quitButton;
+    private boolean isGamePaused = false;
+    private float darkenValue = 0.0f;
 
     /**
      * Creates a new GamePlayCard creating all the sprites needed and setting the initial state 
@@ -93,6 +121,7 @@ public class GamePlayCard extends JPanel {
      * @param enemies the enemies initally rendered by this class
      */
     public GamePlayCard(
+        final Controller controller,
         final GraphicsEngine graphics,
         final Map<GenPair <Integer, Integer>, Cell> map,
         final List<Character> playersList,
@@ -106,9 +135,41 @@ public class GamePlayCard extends JPanel {
         flamesSprite = new BombarderoFlameSprite(500, 6, graphics.getResizingEngine()::getScaledCellImage, resourceGetter);
         normalBomb = new SimpleBombarderoSprite("bomb", resourceGetter, graphics.getResizingEngine()::getScaledBombImage, 4);
         bombImage = normalBomb.getImage();
+        final Image resumeButtonImage = graphics.getResizingEngine().getScaledButtonImage(
+            graphics.getResourceGetter().loadImage("overlay/buttons/RESUME")
+        );
+        final Image quitButtonImage = graphics.getResizingEngine().getScaledButtonImage(
+            graphics.getResourceGetter().loadImage("overlay/buttons/QUIT")
+        );
+        final Image quitButtonPressedImage = graphics.getResizingEngine().getScaledButtonImage(
+            graphics.getResourceGetter().loadImage("overlay/buttons/QUIT_PRESSED")
+        );
+        final Image resumeButtonPressedImage = graphics.getResizingEngine().getScaledButtonImage(
+            graphics.getResourceGetter().loadImage("overlay/buttons/RESUME_PRESSED")
+        );
 
         updateGameState(map, playersList, enemies);
         scaleEverything();
+
+        resumeButton = new JButton(new ImageIcon(resumeButtonImage));
+        quitButton = new JButton(new ImageIcon(quitButtonImage));
+
+        quitButton.setBorder(null);
+        resumeButton.setBorder(null);
+        quitButton.setBorderPainted(false);
+        resumeButton.setBorderPainted(false);
+        resumeButton.setContentAreaFilled(false);
+        quitButton.setContentAreaFilled(false);
+        resumeButton.setFocusPainted(false);
+        quitButton.setFocusPainted(false);
+        quitButton.setPressedIcon(new ImageIcon(quitButtonPressedImage));
+        resumeButton.setPressedIcon(new ImageIcon(resumeButtonPressedImage));
+
+        this.add(new JLabel());
+        this.setLayout(new GridLayout(LAYOUT_ROWS, LAYOUT_COLS));
+
+        quitButton.addActionListener(e -> controller.endGame());
+        resumeButton.addActionListener(e -> controller.escape());
     }
 
     // CHECKSTYLE: MagicNumber ON
@@ -144,58 +205,62 @@ public class GamePlayCard extends JPanel {
             null
         );
         /* Drawing the breakable obstacles, the bombs and the power ups */
-        for (int i = 0; i < Utils.MAP_ROWS; i++) {
-            for (int j = 0; j < Utils.MAP_COLS; j++) {
-                if (cells.containsKey(new GenPair <>(i, j))) {
-                    final Cell entry = cells.get(new GenPair <>(i, j));
-                    Image img = unbreakable;
-                    Dimension placingPoint = graphics.getResizingEngine().getCellPlacingPoint(new GenPair<>(i, j));
-                    switch (entry.getCellType()) {
-                        case WALL_BREAKABLE:
-                            img = obstacle;
-                            break;
-                        case WALL_UNBREAKABLE:
-                            img = unbreakable;
-                            break;
-                        case BOMB: 
-                            img = bombImage;
-                            placingPoint = graphics.getResizingEngine().getBombPlacingPoint(new GenPair<>(i, j));
-                            break;
-                        case POWERUP:
-                            final PowerUp pu = (PowerUp) entry;
-                            img = switch (pu.getType()) {
-                                case REMOTE_BOMB -> bombRemote;
-                                case PIERCING_BOMB -> bombPierce;
-                                case POWER_BOMB -> bombPower;
-                                case LINE_BOMB -> bombLine;
-                                case PLUS_ONE_BOMB -> bombPlusOne;
-                                case MINUS_ONE_BOMB -> bombMinusOne;
-                                case PLUS_ONE_FLAME_RANGE -> firePlusOne;
-                                case MINUS_ONE_FLAME_RANGE -> fireMinusOne;
-                                case MAX_FLAME_RANGE -> fireMax;
-                                case PLUS_ONE_SKATES -> skatesPlusOne;
-                                case MINUS_ONE_SKATES -> skateMinusOne;
-                                case SKULL -> skull;
-                                default -> throw new IllegalArgumentException("texture not present for \"" + pu.getType() + "\"");
-                            };
-                            break;
-                        case FLAME: 
-                            final Flame fl = (FlameImpl) entry;
-                            img = flamesSprite.getImage(fl.getTimePassed(), fl.getFlameType());
-                            break;
-                        default:
-                            img = unbreakable;
-                            break;
-                    }
-                    g2d.drawImage(
-                        img,
-                        placingPoint.width,
-                        placingPoint.height,
-                        null
-                    );
+        IntStream
+            .range(0, Utils.MAP_ROWS)
+            .boxed()
+            .flatMap(x -> IntStream
+                .range(0, Utils.MAP_COLS)
+                .mapToObj(y -> new GenPair<Integer, Integer>(x, y))
+            )
+            .filter(position -> cells.containsKey(position))
+            .forEach(position -> {
+                Image img = unbreakable;
+                Dimension placingPoint = graphics.getResizingEngine().getCellPlacingPoint(position);
+                final Cell currentCell = cells.get(position);
+                switch (currentCell.getCellType()) {
+                    case WALL_BREAKABLE:
+                        img = obstacle;
+                        break;
+                    case WALL_UNBREAKABLE:
+                        img = unbreakable;
+                        break;
+                    case BOMB: 
+                        img = bombImage;
+                        placingPoint = graphics.getResizingEngine().getBombPlacingPoint(position);
+                        break;
+                    case POWERUP:
+                        final PowerUp pu = (PowerUp) currentCell;
+                        img = switch (pu.getType()) {
+                            case REMOTE_BOMB -> bombRemote;
+                            case PIERCING_BOMB -> bombPierce;
+                            case POWER_BOMB -> bombPower;
+                            case LINE_BOMB -> bombLine;
+                            case PLUS_ONE_BOMB -> bombPlusOne;
+                            case MINUS_ONE_BOMB -> bombMinusOne;
+                            case PLUS_ONE_FLAME_RANGE -> firePlusOne;
+                            case MINUS_ONE_FLAME_RANGE -> fireMinusOne;
+                            case MAX_FLAME_RANGE -> fireMax;
+                            case PLUS_ONE_SKATES -> skatesPlusOne;
+                            case MINUS_ONE_SKATES -> skateMinusOne;
+                            case SKULL -> skull;
+                            default -> throw new IllegalArgumentException("texture not present for \"" + pu.getType() + "\"");
+                        };
+                        break;
+                    case FLAME: 
+                        final Flame fl = (FlameImpl) currentCell;
+                        img = flamesSprite.getImage(fl.getTimePassed(), fl.getFlameType());
+                        break;
+                    default:
+                        img = unbreakable;
+                        break;
                 }
-            }
-        }
+                g2d.drawImage(
+                    img,
+                    placingPoint.width,
+                    placingPoint.height,
+                    null
+                );
+        });
         /* Drawing the player and the enemies */
         charactersImages.entrySet().forEach(enemy -> {
             final Dimension enemyPos = graphics.getResizingEngine().getCharacterPlacingPoint(enemy.getKey().getCharacterPosition());
@@ -209,10 +274,8 @@ public class GamePlayCard extends JPanel {
                 null
             );
         });
-        if (blurEntireWindow) {
-            g2d.setColor(new Color(0, 0, 0, BLUR_ALPHA_RATE));
-            g2d.fillRect(0, 0, getSize().width, getSize().height);
-        }
+        g2d.setColor(new Color(0, 0, 0, darkenValue));
+        g2d.fillRect(0, 0, getSize().width, getSize().height);
     }
 
     /**
@@ -225,14 +288,70 @@ public class GamePlayCard extends JPanel {
     public void update(final Map<GenPair<Integer, Integer>, Cell> map, final List<Character> playersList, final List<Character> enemiesList) {
         updateGameState(map, playersList, enemiesList);
         updateSprites();
+        repaint(0);
+    }
+
+    /** 
+     * Displays a "pause screen" to appropriately indicate that the game is
+     * paused and displays alterantives for the user to choose.
+     */
+    public final void setPausedView() {
+        darkenView(PAUSE_DARKEN_ALPHA);
+        isGamePaused = true;
+        this.add(resumeButton);
+        this.add(quitButton);
+        this.revalidate();
+        this.repaint(0);
+    }
+
+    /** 
+     * Stops to display the "pause screen" that displayed after calling {@link #setPausedView()},
+     * otherwise does nothing.
+     */
+    public final void setUnpausedView() {
+        darkenView(0.0f);
+        isGamePaused = false;
+        this.remove(resumeButton);
+        this.remove(quitButton);
+        this.revalidate();
+        this.repaint(0);
     }
 
     /**
-     * Blurs the view of the panel.
+     * Darkens the view by a certain parameter valued between one (1) and 
+     * zero (0), corresponding to the alpha channel.
+     * @param amount the amount to darken the whole view
+     * @see Color
      */
-    public final void blurView() {
-        blurEntireWindow = true;
+    public final void darkenView(final float amount) {
+        darkenValue = amount;
     }
+
+    /** 
+     * Displays the end screen of this card. 
+     */
+    abstract void displayEndView();
+
+    /** 
+     * Displays the end screen of this card, displaying a different
+     * image depending on the parameter passed as argument.
+     * @param endingType the type of ending to be displayed
+     */
+    abstract void displayEndView(EndGameState endingType);
+
+    /**
+     * Shows the message contained in the passed argument, in an appropriate
+     * part of the screen.
+     * @param message the message to be displayed
+     * @see BombarderoViewMessages
+     */
+    abstract void showMessage(BombarderoViewMessages message);
+
+    /** 
+     * Updates the time displayed in the view. 
+     * @param timeLeft the time to be displayed
+     */
+    abstract void setTimeLeft(Long timeLeft);
 
     private void updateGameState(
         final Map<GenPair<Integer, Integer>, Cell> map,
@@ -369,4 +488,5 @@ public class GamePlayCard extends JPanel {
 
     private record SpriteImageCombo(OrientedSprite sprite, Image displayedImage, String colorCode) {
     }
+
 }

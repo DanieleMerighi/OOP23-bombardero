@@ -26,7 +26,7 @@ public interface GameManager {
      * the elapsed time from the previous update.
      * @param elapsed the time passed from the previous update.
      */
-    void updateGame(long elapsed);
+    void updateGame(long elapsed, Controller controller);
 
     /** 
      * Ends the game.

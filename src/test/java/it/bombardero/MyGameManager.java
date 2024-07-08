@@ -4,6 +4,7 @@ import it.unibo.bombardero.bomb.impl.BombFactoryImpl;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;
+import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.GenPair;
@@ -104,7 +105,7 @@ public class MyGameManager implements GameManager {
      * @param elapsed the elapsed time
      */
     @Override
-    public void updateGame(final long elapsed) {
+    public void updateGame(final long elapsed, final Controller controller) {
         // 60 fps
         for (int i = 0; i < LENGHT; i++) {
             enemy.update(this, STANDARD_ELAPSED_TIME);

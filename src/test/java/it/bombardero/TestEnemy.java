@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import it.unibo.bombardero.character.ai.impl.ChaseState;
 import it.unibo.bombardero.character.ai.impl.EscapeState;
 import it.unibo.bombardero.character.ai.impl.PatrolState;
+import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.map.api.GenPair;
 
 /**
@@ -22,12 +23,14 @@ class TestEnemy {
     private static final float NEWSPEED = 0.05f;
 
     private MyGameManager manager;
+    private Controller controller;
 
     /**
      * Setup method executed before each test.
      */
     @BeforeEach
     void setUp() {
+        this.controller = new ControllerForTesting();
         this.manager = new MyGameManager();
         this.manager.setEnemyCoord(0, 0);
         this.manager.getEnemy().setSpeed(SPEED);
@@ -58,7 +61,7 @@ class TestEnemy {
     void testEnemyPatrolPlayerInDetectionRadiusChangesToChaseState() {
         // Set player position within detection radius in TestGameManager
         manager.setPlayerCoord(0, 4);
-        manager.updateGame(STANDARD_ELAPSED_TIME);
+        manager.updateGame(STANDARD_ELAPSED_TIME, controller);
 
         // Verify enemy state is CHASE
         assertTrue(manager.getEnemy().isStateEqualTo(new ChaseState()));
@@ -73,7 +76,7 @@ class TestEnemy {
         manager.setPlayerCoord(2, 1);
         manager.getEnemy().setNumBomb(0);
         // We need more than 1 sec to move between cells
-        manager.updateGame(STANDARD_ELAPSED_TIME);
+        manager.updateGame(STANDARD_ELAPSED_TIME, controller);
 
         // Verify enemy state is CHASE
         assertTrue(manager.getEnemy().isStateEqualTo(new ChaseState()));
@@ -83,7 +86,7 @@ class TestEnemy {
         // CHECKSTYLE: MagicNumber OFF
         manager.setPlayerCoord(3, 12);
         // CHECKSTYLE: MagicNumber ON
-        manager.updateGame(STANDARD_ELAPSED_TIME);
+        manager.updateGame(STANDARD_ELAPSED_TIME, controller);
 
         // Verify enemy state is PATROL
         assertTrue(manager.getEnemy().isStateEqualTo(new PatrolState()));
@@ -100,9 +103,9 @@ class TestEnemy {
         this.manager.getEnemy().update(manager, STANDARD_ELAPSED_TIME);
 
         assertTrue(manager.getEnemy().isStateEqualTo(new EscapeState()));
-        this.manager.updateGame(STANDARD_ELAPSED_TIME);
+        this.manager.updateGame(STANDARD_ELAPSED_TIME, controller);
         assertEquals(new GenPair<Integer, Integer>(1, 0), manager.getEnemy().getIntCoordinate());
-        this.manager.updateGame(STANDARD_ELAPSED_TIME);
+        this.manager.updateGame(STANDARD_ELAPSED_TIME, controller);
         // Verify enemy state is Patrol
         assertTrue(manager.getEnemy().isStateEqualTo(new PatrolState()));
 
@@ -121,8 +124,8 @@ class TestEnemy {
         manager.getEnemy().update(manager, STANDARD_ELAPSED_TIME);
 
         assertTrue(manager.getEnemy().isStateEqualTo(new ChaseState()));
-        manager.updateGame(STANDARD_ELAPSED_TIME);
-        manager.updateGame(STANDARD_ELAPSED_TIME);
+        manager.updateGame(STANDARD_ELAPSED_TIME, controller);
+        manager.updateGame(STANDARD_ELAPSED_TIME, controller);
         // Verify bomb is placed on the enemy's position
         assertEquals(STARTING_BOMBS - 1, manager.getEnemy().getNumBomb());
     }

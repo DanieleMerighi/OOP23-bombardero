@@ -28,19 +28,13 @@ import it.unibo.bombardero.character.Character;
  */
 public final class SkullEffect implements PowerUpEffect {
 
-    private static final long EFFECT_DURATION_IN_SECONDS = 10;
+    /**
+     * The skull effect duration in seconds.
+     */
+    public static final long EFFECT_DURATION_IN_SECONDS = 10;
     private static final long SECONDS_TO_MILLISECONDS = 1000;
     private static final float DECREASE_SPEED_FACTOR = 2.5f;
     private static final float INCREASE_SPEED_FACTOR = 2f;
-
-    /**
-     * Gets the skull effect duration in seconds.
-     * 
-     * @return the skull effect duration
-     */
-    public static long getEffectDurationInSeconds() {
-        return EFFECT_DURATION_IN_SECONDS;
-    }
 
     /**
      * Returns a {@link Consumer} that applies a random effect of the Skull power-up to the character.
@@ -49,6 +43,7 @@ public final class SkullEffect implements PowerUpEffect {
      */
     @Override
     public Consumer<Character> getEffect() {
+        final Random rnd = new Random();
         final List<Consumer<Character>> skull = new ArrayList<>();
         skull.add(character -> character.setSpeed(Character.STARTING_SPEED / DECREASE_SPEED_FACTOR)); // Slownes
         skull.add(character -> character.setSpeed(Character.MAX_SPEED * INCREASE_SPEED_FACTOR)); // Hyperactivity
@@ -64,7 +59,7 @@ public final class SkullEffect implements PowerUpEffect {
             final int previousFlameRange = character.getFlameRange();
 
             // Apply a random effect
-            skull.get(new Random().nextInt(skull.size())).accept(character);
+            skull.get(rnd.nextInt(skull.size())).accept(character);
 
              // Set the effect duration and reset logic
              character.setSkullEffectDuration(EFFECT_DURATION_IN_SECONDS * SECONDS_TO_MILLISECONDS);

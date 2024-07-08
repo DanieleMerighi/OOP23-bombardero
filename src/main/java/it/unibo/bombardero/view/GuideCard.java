@@ -19,7 +19,9 @@ import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.map.api.GenPair;
-import it.unibo.bombardero.view.GraphicsEngine.ViewCards;
+import it.unibo.bombardero.view.api.GraphicsEngine;
+import it.unibo.bombardero.view.api.GraphicsEngine.EndGameState;
+import it.unibo.bombardero.view.api.GraphicsEngine.ViewCards;
 import it.unibo.bombardero.view.sprites.api.Sprite;
 import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
 
@@ -40,7 +42,7 @@ import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
  */
 public final class GuideCard extends GamePlayCard {
 
-    private static final int LAYOUT_ROWS = 1;
+    private static final int LAYOUT_ROWS = 5;
     private static final int LAYOUT_COLS = 1;
 
     // private String message = "";
@@ -71,7 +73,7 @@ public final class GuideCard extends GamePlayCard {
             final Map<GenPair<Integer, Integer>, Cell> gameMap,
             final List<Character> playersList,
             final List<Character> enemiesList) {
-        super(graphics, gameMap, playersList, enemiesList);
+        super(controller, graphics, gameMap, playersList, enemiesList);
 
         final ResourceGetter resourceGetter = graphics.getResourceGetter();
 
@@ -81,6 +83,12 @@ public final class GuideCard extends GamePlayCard {
         final Image startImage = graphics.getResizingEngine()
                 .getScaledButtonImage(resourceGetter.loadImage("overlay/buttons/PLAY"));
         final Image backImage = graphics.getResizingEngine().getScaledButtonImage(resourceGetter.loadImage("overlay/buttons/BACK"));
+        final Image backImagePressed = graphics.getResizingEngine().getScaledButtonImage(
+            resourceGetter.loadImage("overlay/buttons/BACK_PRESSED")
+        );
+        final Image startImagePressed = graphics.getResizingEngine().getScaledButtonImage(
+            resourceGetter.loadImage("overlay/buttons/PLAY_PRESSED")
+        );
         wasdSprite = new SimpleBombarderoSprite(
                 SimpleBombarderoSprite.importAssets("WASD", "overlay/buttons/WASD", resourceGetter,
                         graphics.getResizingEngine()::getScaledWASDImage, 8),
@@ -114,12 +122,13 @@ public final class GuideCard extends GamePlayCard {
         back.setContentAreaFilled(false);
         start.setFocusPainted(false);
         back.setFocusPainted(false);
-        this.add(new JLabel());
+        back.setPressedIcon(new ImageIcon(backImagePressed));
+        start.setPressedIcon(new ImageIcon(startImagePressed));
         this.add(messageBox);
 
         back.addActionListener(e -> {
             controller.endGuide();
-            graphics.showCard(ViewCards.MENU);
+            graphics.showGameScreen(ViewCards.MENU);
         });
 
         start.addActionListener(e -> {
@@ -137,14 +146,7 @@ public final class GuideCard extends GamePlayCard {
         }
     }
 
-    /**
-     * Shows a message to the view. Only one message will be displayed
-     * at the time. The messages' content can be seen at
-     * {@link BombarderoViewMessages}.
-     * 
-     * @param message the message to be shown
-     * @see BombarderoViewMessages
-     */
+    @Override
     public void showMessage(final BombarderoViewMessages message) {
         messageBox.setText(message.getMessage());
         showAnimatedKeys(message);
@@ -154,14 +156,22 @@ public final class GuideCard extends GamePlayCard {
      * Displays the end of the guide: two buttons, one to proceed to the game,
      * the other to go back to the menu.
      */
-    public void displayEndGuide() {
-        this.remove(messageBox);
-        this.add(new JLabel());
-        this.add(new JLabel());
+    @Override
+    public void displayEndView() {
+        darkenView(GamePlayCard.PAUSE_DARKEN_ALPHA);
         this.add(start);
         this.add(back);
         this.revalidate();
         this.repaint();
+    }
+
+    public void displayEndView(EndGameState endingType) {
+        displayEndView();
+    }
+
+    @Override
+    public void setTimeLeft(Long timeLeft) {
+
     }
 
     @Override

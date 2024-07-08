@@ -3,7 +3,7 @@ package it.unibo.bombardero.character.ai.impl;
 import java.util.Optional;
 import java.util.List;
 
-import it.unibo.bombardero.cell.powerup.api.PowerUpType;
+import it.unibo.bombardero.cell.powerup.api.PowerUp.PowerUpType;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.ai.api.AbstractEnemyState;
 import it.unibo.bombardero.core.api.GameManager;

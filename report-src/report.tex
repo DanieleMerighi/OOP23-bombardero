@@ -141,223 +141,148 @@ Per quanto riguarda la indipendenza degli elementi di questa architettura l'inte
 \subsection{qualcosa di Federico Bagattoni}
 \subsection{qualcosa di Luca Venturini}
 \subsection{qualcosa di Jacopo Turchi}
-\subsection{qualcosa di Daniele Merighi}
+\subsection{Daniele Merighi}
 
-In questa sezione si possono approfondire alcuni elementi del design con maggior dettaglio.
-%
-Mentre ci attendiamo principalmente (o solo) interfacce negli schemi UML delle sezioni precedenti,
-in questa sezione è necessario scendere in maggior dettaglio presentando la struttura di alcune sottoparti rilevanti dell'applicazione.
-%
-È molto importante che, descrivendo la soluzione ad un problema, quando possibile si mostri che non si è re-inventata la ruota ma si è applicato un design pattern noto.
-%
-Che si sia utilizzato (o riconosciuto) o meno un pattern noto, è comunque bene definire qual è il problema che si è affrontato, qual è la soluzione messa in campo, e quali motivazioni l'hanno spinta.
-%
-È assolutamente inutile, ed è anzi controproducente, descrivere classe-per-classe (o peggio ancora metodo-per-metodo) com'è fatto il vostro software: è un livello di dettaglio proprio della documentazione dell'API (deducibile dalla Javadoc).
-
-\textbf{È necessario che ciascun membro del gruppo abbia una propria sezione di design dettagliato,
-di cui sarà il solo responsabile}.
-%
-Ciascun autore dovrà spiegare in modo corretto e giustamente approfondito (non troppo in dettaglio, non superficialmente) il proprio contributo.
-%
-È importante focalizzarsi sulle scelte che hanno un impatto positivo sul riuso, sull'estensibilità, e sulla chiarezza dell'applicazione.
-%
-Esattamente come nessun ingegnere meccanico presenta un solo foglio con l'intero progetto di una vettura di Formula 1, ma molteplici fogli di progetto che mostrano a livelli di dettaglio differenti le varie parti della vettura e le modalità di connessione fra le parti, così ci aspettiamo che voi, futuri ingegneri informatici, ci presentiate prima una visione globale del progetto, e via via siate in grado di dettagliare le singole parti, scartando i componenti che non interessano quella in esame.
-%
-Per continuare il parallelo con la vettura di Formula 1, se nei fogli di progetto che mostrano il
-design delle sospensioni anteriori appaiono pezzi che appartengono al volante o al turbo, c'è una
-chiara indicazione di qualche problema di design.
-
-Si divida la sezione in sottosezioni, e per ogni aspetto di design che si vuole approfondire, si presenti:
-\begin{enumerate}
-    \item: una breve descrizione in linguaggio naturale del problema che si vuole risolvere, se necessario ci si può aiutare con schemi o immagini;
-    \item: una descrizione della soluzione proposta, analizzando eventuali alternative che sono state prese in considerazione, e che descriva pro e contro della scelta fatta;
-    \item: uno schema UML che aiuti a comprendere la soluzione sopra descritta;
-    \item: se la soluzione è stata realizzata utilizzando uno o più pattern noti, si spieghi come questi sono reificati nel progetto
-    (ad esempio: nel caso di Template Method, qual è il metodo template;
-    nel caso di Strategy, quale interfaccia del progetto rappresenta la strategia, e quali sono le sue implementazioni;
-    nel caso di Decorator, qual è la classe astratta che fa da Decorator e quali sono le sue implementazioni concrete; eccetera);
-\end{enumerate}
-%
-La presenza di pattern di progettazione \emph{correttamente utilizzati} è valutata molto positivamente.
-%
-L'uso inappropriato è invece valutato negativamente: a tal proposito, si raccomanda di porre particolare attenzione all'abuso di Singleton, che, se usato in modo inappropriato, è di fatto un anti-pattern.
-
-\subsection*{Elementi positivi}
-
-\begin{itemize}
-	\item Ogni membro del gruppo discute le proprie decisioni di progettazione, ed in particolare le azioni volte ad anticipare possibili cambiamenti futuri (ad esempio l'aggiunta di una nuova funzionalità, o il miglioramento di una esistente).
-	\item Si mostrano le principali interazioni fra le varie componenti che collaborano alla soluzione di un determinato problema.
-	\item Si identificano, utilizzano \textit{appropriatamente}, e descrivono diversi design pattern.
-	\item Ogni membro del gruppo identifica i pattern utilizzati nella sua sottoparte.
-	\item Si mostrano gli aspetti di design più rilevanti dell'applicazione, mettendo in luce la maniera in cui si è costruita la soluzione ai problemi descritti nell'analisi.
-	\item Si tralasciano aspetti strettamente implementativi e quelli non rilevanti, non mostrandoli negli schemi UML (ad esempio, campi privati) e non descrivendoli.
-	\item Ciascun elemento di design identificato presenta una piccola descrizione del problema calato
-nell'applicazione, uno schema UML che ne mostra la concretizzazione nelle classi del progetto, ed
-una breve descrizione della motivazione per cui tale soluzione è stata scelta, specialmente se è stato utilizzato un pattern noto. Ad esempio, se si
-dichiara di aver usato Observer, è necessario specificare chi sia l'observable e chi l'observer; se
-si usa Template Method, è necessario indicare quale sia il metodo template; se si usa Strategy, è
-necessario identificare l'interfaccia che rappresenta la strategia; e via dicendo.
-\end{itemize}
-
-\subsection*{Elementi negativi}
-\begin{itemize}
-	\item Il design del modello risulta scorrelato dal problema descritto in analisi.
-	\item Si tratta in modo prolisso, classe per classe, il software realizzato, o comunque si riduce la sezione ad un mero elenco di quanto fatto.
-	\item Non si presentano schemi UML esemplificativi.
-	\item Non si individuano design pattern, o si individuano in modo errato (si spaccia per design pattern qualcosa che non lo è).
-	\item Si utilizzano design pattern in modo inopportuno. Un esempio classico è l'abuso di
-Singleton per entità che possono essere univoche ma non devono necessariamente esserlo. Si rammenta
-che Singleton ha senso nel secondo caso (ad esempio \texttt{System} e \texttt{Runtime} sono
-singleton), mentre rischia di essere un problema nel secondo. Ad esempio, se si rendesse singleton
-il motore di un videogioco, sarebbe impossibile riusarlo per costruire un server per partite online
-(dove, presumibilmente, si gestiscono parallelamente più partite).
-	\item Si producono schemi UML caotici e difficili da leggere, che comprendono inutili elementi di dettaglio.
-	\item Si presentano schemi UML con classi (nel senso UML del termine) che ``galleggiano'' nello schema, non connesse, ossia senza relazioni con il resto degli elementi inseriti.
-	\item Si tratta in modo inutilmente prolisso la divisione in package, elencando ad esempio le classi una per una.
-\end{itemize}
-
-\subsection*{Esempio minimale (e quindi parziale) di sezione di progetto con UML ben realizzati}
-
-\subsubsection{Personalità intercambiabili}
-
-\begin{figure}[H]
-\centering{}
-\includegraphics[width=\textwidth]{img/strategy}
-\caption{Rappresentazione UML del pattern Strategy per la personalità di GLaDOS}
-\label{img:strategy}
-\end{figure}
-
-\paragraph{Problema} GLaDOS ha più personalità intercambiabili, la cui presenza deve essere trasparente al client.
-
-\paragraph{Soluzione} Il sistema per la gestione della personalità utilizza il \textit{pattern Strategy}, come da
-\Cref{img:strategy}: le implementazioni di \texttt{Personality} possono essere modificate, e la
-modifica impatta direttamente sul comportamento di GLaDOS.
-
-\subsubsection{Riuso del codice delle personalità}
-
-\begin{figure}[H]
-\centering{}
-\includegraphics[width=\textwidth]{img/template}
-\caption{Rappresentazione UML dell'applicazione del pattern Template Method alla gerarchia delle Personalità}
-\label{img:template}
-\end{figure}
-
-\paragraph{Problema} In fase di sviluppo, sono state sviluppate due personalità, una buona ed una cattiva.
-Quella buona restituisce sempre una torta vera, mentre quella cattiva restituisce sempre la
-promessa di una torta che verrà in realtà disattesa.
-Ci si è accorti che diverse personalità condividevano molto del comportamento,
-portando a classi molto simili e a duplicazione.
-
-\paragraph{Soluzione} Dato che le due personalità differiscono solo per il comportamento da effettuarsi in caso di percorso completato con successo,
-è stato utilizzato il \textit{pattern template method} per massimizzare il riuso, come da \Cref{img:template}.
-Il metodo template è \texttt{onSuccess()}, che chiama un metodo astratto e protetto
-\texttt{makeCake()}.
-
-\subsubsection{Gestione di output multipli}
-
-\begin{figure}[H]
-\centering{}
-\includegraphics[width=.7\textwidth]{img/observer}
-\caption{Il pattern Observer è usato per consentire a GLaDOS di informare tutti i sistemi di output in ascolto}
-\label{img:observer}
-\end{figure}
-
-\paragraph{Problema} Il sistema deve supportare output multipli. In particolare, si richiede che vi sia un logger che stampa a terminale o su file,
-e un'interfaccia grafica che mostri una rappresentazione grafica del sistema.
-
-\paragraph{Soluzione} Dato che i due sistemi di reporting utilizzano le medesime informazioni, si è deciso di raggrupparli dietro l'interfaccia \texttt{Output}.
-A questo punto, le due possibilità erano quelle di far sì che \texttt{GLaDOS} potesse pilotarle entrambe.
-Invece di fare un sistema in cui questi output sono obbligatori e connessi, si è deciso di usare maggior flessibilità (anche in vista di future estensioni)
-e di adottare una comunicazione uno-a-molti fra \texttt{GLaDOS} ed i sistemi di output.
-La scelta è quindi ricaduta sul \textit{pattern Observer}: \texttt{GLaDOS} è observable, e le istanze di \texttt{Output} sono observer.
-%
-Il suo utilizzo è esemplificato in \Cref{img:observer}
-
-
-\subsection*{Contro-esempio: pessimo diagramma UML}
-
-In \Cref{img:badarch} è mostrato il modo \textbf{sbagliato} di fare le cose.
-%
-Questo schema è fatto male perché:
-\begin{itemize}
-	\item È caotico.
-	\item È difficile da leggere e capire.
-	\item Vi sono troppe classi, e non si capisce bene quali siano i rapporti che intercorrono fra loro.
-	\item Si mostrano elementi implementativi irrilevanti, come i campi e i metodi privati nella classe \texttt{AbstractEnvironment}.
-	\item Se l'intenzione era quella di costruire un diagramma architetturale, allora lo schema è ancora più sbagliato, perché mostra pezzi di implementazione.
-	\item Una delle classi, in alto al centro, galleggia nello schema, non connessa a nessuna altra classe, e di fatto costituisce da sola un secondo schema UML scorrelato al resto
-	\item Le interfacce presentano tutti i metodi e non una selezione che aiuti il lettore a capire quale parte del sistema si vuol mostrare.
-\end{itemize}
-
+\par
+Bomberman, come descritto precedentemente, è un gioco a tema labirintico, dove la mappa è una griglia. E’ naturale che la maggior parte dei problemi derivino dall'esplorazione dell’arena e di conseguenza dei suoi percorsi. L’obiettivo principale del nemico, però, è rimanere l’ultimo giocatore in vita. Per arrivare a ciò, bisogna che l’agent sia in grado di muoversi per la mappa, piazzare bombe in maniera consapevole, raccogliere potenziamenti per avvantaggiarsi sugli avversari e altro ancora. Essendo il tutto molto complesso, ci si è focalizzati sul riuscire a creare un nemico che abbia funzioni di base, che siano però versatili e pronte all’espansione. Di seguito si introduce lo schema UML generico, che verrà successivamente analizzato nelle sue singole parti.
 
 \begin{figure}[h]
 \centering{}
-\includegraphics[width=\textwidth]{img/badarch}
-\caption{Schema UML mal fatto e con una pessima descrizione, che non aiuta a capire. Don't try this at home.}
-\label{img:badarch}
+\includegraphics[width=\textwidth]{report-src/img/enemyGenerics.png}
+\caption{Schema UML riassuntivo della classe Enemy}
 \end{figure}
 
+\subsection*{1. Problema da Risolvere}
+\par
+Uno dei problemi principali quando si gestisce il comportamento di un nemico (classe Enemy) in un videogioco è il modo in cui prende decisioni in tempo reale in base all'ambiente circostante. L’avversario deve tenere conto di numerosi ostacoli e pericoli per potersi muovere in sicurezza per la mappa di gioco. Il suo comportamento deve adattarsi continuamente alla situazione che gli si propone, deve inoltre essere flessibile e facilmente espandibile. 
+
+\subsection*{1. Soluzione Proposta}
+Per risolvere il problema, sono stati utilizzati diversi pattern di programmazione noti per strutturare il comportamento dell'Enemy. I principali utilizzati sono i seguenti:
+\begin{itemize}
+ \item \textbf{State Pattern:} utilizzato per rappresentare i vari stati del nemico (WAITING, ESCAPE, EXPLORING, PATROL, CHASE). Ogni stato decide cosa è meglio per l’entità in quel preciso momento e può transitare ad altri stati in base a determinate condizioni.
+ \item \textbf{Strategy Pattern:} utilizzato per incapsulare diverse strategie di movimento del nemico. Questo permette di cambiare la logica senza modificare il codice stesso dell’entità.
+\end{itemize}
+
+\subsection*{1. Alternativa Considerata}
+\par
+Un'alternativa presa in considerazione era l'uso di una macchina a stati finiti (FSM) al posto dello State Pattern. Tuttavia, questa soluzione avrebbe reso il codice meno modulare e più difficile da estendere.
+
+\par
+Il nemico utilizza il pattern State, come illustrato in figura, per gestire i diversi comportamenti. I vari stati possono essere modificati e aggiunti e questo va ad influire sul comportamento del nemico. Durante lo sviluppo sono state definite cinque differenti "personalità" :
+\begin{itemize}
+ \item \textbf{Chase:} il nemico dà priorità ad inseguire l’entità a lui più vicina entro un dato raggio.
+ \item \textbf{Waiting:} il nemico aspetta l’esplosione di una bomba, posizionandosi in una cella sicura.
+ \item \textbf{Escape:}  il nemico cerca di raggiungere una cella sicura.
+ \item \textbf{Exploring:}  il nemico raccoglie potenziamenti nelle vicinanze.
+ \item \textbf{Patrol:} se il nemico non ha particolari obiettivi si muove in modo casuale.
+\end{itemize}
+
+\par
+Ogni stato estende la classe AbstractEnemyState, progettata per ridurre la ridondanza di codice, la quale implementa l’interfaccia EnemyState, che rappresenta lo stato generico.
+
+\begin{figure}[h]
+\centering{}
+\includegraphics[width=\textwidth]{report-src/img/enemyState.png}
+\caption{Schema UML che rappresenta i vari State dell'Enemy}
+\end{figure}
+
+\par
+Il nemico utilizza anche il pattern Strategy, come illustrato in figura, per determinare i movimenti all’interno della mappa di gioco. Questo design permette di aggiungere in futuro strategie di movimento più sofisticate, come l’attacco e la difesa, permettendo così di rendere il comportamento del nemico più dinamico e imprevedibile. Durante la fase di sviluppo sono state realizzate diverse strategie di movimento, ognuna con un suo comportamento specifico: 
+\begin{itemize}
+ \item \textbf{ChaseMovementStrategy:} viene restituita la casella più vicina per raggiungere l’entità desiderata.
+ \item \textbf{RandomMovementStrategy:} viene restituita una cella casuale adiacente.
+ \item \textbf{EscapeMovementStrategy:} viene restituita, se esiste, la cella sicura più vicina a lui.
+ \item \textbf{ExploreMovementStrategy:} viene restituito la posizione di un potenziamento a lui vicino.
+ \item \textbf{ShortestMovementStrategy:} data una cella target, ti restituisce le celle che compongono il percorso minimo.
+\end{itemize}
+
+\par
+L'interfaccia MovementStrategy definisce il contratto per calcolare il prossimo movimento di un nemico. Ogni classe che implementa questa interfaccia fornisce una diversa logica di movimento. 
+
+\begin{figure}[h]
+\centering{}
+\includegraphics[width=\textwidth]{report-src/img/enemyState.png}
+\caption{Schema UML che rappresenta i vari Movement dell'Enemy}
+\end{figure}
+
+\subsection*{2. Problema da Risolvere}
+\par
+Un aspetto fondamentale dei giochi “labirintici” come Bomberman è trovare il percorso migliore da un punto A ad un punto B. Quindi, dato un grafo G=(V,E) e un vertice sorgente s si ha bisogno di una strategia per esplorare sistematicamente gli archi di G per trovare il percorso raggiungibile da s che meglio si adatta alla nostra situazione. 
+
+\subsection*{2. Soluzione Proposta}
+\par
+Per risolvere il problema si è deciso di trasformare la mappa di gioco da un dizionario (che associa ad ogni coordinata (x,y) una cella) ad un grafo.
+La classe che gestisce ciò è GraphBuilderImpl, definita statica, dove ogni cella della mappa (tranne i muri indistruttibili) viene vista come un nodo. Questi sono collegati tra loro da archi pesati, che rappresentano un cammino che il nemico può compiere, da il nodo di origine a quello di destinazione. Solo le celle tra loro adiacenti vengono quindi collegate da un arco. Il suo costo può essere di due tipi:
+\begin{itemize}
+    \item da muro distruttibile a ogni altro nodo: costo 2.5
+    \item ogni altro collegamento: costo 1
+\end{itemize}
+Questa decisione è stata presa per dare maggiore importanza ai percorsi già disponibili nella mappa, invece che crearne di nuovi. Questo favorisce anche il percorso di inseguimento da parte del nemico quando vede un'altra entità.
+
+\par
+Una volta definito il grafo, sono state scelte due tipologie di algoritmi per la sua esplorazione:
+\begin{itemize}
+    \item \textbf{Breadth-First Search (BFS):} questa produce un albero con nodo radice s che contiene tutti i vertici raggiungibili. Per ogni vertice v raggiungibile da s, il cammino semplice nell’albero prodotto dalla BFS da s a v, corrisponde ad un cammino minimo da s a v in G.
+    \item \textbf{Dijkstra:} questo trova il percorso minimo da un nodo sorgente a tutti gli altri nodi in un grafo aciclico e con pesi non negativi.
+\end{itemize}
+
+\begin{figure}[h]
+\centering{}
+\includegraphics[width=\textwidth]{report-src/img/enemyGraph.png}
+\caption{Schema UML che rappresenta la classe del Grafo}
+\end{figure}
 
 \chapter{Sviluppo}
 \section{Testing automatizzato}
 
-Il testing automatizzato è un requisito di qualunque progetto software che si rispetti, e consente di verificare che non vi siano regressioni nelle funzionalità a fronte di aggiornamenti.
-%
-Per quanto riguarda questo progetto è considerato sufficiente un test minimale, a patto che sia completamente automatico.
-%
-Test che richiedono l'intervento da parte dell'utente sono considerati \textit{negativamente} nel computo del punteggio finale.
-
-\subsection*{Elementi positivi}
-
+\par
+La classe \texttt{TestGraphBuilder} verifica la corretta creazione del grafo a partire dalla mappa di gioco. Di seguito sono descritti i principali casi di test:
 \begin{itemize}
- \item Si descrivono molto brevemente i componenti che si è deciso di sottoporre a test automatizzato.
- \item Si utilizzano suite specifiche (e.g. JUnit) per il testing automatico.
+    \item verifica delle dimensioni della mappa vuota (con solo muri indistruttibili)
+    \item verifica delle dimensioni della mappa con ostacoli
+    \item verifica dei pesi degli archi nel grafo
 \end{itemize}
 
-\subsection*{Elementi negativi}
+\par
+La classe \texttt{TestReasoner} testa le interrogazioni che vengono fatte al grafo. Di seguito sono descritti i principali casi di test:
 \begin{itemize}
- \item Non si realizza alcun test automatico.
- \item La non presenza di testing viene aggravata dall'adduzione di motivazioni non valide. Ad esempio, si scrive che l'interfaccia grafica non è testata automaticamente perché è \emph{impossibile} farlo\footnote{Testare in modo automatico le interfacce grafiche è possibile (si veda, come esempio, \url{https://github.com/TestFX/TestFX}), semplicemente nel corso non c'è modo e tempo di introdurvi questo livello di complessità. Il fatto che non vi sia stato insegnato come farlo non implica che sia impossibile!}.
- \item Si descrive un testing di tipo manuale in maniera prolissa.
- \item Si descrivono test effettuati manualmente che sarebbero potuti essere automatizzati, ad esempio scrivendo che si è usata l'applicazione manualmente.
- \item Si descrivono test non presenti nei sorgenti del progetto.
- \item I test, quando eseguiti, falliscono.
+    \item verifica se una cella è in una zona di pericolo (dove sta per esplodere una bomba)
+    \item verifica se tra due celle è presente un muro
+    \item verifica del percorso minimo tra un nemico ed il player
+    \item verifica della cella sicura più vicina al nemico dopo l’esplosione di una bomba
+\end{itemize}
+
+\par
+La classe \texttt{TestEnemy} verifica il giusto comportamento del nemico al verificarsi di determinate situazioni. Di seguito sono descritti i principali casi di test:
+\begin{itemize}
+    \item verifica se lo stato del nemico è Patrol se il player non è in un dato raggio e di conseguenza se si muove in maniera casuale
+    \item verifica se lo stato del nemico cambia a Chase quando il player è nel raggio visivo
+    \item verifica se il nemico “insegue” il player quando è in Chase
+    \item verifica se il nemico in presenza di una bomba cambia il suo stato a Escape, posizionandosi poi in una zona sicura
+    \item verifica se il nemico posiziona una bomba se tra lui e il player è presente un muro distruttibile
 \end{itemize}
 
 \section{Note di sviluppo}
 
-Questa sezione, come quella riguardante il design dettagliato va svolta \textbf{singolarmente da ogni membro del gruppo}.
-%
-Nella prima parte, ciascuno dovrà mostrare degli esempi di codice particolarmente ben realizzati,
-che dimostrino proefficienza con funzionalità avanzate del linguaggio e capacità di spingersi oltre le librerie mostrate a lezione.
-
 \subsection{qualcosa di Federico Bagattoni}
 \subsection{qualcosa di Luca Venturini}
 \subsection{qualcosa di Jacopo Turchi}
-\subsection{qualcosa di Daniele Merighi}
+\subsection{Daniele Merighi}
+\par
+\subsubsection{Utilizzo della libreria jgrapht.Graph}
+Utilizzata in vari punti, un esempio è:
+\url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/a94a829f9745cfda90a3125da40c183ad68c571e/src/main/java/it/unibo/bombardero/character/AI/impl/GraphBuilderImpl.java#L45-L57}
 
-\begin{itemize}
-	\item \textbf{Elencare} (fare un semplice elenco per punti, non un testo!) le feature \textit{avanzate} del linguaggio e dell'ecosistema Java che sono state
-utilizzate. Le feature di interesse sono:
-	\begin{itemize}
-		\item Progettazione con generici, ad esempio costruzione di nuovi tipi generici, e uso di generici bounded.
-		L'uso di classi generiche di libreria non è considerato avanzato.
-		\item Uso di lambda expressions
-		\item Uso di \texttt{Stream}, di \texttt{Optional} o di altri costrutti funzionali
-		\item Uso di reflection
-		\item Definizione ed uso di nuove annotazioni
-		\item Uso del Java Platform Module System
-		\item Uso di parti della libreria JDK non spiegate a lezione (networking, compressione, parsing XML, eccetera...)
-		\item Uso di librerie di terze parti (incluso JavaFX): Google Guava, Apache Commons...
-	\end{itemize}
-	\item Si faccia molta attenzione a non scrivere banalità, elencando qui features di tipo ``core'', come le eccezioni, le enumerazioni, o le inner class: nessuna di queste è considerata avanzata.
-	\item Per ogni feature avanzata, mostrata, includere:
-	\begin{itemize}
-		\item Nome della feature
-		\item Permalink GitHub al punto nel codice in cui è stata utilizzata
-	\end{itemize}
-\end{itemize}
+\par
+\subsubsection{Utilizzo della libreria jgrapht.traverse}
+Permalink: \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/a94a829f9745cfda90a3125da40c183ad68c571e/src/main/java/it/unibo/bombardero/character/AI/impl/EnemyGraphReasonerImpl.java#L229-L241}
 
+\par
+\subsubsection{Utilizzo delle \texttt{Stream} Java}
+Utilizzando dove è stato possibile, il seguente è un singolo esempio: 
+\url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/a94a829f9745cfda90a3125da40c183ad68c571e/src/main/java/it/unibo/bombardero/character/AI/impl/EnemyGraphReasonerImpl.java#L75C5-L85C6}
+
+%
 In questa sezione, \textit{dopo l'elenco},
 vanno menzionati ed attributi con precisione eventuali pezzi di codice ``riadattati'' (o scopiazzati...) da Internet o da altri progetti,
 pratica che tolleriamo ma che non raccomandiamo.
@@ -457,6 +382,9 @@ futuri.
 Al fine di evitare pregiudizi involontari, l'intero capitolo verrà letto dai docenti solo dopo aver formulato la valutazione.
 
 \section{Autovalutazione e lavori futuri}
+\subsection{Daniele Merighi}
+\par
+In qualità di membro del gruppo responsabile dello sviluppo del nemico, ritengo di aver raggiunto i requisiti inizialmente prefissati in fase di progettazione. Tuttavia essendo la prima volta che realizzo un progetto basato su un videogioco ho dovuto affrontare problematiche concettualmente nuove. Sicuramente il codice attualmente presente è una buona base su cui partire per lo sviluppo di un’entità più complessa, ma se dovessi ripensare alla classe Enemy la strutturerei diversamente. Il nemico è progettato per essere espandibile e riusabile ma adotterei tecniche più evolute per la sua parte comportamentale, adoperando ad esempio un Decision Tree. Anche il grafo lo penserei in maniera differente, creando dei “sotto grafi” specifici per ogni azione, ad esempio uno con solo il suo campo visivo, uno con solo le zone di pericolo ecc. Sarebbe opportuno che l’agent avesse sempre un suo obiettivo andando a ridurre al minimo, se non zero, la parte di movimento casuale. Dopo aver affrontato il corso di metodi numerici si intende proseguire il progetto andando ad implementare anche una parte di Deep Learning per rendere il nemico una vera e propria AI.
 
 \textbf{È richiesta una sezione per ciascun membro del gruppo, obbligatoriamente}.
 %
