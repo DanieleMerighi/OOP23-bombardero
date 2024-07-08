@@ -37,6 +37,7 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
      * The spawnpoints are represented by the fields {@link #PLAYER_GUIDE_SPAWNPOINT} 
      * and {@link #CRATE_GUIDE_SPAWNPOINT}
      * @param controller the reference to the game's {@link Controller}.
+     * @param cEngine the collision engine related to this instance of the game.
      */
     public BombarderoGuideManager(final Controller controller, final CollisionEngine cEngine) {
         super(controller, GuideManager.PLAYER_GUIDE_SPAWNPOINT, List.of(), false, cEngine);
@@ -94,6 +95,7 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
         /**
          * Creates a new dummy at the passed coordinate.
          * @param coord where to spawn the dummy
+         * @param the bombFactory that the character will use to produce bombs
          */
         Dummy(final GenPair<Float, Float> coord, final BombFactory bombFactory) {
             super(coord, bombFactory);
