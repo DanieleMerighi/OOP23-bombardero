@@ -14,6 +14,7 @@ import it.unibo.bombardero.view.api.GraphicsEngine.EndGameState;
 
 import java.awt.Font;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -81,7 +82,7 @@ public final class GameCard extends GamePlayCard {
     public void paintComponent(final Graphics g) {
         super.paintComponent(g);
         final int fontYOffset = (int) (g.getFontMetrics(clockFont).getAscent() / 2);
-        final SimpleDateFormat timerFormatter = new SimpleDateFormat(TIMER_FORMAT);
+        final SimpleDateFormat timerFormatter = new SimpleDateFormat(TIMER_FORMAT, Locale.ITALY);
         g.setFont(clockFont.deriveFont(Font.PLAIN, 16));
         g.drawString(timerFormatter.format(timeLeft), timerPosition.width, timerPosition.height + fontYOffset);
         g.drawImage(clockImage, imageClockPosition.width, imageClockPosition.height, null);

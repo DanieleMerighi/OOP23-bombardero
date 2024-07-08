@@ -30,9 +30,8 @@ public final class ResourceGetter {
         try {
             return ImageIO.read(ClassLoader.getSystemResource(RESOURCE_PATH + name + IMAGE_EXTENSION));
         } catch (final IOException e) {
-            System.out.println("There was an exception loading " + name + IMAGE_EXTENSION + " resource.\n");
+            return null;
         }
-        return null;
     }
 
     /**
@@ -44,13 +43,10 @@ public final class ResourceGetter {
      */
     public Font loadFont(final String name) {
         try {
-            System.out.println(RESOURCE_PATH + FONT_PATH + name + FONT_EXTENSION);
             final InputStream inputStream = ClassLoader.getSystemClassLoader()
                     .getResourceAsStream(RESOURCE_PATH + FONT_PATH + name + FONT_EXTENSION);
             return Font.createFont(Font.TRUETYPE_FONT, inputStream);
         } catch (FontFormatException | IOException e) {
-            System.err.println("Exception in loading font " + name);
-            System.err.println(e.getMessage());
             return null;
         }
     }

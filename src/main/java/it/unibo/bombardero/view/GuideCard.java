@@ -25,10 +25,15 @@ import it.unibo.bombardero.view.api.GraphicsEngine.ViewCards;
 import it.unibo.bombardero.view.sprites.api.Sprite;
 import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 /**
  * This class will never be serialised.
  */
 @SuppressWarnings("serial")
+@SuppressFBWarnings(
+    value="SE_TRANSIENT_FIELD_NOT_RESTORED",
+    justification = "This class will never be serialized"
+)
 /**
  * This class contains the panel for the Guide of
  * the game. It essentially works the same as the {@link GameCard}

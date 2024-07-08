@@ -1,7 +1,5 @@
 package it.unibo.bombardero.view;
 
-import javax.swing.JFrame;
-
 import it.unibo.bombardero.guide.api.GuideManager;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.utils.Utils;
@@ -23,8 +21,10 @@ import java.awt.image.BufferedImage;
  */
 public final class ResizingEngine {
 
+    private static final double SPACE_DISTANCE_FROM_CELL = 1.5;
     private static final double DEFAULT_SCALE = 1.125;
     private static final int HIGH_RES_THRESHOLD = 200;
+    private static final double HIGH_RES_SCALE = 1.25;
     private static final double MENU_LOGO_SCALE = 0.90;
 
     /* A mischevious padding no one knows its reason to exist: */
@@ -59,13 +59,12 @@ public final class ResizingEngine {
      * a {@link #currentScale} that uses to proportionally enlarge every item in the game.
      * <p>
      * The scale is choosen by checking the display's resolution.
-     * @param graphics the {@link GraphicsEngine} related to this instance
      * @param insets the insets of the frame, used to compute the total window size
      */
-    public ResizingEngine(final GraphicsEngine graphics, final Insets insets) {
+    public ResizingEngine(final Insets insets) {
         final int resolution = Toolkit.getDefaultToolkit().getScreenResolution();
         if (resolution >= HIGH_RES_THRESHOLD) {
-            currentScale = 1.25;
+            currentScale = HIGH_RES_SCALE;
         }
         frameInsets = new Insets(insets.top, insets.left, insets.bottom, insets.right);
         scaledCellSize = (int) (currentScale * Utils.CELL_SIZE);
@@ -86,8 +85,8 @@ public final class ResizingEngine {
      * @param graphics the {@link GraphicsEngine} related to this instance
      * @return a new cloned {@link ResizingEngine}
      */
-    public ResizingEngine getNewEngine(final GraphicsEngine graphics) {
-        return new ResizingEngine(graphics, frameInsets);
+    public ResizingEngine getNewEngine() {
+        return new ResizingEngine(frameInsets);
     }
 
     /* FRAME-RELATED METHODS */
@@ -389,7 +388,6 @@ public final class ResizingEngine {
                 getMapPlacingPoint().width + getScaledCellSize() + (int) (getScale() * MISCHIEVOUS_PADDING),
                 getMapPlacingPoint().height + 2 * getScaledCellSize() - (int) (7 * getScale()));
     }
-    // CHECKSTYLE: MagicNumber ON
 
     private Dimension initImageClockPosition() {
         return new Dimension(
@@ -404,7 +402,6 @@ public final class ResizingEngine {
                 (int) Math.floor(getMapPlacingPoint().height + getScaledCellSize() * 1.2));
     }
 
-    // CHECKSTYLE: MagicNumber OFF
     private Dimension initWASDPosition() {
         final Dimension cell = getCharacterPlacingPoint(GuideManager.PLAYER_GUIDE_SPAWNPOINT);
         return new Dimension(
@@ -417,7 +414,7 @@ public final class ResizingEngine {
         final Dimension cell = getCellPlacingPoint(GuideManager.CRATE_GUIDE_SPAWNPOINT);
         return new Dimension(
                 cell.width - getScaledCellSize(),
-                (int) Math.floor(cell.height + 1.5 * getScaledCellSize()));
+                (int) Math.floor(cell.height + SPACE_DISTANCE_FROM_CELL * getScaledCellSize()));
     }
 
     private Dimension initButtonSize() {
