@@ -67,6 +67,10 @@ public final class ResizingEngine {
         menuLogoSize = initLogoSize();
     }
 
+    public ResizingEngine getNewEngine(final GraphicsEngine graphics) {
+        return new ResizingEngine(graphics, frameInsets);
+    }
+
     /* FRAME-RELATED METHODS */
 
     /*
