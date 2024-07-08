@@ -4,12 +4,21 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JButton;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.view.api.GraphicsEngine;
 import it.unibo.bombardero.view.api.GraphicsEngine.EndGameState;
+import it.unibo.bombardero.view.api.GraphicsEngine.ViewCards;
 
 import java.awt.Font;
 import java.util.List;
@@ -31,7 +40,11 @@ public final class GameCard extends GamePlayCard {
 
     private final Image clockImage;
     private final Font clockFont;
+    private final JLabel winningBannerLabel;
+    private final JLabel losingBannerLabel; 
 
+    private final JButton backButton;
+    
     private final Dimension imageClockPosition;
     private final Dimension timerPosition;
     private long timeLeft;
@@ -49,10 +62,26 @@ public final class GameCard extends GamePlayCard {
             graphics.getResourceGetter().loadImage("overlay/clock")
         );
         clockFont = graphics.getResourceGetter().loadFont("mono");
+        final Image backButtonImage = graphics.getResizingEngine().getScaledButtonImage(
+            graphics.getResourceGetter().loadImage("overlay/buttons/BACK")
+        );
+        final Image backButtonImagePressed = graphics.getResizingEngine().getScaledButtonImage(
+            graphics.getResourceGetter().loadImage("overlay/buttons/BACK_PRESSED")
+        );
+        losingBannerLabel = new JLabel(new ImageIcon(graphics.getResourceGetter().loadImage("overlay/defeat-panel")));
+        winningBannerLabel = new JLabel(new ImageIcon(graphics.getResourceGetter().loadImage("overlay/victory-panel")));
 
         imageClockPosition = graphics.getResizingEngine().getImageClockPosition();
         timerPosition = graphics.getResizingEngine().getTimerPosition();
         this.setFont(clockFont);
+
+        backButton = new JButton(new ImageIcon(backButtonImage));
+        backButton.setPressedIcon(new ImageIcon(backButtonImagePressed));
+        backButton.setFocusPainted(false);
+        backButton.setContentAreaFilled(false);
+        backButton.setBorderPainted(false);
+
+        backButton.addActionListener(e -> controller.endGame());
     }
 
     @Override
@@ -84,9 +113,20 @@ public final class GameCard extends GamePlayCard {
 
     @Override
     void displayEndView() {
+        displayEndView(EndGameState.LOSE);
     }
 
     @Override
     void displayEndView(EndGameState endingType) {
+        darkenView(PAUSE_DARKEN_ALPHA);
+        if (endingType.equals(EndGameState.LOSE)) {
+            this.add(losingBannerLabel);
+        } else {
+            this.add(winningBannerLabel);
+        }
+        this.add(backButton);
+        this.revalidate();
+        this.repaint(0);
     }
+
 }
