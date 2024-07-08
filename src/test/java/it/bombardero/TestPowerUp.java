@@ -48,7 +48,7 @@ class TestPowerUp {
      * Tests that the PowerUp gets created correctly.
      */
     @Test
-    void testPowerUpcREATION() {
+    void testPowerUpCreation() {
         powerUP = factory.createPowerUp();
         assertNotNull(powerUP);
 
