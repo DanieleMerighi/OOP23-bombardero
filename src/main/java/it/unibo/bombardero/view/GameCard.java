@@ -21,9 +21,9 @@ import java.util.Map;
  */
 @SuppressWarnings("serial")
 /** 
- * This class represents a JPanel containing a the view of the main  
- * playable part of the game. It adds time displaying and personalized 
- * end game based on cases. 
+ * This class represents a JPanel containing a the view of the main
+ * playable part of the game. It adds time displaying and personalized
+ * end game based on cases.
  * @author Federico Bagattoni
  */
 public final class GameCard extends GamePlayCard {
@@ -36,7 +36,7 @@ public final class GameCard extends GamePlayCard {
     private final JLabel losingBannerLabel; 
 
     private final JButton backButton;
-    
+ 
     private final Dimension imageClockPosition;
     private final Dimension timerPosition;
     private long timeLeft;
@@ -46,6 +46,7 @@ public final class GameCard extends GamePlayCard {
      * the game is paused, and an arena that can be updated throught the {@link #update(Map, List, List)}
      * method.
      * @param graphics the {@link GraphicsEngine} managing this class
+     * @param controller the game's controller
      */
     public GameCard(final Controller controller, final GraphicsEngine graphics) {
         super(controller, graphics, Map.of(), List.of(), List.of());
@@ -80,12 +81,12 @@ public final class GameCard extends GamePlayCard {
     public void paintComponent(final Graphics g) {
         super.paintComponent(g);
         final int fontYOffset = (int) (g.getFontMetrics(clockFont).getAscent() / 2);
-        final SimpleDateFormat timerFormatter = new SimpleDateFormat(TIMER_FORMAT   );
+        final SimpleDateFormat timerFormatter = new SimpleDateFormat(TIMER_FORMAT);
         g.setFont(clockFont.deriveFont(Font.PLAIN, 16));
         g.drawString(timerFormatter.format(timeLeft), timerPosition.width, timerPosition.height + fontYOffset);
         g.drawImage(clockImage, imageClockPosition.width, imageClockPosition.height, null);
     }
-    
+
     /**
      * Sets the time left for the displayed timer.
      * @param timeLeft the time left, in milliseconds
@@ -96,7 +97,7 @@ public final class GameCard extends GamePlayCard {
     }
 
     @Override
-    void showMessage(BombarderoViewMessages message) {
+    void showMessage(final BombarderoViewMessages message) {
     }
 
     @Override
@@ -105,7 +106,7 @@ public final class GameCard extends GamePlayCard {
     }
 
     @Override
-    void displayEndView(EndGameState endingType) {
+    void displayEndView(final EndGameState endingType) {
         darkenView(PAUSE_DARKEN_ALPHA);
         if (endingType.equals(EndGameState.LOSE)) {
             this.add(losingBannerLabel);
