@@ -40,7 +40,6 @@ public class BasicBombarderoGameManager implements GameManager {
     private final List<FlameImpl> flames = new ArrayList<>();
     private final List<Character> enemies = new ArrayList<>();
     private final Character player;
-    private final Controller controller;
     private final CollisionEngine ce;
     private final BombFactory bombFactory;
 
@@ -61,7 +60,6 @@ public class BasicBombarderoGameManager implements GameManager {
             final List<GenPair<Float, Float>> enemiesSpawnpoint,
             final boolean generateWalls,
             final CollisionEngine cEngine) {
-        this.controller = controller;
         this.map = new GameMapImpl(generateWalls);
         this.ce = cEngine;
         this.bombFactory = new BombFactoryImpl();
