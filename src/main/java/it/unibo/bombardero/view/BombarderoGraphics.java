@@ -32,9 +32,6 @@ public final class BombarderoGraphics implements GraphicsEngine {
     private final JPanel deck;
     private final CardLayout layout = new CardLayout();
 
-    private final GamePlayCard gameCard;
-    private final GamePlayCard guideCard;
-    private final MenuCard menuCard;
     private ViewCards currentCard;
     private final Map<ViewCards, GamePlayCard> cardsMap = new HashMap<>();
 
@@ -58,9 +55,9 @@ public final class BombarderoGraphics implements GraphicsEngine {
         frame.setLocationRelativeTo(null);
         frame.setIconImage(gameIconImage.getScaledInstance(64, 64, Image.SCALE_SMOOTH));
 
-        menuCard = new MenuCard(controller, this, resourceGetter);
-        this.guideCard = new GuideCard(controller, this, Map.of(), List.of(), List.of());
-        this.gameCard = new GameCard(controller, this);
+        MenuCard menuCard = new MenuCard(controller, this, resourceGetter);
+        GamePlayCard guideCard = new GuideCard(controller, this, Map.of(), List.of(), List.of());
+        GamePlayCard gameCard = new GameCard(controller, this);
 
         deck.add(ViewCards.GUIDE.getStringId(), guideCard);
         layout.addLayoutComponent(guideCard, ViewCards.GUIDE.getStringId());
