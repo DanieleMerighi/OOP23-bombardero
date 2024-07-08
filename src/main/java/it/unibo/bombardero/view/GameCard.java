@@ -84,7 +84,7 @@ public final class GameCard extends GamePlayCard {
         final Graphics2D g2d = (Graphics2D) g;
         final int fontYOffset = (int) (g.getFontMetrics(clockFont).getAscent() / 2);
         g2d.setFont(clockFont.deriveFont(Font.PLAIN, 16));
-        g2d.drawString(getFormattedTime(), timerPosition.width, timerPosition.height + fontYOffset);
+        g2d.drawString(TIMER_FORMAT.format(new Date(timeLeft)), timerPosition.width, timerPosition.height + fontYOffset);
         g2d.drawImage(clockImage, imageClockPosition.width, imageClockPosition.height, null);
     }
     
@@ -95,10 +95,6 @@ public final class GameCard extends GamePlayCard {
     @Override
     public void setTimeLeft(final Long timeLeft) {
         this.timeLeft = timeLeft;
-    }
-
-    private String getFormattedTime() {
-        return TIMER_FORMAT.format(new Date(timeLeft));
     }
 
     @Override
