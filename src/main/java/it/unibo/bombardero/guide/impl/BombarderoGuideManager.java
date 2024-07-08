@@ -95,7 +95,7 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
         /**
          * Creates a new dummy at the passed coordinate.
          * @param coord where to spawn the dummy
-         * @param the bombFactory that the character will use to produce bombs
+         * @param bombFactory the {@link BombFactory} that the character will use to produce bombs
          */
         Dummy(final GenPair<Float, Float> coord, final BombFactory bombFactory) {
             super(coord, bombFactory);
