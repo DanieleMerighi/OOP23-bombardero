@@ -12,13 +12,19 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
+/*
+ * NOTE: Due to the impressive quantity of references made to the sizes of the game's 
+ * assets, the checkstyles have been suppressed in certain areas.
+ */
 
 /**
  * A class to compute the scale of the game relative to the window size and
- * display size
+ * display size.
  */
 public final class ResizingEngine {
 
+    private static final double DEFAULT_SCALE = 1.125;
+    private static final int HIGH_RES_THRESHOLD = 200;
     private static final double MENU_LOGO_SCALE = 0.90;
 
     /* A mischevious padding no one knows its reason to exist: */
@@ -32,7 +38,7 @@ public final class ResizingEngine {
     private static final int MENU_LOGO_WIDTH = 1522;
     private static final int MENU_LOGO_HEIGHT = 362;
 
-    private double currentScale = 1.125; /* default scale size for every device */
+    private double currentScale = DEFAULT_SCALE; /* default scale size for every device */
     private final int scaledCellSize;
     private final Dimension gameWindowSize;
 
@@ -50,7 +56,7 @@ public final class ResizingEngine {
 
     public ResizingEngine(final GraphicsEngine graphics, final Insets insets) {
         final int resolution = Toolkit.getDefaultToolkit().getScreenResolution();
-        if (resolution >= 200) {
+        if (resolution >= HIGH_RES_THRESHOLD) {
             currentScale = 1.25;
         }
         frameInsets = new Insets(insets.top, insets.left, insets.bottom, insets.right);
@@ -110,7 +116,7 @@ public final class ResizingEngine {
     }
 
     /* SCALING-RELATED METHODS: */
-
+    // CHECKSTYLE: MagicNumber OFF
     public Image getScaledCellImage(final Image cellImage) {
         return cellImage.getScaledInstance(getScaledCellSize(), (int) (getScaledCellSize() + 7 * getScale()),
                 Image.SCALE_SMOOTH);
@@ -120,6 +126,7 @@ public final class ResizingEngine {
         return characterImage.getScaledInstance((int) Math.floor(31 * getScale()), (int) Math.floor(49 * getScale()),
                 Image.SCALE_SMOOTH);
     }
+    // CHECKSTYLE: MagicNumber ON
 
     public Image getScaledBombImage(final Image bombImage) {
         return bombImage;
@@ -138,6 +145,7 @@ public final class ResizingEngine {
         return clockImage.getScaledInstance(getScaledCellSize(), getScaledCellSize(), Image.SCALE_SMOOTH);
     }
 
+    // CHECKSTYLE: MagicNumber OFF
     public Image getScaledWASDImage(final Image wasdImage) {
         return wasdImage.getScaledInstance((int) Math.floor(39 * 2.5 * getScale()),
                 (int) Math.floor(24 * 2.5 * getScale()), Image.SCALE_SMOOTH);
@@ -147,6 +155,7 @@ public final class ResizingEngine {
         return wasdImage.getScaledInstance((int) Math.floor(30 * 2 * getScale()), (int) Math.floor(12 * 2 * getScale()),
                 Image.SCALE_SMOOTH);
     }
+    // CHECKSTYLE: MagicNumber ON
 
     public Image getScaledButtonImage(final Image buttonImage) {
         return buttonImage.getScaledInstance(buttonSize.width, buttonSize.height, Image.SCALE_SMOOTH);
@@ -198,6 +207,7 @@ public final class ResizingEngine {
                 placingPoint.height + (int) (getScaledCellSize() / 2));
     }
 
+    // CHECKSTYLE: MagicNumber OFF
     public Dimension getCharacterPlacingPoint(final GenPair<Float, Float> playerPosition) {
         return new Dimension(
                 (int) Math.floor(
@@ -209,6 +219,7 @@ public final class ResizingEngine {
                                 + playerPosition.y() * getScaledCellSize()
                                 - (int) Math.floor(getScaledCellSize() - (49 * getScale() * (3 / 4)))));
     }
+    // CHECKSTYLE: MagicNumber ON
 
     public Dimension getImageClockPosition() {
         return new Dimension(
@@ -257,11 +268,13 @@ public final class ResizingEngine {
     /**
      * Returns the corner of the north-eastern cell of the map
      */
+    // CHECKSTYLE: MagicNumber OFF
     private Dimension initEntityPlacingPoint() {
         return new Dimension(
                 getMapPlacingPoint().width + getScaledCellSize() + (int) (getScale() * MISCHIEVOUS_PADDING),
                 getMapPlacingPoint().height + 2 * getScaledCellSize() - (int) (7 * getScale()));
     }
+    // CHECKSTYLE: MagicNumber ON
 
     private Dimension initImageClockPosition() {
         return new Dimension(
@@ -276,12 +289,14 @@ public final class ResizingEngine {
                 (int) Math.floor(getMapPlacingPoint().height + getScaledCellSize() * 1.2));
     }
 
+    // CHECKSTYLE: MagicNumber OFF
     private Dimension initWASDPosition() {
         final Dimension cell = getCharacterPlacingPoint(GuideManager.PLAYER_GUIDE_SPAWNPOINT);
         return new Dimension(
                 cell.width - 39,
                 cell.height + 2 * getScaledCellSize());
     }
+    // CHECKSTYLE: MagicNumber ON
 
     private Dimension initSpacePosition() {
         final Dimension cell = getCellPlacingPoint(GuideManager.CRATE_GUIDE_SPAWNPOINT);
