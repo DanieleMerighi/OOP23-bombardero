@@ -33,9 +33,7 @@ public final class BombarderoController implements Controller {
     private boolean isGameStarted = false;
 
     /**
-     * Creates a new {@link BombarderoController} calling the constructor 
-     * will automatically instantiate the game's {@link GraphicsEngine} and show
-     * the game.
+     * TODO
      */
     public BombarderoController() {
         this.graphics = new BombarderoGraphics(this);
