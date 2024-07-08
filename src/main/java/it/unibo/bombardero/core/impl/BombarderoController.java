@@ -105,7 +105,7 @@ public final class BombarderoController implements Controller {
 
     @Override
     public void updateGraphics(final long elapsed) {
-        graphics.update(getMap(), List.of(getMainPlayer()), getEnemies(), getTimeLeft());
+        graphics.update(getMap(), getPlayers(), getEnemies(), getTimeLeft());
     }
 
 
@@ -130,8 +130,8 @@ public final class BombarderoController implements Controller {
     }
 
     @Override
-    public Character getMainPlayer() {
-        return manager.getPlayer();
+    public List<Character> getPlayers() {
+        return manager.getPlayers();
     }
 
     @Override

@@ -38,7 +38,7 @@ public interface GameManager {
      * Returns the main player of the current game's instance. 
      * @return the main {@link Character} of the game.
      */
-    Character getPlayer();
+    List<Character> getPlayers();
 
     /** 
      * Returns the {@link GameMap} of the current game instance.

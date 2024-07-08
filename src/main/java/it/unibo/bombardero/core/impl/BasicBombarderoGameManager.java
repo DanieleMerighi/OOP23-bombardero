@@ -39,7 +39,7 @@ public class BasicBombarderoGameManager implements GameManager {
     private final Map<Bomb, Character> bombs = new HashMap<>();
     private final List<FlameImpl> flames = new ArrayList<>();
     private final List<Character> enemies = new ArrayList<>();
-    private final Character player;
+    private final List<Character> players;
     private final CollisionEngine ce;
     private final BombFactory bombFactory;
 
@@ -63,7 +63,7 @@ public class BasicBombarderoGameManager implements GameManager {
         this.map = new GameMapImpl(generateWalls);
         this.ce = cEngine;
         this.bombFactory = new BombFactoryImpl();
-        this.player = new Player(playerSpawnPoint, bombFactory);
+        this.players = List.of(new Player(playerSpawnPoint, bombFactory));
         enemiesSpawnpoint.forEach(spawnpoint -> enemies.add(new Enemy(spawnpoint, bombFactory)));
     }
 
@@ -88,7 +88,7 @@ public class BasicBombarderoGameManager implements GameManager {
         updateBombs(elapsed);
         updateFlames(elapsed);
         updateMap();
-        if (!player.isAlive()) {
+        if (!players.stream().allMatch(Character::isAlive)) {
             controller.displayEndScreen(EndGameState.LOSE);
         } else if ( !enemies.stream().allMatch(Character::isAlive)) {
             controller.displayEndScreen(EndGameState.WIN);
@@ -106,8 +106,8 @@ public class BasicBombarderoGameManager implements GameManager {
     }
 
     @Override
-    public final Character getPlayer() {
-        return this.player;
+    public final List<Character> getPlayers() {
+        return List.copyOf(players);
     }
 
     /**
@@ -161,12 +161,14 @@ public class BasicBombarderoGameManager implements GameManager {
     }
 
     private void updatePlayer(final long elapsed) {
-        if (player.isAlive()) {
+        players.stream()
+        .filter(Character::isAlive)
+        .forEach(player -> {
             player.update(this, elapsed);
             addCharacterBombsToMap(player);
             ce.checkCharacterCollision(player, map);
             ce.checkFlameAndPowerUpCollision(player, map);
-        }
+        });
     }
 
     private void updateMap() {

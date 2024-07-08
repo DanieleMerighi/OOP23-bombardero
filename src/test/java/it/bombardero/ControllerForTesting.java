@@ -86,8 +86,8 @@ public final class ControllerForTesting implements Controller {
     }
 
     @Override
-    public Character getMainPlayer() {
-        return this.player;
+    public List<Character> getPlayers() {
+        return List.of(player);
     }
 
     @Override

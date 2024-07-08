@@ -96,7 +96,7 @@ public interface Controller {
      * Returns the main player of the current game instance. 
      * @return the main {@link Character}
      */
-    Character getMainPlayer();
+    List<Character> getPlayers();
 
     /** 
      * Returns the enemies of the current game instance. 
