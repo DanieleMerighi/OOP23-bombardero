@@ -82,7 +82,6 @@ public abstract class GamePlayCard extends JPanel {
     private transient Image skatesPlusOne = resourceGetter.loadImage("powerup/skates_plus_one");
     private transient Image skateMinusOne = resourceGetter.loadImage("powerup/skates_minus_one");
     private transient Image skull = resourceGetter.loadImage("powerup/skull");
-    private transient Image pausePanelImage = resourceGetter.loadImage("overlay/victory-panel");
 
     /* References to model components: */
     private final transient GraphicsEngine graphics;
@@ -104,7 +103,6 @@ public abstract class GamePlayCard extends JPanel {
     /* Pause state buttons: */
     private final JButton resumeButton;
     private final JButton quitButton;
-    private boolean isGamePaused = false;
     private float darkenValue = 0.0f;
 
     /**
@@ -292,8 +290,7 @@ public abstract class GamePlayCard extends JPanel {
      * paused and displays alterantives for the user to choose.
      */
     public final void setPausedView() {
-        darkenView(PAUSE_DARKEN_ALPHA);
-        isGamePaused = true;
+        darkenView(PAUSE_DARKEN_ALPHA);;
         this.add(resumeButton);
         this.add(quitButton);
         this.revalidate();
@@ -306,7 +303,6 @@ public abstract class GamePlayCard extends JPanel {
      */
     public final void setUnpausedView() {
         darkenView(0.0f);
-        isGamePaused = false;
         this.remove(resumeButton);
         this.remove(quitButton);
         this.revalidate();
