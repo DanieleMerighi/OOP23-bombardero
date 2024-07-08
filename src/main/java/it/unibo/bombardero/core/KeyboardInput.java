@@ -31,6 +31,8 @@ public class KeyboardInput implements KeyListener {
      * Constructs a new KeyboardInput istance.
      *
      * @param controller The controller instance to handle player actions.
+     * @param playerIndex the index of the player in the player's list that this
+     * has to control.
      */
     public KeyboardInput(final Controller controller, final int playerIndex) {
         this.controller = controller;
