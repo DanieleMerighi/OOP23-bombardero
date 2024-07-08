@@ -15,6 +15,10 @@ public final class BombFactoryImpl implements BombFactory {
 
     @Override
     public Bomb createBasicBomb(final int range, final GenPair<Integer, Integer> pos) {
+        return genericBomb(BombType.BOMB_BASIC, range, pos);
+    }
+
+    private Bomb genericBomb(BombType type, final int range, final GenPair<Integer, Integer> pos) {
         return new BasicBomb(BombType.BOMB_BASIC, range, pos) { };
     }
 
@@ -46,7 +50,7 @@ public final class BombFactoryImpl implements BombFactory {
 
     @Override
     public Bomb createPowerBomb(final GenPair<Integer, Integer> pos) {
-        return new BasicBomb(BombType.BOMB_POWER, Character.MAX_FLAME_RANGE, pos) { };
+        return genericBomb(BombType.BOMB_POWER, Character.MAX_FLAME_RANGE, pos);
     }
 
     @Override
