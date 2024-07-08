@@ -59,10 +59,9 @@ public final class ResizingEngine {
      * a {@link #currentScale} that uses to proportionally enlarge every item in the game.
      * <p>
      * The scale is choosen by checking the display's resolution.
-     * @param graphics the {@link GraphicsEngine} related to this instance
      * @param insets the insets of the frame, used to compute the total window size
      */
-    public ResizingEngine(final GraphicsEngine graphics, final Insets insets) {
+    public ResizingEngine(final Insets insets) {
         final int resolution = Toolkit.getDefaultToolkit().getScreenResolution();
         if (resolution >= HIGH_RES_THRESHOLD) {
             currentScale = HIGH_RES_SCALE;
@@ -86,8 +85,8 @@ public final class ResizingEngine {
      * @param graphics the {@link GraphicsEngine} related to this instance
      * @return a new cloned {@link ResizingEngine}
      */
-    public ResizingEngine getNewEngine(final GraphicsEngine graphics) {
-        return new ResizingEngine(graphics, frameInsets);
+    public ResizingEngine getNewEngine() {
+        return new ResizingEngine(frameInsets);
     }
 
     /* FRAME-RELATED METHODS */

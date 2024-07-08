@@ -121,7 +121,7 @@ public abstract class GamePlayCard extends JPanel {
         final List<Character> playersList,
         final List<Character> enemies
         ) {
-        this.resizingEngine = graphics.getResizingEngine().getNewEngine(graphics);
+        this.resizingEngine = graphics.getResizingEngine().getNewEngine();
         this.setMinimumSize(graphics.getResizingEngine().getMapSize());
         this.setLayout(new BorderLayout());
 

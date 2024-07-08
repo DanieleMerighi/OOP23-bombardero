@@ -51,7 +51,7 @@ public final class BombarderoGraphics implements GraphicsEngine {
 
         frame.addKeyListener(new KeyboardInput(controller, 0));
 
-        resizingEngine = new ResizingEngine(this, frame.getInsets());
+        resizingEngine = new ResizingEngine(frame.getInsets());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(resizingEngine.getGameWindowSize());
         frame.setResizable(false);
