@@ -18,7 +18,7 @@ public final class BombFactoryImpl implements BombFactory {
         return genericBomb(BombType.BOMB_BASIC, range, pos);
     }
 
-    private Bomb genericBomb(BombType type, final int range, final GenPair<Integer, Integer> pos) {
+    private Bomb genericBomb(final BombType type, final int range, final GenPair<Integer, Integer> pos) {
         return new BasicBomb(BombType.BOMB_BASIC, range, pos) { };
     }
 

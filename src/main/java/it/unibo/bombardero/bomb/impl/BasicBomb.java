@@ -23,7 +23,7 @@ import it.unibo.bombardero.physics.impl.RectangleBoundingBox;
  */
 public abstract class BasicBomb extends AbstractCell implements Bomb {
 
-    private static final long timeToExplode = 2000L;
+    private static final long TIME_TO_EXPLODE = 2000L;
     private boolean exploded;
     private final int range;
     private long timer;
@@ -79,7 +79,7 @@ public abstract class BasicBomb extends AbstractCell implements Bomb {
     @Override
     public void update(final long timeElapsed) {
         timer += timeElapsed;
-        if (timer >= timeToExplode) {
+        if (timer >= TIME_TO_EXPLODE) {
             explode();
         }
     }

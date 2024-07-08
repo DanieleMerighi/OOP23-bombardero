@@ -4,7 +4,7 @@ import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.map.api.GameMap;
 
 /**
- * This interface checks the collision of the game and solves them.
+ * This interface Take care of the collisions in the Game.
  */
 public interface CollisionEngine {
  

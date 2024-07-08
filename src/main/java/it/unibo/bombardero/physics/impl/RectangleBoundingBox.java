@@ -59,12 +59,12 @@ public final class RectangleBoundingBox implements BoundingBox {
     }
 
     @Override
-    public boolean isColliding(final Line2D.Float mapOutline) {
+    public boolean isColliding(final Line2D mapOutline) {
         return this.physicsBox.intersectsLine(mapOutline);
     }
 
     @Override
-    public GenPair<Float, Float> computeCollision(final Line2D.Float mapOutline, final Direction dir) {
+    public GenPair<Float, Float> computeCollision(final Line2D mapOutline, final Direction dir) {
         switch (dir) {
             case UP:
                 return new GenPair<Float, Float>(0f, (float) (mapOutline.getY1() - this.physicsBox.getMinY()));

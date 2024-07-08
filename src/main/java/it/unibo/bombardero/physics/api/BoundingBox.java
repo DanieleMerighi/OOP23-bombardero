@@ -37,7 +37,7 @@ public interface BoundingBox {
      * @param mapOutline the line that rapresent an Outline of the map
      * @return if the BoundingBox is colliding with this line
      */
-    boolean isColliding(Line2D.Float mapOutline);
+    boolean isColliding(Line2D mapOutline);
 
     /**
      * 
@@ -45,7 +45,7 @@ public interface BoundingBox {
      * @param dir direction of the Character
      * @return the distance of the collision
      */
-    GenPair<Float, Float> computeCollision(Line2D.Float mapOutline, Direction dir);
+    GenPair<Float, Float> computeCollision(Line2D mapOutline, Direction dir);
 
     /**
      * @return the rectangle that rappresent the bounding box

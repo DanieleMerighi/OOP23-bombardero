@@ -15,8 +15,7 @@ public final class FlameImpl extends AbstractCell implements Flame {
     private long countTime;
 
     /**
-     * 
-     * @param type            Flame
+     *        
      * @param specfiFlameType if it's a CrossFlame, Orizzontal, Vertical
      * @param pos             position on the map
      */
