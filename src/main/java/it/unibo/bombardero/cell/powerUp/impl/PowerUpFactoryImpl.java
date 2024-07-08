@@ -61,11 +61,11 @@ public final class PowerUpFactoryImpl implements PowerUpFactory {
     }
 
     private PowerUp createPowerUpImpl(final PowerUpType powerUpType) {
-        final Supplier<PowerUpEffect> supplier = powerUpEffectMap.get(powerUpType); // Get the power-Up effect
-        if (supplier == null) { // Checks if the effect is null
+        final Supplier<PowerUpEffect> effectSupplier = powerUpEffectMap.get(powerUpType); // Get the power-Up effect
+        if (effectSupplier == null) { // Checks if the effect is null
             throw new IllegalArgumentException("Unknown power-up effect for: " + powerUpType);
         }
-        return new PowerUpImpl(powerUpType, supplier.get());
+        return new PowerUpImpl(powerUpType, effectSupplier.get());
     }
 
     /**
