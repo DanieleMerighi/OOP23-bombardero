@@ -1,11 +1,9 @@
 package it.unibo.bombardero.view;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -81,12 +79,11 @@ public final class GameCard extends GamePlayCard {
     @Override
     public void paintComponent(final Graphics g) {
         super.paintComponent(g);
-        final Graphics2D g2d = (Graphics2D) g;
         final int fontYOffset = (int) (g.getFontMetrics(clockFont).getAscent() / 2);
         final SimpleDateFormat timerFormatter = new SimpleDateFormat(TIMER_FORMAT   );
-        g2d.setFont(clockFont.deriveFont(Font.PLAIN, 16));
-        g2d.drawString(timerFormatter.format(timeLeft), timerPosition.width, timerPosition.height + fontYOffset);
-        g2d.drawImage(clockImage, imageClockPosition.width, imageClockPosition.height, null);
+        g.setFont(clockFont.deriveFont(Font.PLAIN, 16));
+        g.drawString(timerFormatter.format(timeLeft), timerPosition.width, timerPosition.height + fontYOffset);
+        g.drawImage(clockImage, imageClockPosition.width, imageClockPosition.height, null);
     }
     
     /**
