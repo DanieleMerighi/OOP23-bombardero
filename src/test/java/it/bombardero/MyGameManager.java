@@ -122,14 +122,6 @@ public class MyGameManager implements GameManager {
     }
 
     /**
-     * Ends the game.
-     */
-    @Override
-    public void endGame() {
-        throw new UnsupportedOperationException("Unimplemented method 'endGame'");
-    }
-
-    /**
      * Gets the list of enemies.
      *
      * @return the list of enemies

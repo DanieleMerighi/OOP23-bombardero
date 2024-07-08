@@ -13,6 +13,7 @@ import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.view.BombarderoViewMessages;
+import it.unibo.bombardero.view.api.GraphicsEngine.EndGameState;
 
 import java.util.Arrays;
 
@@ -46,19 +47,27 @@ public final class ControllerForTesting implements Controller {
         throw new UnsupportedOperationException("Unimplemented method 'endGuide'");
     }
 
+        @Override
+    public void displayEndScreen(EndGameState endGameState) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'displayEndScreen'");
+    }
+
     @Override
-    public void displayEndGuide() {
-        throw new UnsupportedOperationException("Unimplemented method 'displayEndGuide'");
+    public void updateGame(long elapsed) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateGame'");
+    }
+
+    @Override
+    public void updateGraphics(long elapsed) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateGraphics'");
     }
 
     @Override
     public void escape() {
         this.escapeCalled = true;
-    }
-
-    @Override
-    public void update(final long elapsed) {
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
 
     @Override
