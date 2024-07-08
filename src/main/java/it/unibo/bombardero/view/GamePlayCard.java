@@ -103,7 +103,7 @@ public abstract class GamePlayCard extends JPanel {
     /* Pause state buttons: */
     private final JButton resumeButton;
     private final JButton quitButton;
-    private float darkenValue = 0.0f;
+    private float darkenValue;
 
     /**
      * Creates a new GamePlayCard creating all the sprites needed and setting the initial state 
@@ -372,7 +372,7 @@ public abstract class GamePlayCard extends JPanel {
         charactersImages.entrySet().forEach(character -> {
             character.getValue().sprite.update();
             OrientedSprite sprite = character.getValue().sprite();
-            Image image = character.getValue().displayedImage();
+            Image image;
             if (character.getKey().isStationary()) {
                 image = character.getValue().sprite().getStandingImage();
             } else if (
