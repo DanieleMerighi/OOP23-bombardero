@@ -44,7 +44,7 @@ public interface MapGenerator {
      * @return a list of positions, the first position being the first wall to collapse.
      * @see MatrixTraversalStrategy
      */
-    List<GenPair<Integer, Integer>> generateCollapseOrder(MatrixTraversalStrategy collpaseStrategy);
+    List<GenPair<Integer, Integer>> generateCollapseOrder(MatrixTraversalStrategy collapseStrategy);
 
 
 }
