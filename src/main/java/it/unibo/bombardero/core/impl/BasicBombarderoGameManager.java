@@ -32,8 +32,7 @@ public class BasicBombarderoGameManager implements GameManager {
     /**
      * The total length in time of one match: 2 minutes. 
      */
-    public static final long TOTAL_GAME_TIME = 20_000L;
-    public static final long GAME_OVER_TIME = 0L;
+    public static final long TOTAL_GAME_TIME = 120_000L;
 
     private final GameMap map;
     private final Map<Bomb, Character> bombs = new HashMap<>();
@@ -53,6 +52,7 @@ public class BasicBombarderoGameManager implements GameManager {
      * @param playerSpawnPoint  the main player's spawnpoint
      * @param enemiesSpawnpoint a list of the enemies spawnpoints
      * @param generateWalls     wether the breakable walls have to be generated or not
+     * @param cEngine the collision engine linked to this instance of the game.
      */
     public BasicBombarderoGameManager(
             final Controller controller,
@@ -90,7 +90,7 @@ public class BasicBombarderoGameManager implements GameManager {
         updateMap();
         if (!players.stream().allMatch(Character::isAlive)) {
             controller.displayEndScreen(EndGameState.LOSE);
-        } else if ( !enemies.stream().allMatch(Character::isAlive)) {
+        } else if (!enemies.stream().allMatch(Character::isAlive)) {
             controller.displayEndScreen(EndGameState.WIN);
         }
     }
@@ -120,14 +120,30 @@ public class BasicBombarderoGameManager implements GameManager {
         return Optional.empty();
     }
 
+    /**
+     * Adds a new Character to the game's enemies, this characters
+     * have to be headless or AI.
+     * <p> 
+     * Note: An "enemy" is intended to be everything not controlled
+     * by a human.
+     * @param enemy the enemy to be added. 
+     */
     protected final void addEnemy(final Character enemy) {
         this.enemies.add(enemy);
     }
 
+    /** 
+     * Returns the {@link BombFactory} of the current instance of
+     * the game.
+     * @return the bombs factory.
+     */
     protected final BombFactory getBombFactory() {
         return this.bombFactory;
     }
 
+    /**
+     * Triggers the collapse of the game map.
+     */
     protected final void triggetCollapse() {
         map.triggerCollapse();
     }
