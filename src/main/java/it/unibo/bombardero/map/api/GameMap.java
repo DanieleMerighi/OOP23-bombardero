@@ -23,6 +23,10 @@ public interface GameMap {
      * The final coordinate for the cells.
      */
     int MAX_NUM_CELL = 12;
+
+    /**
+     * The speed at wich each wall collapses, expressed in game ticks.
+     */
     int COLLAPSE_RATE = 5;
 
     /**
