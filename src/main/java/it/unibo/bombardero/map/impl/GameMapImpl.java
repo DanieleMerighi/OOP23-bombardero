@@ -42,7 +42,7 @@ public final class GameMapImpl implements GameMap {
         this.mapGenerator = new MapGeneratorImpl();
         placeUnbreakableWalls();
         placeBreakableWalls();
-        collapseOrder = mapGenerator.generateCollapseOrder();
+        collapseOrder = mapGenerator.generateCollapseOrder(new SideToSideTraversalStrategy());
     }
 
     /**
@@ -56,7 +56,7 @@ public final class GameMapImpl implements GameMap {
         if (wallGeneration) {
             placeBreakableWalls();
         }
-        collapseOrder = mapGenerator.generateCollapseOrder();
+        collapseOrder = mapGenerator.generateCollapseOrder(new SideToSideTraversalStrategy());
     }
 
     /**
@@ -67,7 +67,7 @@ public final class GameMapImpl implements GameMap {
     public GameMapImpl(final Map<GenPair<Integer, Integer>, Cell> map) {
         this.map.putAll(map);
         this.mapGenerator = new MapGeneratorImpl();
-        collapseOrder = mapGenerator.generateCollapseOrder();
+        collapseOrder = mapGenerator.generateCollapseOrder(new SpiralTraversalStrategy());
     }
 
     @Override
