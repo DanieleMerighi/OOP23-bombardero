@@ -289,8 +289,8 @@ public final class ResizingEngine {
 
     private Dimension initButtonSize() {
         return new Dimension(
-                (int) Math.floor(BUTTON_WIDTH / 2),
-                (int) Math.floor(BUTTON_HEIGHT / 2));
+                (int) Math.floorDiv(BUTTON_WIDTH, 2),
+                (int) Math.floorDiv(BUTTON_HEIGHT, 2));
     }
 
     private Dimension initLogoSize() {
