@@ -19,6 +19,7 @@ import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.physics.api.CollisionEngine;
+import it.unibo.bombardero.view.api.GraphicsEngine.EndGameState;
 
 /**
  * This class implements the concepts expressed in the
@@ -31,7 +32,7 @@ public class BasicBombarderoGameManager implements GameManager {
     /**
      * The total length in time of one match: 2 minutes. 
      */
-    public static final long TOTAL_GAME_TIME = 120_000L;
+    public static final long TOTAL_GAME_TIME = 20_000L;
     public static final long GAME_OVER_TIME = 0L;
 
     private final GameMap map;
@@ -88,11 +89,12 @@ public class BasicBombarderoGameManager implements GameManager {
         updateEnemies(elapsed);
         updateBombs(elapsed);
         updateFlames(elapsed);
-    }
-
-    @Override
-    public final void endGame() {
-        controller.endGame();
+        updateMap();
+        if (!player.isAlive()) {
+            controller.displayEndScreen(EndGameState.LOSE);
+        } else if ( !enemies.stream().allMatch(Character::isAlive)) {
+            controller.displayEndScreen(EndGameState.WIN);
+        }
     }
 
     @Override
@@ -124,8 +126,12 @@ public class BasicBombarderoGameManager implements GameManager {
         this.enemies.add(enemy);
     }
 
-    protected BombFactory getBombFactory() {
+    protected final BombFactory getBombFactory() {
         return this.bombFactory;
+    }
+
+    protected final void triggetCollapse() {
+        map.triggerCollapse();
     }
 
     private void updateFlames(final long elapsed) {
@@ -163,6 +169,10 @@ public class BasicBombarderoGameManager implements GameManager {
             ce.checkCharacterCollision(player, map);
             ce.checkFlameAndPowerUpCollision(player, map);
         }
+    }
+
+    private void updateMap() {
+        map.update();
     }
 
     private void addCharacterBombsToMap(final Character character) {
