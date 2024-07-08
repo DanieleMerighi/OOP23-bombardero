@@ -29,11 +29,6 @@ public interface GameManager {
     void updateGame(long elapsed, Controller controller);
 
     /** 
-     * Ends the game.
-     */
-    void endGame();
-
-    /** 
      * Returns a list of the enemies in the current game instance.
      * @return a list of {@link @Character} representing the game's enemies. 
      */
