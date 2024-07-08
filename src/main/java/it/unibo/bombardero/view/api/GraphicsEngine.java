@@ -25,7 +25,7 @@ public interface GraphicsEngine {
          * The game.
          */
         GAME("game"),
-  
+
         /**
          * The main menu.
          */
