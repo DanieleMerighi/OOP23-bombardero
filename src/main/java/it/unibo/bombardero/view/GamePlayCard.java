@@ -164,6 +164,8 @@ public abstract class GamePlayCard extends JPanel {
         quitButton.setFocusPainted(false);
         quitButton.setPressedIcon(new ImageIcon(quitButtonPressedImage));
         resumeButton.setPressedIcon(new ImageIcon(resumeButtonPressedImage));
+        resumeButton.setFocusable(false);
+        quitButton.setFocusable(false);
 
         this.add(new JLabel());
         this.setLayout(new GridLayout(LAYOUT_ROWS, LAYOUT_COLS));

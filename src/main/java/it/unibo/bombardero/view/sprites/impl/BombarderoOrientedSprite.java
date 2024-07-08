@@ -68,7 +68,11 @@ public final class BombarderoOrientedSprite extends SimpleBombarderoSprite imple
 
     @Override
     public Image getStandingImage() {
-        return standingAsset;
+        return standingAsset.getScaledInstance(
+            standingAsset.getWidth(null),
+            standingAsset.getHeight(null),
+            Image.SCALE_DEFAULT
+        );
     }
 
     @Override

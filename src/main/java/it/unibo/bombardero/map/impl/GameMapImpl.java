@@ -59,6 +59,17 @@ public final class GameMapImpl implements GameMap {
         collapseOrder = mapGenerator.generateCollapseOrder();
     }
 
+    /**
+     * Creates a new GameMap from the map passed as argument, therefore
+     * it does not generate any walls. The collapse order is generated anyway.
+     * @param map the map representing the game map.
+     */
+    public GameMapImpl(final Map<GenPair<Integer, Integer>, Cell> map) {
+        this.map.putAll(map);
+        this.mapGenerator = new MapGeneratorImpl();
+        collapseOrder = mapGenerator.generateCollapseOrder();
+    }
+
     @Override
     public void update() {
         if (collapseStarted && !collapseOrder.isEmpty()) {
@@ -166,6 +177,11 @@ public final class GameMapImpl implements GameMap {
     @Override
     public Map<GenPair<Integer, Integer>, Cell> getMap() {
         return Map.copyOf(this.map);
+    }
+
+    @Override
+    public GameMap getCopiedGameMap() {
+        return new GameMapImpl(this.map);
     }
 
     @Override
