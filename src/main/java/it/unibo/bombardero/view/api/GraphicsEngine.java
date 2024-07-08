@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.swing.JFrame;
-
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.map.api.GenPair;
