@@ -3,6 +3,7 @@ package it.unibo.bombardero.guide.impl;
 import java.util.Stack;
 import java.util.List;
 
+import it.unibo.bombardero.bomb.api.BombFactory;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
@@ -12,6 +13,7 @@ import it.unibo.bombardero.guide.api.GuideStep;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.view.BombarderoViewMessages;
+import it.unibo.bombardero.view.api.GraphicsEngine.EndGameState;
 
 /**
  * This class represents a single instance of the game's guide
@@ -35,6 +37,7 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
      * The spawnpoints are represented by the fields {@link #PLAYER_GUIDE_SPAWNPOINT} 
      * and {@link #CRATE_GUIDE_SPAWNPOINT}
      * @param controller the reference to the game's {@link Controller}.
+     * @param cEngine the collision engine related to this instance of the game.
      */
     public BombarderoGuideManager(final Controller controller, final CollisionEngine cEngine) {
         super(controller, GuideManager.PLAYER_GUIDE_SPAWNPOINT, List.of(), false, cEngine);
@@ -52,7 +55,7 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
 
     @Override
     public void spawnDummy() {
-        addEnemy(new Dummy(DUMMY_GUIDE_SPAWNPOINT));
+        addEnemy(new BombarderoGuideManager.Dummy(DUMMY_GUIDE_SPAWNPOINT, getBombFactory()));
     }
 
     private void initialiseProcedures() {
@@ -60,7 +63,7 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
             (map, manager) -> manager.getEnemies().stream().allMatch(enemy -> !enemy.isAlive()),
             (manager, controller) -> {
                 controller.toggleMessage(BombarderoViewMessages.END_GUIDE);
-                controller.displayEndGuide();
+                controller.displayEndScreen(EndGameState.LOSE);
             }
         ));
         guideProcedures.add(new GuideStep(
@@ -87,14 +90,15 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
      * It's sole purporse is to be the target of the player during the guide.
      * @author Federico Bagattoni
      */
-    private final class Dummy extends Character {
+    private static class Dummy extends Character {
 
         /**
          * Creates a new dummy at the passed coordinate.
          * @param coord where to spawn the dummy
+         * @param bombFactory the {@link BombFactory} that the character will use to produce bombs
          */
-        Dummy(final GenPair<Float, Float> coord) {
-            super(coord, BombarderoGuideManager.this.getBombFactory());
+        Dummy(final GenPair<Float, Float> coord, final BombFactory bombFactory) {
+            super(coord, bombFactory);
         }
 
         @Override

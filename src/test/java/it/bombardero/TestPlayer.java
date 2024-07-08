@@ -16,8 +16,8 @@ import it.unibo.bombardero.map.api.GenPair;
 /**
  * Unit tests for the {@link Player} class.
  * <p>
- * This class contains tests to verify the behavior of the Player character, including
- * direction facing and movement mechanics.
+ * This class contains tests to verify the behavior of the Player character,
+ * including direction facing and movement mechanics.
  * </p>
  */
 class TestPlayer {
@@ -26,6 +26,8 @@ class TestPlayer {
     private static final float STARTING_COORD = 5.0f;
     private static final int STANDARD_ELAPSED_TIME = 100;
     private MyGameManager manager;
+
+    private int playerIndex;
 
     private GenPair<Float, Float> spawnCoord;
     private GenPair<Float, Float> expectedCoord;
@@ -37,9 +39,10 @@ class TestPlayer {
     @BeforeEach
     void setUp() {
         this.manager = new MyGameManager();
-        spawnCoord  = new GenPair<>(STARTING_COORD, STARTING_COORD);
-        expectedCoord = new GenPair<>(STARTING_COORD, STARTING_COORD);
-        this.manager.getPlayer().setCharacterPosition(spawnCoord);
+        this.playerIndex = 0;
+        this.spawnCoord = new GenPair<>(STARTING_COORD, STARTING_COORD);
+        this.expectedCoord = new GenPair<>(STARTING_COORD, STARTING_COORD);
+        this.manager.getPlayers().get(playerIndex).setCharacterPosition(spawnCoord);
     }
 
     /**
@@ -47,11 +50,11 @@ class TestPlayer {
      */
     @Test
     void testPlayerLookingDirections() {
-        this.manager.getPlayer().setCharacterPosition(spawnCoord);
+        this.manager.getPlayers().get(playerIndex).setCharacterPosition(spawnCoord);
         for (final Direction dir : Direction.values()) {
-            this.manager.getPlayer().setFacingDirection(dir);
-            this.manager.getPlayer().update(manager, STANDARD_ELAPSED_TIME);
-            assertEquals(dir, manager.getPlayer().getFacingDirection());
+            this.manager.getPlayers().get(playerIndex).setFacingDirection(dir);
+            this.manager.getPlayers().get(playerIndex).update(manager, STANDARD_ELAPSED_TIME);
+            assertEquals(dir, manager.getPlayers().get(playerIndex).getFacingDirection());
         }
     }
 
@@ -61,34 +64,38 @@ class TestPlayer {
     @Test
     void testPlayerMovingDirections() {
         // Setting player direction
-        this.manager.getPlayer().setFacingDirection(Direction.RIGHT);
+        this.manager.getPlayers().get(playerIndex).setFacingDirection(Direction.RIGHT);
         // Setting player to not stationary
-        this.manager.getPlayer().setStationary(false);
+        this.manager.getPlayers().get(playerIndex).setStationary(false);
         // Setting player speed
-        this.manager.getPlayer().setSpeed(Character.STARTING_SPEED);
+        this.manager.getPlayers().get(playerIndex).setSpeed(Character.STARTING_SPEED);
 
         // Setting the number of update and calling them
         final int updateNumeber = FPS; // Number of updates done
-        IntStream.range(0, updateNumeber).forEach(n -> this.manager.getPlayer().update(manager, STANDARD_ELAPSED_TIME));
+        IntStream.range(0, updateNumeber)
+                .forEach(n -> this.manager.getPlayers().get(playerIndex).update(manager, STANDARD_ELAPSED_TIME));
 
         roundPlayerCoordinateToThreeDecimal();
         // Sums the spawn coordinates with the movement done
         expectedCoord = expectedCoord.apply(Functions.sumFloat(calculateExpectedDeltaMovement(updateNumeber)));
 
-        assertEquals(expectedCoord, manager.getPlayer().getCharacterPosition());
-     }
+        assertEquals(expectedCoord, manager.getPlayers().get(playerIndex).getCharacterPosition());
+    }
 
     /**
-     * Calculates the expected delta movement of the player based on the number of updates.
+     * Calculates the expected delta movement of the player based on the number of
+     * updates.
      *
      * @param updateNumeber the number of updates
      * @return the expected delta movement as a {@link GenPair<Float, Float>}
      */
     private GenPair<Float, Float> calculateExpectedDeltaMovement(final int updateNumeber) {
         return new GenPair<Float, Float>(
-                this.manager.getPlayer().getSpeed() * this.manager.getPlayer().getFacingDirection().x()
+                this.manager.getPlayers().get(playerIndex).getSpeed()
+                        * this.manager.getPlayers().get(playerIndex).getFacingDirection().x()
                         * updateNumeber,
-                this.manager.getPlayer().getSpeed() * this.manager.getPlayer().getFacingDirection().y()
+                this.manager.getPlayers().get(playerIndex).getSpeed()
+                        * this.manager.getPlayers().get(playerIndex).getFacingDirection().y()
                         * updateNumeber);
     }
 
@@ -96,10 +103,11 @@ class TestPlayer {
      * Rounds the player's coordinates to three decimal places for comparison.
      */
     private void roundPlayerCoordinateToThreeDecimal() {
-        this.manager.getPlayer().setCharacterPosition(
-            new GenPair<Float, Float>(
-                Math.round(this.manager.getPlayer().getCharacterPosition().x() * 1000.0f) / 1000.0f,
-                Math.round(this.manager.getPlayer().getCharacterPosition().y() * 1000.0f) / 1000.0f
-            ));
+        this.manager.getPlayers().get(playerIndex).setCharacterPosition(
+                new GenPair<Float, Float>(
+                        Math.round(this.manager.getPlayers().get(playerIndex).getCharacterPosition().x() * 1000.0f)
+                                / 1000.0f,
+                        Math.round(this.manager.getPlayers().get(playerIndex).getCharacterPosition().y() * 1000.0f)
+                                / 1000.0f));
     }
 }

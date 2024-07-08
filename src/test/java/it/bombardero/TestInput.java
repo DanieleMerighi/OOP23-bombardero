@@ -24,6 +24,7 @@ class TestInput {
     private KeyboardInput keyboardInput;
     private Controller controller;
     private KeyEvent keyEvent;
+    private int playerIndex;
 
     /**
      * Sets up the test environment before each test.
@@ -31,9 +32,10 @@ class TestInput {
     @BeforeEach
     void setUp() {
         // Initialize the test controller
-        controller = new ControllerForTesting();
+        this.controller = new ControllerForTesting();
+        this.playerIndex = 0;
         // Initialize KeyboardInput with the test controller
-        this.keyboardInput = new KeyboardInput(controller);
+        this.keyboardInput = new KeyboardInput(controller, playerIndex);
     }
 
     /**
@@ -57,7 +59,7 @@ class TestInput {
         pressSpace();
 
         // Verify that the setHasToPlaceBomb method was called on the player
-        assertTrue(controller.getMainPlayer().isHasToPlaceBomb());
+        assertTrue(controller.getPlayers().get(playerIndex).isHasToPlaceBomb());
     }
 
     /**
@@ -66,14 +68,14 @@ class TestInput {
     @Test
     void testKeyTypedLineBomb() {
         // Set line bomb powerup to true
-        controller.getMainPlayer().setLineBomb(true);
+        controller.getPlayers().get(playerIndex).setLineBomb(true);
         // Simulate pressing the 'L' key (place line bomb button)
         keyEvent = new KeyEvent(new java.awt.Component() {
         }, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0, KeyEvent.VK_UNDEFINED, 'L');
         keyboardInput.keyTyped(keyEvent);
 
         // Verify that the setHasToPlaceLineBomb method was called on the player
-        assertTrue(controller.getMainPlayer().isHasToPlaceLineBomb());
+        assertTrue(controller.getPlayers().get(playerIndex).isHasToPlaceLineBomb());
     }
 
     /**
@@ -82,14 +84,14 @@ class TestInput {
     @Test
     void testKeyTypedRemoteBomb() {
         // Set type bomb to remote bomb
-        controller.getMainPlayer().setBombType(Optional.of(PowerUpType.REMOTE_BOMB));
+        controller.getPlayers().get(playerIndex).setBombType(Optional.of(PowerUpType.REMOTE_BOMB));
         // Simulate pressing the 'P' key (explode remote bomb button)
         keyEvent = new KeyEvent(new java.awt.Component() {
         }, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0, KeyEvent.VK_UNDEFINED, 'P');
         keyboardInput.keyTyped(keyEvent);
 
         // Verify that the setHasToExplodeRemoteBomb method was called on the player
-        assertTrue(controller.getMainPlayer().isHasToExplodeRemoteBomb());
+        assertTrue(controller.getPlayers().get(playerIndex).isHasToExplodeRemoteBomb());
     }
 
     /**
@@ -99,15 +101,15 @@ class TestInput {
     void testKeyW() {
         pressW();
         // Verify that the player is not stationary after pressing 'W'
-        assertFalse(controller.getMainPlayer().isStationary());
+        assertFalse(controller.getPlayers().get(playerIndex).isStationary());
         // Verify that the player is facing the UP direction
-        assertEquals(Direction.UP, controller.getMainPlayer().getFacingDirection());
+        assertEquals(Direction.UP, controller.getPlayers().get(playerIndex).getFacingDirection());
 
         releaseW();
         // Verify that the player is stationary after releasing 'W'
-        assertTrue(controller.getMainPlayer().isStationary());
+        assertTrue(controller.getPlayers().get(playerIndex).isStationary());
         // Verify that the player is still facing the UP direction
-        assertEquals(Direction.UP, controller.getMainPlayer().getFacingDirection());
+        assertEquals(Direction.UP, controller.getPlayers().get(playerIndex).getFacingDirection());
     }
 
     /**
@@ -117,15 +119,15 @@ class TestInput {
     void testKeyA() {
         pressA();
         // Verify that the player is not stationary after pressing 'A'
-        assertFalse(controller.getMainPlayer().isStationary());
+        assertFalse(controller.getPlayers().get(playerIndex).isStationary());
         // Verify that the player is facing the LEFT direction
-        assertEquals(Direction.LEFT, controller.getMainPlayer().getFacingDirection());
+        assertEquals(Direction.LEFT, controller.getPlayers().get(playerIndex).getFacingDirection());
 
         releaseA();
         // Verify that the player is stationary after releasing 'A'
-        assertTrue(controller.getMainPlayer().isStationary());
+        assertTrue(controller.getPlayers().get(playerIndex).isStationary());
         // Verify that the player is still facing the LEFT direction
-        assertEquals(Direction.LEFT, controller.getMainPlayer().getFacingDirection());
+        assertEquals(Direction.LEFT, controller.getPlayers().get(playerIndex).getFacingDirection());
     }
 
     /**
@@ -135,15 +137,15 @@ class TestInput {
     void testKeyS() {
         pressS();
         // Verify that the player is not stationary after pressing 'S'
-        assertFalse(controller.getMainPlayer().isStationary());
+        assertFalse(controller.getPlayers().get(playerIndex).isStationary());
         // Verify that the player is facing the DOWN direction
-        assertEquals(Direction.DOWN, controller.getMainPlayer().getFacingDirection());
+        assertEquals(Direction.DOWN, controller.getPlayers().get(playerIndex).getFacingDirection());
 
         releaseS();
         // Verify that the player is stationary after releasing 'S'
-        assertTrue(controller.getMainPlayer().isStationary());
+        assertTrue(controller.getPlayers().get(playerIndex).isStationary());
         // Verify that the player is still facing the DOWN direction
-        assertEquals(Direction.DOWN, controller.getMainPlayer().getFacingDirection());
+        assertEquals(Direction.DOWN, controller.getPlayers().get(playerIndex).getFacingDirection());
     }
 
     /**
@@ -153,15 +155,15 @@ class TestInput {
     void testKeyD() {
         pressD();
         // Verify that the player is not stationary after pressing 'D'
-        assertFalse(controller.getMainPlayer().isStationary());
+        assertFalse(controller.getPlayers().get(playerIndex).isStationary());
         // Verify that the player is facing the RIGHT direction
-        assertEquals(Direction.RIGHT, controller.getMainPlayer().getFacingDirection());
+        assertEquals(Direction.RIGHT, controller.getPlayers().get(playerIndex).getFacingDirection());
 
         releaseD();
         // Verify that the player is stationary after releasing 'D'
-        assertTrue(controller.getMainPlayer().isStationary());
+        assertTrue(controller.getPlayers().get(playerIndex).isStationary());
         // Verify that the player is still facing the RIGHT direction
-        assertEquals(Direction.RIGHT, controller.getMainPlayer().getFacingDirection());
+        assertEquals(Direction.RIGHT, controller.getPlayers().get(playerIndex).getFacingDirection());
     }
 
     /**
@@ -172,21 +174,21 @@ class TestInput {
         pressW();
         pressA();
         // Verify that the player is not stationary
-        assertFalse(controller.getMainPlayer().isStationary());
+        assertFalse(controller.getPlayers().get(playerIndex).isStationary());
         // Verify that the player is facing the LEFT direction
-        assertEquals(Direction.LEFT, controller.getMainPlayer().getFacingDirection());
+        assertEquals(Direction.LEFT, controller.getPlayers().get(playerIndex).getFacingDirection());
 
         releaseA();
         // Verify that the player is not stationary
-        assertFalse(controller.getMainPlayer().isStationary());
+        assertFalse(controller.getPlayers().get(playerIndex).isStationary());
         // Verify that the player is facing the UP direction
-        assertEquals(Direction.UP, controller.getMainPlayer().getFacingDirection());
+        assertEquals(Direction.UP, controller.getPlayers().get(playerIndex).getFacingDirection());
 
         releaseW();
         // Verify that the player is stationary
-        assertTrue(controller.getMainPlayer().isStationary());
+        assertTrue(controller.getPlayers().get(playerIndex).isStationary());
         // Verify that the player is still facing the UP direction
-        assertEquals(Direction.UP, controller.getMainPlayer().getFacingDirection());
+        assertEquals(Direction.UP, controller.getPlayers().get(playerIndex).getFacingDirection());
     }
 
     /**
@@ -197,11 +199,11 @@ class TestInput {
         pressW();
         pressSpace();
         // Verify that the player is not stationary
-        assertFalse(controller.getMainPlayer().isStationary());
+        assertFalse(controller.getPlayers().get(playerIndex).isStationary());
         // Verify that the player is facing the UP direction
-        assertEquals(Direction.UP, controller.getMainPlayer().getFacingDirection());
+        assertEquals(Direction.UP, controller.getPlayers().get(playerIndex).getFacingDirection());
         // Verify that the setHasToPlaceBomb method was called on the player
-        assertTrue(controller.getMainPlayer().isHasToPlaceBomb());
+        assertTrue(controller.getPlayers().get(playerIndex).isHasToPlaceBomb());
     }
 
     /**

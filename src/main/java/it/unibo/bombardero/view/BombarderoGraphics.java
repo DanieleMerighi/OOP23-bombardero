@@ -1,14 +1,11 @@
 package it.unibo.bombardero.view;
 
 import java.awt.CardLayout;
-import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.awt.Image;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -52,9 +49,9 @@ public final class BombarderoGraphics implements GraphicsEngine {
 
         frame.pack(); // calling pack on the frame generates the insets
 
-        frame.addKeyListener(new KeyboardInput(controller));
+        frame.addKeyListener(new KeyboardInput(controller, 0));
 
-        resizingEngine = new ResizingEngine(this);
+        resizingEngine = new ResizingEngine(this, frame.getInsets());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(resizingEngine.getGameWindowSize(frame));
         frame.setResizable(false);
@@ -76,7 +73,7 @@ public final class BombarderoGraphics implements GraphicsEngine {
         layout.addLayoutComponent(gameCard, ViewCards.GAME.getStringId());
         cardsMap.put(ViewCards.GAME, gameCard);
         deck.validate();
-        
+ 
         frame.add(deck);
         showGameScreen(ViewCards.MENU);
         frame.setVisible(true);
@@ -96,16 +93,8 @@ public final class BombarderoGraphics implements GraphicsEngine {
         final List<Character> enemiesList,
         final Optional<Long> timeLeft) {
         cardsMap.get(currentCard).update(map, playerList, enemiesList);
-        cardsMap.get(currentCard).setTimeLeft(timeLeft.orElse(0l));
-        cardsMap.get(currentCard).repaint(0);
-    }
-
-    public Dimension getFrameSize() {
-        final Dimension dim = frame.getSize();
-        return new Dimension(
-            dim.width - frame.getInsets().right - frame.getInsets().left,
-            dim.height - frame.getInsets().top - frame.getInsets().bottom
-        );
+        cardsMap.get(currentCard).setTimeLeft(timeLeft.orElse(0L));
+        cardsMap.get(currentCard).repaint(0L);
     }
 
     @Override
@@ -123,13 +112,9 @@ public final class BombarderoGraphics implements GraphicsEngine {
         cardsMap.get(currentCard).showMessage(message);
     }
 
-    public void displayEndGuide() {
-        cardsMap.get(currentCard).displayEndView();
-    }
-
     @Override
     public void showEndScreen(final EndGameState gameState) {
-        
+        cardsMap.get(currentCard).displayEndView(gameState);
     }
 
     @Override
@@ -142,8 +127,4 @@ public final class BombarderoGraphics implements GraphicsEngine {
         return this.resourceGetter;
     }
 
-    @Override
-    public JFrame getParentFrame() {
-        return this.frame;
-    }
 }

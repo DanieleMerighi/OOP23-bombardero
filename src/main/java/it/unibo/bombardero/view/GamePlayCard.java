@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -14,10 +13,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.swing.JPanel;
-
-import com.fasterxml.jackson.core.util.DefaultIndenter;
-
-import javax.swing.JLayeredPane;
 import javax.swing.JButton;
 import java.awt.GridLayout;
 import javax.swing.JLabel;
@@ -41,7 +36,7 @@ import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.core.api.Controller;
 
-/*
+/**
  * This class will never be serialised.
  */
 @SuppressWarnings("serial")
@@ -87,11 +82,10 @@ public abstract class GamePlayCard extends JPanel {
     private transient Image skatesPlusOne = resourceGetter.loadImage("powerup/skates_plus_one");
     private transient Image skateMinusOne = resourceGetter.loadImage("powerup/skates_minus_one");
     private transient Image skull = resourceGetter.loadImage("powerup/skull");
-    private transient Image pausePanelImage = resourceGetter.loadImage("overlay/victory-panel");
 
     /* References to model components: */
-    private final transient GraphicsEngine graphics;
-    private transient Map<GenPair <Integer, Integer>, Cell> cells;
+    private final transient ResizingEngine resizingEngine;
+    private transient Map<GenPair<Integer, Integer>, Cell> cells;
     private transient List<Character> playersList;
     private final transient Map<Character, SpriteImageCombo> charactersImages = new HashMap<>();
     private transient List<Character> enemiesList;
@@ -109,7 +103,6 @@ public abstract class GamePlayCard extends JPanel {
     /* Pause state buttons: */
     private final JButton resumeButton;
     private final JButton quitButton;
-    private boolean isGamePaused = false;
     private float darkenValue = 0.0f;
 
     /**
@@ -119,15 +112,16 @@ public abstract class GamePlayCard extends JPanel {
      * @param map the game map initally rendered by this class
      * @param playersList the players initally rendered by this class
      * @param enemies the enemies initally rendered by this class
+     * @param controller the game's controller
      */
     public GamePlayCard(
         final Controller controller,
         final GraphicsEngine graphics,
-        final Map<GenPair <Integer, Integer>, Cell> map,
+        final Map<GenPair<Integer, Integer>, Cell> map,
         final List<Character> playersList,
         final List<Character> enemies
         ) {
-        this.graphics = graphics;
+        this.resizingEngine = graphics.getResizingEngine().getNewEngine(graphics);
         this.setMinimumSize(graphics.getResizingEngine().getMapSize());
         this.setLayout(new BorderLayout());
 
@@ -192,15 +186,14 @@ public abstract class GamePlayCard extends JPanel {
      */
     @Override
     public void paintComponent(final Graphics g) {
-        final Graphics2D g2d = (Graphics2D) g;
         /* Drawing the Map and the Background */
         // CHECKSTYLE: MagicNumber OFF
-        g2d.drawImage(
+        g.drawImage(
             grassBackgroundImage,
             0, 0,
             null);
         // CHECKSTYLE: MagicNumber ON
-        g2d.drawImage(
+        g.drawImage(
             mapImage,
             mapPlacingPoint.width,
             mapPlacingPoint.height,
@@ -217,7 +210,7 @@ public abstract class GamePlayCard extends JPanel {
             .filter(position -> cells.containsKey(position))
             .forEach(position -> {
                 Image img = unbreakable;
-                Dimension placingPoint = graphics.getResizingEngine().getCellPlacingPoint(position);
+                Dimension placingPoint = resizingEngine.getCellPlacingPoint(position);
                 final Cell currentCell = cells.get(position);
                 switch (currentCell.getCellType()) {
                     case WALL_BREAKABLE:
@@ -228,7 +221,7 @@ public abstract class GamePlayCard extends JPanel {
                         break;
                     case BOMB: 
                         img = bombImage;
-                        placingPoint = graphics.getResizingEngine().getBombPlacingPoint(position);
+                        placingPoint = resizingEngine.getBombPlacingPoint(position);
                         break;
                     case POWERUP:
                         final PowerUp pu = (PowerUp) currentCell;
@@ -256,7 +249,7 @@ public abstract class GamePlayCard extends JPanel {
                         img = unbreakable;
                         break;
                 }
-                g2d.drawImage(
+                g.drawImage(
                     img,
                     placingPoint.width,
                     placingPoint.height,
@@ -265,19 +258,19 @@ public abstract class GamePlayCard extends JPanel {
         });
         /* Drawing the player and the enemies */
         charactersImages.entrySet().forEach(enemy -> {
-            final Dimension enemyPos = graphics.getResizingEngine().getCharacterPlacingPoint(enemy.getKey().getCharacterPosition());
-            g2d.drawImage(enemy.getValue().displayedImage(), enemyPos.width, enemyPos.height, null);
+            final Dimension enemyPos = resizingEngine.getCharacterPlacingPoint(enemy.getKey().getCharacterPosition());
+            g.drawImage(enemy.getValue().displayedImage(), enemyPos.width, enemyPos.height, null);
         });
         dyingCharactersMap.entrySet().forEach(entry -> {
-            final Dimension pos = graphics.getResizingEngine().getCharacterPlacingPoint(entry.getKey().getCharacterPosition());
-            g2d.drawImage(
+            final Dimension pos = resizingEngine.getCharacterPlacingPoint(entry.getKey().getCharacterPosition());
+            g.drawImage(
                 entry.getValue().getImage(),
                 pos.width, pos.height,
                 null
             );
         });
-        g2d.setColor(new Color(0, 0, 0, darkenValue));
-        g2d.fillRect(0, 0, getSize().width, getSize().height);
+        g.setColor(new Color(0, 0, 0, darkenValue));
+        g.fillRect(0, 0, getSize().width, getSize().height);
     }
 
     /**
@@ -287,7 +280,11 @@ public abstract class GamePlayCard extends JPanel {
      * @param playersList the list of players present in the game
      * @param enemiesList the list of enemies present in the game
      */
-    public void update(final Map<GenPair<Integer, Integer>, Cell> map, final List<Character> playersList, final List<Character> enemiesList) {
+    public void update(
+        final Map<GenPair<Integer, Integer>, Cell> map,
+        final List<Character> playersList,
+        final List<Character> enemiesList
+        ) {
         updateGameState(map, playersList, enemiesList);
         updateSprites();
         repaint(0);
@@ -299,7 +296,6 @@ public abstract class GamePlayCard extends JPanel {
      */
     public final void setPausedView() {
         darkenView(PAUSE_DARKEN_ALPHA);
-        isGamePaused = true;
         this.add(resumeButton);
         this.add(quitButton);
         this.revalidate();
@@ -312,7 +308,6 @@ public abstract class GamePlayCard extends JPanel {
      */
     public final void setUnpausedView() {
         darkenView(0.0f);
-        isGamePaused = false;
         this.remove(resumeButton);
         this.remove(quitButton);
         this.revalidate();
@@ -402,22 +397,22 @@ public abstract class GamePlayCard extends JPanel {
 
 
     private void scaleEverything() {
-        mapImage = graphics.getResizingEngine().getScaledMapImage(mapImage);
-        grassBackgroundImage = graphics.getResizingEngine().getScaledBackgroundImage(grassBackgroundImage);
-        unbreakable = graphics.getResizingEngine().getScaledCellImage(unbreakable);
-        obstacle = graphics.getResizingEngine().getScaledCellImage(obstacle);
-        bombLine = graphics.getResizingEngine().getScaledCellImage(bombLine);
-        bombPlusOne = graphics.getResizingEngine().getScaledCellImage(bombPlusOne);
-        bombMinusOne = graphics.getResizingEngine().getScaledCellImage(bombMinusOne);
-        bombPower = graphics.getResizingEngine().getScaledCellImage(bombPower);
-        bombRemote = graphics.getResizingEngine().getScaledCellImage(bombRemote);
-        bombPierce = graphics.getResizingEngine().getScaledCellImage(bombPierce);
-        fireMax = graphics.getResizingEngine().getScaledCellImage(fireMax);
-        firePlusOne = graphics.getResizingEngine().getScaledCellImage(firePlusOne);
-        fireMinusOne = graphics.getResizingEngine().getScaledCellImage(fireMinusOne);
-        skatesPlusOne = graphics.getResizingEngine().getScaledCellImage(skatesPlusOne);
-        skateMinusOne = graphics.getResizingEngine().getScaledCellImage(skateMinusOne);
-        skull = graphics.getResizingEngine().getScaledCellImage(skull);
+        mapImage = resizingEngine.getScaledMapImage(mapImage);
+        grassBackgroundImage = resizingEngine.getScaledBackgroundImage(grassBackgroundImage);
+        unbreakable = resizingEngine.getScaledCellImage(unbreakable);
+        obstacle = resizingEngine.getScaledCellImage(obstacle);
+        bombLine = resizingEngine.getScaledCellImage(bombLine);
+        bombPlusOne = resizingEngine.getScaledCellImage(bombPlusOne);
+        bombMinusOne = resizingEngine.getScaledCellImage(bombMinusOne);
+        bombPower = resizingEngine.getScaledCellImage(bombPower);
+        bombRemote = resizingEngine.getScaledCellImage(bombRemote);
+        bombPierce = resizingEngine.getScaledCellImage(bombPierce);
+        fireMax = resizingEngine.getScaledCellImage(fireMax);
+        firePlusOne = resizingEngine.getScaledCellImage(firePlusOne);
+        fireMinusOne = resizingEngine.getScaledCellImage(fireMinusOne);
+        skatesPlusOne = resizingEngine.getScaledCellImage(skatesPlusOne);
+        skateMinusOne = resizingEngine.getScaledCellImage(skateMinusOne);
+        skull = resizingEngine.getScaledCellImage(skull);
     }
 
     private void checkForNewCharacters() {
@@ -430,7 +425,7 @@ public abstract class GamePlayCard extends JPanel {
                     "character/" + colorCode + "/walking",
                     resourceGetter,
                     Direction.DOWN,
-                    graphics.getResizingEngine()::getScaledCharacterImage
+                    resizingEngine::getScaledCharacterImage
                 );
                 charactersImages.put(
                     enemy,
@@ -449,7 +444,7 @@ public abstract class GamePlayCard extends JPanel {
                     "character/main/walking",
                     resourceGetter, 
                     Direction.DOWN,
-                    graphics.getResizingEngine()::getScaledCharacterImage
+                    resizingEngine::getScaledCharacterImage
                 );
                 charactersImages.put(
                     player,
@@ -476,7 +471,7 @@ public abstract class GamePlayCard extends JPanel {
                     "dying",
                     "character/" + entry.getValue().colorCode() + "/dying",
                     resourceGetter,
-                    graphics.getResizingEngine()::getScaledCharacterImage,
+                    resizingEngine::getScaledCharacterImage,
                     4
                 );
                 dyingCharactersMap.put(

@@ -27,10 +27,10 @@ import it.unibo.bombardero.character.Character.CharacterType;
  */
 class TestPowerUp {
 
-    private static final int FPS = 60;
     private static final int STANDARD_ELAPSED_TIME = 100;
     private static final long SECONDS_TO_MILLISECONDS = 1000;
     private MyGameManager manager;
+    private int playerIndex;
     private final PowerUpFactory factory = new PowerUpFactoryImpl();
     private PowerUp powerUP;
 
@@ -41,6 +41,7 @@ class TestPowerUp {
     @BeforeEach
     void setUp() {
         this.manager = new MyGameManager();
+        this.playerIndex = 0;
     }
 
     /**
@@ -52,11 +53,11 @@ class TestPowerUp {
             .forEach(n -> {
                 this.manager = new MyGameManager(); // Reset character
                 powerUP = factory.createPowerUp();
-                powerUP.applyEffect(this.manager.getPlayer());
+                powerUP.applyEffect(this.manager.getPlayers().get(playerIndex));
         });
-        if (this.manager.getPlayer().getResetEffect().isPresent()) {
-            while (this.manager.getPlayer().getSkullEffectDuration() > 0) {
-                this.manager.getPlayer().updateSkull(manager, STANDARD_ELAPSED_TIME, CharacterType.PLAYER);
+        if (this.manager.getPlayers().get(playerIndex).getResetEffect().isPresent()) {
+            while (this.manager.getPlayers().get(playerIndex).getSkullEffectDuration() > 0) {
+                this.manager.getPlayers().get(playerIndex).updateSkull(manager, STANDARD_ELAPSED_TIME, CharacterType.PLAYER);
             }
         }
     }
@@ -69,22 +70,22 @@ class TestPowerUp {
         // Create skull powerup
         powerUP = new PowerUpImpl(PowerUpType.SKULL, new SkullEffect());
         // Apply skull effect to the player
-        powerUP.applyEffect(this.manager.getPlayer());
+        powerUP.applyEffect(this.manager.getPlayers().get(playerIndex));
 
         assertEquals(SkullEffect.EFFECT_DURATION_IN_SECONDS * SECONDS_TO_MILLISECONDS,
-            this.manager.getPlayer().getSkullEffectDuration());
-        assertTrue(this.manager.getPlayer().getResetEffect().isPresent());
+            this.manager.getPlayers().get(playerIndex).getSkullEffectDuration());
+        assertTrue(this.manager.getPlayers().get(playerIndex).getResetEffect().isPresent());
 
-        while (this.manager.getPlayer().getSkullEffectDuration() > 0) {
-            this.manager.getPlayer().updateSkull(manager, STANDARD_ELAPSED_TIME, CharacterType.PLAYER);
+        while (this.manager.getPlayers().get(playerIndex).getSkullEffectDuration() > 0) {
+            this.manager.getPlayers().get(playerIndex).updateSkull(manager, STANDARD_ELAPSED_TIME, CharacterType.PLAYER);
         }
 
         // Asserts the skull duration is 0
-        assertEquals(0L, this.manager.getPlayer().getSkullEffectDuration());
+        assertEquals(0L, this.manager.getPlayers().get(playerIndex).getSkullEffectDuration());
         // Asserts there is no Reset effect to run
-        assertEquals(Optional.empty(), this.manager.getPlayer().getResetEffect());
+        assertEquals(Optional.empty(), this.manager.getPlayers().get(playerIndex).getResetEffect());
         // Asserts the initial stats are resetted
-        assertEquals(Character.STARTING_SPEED, this.manager.getPlayer().getSpeed());
-        assertEquals(Character.STARTING_FLAME_RANGE, this.manager.getPlayer().getFlameRange());
+        assertEquals(Character.STARTING_SPEED, this.manager.getPlayers().get(playerIndex).getSpeed());
+        assertEquals(Character.STARTING_FLAME_RANGE, this.manager.getPlayers().get(playerIndex).getFlameRange());
     }
 }

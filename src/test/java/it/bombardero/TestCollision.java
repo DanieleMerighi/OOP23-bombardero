@@ -33,7 +33,7 @@ class TestCollision {
     @BeforeEach
     void init() {
         mgr = new MyGameManager();
-        character = mgr.getPlayer();
+        character = mgr.getPlayers().get(0);
         gMap = mgr.getGameMap();
         cEngine = mgr.getCollisionEngine();
     }

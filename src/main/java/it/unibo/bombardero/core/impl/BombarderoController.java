@@ -14,6 +14,8 @@ import it.unibo.bombardero.physics.impl.CollisionHandlerImpl;
 import it.unibo.bombardero.view.BombarderoGraphics;
 import it.unibo.bombardero.view.BombarderoViewMessages;
 import it.unibo.bombardero.view.api.GraphicsEngine;
+import it.unibo.bombardero.view.api.GraphicsEngine.EndGameState;
+import it.unibo.bombardero.view.api.GraphicsEngine.ViewCards;
 import it.unibo.bombardero.character.Character;
 
 /**
@@ -31,9 +33,13 @@ public final class BombarderoController implements Controller {
 
     private boolean isGamePaused = true;
     private boolean isGameStarted = false;
+    private boolean isGameOver = false;
 
     /**
-     * TODO
+     * Creates a new controller, creating and storing the {@GraphicsEngine} that will
+     * display the model's elements. The {@link GraphicsEngine} creation results in 
+     * the creation of the game's window and the main menu.
+     * @see {@link GraphicsEngine} and {@link BombarderoGraphics} for the graphic's behaviour.
      */
     public BombarderoController() {
         this.graphics = new BombarderoGraphics(this);
@@ -49,9 +55,11 @@ public final class BombarderoController implements Controller {
 
     @Override
     public void endGame() {
-        isGamePaused = true;
-        isGameStarted = false;
-        graphics.showGameScreen(GraphicsEngine.ViewCards.END);
+        if (isGameStarted) {
+            isGamePaused = true;
+            isGameStarted = false;
+        }
+        graphics.showGameScreen(ViewCards.MENU);
     }
 
     @Override
@@ -73,28 +81,32 @@ public final class BombarderoController implements Controller {
     }
 
     @Override
-    public void displayEndGuide() {
-        graphics.displayEndGuide();
+    public void displayEndScreen(final EndGameState endGameState) {
+        graphics.showEndScreen(endGameState);
     }
-    
+
 
     @Override
     public void escape() {
         if (!isGamePaused) {
             graphics.setPausedView();
             isGamePaused = true;
-        }
-        else {
+        } else {
             isGamePaused = false;
             graphics.setUnpausedView();
         }
     }
 
     @Override
-    public void update(final long elapsed) {
+    public void updateGame(final long elapsed) {
         manager.updateGame(elapsed, this);
-        graphics.update(getMap(), List.of(getMainPlayer()), getEnemies(), getTimeLeft());
     }
+
+    @Override
+    public void updateGraphics(final long elapsed) {
+        graphics.update(getMap(), getPlayers(), getEnemies(), getTimeLeft());
+    }
+
 
     @Override
     public void toggleMessage(final BombarderoViewMessages message) {
@@ -112,8 +124,13 @@ public final class BombarderoController implements Controller {
     }
 
     @Override
-    public Character getMainPlayer() {
-        return manager.getPlayer();
+    public boolean isGameOver() {
+        return isGameOver;
+    }
+
+    @Override
+    public List<Character> getPlayers() {
+        return manager.getPlayers();
     }
 
     @Override

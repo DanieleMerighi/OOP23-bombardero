@@ -25,13 +25,9 @@ public interface GameManager {
      * need to be updated). If needed it can pass to such entities
      * the elapsed time from the previous update.
      * @param elapsed the time passed from the previous update.
+     * @param controller the game's controller
      */
     void updateGame(long elapsed, Controller controller);
-
-    /** 
-     * Ends the game.
-     */
-    void endGame();
 
     /** 
      * Returns a list of the enemies in the current game instance.
@@ -43,7 +39,7 @@ public interface GameManager {
      * Returns the main player of the current game's instance. 
      * @return the main {@link Character} of the game.
      */
-    Character getPlayer();
+    List<Character> getPlayers();
 
     /** 
      * Returns the {@link GameMap} of the current game instance.
@@ -51,5 +47,10 @@ public interface GameManager {
      */
     GameMap getGameMap();
 
+    /**
+     * Returns the time left in the game, in milliseconds, if the manager is 
+     * keeping the time.
+     * @return the time left, if the time is being kept, otherwise nothing
+     */
     Optional<Long> getTimeLeft();
 }

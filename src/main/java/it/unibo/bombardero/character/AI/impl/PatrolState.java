@@ -27,7 +27,7 @@ public class PatrolState extends AbstractEnemyState {
             enemy.setState(new ChaseState());
         } else {
             enemy.setNextMove(new ChaseMovementStrategy().getNextMove(enemy, manager));
-            if(enemy.getNextMove().isEmpty()) {
+            if (enemy.getNextMove().isEmpty()) {
                 enemy.setNextMove(new RandomMovementStrategy().getNextMove(enemy, manager));
             }
         }

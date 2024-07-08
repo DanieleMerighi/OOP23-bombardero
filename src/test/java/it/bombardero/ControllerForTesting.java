@@ -1,5 +1,6 @@
 package it.bombardero;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -13,8 +14,7 @@ import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.view.BombarderoViewMessages;
-
-import java.util.Arrays;
+import it.unibo.bombardero.view.api.GraphicsEngine.EndGameState;
 
 /**
  * A simulation of an implementation of the {@link #Controller} interface
@@ -47,18 +47,26 @@ public final class ControllerForTesting implements Controller {
     }
 
     @Override
-    public void displayEndGuide() {
-        throw new UnsupportedOperationException("Unimplemented method 'displayEndGuide'");
+    public void displayEndScreen(final EndGameState endGameState) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'displayEndScreen'");
+    }
+
+    @Override
+    public void updateGame(final long elapsed) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateGame'");
+    }
+
+    @Override
+    public void updateGraphics(final long elapsed) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateGraphics'");
     }
 
     @Override
     public void escape() {
         this.escapeCalled = true;
-    }
-
-    @Override
-    public void update(final long elapsed) {
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
 
     @Override
@@ -77,8 +85,8 @@ public final class ControllerForTesting implements Controller {
     }
 
     @Override
-    public Character getMainPlayer() {
-        return this.player;
+    public List<Character> getPlayers() {
+        return List.of(player);
     }
 
     @Override
@@ -94,6 +102,11 @@ public final class ControllerForTesting implements Controller {
     @Override
     public Optional<Long> getTimeLeft() {
         throw new UnsupportedOperationException("Unimplemented method 'getTimeLeft'");
+    }
+
+    @Override
+    public boolean isGameOver() {
+        throw new UnsupportedOperationException("Unimplemented method 'isGameOver'");
     }
 
 }

@@ -48,15 +48,15 @@ public final class ResizingEngine {
     private final Dimension buttonSize;
     private final Dimension menuLogoSize;
 
-    public ResizingEngine(final GraphicsEngine graphics) {
+    public ResizingEngine(final GraphicsEngine graphics, final Insets insets) {
         final int resolution = Toolkit.getDefaultToolkit().getScreenResolution();
         if (resolution >= 200) {
             currentScale = 1.25;
         }
-        frameInsets = graphics.getParentFrame().getInsets();
+        frameInsets = new Insets(insets.top, insets.left, insets.bottom, insets.right);
         scaledCellSize = (int) (currentScale * Utils.CELL_SIZE);
 
-        gameWindowSize = initGameWindowSize(graphics.getParentFrame());
+        gameWindowSize = initGameWindowSize(insets);
         mapPlacingPoint = initMapPlacingPoint();
         entityPlacingPoint = initEntityPlacingPoint();
         imageClockPosition = initImageClockPosition();
@@ -65,6 +65,10 @@ public final class ResizingEngine {
         spaceGuidePosition = initSpacePosition();
         buttonSize = initButtonSize();
         menuLogoSize = initLogoSize();
+    }
+
+    public ResizingEngine getNewEngine(final GraphicsEngine graphics) {
+        return new ResizingEngine(graphics, frameInsets);
     }
 
     /* FRAME-RELATED METHODS */
@@ -118,7 +122,6 @@ public final class ResizingEngine {
     }
 
     public Image getScaledBombImage(final Image bombImage) {
-        /* TODO: scale appropriately */
         return bombImage;
     }
 
@@ -237,11 +240,11 @@ public final class ResizingEngine {
                 menuLogoSize.height);
     }
 
-    public Dimension initGameWindowSize(final JFrame frame) {
+    public Dimension initGameWindowSize(final Insets frameInsets) {
         return new Dimension(
-                frame.getInsets().left + frame.getInsets().right
+                frameInsets.left + frameInsets.right
                         + (int) (Utils.MAP_WIDTH * currentScale + Utils.GRASS_PADDING_RATIO * Utils.MAP_WIDTH),
-                frame.getInsets().top + frame.getInsets().bottom
+                frameInsets.top + frameInsets.bottom
                         + (int) (Utils.MAP_HEIGHT * currentScale + Utils.GRASS_PADDING_RATIO * Utils.MAP_HEIGHT));
     }
 
@@ -289,8 +292,8 @@ public final class ResizingEngine {
 
     private Dimension initButtonSize() {
         return new Dimension(
-                (int) Math.floor(BUTTON_WIDTH / 2),
-                (int) Math.floor(BUTTON_HEIGHT / 2));
+                (int) Math.floorDiv(BUTTON_WIDTH, 2),
+                (int) Math.floorDiv(BUTTON_HEIGHT, 2));
     }
 
     private Dimension initLogoSize() {

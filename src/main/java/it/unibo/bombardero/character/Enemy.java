@@ -89,7 +89,7 @@ public class Enemy extends Character {
     public Optional<GenPair<Integer, Integer>> getClosestEntity(final GameManager manager) {
         final GenPair<Integer, Integer> enemyCoord = getIntCoordinate();
         final List<Character> allEntities = new ArrayList<>(manager.getEnemies());
-        allEntities.add(manager.getPlayer());
+        allEntities.addAll(manager.getPlayers());
 
         return allEntities.stream()
                 .filter(Character::isAlive)
@@ -111,7 +111,7 @@ public class Enemy extends Character {
      */
     public Optional<Character> getClosestEntity(final GameManager manager, final GenPair<Integer, Integer> enemy) {
         final List<Character> allEntities = new ArrayList<>(manager.getEnemies());
-        allEntities.add(manager.getPlayer());
+        allEntities.addAll(manager.getPlayers());
 
         return allEntities.stream()
                 .filter(e -> e.getIntCoordinate().equals(getIntCoordinate()))

@@ -15,11 +15,8 @@ import it.unibo.bombardero.core.impl.BombarderoController;
 public final class BombarderoEngine extends Thread implements Engine {
 
     private static final long SLEEP_TIME = 16L; // Time during which the thread sleeps, equivalent to about 60FPS
- 
-    //private final GameManager manager;
-    //private final BombarderoGraphics graphics;
+
     private final Controller controller;
-    private boolean isGameOver;
 
     /**
      * Creates a new BombarderoEngine, associating it to a Controller 
@@ -33,11 +30,14 @@ public final class BombarderoEngine extends Thread implements Engine {
     @Override
     public void run() {
         long previousCycleStartTime = System.currentTimeMillis();
-        while (!isGameOver) {
+        while (!controller.isGameOver()) {
             final long currentCycleStartTime = System.currentTimeMillis();
             final long elapsed = currentCycleStartTime - previousCycleStartTime;
             if (controller.isGameStarted() && !controller.isGamePaused()) {
-                controller.update(elapsed);
+                controller.updateGame(elapsed);
+                controller.updateGraphics(elapsed);
+            } else if (controller.isGameStarted()) {
+                controller.updateGraphics(elapsed);
             }
             waitForNextFrame(currentCycleStartTime);
             previousCycleStartTime = currentCycleStartTime;

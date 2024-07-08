@@ -19,6 +19,7 @@ import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.map.impl.GameMapImpl;
 import it.unibo.bombardero.physics.api.CollisionEngine;
+import it.unibo.bombardero.view.api.GraphicsEngine.EndGameState;
 
 /**
  * This class implements the concepts expressed in the
@@ -32,14 +33,12 @@ public class BasicBombarderoGameManager implements GameManager {
      * The total length in time of one match: 2 minutes. 
      */
     public static final long TOTAL_GAME_TIME = 120_000L;
-    public static final long GAME_OVER_TIME = 0L;
 
     private final GameMap map;
     private final Map<Bomb, Character> bombs = new HashMap<>();
     private final List<FlameImpl> flames = new ArrayList<>();
     private final List<Character> enemies = new ArrayList<>();
-    private final Character player;
-    private final Controller controller;
+    private final List<Character> players;
     private final CollisionEngine ce;
     private final BombFactory bombFactory;
 
@@ -53,6 +52,7 @@ public class BasicBombarderoGameManager implements GameManager {
      * @param playerSpawnPoint  the main player's spawnpoint
      * @param enemiesSpawnpoint a list of the enemies spawnpoints
      * @param generateWalls     wether the breakable walls have to be generated or not
+     * @param cEngine the collision engine linked to this instance of the game.
      */
     public BasicBombarderoGameManager(
             final Controller controller,
@@ -60,11 +60,10 @@ public class BasicBombarderoGameManager implements GameManager {
             final List<GenPair<Float, Float>> enemiesSpawnpoint,
             final boolean generateWalls,
             final CollisionEngine cEngine) {
-        this.controller = controller;
         this.map = new GameMapImpl(generateWalls);
         this.ce = cEngine;
         this.bombFactory = new BombFactoryImpl();
-        this.player = new Player(playerSpawnPoint, bombFactory);
+        this.players = List.of(new Player(playerSpawnPoint, bombFactory));
         enemiesSpawnpoint.forEach(spawnpoint -> enemies.add(new Enemy(spawnpoint, bombFactory)));
     }
 
@@ -88,11 +87,12 @@ public class BasicBombarderoGameManager implements GameManager {
         updateEnemies(elapsed);
         updateBombs(elapsed);
         updateFlames(elapsed);
-    }
-
-    @Override
-    public final void endGame() {
-        controller.endGame();
+        updateMap();
+        if (!players.stream().allMatch(Character::isAlive)) {
+            controller.displayEndScreen(EndGameState.LOSE);
+        } else if (!enemies.stream().allMatch(Character::isAlive)) {
+            controller.displayEndScreen(EndGameState.WIN);
+        }
     }
 
     @Override
@@ -106,8 +106,8 @@ public class BasicBombarderoGameManager implements GameManager {
     }
 
     @Override
-    public final Character getPlayer() {
-        return this.player;
+    public final List<Character> getPlayers() {
+        return List.copyOf(players);
     }
 
     /**
@@ -120,12 +120,32 @@ public class BasicBombarderoGameManager implements GameManager {
         return Optional.empty();
     }
 
+    /**
+     * Adds a new Character to the game's enemies, this characters
+     * have to be headless or AI.
+     * <p> 
+     * Note: An "enemy" is intended to be everything not controlled
+     * by a human.
+     * @param enemy the enemy to be added. 
+     */
     protected final void addEnemy(final Character enemy) {
         this.enemies.add(enemy);
     }
 
-    protected BombFactory getBombFactory() {
+    /** 
+     * Returns the {@link BombFactory} of the current instance of
+     * the game.
+     * @return the bombs factory.
+     */
+    protected final BombFactory getBombFactory() {
         return this.bombFactory;
+    }
+
+    /**
+     * Triggers the collapse of the game map.
+     */
+    protected final void triggetCollapse() {
+        map.triggerCollapse();
     }
 
     private void updateFlames(final long elapsed) {
@@ -157,12 +177,18 @@ public class BasicBombarderoGameManager implements GameManager {
     }
 
     private void updatePlayer(final long elapsed) {
-        if (player.isAlive()) {
+        players.stream()
+        .filter(Character::isAlive)
+        .forEach(player -> {
             player.update(this, elapsed);
             addCharacterBombsToMap(player);
             ce.checkCharacterCollision(player, map);
             ce.checkFlameAndPowerUpCollision(player, map);
-        }
+        });
+    }
+
+    private void updateMap() {
+        map.update();
     }
 
     private void addCharacterBombsToMap(final Character character) {

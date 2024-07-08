@@ -18,6 +18,9 @@ public class KeyboardInput implements KeyListener {
     // Controller instance to handle player actions
     private final Controller controller;
 
+    // The index of the player
+    private final int playerIndex;
+
     // Directions for checks
     private boolean up;
     private boolean left;
@@ -28,9 +31,12 @@ public class KeyboardInput implements KeyListener {
      * Constructs a new KeyboardInput istance.
      *
      * @param controller The controller instance to handle player actions.
+     * @param playerIndex the index of the player in the player's list that this
+     * has to control.
      */
-    public KeyboardInput(final Controller controller) {
+    public KeyboardInput(final Controller controller, final int playerIndex) {
         this.controller = controller;
+        this.playerIndex = playerIndex;
     }
 
     /*
@@ -54,14 +60,14 @@ public class KeyboardInput implements KeyListener {
             // Opens the menu
             case KeyEvent.VK_ESCAPE -> controller.escape();
             // calls player method to place a bomb
-            case KeyEvent.VK_SPACE -> controller.getMainPlayer().setHasToPlaceBomb(true);
+            case KeyEvent.VK_SPACE -> controller.getPlayers().get(playerIndex).setHasToPlaceBomb(true);
             // calls powerup method to use line bomb powerup
             case 'l', 'L' -> {
-                controller.getMainPlayer().setHasToPlaceLineBomb(true);
+                controller.getPlayers().get(playerIndex).setHasToPlaceLineBomb(true);
             }
             // calls player method to explode remote bomb powerup
             case 'p', 'P' -> {
-                controller.getMainPlayer().setHasToExplodeRemoteBomb(true);
+                controller.getPlayers().get(playerIndex).setHasToExplodeRemoteBomb(true);
             }
             default -> {
             }
@@ -88,23 +94,23 @@ public class KeyboardInput implements KeyListener {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W -> {
                 up = true;
-                controller.getMainPlayer().setStationary(false);
-                controller.getMainPlayer().setFacingDirection(Direction.UP);
+                controller.getPlayers().get(playerIndex).setStationary(false);
+                controller.getPlayers().get(playerIndex).setFacingDirection(Direction.UP);
             }
             case KeyEvent.VK_A -> {
                 left = true;
-                controller.getMainPlayer().setStationary(false);
-                controller.getMainPlayer().setFacingDirection(Direction.LEFT);
+                controller.getPlayers().get(playerIndex).setStationary(false);
+                controller.getPlayers().get(playerIndex).setFacingDirection(Direction.LEFT);
             }
             case KeyEvent.VK_S -> {
                 down = true;
-                controller.getMainPlayer().setStationary(false);
-                controller.getMainPlayer().setFacingDirection(Direction.DOWN);
+                controller.getPlayers().get(playerIndex).setStationary(false);
+                controller.getPlayers().get(playerIndex).setFacingDirection(Direction.DOWN);
             }
             case KeyEvent.VK_D -> {
                 right = true;
-                controller.getMainPlayer().setStationary(false);
-                controller.getMainPlayer().setFacingDirection(Direction.RIGHT);
+                controller.getPlayers().get(playerIndex).setStationary(false);
+                controller.getPlayers().get(playerIndex).setFacingDirection(Direction.RIGHT);
             }
             default -> {
             }
@@ -144,7 +150,7 @@ public class KeyboardInput implements KeyListener {
      */
     private void checkIfStationary() {
         if (!up && !left && !down && !right) {
-            controller.getMainPlayer().setStationary(true);
+            controller.getPlayers().get(playerIndex).setStationary(true);
         }
     }
 
@@ -154,16 +160,16 @@ public class KeyboardInput implements KeyListener {
      */
     private void checkIfAnotherDirectionIsPressed() {
         if (up) {
-            controller.getMainPlayer().setFacingDirection(Direction.UP);
+            controller.getPlayers().get(playerIndex).setFacingDirection(Direction.UP);
         }
         if (left) {
-            controller.getMainPlayer().setFacingDirection(Direction.LEFT);
+            controller.getPlayers().get(playerIndex).setFacingDirection(Direction.LEFT);
         }
         if (down) {
-            controller.getMainPlayer().setFacingDirection(Direction.DOWN);
+            controller.getPlayers().get(playerIndex).setFacingDirection(Direction.DOWN);
         }
         if (right) {
-            controller.getMainPlayer().setFacingDirection(Direction.RIGHT);
+            controller.getPlayers().get(playerIndex).setFacingDirection(Direction.RIGHT);
         }
     }
 }

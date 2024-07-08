@@ -90,16 +90,6 @@ public class MyGameManager implements GameManager {
     }
 
     /**
-     * Gets the player.
-     *
-     * @return the player
-     */
-    @Override
-    public Player getPlayer() {
-        return player;
-    }
-
-    /**
      * Updates the game state.
      *
      * @param elapsed the elapsed time
@@ -119,14 +109,6 @@ public class MyGameManager implements GameManager {
      */
     public Enemy getEnemy() {
         return this.enemy;
-    }
-
-    /**
-     * Ends the game.
-     */
-    @Override
-    public void endGame() {
-        throw new UnsupportedOperationException("Unimplemented method 'endGame'");
     }
 
     /**
@@ -158,5 +140,15 @@ public class MyGameManager implements GameManager {
     public Optional<Long> getTimeLeft() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getTimeLeft'");
+    }
+
+    /**
+     * Gets the list of player.
+     *
+     * @return the list of player
+     */
+    @Override
+    public List<Character> getPlayers() {
+        return Arrays.asList(player);
     }
 }

@@ -18,6 +18,7 @@ public final class FullBombarderoGameManager extends BasicBombarderoGameManager 
      * Creates a new {@link FullBombarderoGameManager} spawning the player, the enemies and 
      * generating the breakable walls in the map.
      * @param controller the game's controller
+     * @param cEngine the collision engine related to this instance of the game.
      */
     public FullBombarderoGameManager(final Controller controller, final CollisionEngine cEngine) {
         super(controller, Utils.PLAYER_SPAWNPOINT,
@@ -30,15 +31,14 @@ public final class FullBombarderoGameManager extends BasicBombarderoGameManager 
     public void updateGame(final long elapsed, final Controller controller) {
         gameTime += elapsed;
         if (gameTime >= TOTAL_GAME_TIME) {
-            getGameMap().triggerCollapse();
+            super.triggetCollapse();
         }
-        getGameMap().update();
         super.updateGame(elapsed, controller);
     }
 
     @Override
     public Optional<Long> getTimeLeft() {
-        return Optional.of(gameTime < TOTAL_GAME_TIME ? TOTAL_GAME_TIME - gameTime : GAME_OVER_TIME);
+        return Optional.of(gameTime < TOTAL_GAME_TIME ? TOTAL_GAME_TIME - gameTime : 0L);
     }
 
 }
