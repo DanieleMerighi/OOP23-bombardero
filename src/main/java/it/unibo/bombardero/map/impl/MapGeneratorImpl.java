@@ -1,6 +1,5 @@
 package it.unibo.bombardero.map.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
