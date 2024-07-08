@@ -43,7 +43,6 @@ public final class ResourceGetter {
      */
     public Font loadFont(final String name) {
         try {
-            System.out.println(RESOURCE_PATH + FONT_PATH + name + FONT_EXTENSION);
             final InputStream inputStream = ClassLoader.getSystemClassLoader()
                     .getResourceAsStream(RESOURCE_PATH + FONT_PATH + name + FONT_EXTENSION);
             return Font.createFont(Font.TRUETYPE_FONT, inputStream);
