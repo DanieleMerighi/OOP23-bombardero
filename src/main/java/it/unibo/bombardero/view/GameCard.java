@@ -4,21 +4,15 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.view.api.GraphicsEngine;
 import it.unibo.bombardero.view.api.GraphicsEngine.EndGameState;
-import it.unibo.bombardero.view.api.GraphicsEngine.ViewCards;
 
 import java.awt.Font;
 import java.util.List;
