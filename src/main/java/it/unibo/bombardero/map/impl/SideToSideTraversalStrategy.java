@@ -13,7 +13,7 @@ import it.unibo.bombardero.map.api.MatrixTraversalStrategy;
 public final class SideToSideTraversalStrategy implements MatrixTraversalStrategy {
 
     @Override
-    public List<GenPair<Integer, Integer>> compute(int rows, int cols) {
+    public List<GenPair<Integer, Integer>> compute(final int rows, final int cols) {
         return IntStream
             .range(0, cols)
             .boxed()

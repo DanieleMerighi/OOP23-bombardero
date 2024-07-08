@@ -12,7 +12,7 @@ import it.unibo.bombardero.map.api.MatrixTraversalStrategy;
 public final class SpiralTraversalStrategy implements MatrixTraversalStrategy {
 
     @Override
-    public List<GenPair<Integer, Integer>> compute(int rows, int cols) {
+    public List<GenPair<Integer, Integer>> compute(final int rows, final int cols) {
         final List<GenPair<Integer, Integer>> order = new ArrayList<>();
         int top = 0, bottom = rows - 1, left = 0, right = cols - 1;
         while (top <= bottom && left <= right) {
