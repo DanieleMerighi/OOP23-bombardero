@@ -84,15 +84,14 @@ public final class BombarderoController implements Controller {
     public void displayEndScreen(final EndGameState endGameState) {
         graphics.showEndScreen(endGameState);
     }
-    
+
 
     @Override
     public void escape() {
         if (!isGamePaused) {
             graphics.setPausedView();
             isGamePaused = true;
-        }
-        else {
+        } else {
             isGamePaused = false;
             graphics.setUnpausedView();
         }
