@@ -81,8 +81,9 @@ public final class GuideCard extends GamePlayCard {
         final Font font = resourceGetter.loadFont("mono");
         final Image messageBoxImage = resourceGetter.loadImage("overlay/dialog");
         final Image startImage = graphics.getResizingEngine()
-                .getScaledButtonImage(resourceGetter.loadImage("overlay/buttons/PLAY"));
-        final Image backImage = graphics.getResizingEngine().getScaledButtonImage(resourceGetter.loadImage("overlay/buttons/BACK"));
+            .getScaledButtonImage(resourceGetter.loadImage("overlay/buttons/PLAY"));
+        final Image backImage = graphics.getResizingEngine()
+            .getScaledButtonImage(resourceGetter.loadImage("overlay/buttons/BACK"));
         final Image backImagePressed = graphics.getResizingEngine().getScaledButtonImage(
             resourceGetter.loadImage("overlay/buttons/BACK_PRESSED")
         );
@@ -165,12 +166,13 @@ public final class GuideCard extends GamePlayCard {
         this.repaint();
     }
 
-    public void displayEndView(EndGameState endingType) {
+    @Override
+    public void displayEndView(final EndGameState endingType) {
         displayEndView();
     }
 
     @Override
-    public void setTimeLeft(Long timeLeft) {
+    public void setTimeLeft(final Long timeLeft) {
 
     }
 
