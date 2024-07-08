@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -14,10 +13,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.swing.JPanel;
-
-import com.fasterxml.jackson.core.util.DefaultIndenter;
-
-import javax.swing.JLayeredPane;
 import javax.swing.JButton;
 import java.awt.GridLayout;
 import javax.swing.JLabel;
