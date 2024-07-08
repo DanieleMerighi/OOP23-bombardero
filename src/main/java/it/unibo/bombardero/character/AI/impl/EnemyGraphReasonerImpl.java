@@ -180,8 +180,8 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
                 .stream()
                 .map(d -> new GenPair<Integer, Integer>(enemyCoord.x() + d.x(), enemyCoord.y() + d.y()))
                 .filter(cell -> isValidCell(cell) && !visited.contains(cell) && (map.isEmpty(cell)
-                        || (map.isPowerUp(cell)
-                                && map.whichPowerUpType(cell).filter(type -> type != PowerUpType.SKULL).isPresent())))
+                        || map.isPowerUp(cell)
+                                && map.whichPowerUpType(cell).filter(type -> type != PowerUpType.SKULL).isPresent()))
                 .collect(Collectors.toCollection(ArrayList::new));
 
         final Optional<GenPair<Integer, Integer>> safeCell = adjacentCells.stream()
@@ -202,7 +202,7 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
                 }
             }
         }
-        
+
         return Optional.empty();
     }
 

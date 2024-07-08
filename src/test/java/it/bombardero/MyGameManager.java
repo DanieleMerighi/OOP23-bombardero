@@ -142,6 +142,11 @@ public class MyGameManager implements GameManager {
         throw new UnsupportedOperationException("Unimplemented method 'getTimeLeft'");
     }
 
+    /**
+     * Gets the list of player.
+     *
+     * @return the list of player
+     */
     @Override
     public List<Character> getPlayers() {
         return Arrays.asList(player);
