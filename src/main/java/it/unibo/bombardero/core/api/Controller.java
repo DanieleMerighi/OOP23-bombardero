@@ -44,6 +44,7 @@ public interface Controller {
 
     /** 
      *  Signals the View to display the end of the Guide game mode.
+     * @param endGameState the state that has to be displayed in the view (e.g. winning or losing)
      */
     void displayEndScreen(EndGameState endGameState);
 
@@ -60,8 +61,8 @@ public interface Controller {
      */
     void updateGame(long elapsed);
 
-        /** 
-     * Updates the view
+    /**
+     * Updates the view.
      * @param elapsed the time elapsed since the last update
      */
     void updateGraphics(long elapsed);
