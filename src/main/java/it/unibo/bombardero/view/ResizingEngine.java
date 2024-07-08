@@ -122,7 +122,6 @@ public final class ResizingEngine {
     }
 
     public Image getScaledBombImage(final Image bombImage) {
-        /* TODO: scale appropriately */
         return bombImage;
     }
 
