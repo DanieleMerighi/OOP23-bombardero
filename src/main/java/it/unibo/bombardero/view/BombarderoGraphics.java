@@ -52,7 +52,7 @@ public final class BombarderoGraphics implements GraphicsEngine {
 
         frame.pack(); // calling pack on the frame generates the insets
 
-        frame.addKeyListener(new KeyboardInput(controller));
+        frame.addKeyListener(new KeyboardInput(controller, 0));
 
         resizingEngine = new ResizingEngine(this);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

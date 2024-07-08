@@ -90,16 +90,6 @@ public class MyGameManager implements GameManager {
     }
 
     /**
-     * Gets the player.
-     *
-     * @return the player
-     */
-    @Override
-    public Player getPlayer() {
-        return player;
-    }
-
-    /**
      * Updates the game state.
      *
      * @param elapsed the elapsed time
@@ -150,5 +140,10 @@ public class MyGameManager implements GameManager {
     public Optional<Long> getTimeLeft() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getTimeLeft'");
+    }
+
+    @Override
+    public List<Character> getPlayers() {
+        return Arrays.asList(player);
     }
 }
