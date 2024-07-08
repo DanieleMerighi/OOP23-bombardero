@@ -13,6 +13,7 @@ import it.unibo.bombardero.cell.FlameImpl;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;
+import it.unibo.bombardero.character.Character.CharacterType;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GameMap;
@@ -55,7 +56,6 @@ public class BasicBombarderoGameManager implements GameManager {
      * @param cEngine the collision engine linked to this instance of the game.
      */
     public BasicBombarderoGameManager(
-            final Controller controller,
             final GenPair<Float, Float> playerSpawnPoint,
             final List<GenPair<Float, Float>> enemiesSpawnpoint,
             final boolean generateWalls,
@@ -168,7 +168,7 @@ public class BasicBombarderoGameManager implements GameManager {
     private void updateEnemies(final long elapsed) {
         enemies.forEach(enemy -> {
             if (enemy.isAlive()) {
-                enemy.update(this, elapsed);
+                enemy.update(this, elapsed, CharacterType.ENEMY);
                 addCharacterBombsToMap(enemy);
                 ce.checkCharacterCollision(enemy, map);
                 ce.checkFlameAndPowerUpCollision(enemy, map);
@@ -180,7 +180,7 @@ public class BasicBombarderoGameManager implements GameManager {
         players.stream()
         .filter(Character::isAlive)
         .forEach(player -> {
-            player.update(this, elapsed);
+            player.update(this, elapsed, CharacterType.PLAYER);
             addCharacterBombsToMap(player);
             ce.checkCharacterCollision(player, map);
             ce.checkFlameAndPowerUpCollision(player, map);

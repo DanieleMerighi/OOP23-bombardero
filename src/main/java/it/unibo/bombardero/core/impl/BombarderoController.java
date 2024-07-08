@@ -47,7 +47,7 @@ public final class BombarderoController implements Controller {
 
     @Override
     public void startGame() {
-        this.manager = new FullBombarderoGameManager(this, new BombarderoCollision(new CollisionHandlerImpl()));
+        this.manager = new FullBombarderoGameManager(new BombarderoCollision(new CollisionHandlerImpl()));
         isGamePaused = false;
         isGameStarted = true;
         graphics.showGameScreen(GraphicsEngine.ViewCards.GAME);
@@ -64,7 +64,7 @@ public final class BombarderoController implements Controller {
 
     @Override
     public void startGuide() {
-        this.manager = new BombarderoGuideManager(this,  new BombarderoCollision(new CollisionHandlerImpl()));
+        this.manager = new BombarderoGuideManager(new BombarderoCollision(new CollisionHandlerImpl()));
         isGamePaused = false;
         isGameStarted = true;
         graphics.showGameScreen(GraphicsEngine.ViewCards.GUIDE);

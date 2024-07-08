@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.unibo.bombardero.character.Character;
+import it.unibo.bombardero.character.Character.CharacterType;
 import it.unibo.bombardero.character.Direction;
 import it.unibo.bombardero.character.Player;
 import it.unibo.bombardero.map.api.Functions;
@@ -53,7 +54,7 @@ class TestPlayer {
         this.manager.getPlayers().get(playerIndex).setCharacterPosition(spawnCoord);
         for (final Direction dir : Direction.values()) {
             this.manager.getPlayers().get(playerIndex).setFacingDirection(dir);
-            this.manager.getPlayers().get(playerIndex).update(manager, STANDARD_ELAPSED_TIME);
+            this.manager.getPlayers().get(playerIndex).update(manager, STANDARD_ELAPSED_TIME, CharacterType.PLAYER);
             assertEquals(dir, manager.getPlayers().get(playerIndex).getFacingDirection());
         }
     }
@@ -73,7 +74,7 @@ class TestPlayer {
         // Setting the number of update and calling them
         final int updateNumeber = FPS; // Number of updates done
         IntStream.range(0, updateNumeber)
-                .forEach(n -> this.manager.getPlayers().get(playerIndex).update(manager, STANDARD_ELAPSED_TIME));
+                .forEach(n -> this.manager.getPlayers().get(playerIndex).update(manager, STANDARD_ELAPSED_TIME, CharacterType.PLAYER));
 
         roundPlayerCoordinateToThreeDecimal();
         // Sums the spawn coordinates with the movement done

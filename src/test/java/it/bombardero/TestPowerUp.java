@@ -57,7 +57,7 @@ class TestPowerUp {
         });
         if (this.manager.getPlayers().get(playerIndex).getResetEffect().isPresent()) {
             while (this.manager.getPlayers().get(playerIndex).getSkullEffectDuration() > 0) {
-                this.manager.getPlayers().get(playerIndex).updateSkull(manager, STANDARD_ELAPSED_TIME, CharacterType.PLAYER);
+                this.manager.getPlayers().get(playerIndex).update(manager, STANDARD_ELAPSED_TIME, CharacterType.PLAYER);
             }
         }
     }
@@ -77,7 +77,7 @@ class TestPowerUp {
         assertTrue(this.manager.getPlayers().get(playerIndex).getResetEffect().isPresent());
 
         while (this.manager.getPlayers().get(playerIndex).getSkullEffectDuration() > 0) {
-            this.manager.getPlayers().get(playerIndex).updateSkull(manager, STANDARD_ELAPSED_TIME, CharacterType.PLAYER);
+            this.manager.getPlayers().get(playerIndex).update(manager, STANDARD_ELAPSED_TIME, CharacterType.PLAYER);
         }
 
         // Asserts the skull duration is 0

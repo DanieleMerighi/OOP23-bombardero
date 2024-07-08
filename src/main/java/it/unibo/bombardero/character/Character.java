@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 import it.unibo.bombardero.bomb.api.Bomb;
+import it.unibo.bombardero.bomb.api.Bomb.BombType;
 import it.unibo.bombardero.bomb.api.BombFactory;
 import it.unibo.bombardero.cell.powerup.api.PowerUp.PowerUpType;
-import it.unibo.bombardero.bomb.api.Bomb.BombType;
 import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.physics.api.BoundingBox;
@@ -124,34 +124,20 @@ public abstract class Character {
     }
 
     /**
-     * Updates the character's state.
-     * This method should be implemented by subclasses to define character-specific
-     * behavior.
-     * 
-     * @param manager       the game manager
-     * @param elapsedTime   the time elapsed since the last update
-     */
-    public abstract void update(GameManager manager, long elapsedTime);
-
-    /**
-     * Updates the skull's effects.
+     * Template method to update the character's state.
+     * Calls the concrete implementation of performCharacterActions by subclasses.
      * 
      * @param manager       the game manager
      * @param elapsedTime   the time elapsed since the last update
      * @param type          the type of character
      */
-    public void updateSkull(final GameManager manager, final long elapsedTime, final CharacterType type) {
-        if (this.skullEffectDuration > 0) { // Continues until the duration reaches zero
-            this.skullEffectDuration -= elapsedTime;
-            if (this.skullEffectDuration <= 0) { // When the effect ends the character's stats get resetted
-                setSkullEffectDuration(0);
-                this.resetEffect.ifPresent(Runnable::run); // If there's a effect to reset, it runs the reset effect
-                this.resetEffect = Optional.empty(); // Clear the reset effect after it has run
-            }
-            if (this.butterfingers) { // If the character has butterfingers, he places a bomb
-                placeBomb(manager, type);
-            }
+    public final void update(final GameManager manager, final long elapsedTime, final CharacterType type) {
+        // Skull update
+        if (getResetEffect().isPresent()) { // If there's a Task to reset
+            updateSkull(manager, elapsedTime, type);
         }
+        // Delegate specific update logic to subclasses
+        performCharacterActions(manager, elapsedTime);
     }
 
     /**
@@ -625,6 +611,37 @@ public abstract class Character {
      */
     public void resetBombsList() {
         this.bombsToBePlaced.clear();
+    }
+
+    /**
+     * Performs the character's action like moving and placing bombs.
+     * This method should be implemented by subclasses to define character-specific
+     * behavior.
+     * 
+     * @param manager       the game manager
+     * @param elapsedTime   the time elapsed since the last update
+     */
+    protected abstract void performCharacterActions(GameManager manager, long elapsedTime);
+
+    /**
+     * Updates the skull's effects.
+     * 
+     * @param manager       the game manager
+     * @param elapsedTime   the time elapsed since the last update
+     * @param type          the type of character
+     */
+    private void updateSkull(final GameManager manager, final long elapsedTime, final CharacterType type) {
+        if (this.skullEffectDuration > 0) { // Continues until the duration reaches zero
+            this.skullEffectDuration -= elapsedTime;
+            if (this.skullEffectDuration <= 0) { // When the effect ends the character's stats get resetted
+                setSkullEffectDuration(0);
+                this.resetEffect.ifPresent(Runnable::run); // If there's a effect to reset, it runs the reset effect
+                this.resetEffect = Optional.empty(); // Clear the reset effect after it has run
+            }
+            if (this.butterfingers) { // If the character has butterfingers, he places a bomb
+                placeBomb(manager, type);
+            }
+        }
     }
 
     /**
