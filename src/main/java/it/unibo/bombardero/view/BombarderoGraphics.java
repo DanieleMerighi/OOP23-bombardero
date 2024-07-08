@@ -129,7 +129,7 @@ public final class BombarderoGraphics implements GraphicsEngine {
 
     @Override
     public void showEndScreen(final EndGameState gameState) {
-        
+        cardsMap.get(currentCard).displayEndView(gameState);
     }
 
     @Override
