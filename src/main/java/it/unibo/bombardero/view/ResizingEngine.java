@@ -3,8 +3,6 @@ package it.unibo.bombardero.view;
 import it.unibo.bombardero.guide.api.GuideManager;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.utils.Utils;
-import it.unibo.bombardero.view.api.GraphicsEngine;
-
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -82,7 +80,6 @@ public final class ResizingEngine {
 
     /**
      * Returns a cloned version of the current instance with the same values.
-     * @param graphics the {@link GraphicsEngine} related to this instance
      * @return a new cloned {@link ResizingEngine}
      */
     public ResizingEngine getNewEngine() {
