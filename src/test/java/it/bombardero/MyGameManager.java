@@ -17,6 +17,9 @@ import it.unibo.bombardero.physics.impl.CollisionHandlerImpl;
 
 import java.util.List;
 import java.util.Optional;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.util.Arrays;
 
 /**
@@ -114,10 +117,11 @@ public class MyGameManager implements GameManager {
         return Arrays.asList(enemy);
     }
 
-    /**
-     * for tests we need to change the shape of the map
-     */
-    @SuppressWarnings("EI_EXPOSE_REP")
+
+    @SuppressFBWarnings(
+    value = "EI_EXPOSE_REP",
+    justification = "we need to change the map for tests"
+    )
     /**
      * Gets the game map.
      * 
