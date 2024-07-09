@@ -21,6 +21,11 @@ import it.unibo.bombardero.character.Character;
 public interface GameManager {
 
     /**
+     * The total length in time of one match: 2 minutes. 
+     */
+    public static final long TOTAL_GAME_TIME = 120_000L;
+
+    /**
      * Updates all the dynamic entities of the game (the ones that
      * need to be updated). If needed it can pass to such entities
      * the elapsed time from the previous update.
