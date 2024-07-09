@@ -91,7 +91,7 @@ public final class BombarderoCollision implements CollisionEngine {
 
     @Override
     public void checkMapCollapseCollision(final Character character, final GameMap map) {
-        if(map.isUnbreakableWall(character.getIntCoordinate())) {
+        if (map.isUnbreakableWall(character.getIntCoordinate())) {
             cHandler.applyCollapseCollision(character);
         }
     }

@@ -115,13 +115,17 @@ public class MyGameManager implements GameManager {
     }
 
     /**
+     * for tests we need to change the shape of the map
+     */
+    @SuppressWarnings("EI_EXPOSE_REP")
+    /**
      * Gets the game map.
-     *
+     * 
      * @return the game map
      */
     @Override
     public GameMap getGameMap() {
-        return map.getCopiedGameMap();
+        return map;
     }
 
     /**
