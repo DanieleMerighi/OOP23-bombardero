@@ -54,11 +54,11 @@ class TestCollision {
 private void testDirection(final Direction dir, final GenPair<Float, Float> characterPosition) {
         character.setCharacterPosition(characterPosition);
         character.setFacingDirection(dir);
-        assertTrue(
-                character.getBoundingBox().isColliding(mgr.getGameMap().getMap().get(new GenPair<>(1, 1)).getBoundingBox().get()));
+        assertTrue(character.getBoundingBox()
+            .isColliding(mgr.getGameMap().getMap().get(new GenPair<>(1, 1)).getBoundingBox().get()));
         cEngine.checkCharacterCollision(character, mgr.getGameMap());
-        assertFalse(
-                character.getBoundingBox().isColliding(mgr.getGameMap().getMap().get(new GenPair<>(1, 1)).getBoundingBox().get()));
+        assertFalse(character.getBoundingBox().
+            isColliding(mgr.getGameMap().getMap().get(new GenPair<>(1, 1)).getBoundingBox().get()));
 }
 
     /**
