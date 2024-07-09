@@ -67,15 +67,15 @@ private void testDirection(final Direction dir, final GenPair<Float, Float> char
      */
     @Test
     void testFlameAndPowerUpCollision() {
-        mgr.getGameMap().addFlame(new FlameImpl(null, new GenPair<Integer, Integer>(1, 0)),
+        mgr.addFlame(new FlameImpl(null, new GenPair<Integer, Integer>(1, 0)),
                 new GenPair<Integer, Integer>(1, 0));
         mgr.addPowerUp(new GenPair<Integer, Integer>(0, 1));
+        character.setCharacterPosition(R_CORNER_CELL_0_1);
+        mgr.checkFlameAndPowerUpCollision(character);
+        assertFalse(mgr.getGameMap().isPowerUp(new GenPair<Integer, Integer>(0, 1)));
         character.setCharacterPosition(D_CORNER_CELL_1_0);
         assertTrue(mgr.getGameMap().isFlame(new GenPair<Integer, Integer>(1, 0)));
-        cEngine.checkFlameAndPowerUpCollision(character, mgr.getGameMap());
+        mgr.checkFlameAndPowerUpCollision(character);
         assertFalse(character.isAlive());
-        character.setCharacterPosition(R_CORNER_CELL_0_1);
-        cEngine.checkFlameAndPowerUpCollision(character, mgr.getGameMap());
-        assertFalse(mgr.getGameMap().isPowerUp(new GenPair<Integer, Integer>(0, 1)));
     }
 }

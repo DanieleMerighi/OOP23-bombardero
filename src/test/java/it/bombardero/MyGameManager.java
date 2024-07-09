@@ -1,6 +1,9 @@
 package it.bombardero;
 
+import it.unibo.bombardero.bomb.api.Bomb;
 import it.unibo.bombardero.bomb.impl.BombFactoryImpl;
+import it.unibo.bombardero.cell.Flame;
+import it.unibo.bombardero.cell.FlameImpl;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Character.CharacterType;
 import it.unibo.bombardero.character.ai.api.EnemyState;
@@ -18,19 +21,8 @@ import it.unibo.bombardero.physics.impl.CollisionHandlerImpl;
 import java.util.List;
 import java.util.Optional;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 import java.util.Arrays;
-/**
- * Given that this class has been created for testing purposes and for sake
- * of simplicity (otherwise we would need to add more methods),
- * knowing nothing harmful can happen in so little code the
- * SpotBugs check for exposing internal representation is suprressed.
- */
-@SuppressFBWarnings(
-    value = "EI_EXPOSE_REP",
-    justification = "The map needs to be changed for the tests."
-    )
+
 /**
  * A Modified manager for testing purpose.
  */
@@ -87,6 +79,61 @@ public class MyGameManager implements GameManager {
     }
 
     /**
+     * Add a bomb in the map.
+     * @param bomb
+     * @param pos the position of the bomb
+     */
+    public void addBomb(final Bomb bomb, final GenPair<Integer, Integer> pos) {
+        this.map.addBomb(bomb, pos);
+    }
+
+     /**
+     * Add a flame in the map.
+     * @param flame 
+     * @param pos the position of the bomb
+     */
+    public void addFlame(final Flame flame, final GenPair<Integer, Integer> pos) {
+        this.map.addFlame(flame, pos);
+    }
+
+    /**
+     * Add a unbreackableWall in the map.
+     * 
+     * @param pos the position of the bomb
+     */
+    public void addUnbreakableWall(final GenPair<Integer, Integer> pos) {
+        this.map.addUnbreakableWall(pos);
+    }
+
+    /**
+     * Place flame of an explosion.
+     * 
+     * @param bomb 
+     */
+    public void placeExplosion(final Bomb bomb) {
+        bomb.computeFlame(map).forEach(e -> map.addFlame(new FlameImpl(null, e.getKey()), e.getKey()));
+    }
+
+
+    /**
+     * checks if there is flame or powerUp under the character.
+     * 
+     * @param character
+     */
+    public void checkFlameAndPowerUpCollision(final Character character) {
+        cEngine.checkFlameAndPowerUpCollision(character, map);
+    }
+
+    /**
+     * check cell collision in a character position.
+     * 
+     * @param pos the position of the bomb
+     */
+    public void addUnbreackable(final GenPair<Integer, Integer> pos) {
+        this.map.addUnbreakableWall(pos);
+    }
+
+    /**
      * add a power up to the map.
      * 
      * @param pos position
@@ -133,7 +180,7 @@ public class MyGameManager implements GameManager {
      */
     @Override
     public GameMap getGameMap() {
-        return map;
+        return map.getCopiedGameMap();
     }
 
     /**

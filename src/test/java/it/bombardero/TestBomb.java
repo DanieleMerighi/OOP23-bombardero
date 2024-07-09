@@ -11,7 +11,6 @@ import it.unibo.bombardero.bomb.api.Bomb;
 import it.unibo.bombardero.bomb.api.BombFactory;
 import it.unibo.bombardero.bomb.api.Bomb.BombType;
 import it.unibo.bombardero.bomb.impl.BombFactoryImpl;
-import it.unibo.bombardero.cell.FlameImpl;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.character.Character;
 
@@ -42,15 +41,13 @@ class TestBomb {
     void testPlacingAndExplodeBomb() {
         final Bomb bomb = bombFactory.createBasicBomb(1, new GenPair<Integer, Integer>(2, 2));
         assertEquals(bomb.getBombType(), BombType.BOMB_BASIC);
-        mgr.getGameMap().addBomb(bomb, new GenPair<Integer, Integer>(2, 2));
+        mgr.addBomb(bomb, new GenPair<Integer, Integer>(2, 2));
         assertTrue(mgr.getGameMap().isBomb(new GenPair<Integer, Integer>(2, 2)));
-        mgr.getGameMap().addBreakableWall(new GenPair<Integer, Integer>(2, 1));
-        mgr.getGameMap().addUnbreakableWall(new GenPair<Integer, Integer>(1, 2));
+        mgr.addBreakableWall(new GenPair<Integer, Integer>(2, 1));
+        mgr.addUnbreakableWall(new GenPair<Integer, Integer>(1, 2));
         bomb.update(TIME_TO_EXPLODE);
         assertTrue(bomb.isExploded());
-        bomb.computeFlame(mgr.getGameMap())
-                .forEach(entry -> mgr.getGameMap().addFlame(new FlameImpl(entry.getValue(), entry.getKey()),
-                        entry.getKey()));
+        mgr.placeExplosion(bomb);
         assertTrue(mgr.getGameMap().isPowerUp(new GenPair<Integer, Integer>(2, 1)));
         assertTrue(mgr.getGameMap().isUnbreakableWall(new GenPair<Integer, Integer>(1, 2)));
         assertTrue(mgr.getGameMap().isFlame(new GenPair<Integer, Integer>(2, 3)));
@@ -66,14 +63,12 @@ class TestBomb {
     void testPircingBomb() {
         final Bomb piercingBomb = bombFactory.createPiercingBomb(2, new GenPair<Integer, Integer>(2, 2));
         assertEquals(piercingBomb.getBombType(), BombType.BOMB_PIERCING);
-        mgr.getGameMap().addBreakableWall(new GenPair<Integer, Integer>(2, 3));
-        mgr.getGameMap().addBreakableWall(new GenPair<Integer, Integer>(2, 4));
-        mgr.getGameMap().addUnbreakableWall(new GenPair<Integer, Integer>(2, 1));
+        mgr.addBreakableWall(new GenPair<Integer, Integer>(2, 3));
+        mgr.addBreakableWall(new GenPair<Integer, Integer>(2, 4));
+        mgr.addUnbreakableWall(new GenPair<Integer, Integer>(2, 1));
         piercingBomb.update(TIME_TO_EXPLODE);
         assertTrue(piercingBomb.isExploded());
-        piercingBomb.computeFlame(mgr.getGameMap())
-                .forEach(entry -> mgr.getGameMap().addFlame(new FlameImpl(entry.getValue(), entry.getKey()),
-                        entry.getKey()));
+        mgr.placeExplosion(piercingBomb);
         assertTrue(mgr.getGameMap().isFlame(new GenPair<Integer, Integer>(2, 3)));
         assertTrue(mgr.getGameMap().isPowerUp(new GenPair<Integer, Integer>(2, 4)));
         assertTrue(mgr.getGameMap().isUnbreakableWall(new GenPair<Integer, Integer>(2, 1)));
