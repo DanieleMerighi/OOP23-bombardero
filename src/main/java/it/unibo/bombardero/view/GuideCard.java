@@ -157,6 +157,7 @@ public final class GuideCard extends GamePlayCard {
         super.clear();
         currentShowedSprite = Optional.empty();
         removeEndView();
+        darkenView(0.0f);
     }
 
     @Override
