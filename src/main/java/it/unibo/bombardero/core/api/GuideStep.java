@@ -1,9 +1,8 @@
-package it.unibo.bombardero.guide.api;
+package it.unibo.bombardero.core.api;
 
 import java.util.function.BiPredicate;
 import java.util.function.BiConsumer;
 
-import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.map.api.GameMap;
 
 /** 

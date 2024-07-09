@@ -1,6 +1,5 @@
-package it.unibo.bombardero.guide.api;
+package it.unibo.bombardero.core.api;
 
-import it.unibo.bombardero.core.api.GameManager;
 import it.unibo.bombardero.map.api.GenPair;
 
 /**

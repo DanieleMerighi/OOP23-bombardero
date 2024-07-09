@@ -1,6 +1,6 @@
 package it.unibo.bombardero.view;
 
-import it.unibo.bombardero.guide.api.GuideManager;
+import it.unibo.bombardero.core.api.GuideManager;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.utils.Utils;
 import java.awt.Dimension;

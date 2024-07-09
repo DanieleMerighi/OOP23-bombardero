@@ -1,4 +1,4 @@
-package it.unibo.bombardero.guide.impl;
+package it.unibo.bombardero.core.impl;
 
 import java.util.Stack;
 import java.util.List;
@@ -7,9 +7,8 @@ import it.unibo.bombardero.bomb.api.BombFactory;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.core.impl.BasicBombarderoGameManager;
-import it.unibo.bombardero.guide.api.GuideManager;
-import it.unibo.bombardero.guide.api.GuideStep;
+import it.unibo.bombardero.core.api.GuideManager;
+import it.unibo.bombardero.core.api.GuideStep;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 import it.unibo.bombardero.view.BombarderoViewMessages;

@@ -33,7 +33,7 @@ public interface Controller {
      * Starts the game's Guide, a slightly different game mode intended for
      * explaining the game to a new user. The procedure is the same as the 
      * {@link #startGame()} method.
-     * @see {@link it.unibo.guide.api.GuideManager}
+     * @see {@link it.unibo.bombardero.core.api.guide.api.GuideManager}
      */
     void startGuide();
 

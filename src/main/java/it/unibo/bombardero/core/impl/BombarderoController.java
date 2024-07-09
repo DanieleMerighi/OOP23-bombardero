@@ -7,7 +7,6 @@ import java.util.Optional;
 import it.unibo.bombardero.cell.Cell;
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.GameManager;
-import it.unibo.bombardero.guide.impl.BombarderoGuideManager;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.physics.impl.BombarderoCollision;
 import it.unibo.bombardero.physics.impl.CollisionHandlerImpl;
