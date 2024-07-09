@@ -33,7 +33,7 @@ public class BasicBombarderoGameManager implements GameManager {
     /**
      * The total length in time of one match: 2 minutes. 
      */
-    public static final long TOTAL_GAME_TIME = 120_000L;
+    public static final long TOTAL_GAME_TIME = 10_000L;
 
     private final GameMap map;
     private final Map<Bomb, Character> bombs = new HashMap<>();
@@ -149,9 +149,18 @@ public class BasicBombarderoGameManager implements GameManager {
     }
 
     /**
+     * Returns the {@link CollisionEngine} for this instance of
+     * the game.
+     * @return the collision engine
+     */
+    protected final CollisionEngine getCollisionEngine() {
+        return ce;
+    }
+
+    /**
      * Triggers the collapse of the game map.
      */
-    protected final void triggetCollapse() {
+    protected final void triggerCollapse() {
         map.triggerCollapse();
     }
 

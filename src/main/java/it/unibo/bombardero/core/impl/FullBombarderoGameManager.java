@@ -1,6 +1,7 @@
 package it.unibo.bombardero.core.impl;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.physics.api.CollisionEngine;
@@ -29,10 +30,15 @@ public final class FullBombarderoGameManager extends BasicBombarderoGameManager 
     @Override
     public void updateGame(final long elapsed, final Controller controller) {
         gameTime += elapsed;
-        if (gameTime >= TOTAL_GAME_TIME) {
-            super.triggetCollapse();
-        }
         super.updateGame(elapsed, controller);
+        if (gameTime >= TOTAL_GAME_TIME) {
+            super.triggerCollapse();
+            Stream.of(getEnemies(), getPlayers())
+            .flatMap(list -> list.stream())
+            .forEach(character -> {
+                getCollisionEngine().checkMapCollapseCollision(character, getGameMap());
+            });
+        }
     }
 
     @Override
