@@ -386,6 +386,7 @@ public abstract class GamePlayCard extends JPanel {
     protected void updateSprites() {
         checkForNewCharacters();
 
+        final Map<Character, SpriteImageCombo> newCharactersImages = new HashMap<>();
         charactersImages.entrySet().forEach(character -> {
             character.getValue().sprite.update();
             OrientedSprite sprite = character.getValue().sprite();
@@ -400,11 +401,12 @@ public abstract class GamePlayCard extends JPanel {
                 sprite = character.getValue().sprite().getNewSprite(character.getKey().getFacingDirection());
                 image = sprite.getImage();
             }
-            charactersImages.put(
+            newCharactersImages.put(
                 character.getKey(),
                 new SpriteImageCombo(sprite, image, "main")
             );
         });
+        charactersImages.putAll(newCharactersImages);
         /* Update bomb sprites: */
         normalBomb.update();
         bombImage = normalBomb.getImage();
