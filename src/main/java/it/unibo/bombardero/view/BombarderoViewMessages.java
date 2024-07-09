@@ -13,7 +13,7 @@ public enum BombarderoViewMessages {
     /**
      * The message to explain how to place a bomb to a new user.
      */
-    PLACE_BOMB("<html>Everyone starts with one bomb, <br>press the space bar to place it near the crate and brake</html>"),
+    PLACE_BOMB("<html>Everyone starts with one bomb, <br>press the space bar to place it near the crate<br>and brake it</html>"),
 
     /** 
      * The message to explain the basis of powerups to a new user. 
@@ -28,7 +28,7 @@ public enum BombarderoViewMessages {
     /**
      * The message to end the guide and prompt the user into choosing what to do next.
      */
-    END_GUIDE("<html>Good!<br>The guide has endend, you can go back to the menu or start a new game!</html>");
+    END_GUIDE("<html>Good!<br>The guide has endend,<br>you can go back to the menu or start a new game!</html>");
 
     private String message;
 
