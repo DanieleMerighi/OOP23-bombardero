@@ -95,7 +95,7 @@ public abstract class GamePlayCard extends JPanel {
     private final transient Sprite normalBomb;
     private transient Image bombImage;
     private transient Map<Character, TimedBombarderoSprite> dyingCharactersMap = new HashMap<>();
-    private List<String> colorCodes = List.of("black", "blue", "red", "main");
+    private List<String> colorCodes = List.of("black", "blue", "red");
 
     /* Static positions for quicker access: */
     private final Dimension mapPlacingPoint;
@@ -292,7 +292,7 @@ public abstract class GamePlayCard extends JPanel {
 
     /**
      * Clears the view of everything that has been displayed during the 
-     * game phase:
+     * game phase.
      * <ul>
      *  <li> Removes sprites </li>
      *  <li> Removes messages </li>

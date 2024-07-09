@@ -5,12 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.conversions.IntegerConversion;
 
 import it.unibo.bombardero.cell.FlameImpl;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Direction;
-import it.unibo.bombardero.map.api.GameMap;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.physics.api.CollisionEngine;
 
@@ -21,9 +19,8 @@ class TestCollision {
     private static final GenPair<Float, Float> L_CORNER_CELL_2_1 = new GenPair<>(2f, 1.5f);
     private static final GenPair<Float, Float> R_CORNER_CELL_0_1 = new GenPair<>(0.9f, 1.5f);
     private static final GenPair<Float, Float> U_CORNER_CELL_1_2 = new GenPair<>(1.5f, 2f);
-    private static final GenPair<Float, Float> D_CORNER_CELL_0_1 = new GenPair<>(1.5f, 0.9f);
+    private static final GenPair<Float, Float> D_CORNER_CELL_1_0 = new GenPair<>(1.5f, 0.9f);
     private Character character;
-    private GameMap gMap;
     private MyGameManager mgr;
     private CollisionEngine cEngine;
 
@@ -34,7 +31,6 @@ class TestCollision {
     void init() {
         mgr = new MyGameManager();
         character = mgr.getPlayers().get(0);
-        gMap = mgr.getGameMap();
         cEngine = mgr.getCollisionEngine();
     }
 
@@ -48,7 +44,7 @@ class TestCollision {
         // Direction RIGHT
         testDirection(Direction.RIGHT, R_CORNER_CELL_0_1);
         // Direction DOWN
-        testDirection(Direction.DOWN, D_CORNER_CELL_0_1);
+        testDirection(Direction.DOWN, D_CORNER_CELL_1_0);
         // Direction UP
         testDirection(Direction.UP, U_CORNER_CELL_1_2);
         // Direction LEFT
@@ -58,11 +54,11 @@ class TestCollision {
 private void testDirection(final Direction dir, final GenPair<Float, Float> characterPosition) {
         character.setCharacterPosition(characterPosition);
         character.setFacingDirection(dir);
-        assertTrue(
-                character.getBoundingBox().isColliding(gMap.getMap().get(new GenPair<>(1, 1)).getBoundingBox().get()));
-        cEngine.checkCharacterCollision(character, gMap);
-        assertFalse(
-                character.getBoundingBox().isColliding(gMap.getMap().get(new GenPair<>(1, 1)).getBoundingBox().get()));
+        assertTrue(character.getBoundingBox()
+            .isColliding(mgr.getGameMap().getMap().get(new GenPair<>(1, 1)).getBoundingBox().get()));
+        cEngine.checkCharacterCollision(character, mgr.getGameMap());
+        assertFalse(character.getBoundingBox().
+            isColliding(mgr.getGameMap().getMap().get(new GenPair<>(1, 1)).getBoundingBox().get()));
 }
 
     /**
@@ -71,14 +67,15 @@ private void testDirection(final Direction dir, final GenPair<Float, Float> char
      */
     @Test
     void testFlameAndPowerUpCollision() {
-        gMap.addFlame(new FlameImpl(null, new GenPair<Integer, Integer>(1, 0)), new GenPair<Integer, Integer>(1, 0));
+        mgr.getGameMap().addFlame(new FlameImpl(null, new GenPair<Integer, Integer>(1, 0)),
+                new GenPair<Integer, Integer>(1, 0));
         mgr.addPowerUp(new GenPair<Integer, Integer>(0, 1));
-        character.setCharacterPosition(R_CORNER_CELL_0_1);
-        cEngine.checkFlameAndPowerUpCollision(character, gMap);
-        assertFalse(gMap.isPowerUp(new GenPair<Integer, Integer>(0, 1)));
-        character.setCharacterPosition(D_CORNER_CELL_0_1);
-        assertTrue(gMap.isFlame(new GenPair<Integer, Integer>(1, 0)));
-        cEngine.checkFlameAndPowerUpCollision(character, gMap);
+        character.setCharacterPosition(D_CORNER_CELL_1_0);
+        assertTrue(mgr.getGameMap().isFlame(new GenPair<Integer, Integer>(1, 0)));
+        cEngine.checkFlameAndPowerUpCollision(character, mgr.getGameMap());
         assertFalse(character.isAlive());
+        character.setCharacterPosition(R_CORNER_CELL_0_1);
+        cEngine.checkFlameAndPowerUpCollision(character, mgr.getGameMap());
+        assertFalse(mgr.getGameMap().isPowerUp(new GenPair<Integer, Integer>(0, 1)));
     }
 }

@@ -29,7 +29,7 @@ public final class BombarderoCollision implements CollisionEngine {
             Direction.RIGHT, new Line2D.Float(new Point2D.Float(13, 0), new Point2D.Float(13, 13)));
 
     /**
-     * set the collisionHandler to compute collision
+     * set the collisionHandler to compute collision.
      * @param cHandler
      */
     public BombarderoCollision(final CollisionHandler cHandler) {

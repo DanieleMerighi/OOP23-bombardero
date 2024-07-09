@@ -19,7 +19,7 @@ public final class BombFactoryImpl implements BombFactory {
     }
 
     private Bomb genericBomb(final BombType type, final int range, final GenPair<Integer, Integer> pos) {
-        return new BasicBomb(BombType.BOMB_BASIC, range, pos) { };
+        return new BasicBomb(type, range, pos) { };
     }
 
     @Override

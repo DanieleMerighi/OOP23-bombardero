@@ -101,8 +101,8 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
         }
 
         @Override
-        protected void performCharacterActions(GameManager manager, long elapsedTime) {
-            
+        protected void performCharacterActions(final GameManager manager, final long elapsedTime) {
+
         }
     }
 
