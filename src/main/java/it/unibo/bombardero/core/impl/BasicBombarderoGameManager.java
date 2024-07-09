@@ -84,7 +84,7 @@ public class BasicBombarderoGameManager implements GameManager {
         updateMap();
         if (!players.stream().allMatch(Character::isAlive)) {
             controller.displayEndScreen(EndGameState.LOSE);
-        } else if (!enemies.stream().anyMatch(Character::isAlive)) {
+        } else if (!enemies.isEmpty() && !enemies.stream().anyMatch(Character::isAlive)) {
             controller.displayEndScreen(EndGameState.WIN);
         }
     }
