@@ -83,7 +83,7 @@ public final class GuideCard extends GamePlayCard {
         final ResourceGetter resourceGetter = graphics.getResourceGetter();
 
         // CHECKSTYLE: MagicNumber OFF
-        final Font font = resourceGetter.loadFont("mono");
+        final Font font = resourceGetter.loadFont("clock_font");
         final Image messageBoxImage = resourceGetter.loadImage("overlay/dialog");
         final Image startImage = graphics.getResizingEngine()
             .getScaledButtonImage(resourceGetter.loadImage("overlay/buttons/PLAY"));
@@ -118,7 +118,7 @@ public final class GuideCard extends GamePlayCard {
 
         messageBox.setHorizontalTextPosition(SwingConstants.CENTER);
         messageBox.setVerticalTextPosition(SwingConstants.CENTER);
-        messageBox.setFont(font.deriveFont(10.0f));
+        messageBox.setFont(font.deriveFont(9.0f));
 
         back.setBorder(null);
         start.setBorder(null);

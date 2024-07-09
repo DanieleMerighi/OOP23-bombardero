@@ -1,6 +1,7 @@
 package it.unibo.bombardero.view;
 
 import java.awt.Graphics;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.text.SimpleDateFormat;
@@ -55,7 +56,7 @@ public final class GameCard extends GamePlayCard {
         clockImage = graphics.getResizingEngine().getScaledClockImage(
             graphics.getResourceGetter().loadImage("overlay/clock")
         );
-        clockFont = graphics.getResourceGetter().loadFont("mono");
+        clockFont = graphics.getResourceGetter().loadFont("clock_font");
         final Image backButtonImage = graphics.getResizingEngine().getScaledButtonImage(
             graphics.getResourceGetter().loadImage("overlay/buttons/BACK")
         );
@@ -83,7 +84,8 @@ public final class GameCard extends GamePlayCard {
         super.paintComponent(g);
         final int fontYOffset = (int) (g.getFontMetrics(clockFont).getAscent() / 2);
         final SimpleDateFormat timerFormatter = new SimpleDateFormat(TIMER_FORMAT, Locale.ITALY);
-        g.setFont(clockFont.deriveFont(Font.PLAIN, 16));
+        g.setFont(clockFont.deriveFont(Font.PLAIN, 14));
+        g.setColor(Color.BLACK);
         g.drawString(timerFormatter.format(timeLeft), timerPosition.width, timerPosition.height + fontYOffset);
         g.drawImage(clockImage, imageClockPosition.width, imageClockPosition.height, null);
     }
