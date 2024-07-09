@@ -120,6 +120,14 @@ public class BasicBombarderoGameManager implements GameManager {
     }
 
     /**
+     * Adds a breakable wall to the map.
+     * @param coordinate the coordinate where to add the wall.
+     */
+    protected final void addBreakableWall(final GenPair<Integer, Integer> coordinate) {
+        map.addBreakableWall(coordinate);
+    }
+
+    /**
      * Adds a new Character to the game's enemies, this characters
      * have to be headless or AI.
      * <p> 

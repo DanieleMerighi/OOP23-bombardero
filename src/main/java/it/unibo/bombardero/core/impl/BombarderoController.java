@@ -71,6 +71,7 @@ public final class BombarderoController implements Controller {
         isGameStarted = true;
         graphics.showGameScreen(GraphicsEngine.ViewCards.GUIDE);
         toggleMessage(BombarderoViewMessages.EXPLAIN_MOVEMENT);
+        graphics.update(getMap(), getPlayers(), getEnemies(), getTimeLeft());
     }
 
     @Override
@@ -78,7 +79,7 @@ public final class BombarderoController implements Controller {
         if (isGameStarted) {
             isGamePaused = true;
             isGameStarted = false;
-            graphics.update(getMap(), List.of(), getEnemies(), getTimeLeft());
+            graphics.clearView();
         }
     }
 

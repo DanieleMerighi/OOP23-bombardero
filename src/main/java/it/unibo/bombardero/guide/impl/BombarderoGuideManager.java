@@ -40,7 +40,7 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
      */
     public BombarderoGuideManager(final CollisionEngine cEngine) {
         super(GuideManager.PLAYER_GUIDE_SPAWNPOINT, List.of(), false, cEngine);
-        this.getGameMap().addBreakableWall(CRATE_GUIDE_SPAWNPOINT);
+        addBreakableWall(CRATE_GUIDE_SPAWNPOINT);
         initialiseProcedures();
     }
 
@@ -77,7 +77,7 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
             (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.EXPLAIN_POWERUP)
         ));
         guideProcedures.add(new GuideStep(
-            (map, manager) -> true /*manager.getPlayer().isStationary()*/,
+            (map, manager) -> !manager.getPlayers().stream().allMatch(Character::isStationary),
             (manager, controller) -> controller.toggleMessage(BombarderoViewMessages.PLACE_BOMB)
         ));
     } 
