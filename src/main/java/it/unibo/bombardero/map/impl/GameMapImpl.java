@@ -56,7 +56,7 @@ public final class GameMapImpl implements GameMap {
         if (wallGeneration) {
             placeBreakableWalls();
         }
-        collapseOrder = mapGenerator.generateCollapseOrder(new SideToSideTraversalStrategy());
+        collapseOrder = mapGenerator.generateCollapseOrder(new SpiralTraversalStrategy());
     }
 
     /**
