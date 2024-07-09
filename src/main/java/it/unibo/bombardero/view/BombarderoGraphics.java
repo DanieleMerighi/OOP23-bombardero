@@ -73,6 +73,7 @@ public final class BombarderoGraphics implements GraphicsEngine {
  
         frame.add(deck);
         showGameScreen(ViewCards.MENU);
+        currentCard = ViewCards.MENU;
         frame.setVisible(true);
     }
 
@@ -89,9 +90,11 @@ public final class BombarderoGraphics implements GraphicsEngine {
         final List<Character> playerList,
         final List<Character> enemiesList,
         final Optional<Long> timeLeft) {
-        cardsMap.get(currentCard).update(map, playerList, enemiesList);
-        cardsMap.get(currentCard).setTimeLeft(timeLeft.orElse(0L));
-        cardsMap.get(currentCard).repaint(0L);
+        if (!currentCard.equals(ViewCards.MENU)) {
+            cardsMap.get(currentCard).update(map, playerList, enemiesList);
+            cardsMap.get(currentCard).setTimeLeft(timeLeft.orElse(0L));
+            cardsMap.get(currentCard).repaint(0L);
+        }
     }
 
     @Override
@@ -116,7 +119,7 @@ public final class BombarderoGraphics implements GraphicsEngine {
 
     @Override
     public void clearView() {
-        cardsMap.get(currentCard).clear();
+        cardsMap.values().forEach(GamePlayCard::clear);
     }
 
     @Override
