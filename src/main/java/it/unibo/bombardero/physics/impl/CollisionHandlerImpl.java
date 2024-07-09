@@ -37,12 +37,21 @@ public final class CollisionHandlerImpl implements CollisionHandler {
 
     @Override
     public void applyFlameCollision(final Character character) {
-        character.kill();
+        killCharacter(character);
     }
 
     @Override
     public void applyPowerUpCollision(final Character character, final PowerUp powerUp) {
         powerUp.applyEffect(character);
+    }
+
+    @Override
+    public void applyCollapseCollision(final Character character) {
+        killCharacter(character);
+    }
+
+    private void killCharacter(final Character character) {
+        character.kill();
     }
 
 }

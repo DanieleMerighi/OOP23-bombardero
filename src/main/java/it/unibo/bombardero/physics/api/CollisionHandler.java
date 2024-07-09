@@ -39,4 +39,9 @@ public interface CollisionHandler {
      */
     void applyPowerUpCollision(Character character, PowerUp powerUp);
 
+    /**
+     * if character is over an unbreckableWall he dies
+     * @param character
+     */
+    void applyCollapseCollision(Character character);
 }

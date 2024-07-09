@@ -22,4 +22,11 @@ public interface CollisionEngine {
      */
     void checkCharacterCollision(Character character, GameMap gMap);
 
+
+    /**
+     * check if the character is over an UnbreckableWall
+     * @param character
+     * @param map
+     */
+    void checkMapCollapseCollision(Character character, GameMap map);
 }

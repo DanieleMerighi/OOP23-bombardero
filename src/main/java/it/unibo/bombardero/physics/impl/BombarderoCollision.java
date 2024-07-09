@@ -88,4 +88,11 @@ public final class BombarderoCollision implements CollisionEngine {
         return p.x() < GameMap.MIN_NUM_CELL || p.y() < GameMap.MIN_NUM_CELL 
             || p.x() > GameMap.MAX_NUM_CELL || p.y() > GameMap.MAX_NUM_CELL;
     }
+
+    @Override
+    public void checkMapCollapseCollision(final Character character, final GameMap map) {
+        if(map.isUnbreakableWall(character.getIntCoordinate())) {
+            cHandler.applyCollapseCollision(character);
+        }
+    }
 }
