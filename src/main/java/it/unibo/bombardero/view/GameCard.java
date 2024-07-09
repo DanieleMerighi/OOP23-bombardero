@@ -45,6 +45,8 @@ public final class GameCard extends GamePlayCard {
     private final Dimension timerPosition;
     private long timeLeft;
 
+    private boolean endViewShowed;
+
     /** 
      * Creates a new game card, togheter with two buttons to be displayed when
      * the game is paused, and an arena that can be updated throught the {@link #update(Map, List, List)}
@@ -118,18 +120,22 @@ public final class GameCard extends GamePlayCard {
 
     @Override
     void displayEndView(final EndGameState endingType) {
-        darkenView(PAUSE_DARKEN_ALPHA);
-        if (endingType.equals(EndGameState.LOSE)) {
-            this.add(losingBannerLabel);
-        } else {
-            this.add(winningBannerLabel);
+        if (!endViewShowed) {
+            endViewShowed = true;
+            darkenView(PAUSE_DARKEN_ALPHA);
+            if (endingType.equals(EndGameState.LOSE)) {
+                this.add(losingBannerLabel);
+            } else {
+                this.add(winningBannerLabel);
+            }
+            this.add(backButton);
+            this.revalidate();
+            this.repaint(0);
         }
-        this.add(backButton);
-        this.revalidate();
-        this.repaint(0);
     }
 
     private void removeEndView() {
+        endViewShowed = false;
         this.remove(backButton);
         this.remove(winningBannerLabel);
         this.remove(losingBannerLabel);
