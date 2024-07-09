@@ -21,7 +21,16 @@ import java.util.Optional;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.Arrays;
-
+/**
+ * Given that this class has been created for testing purposes and for sake
+ * of simplicity (otherwise we would need to add more methods),
+ * knowing nothing harmful can happen in so little code the
+ * SpotBugs check for exposing internal representation is suprressed.
+ */
+@SuppressFBWarnings(
+    value = "EI_EXPOSE_REP",
+    justification = "The map needs to be changed for the tests."
+    )
 /**
  * A Modified manager for testing purpose.
  */
@@ -117,11 +126,6 @@ public class MyGameManager implements GameManager {
         return Arrays.asList(enemy);
     }
 
-
-    @SuppressFBWarnings(
-    value = "EI_EXPOSE_REP",
-    justification = "we need to change the map for tests"
-    )
     /**
      * Gets the game map.
      * 
