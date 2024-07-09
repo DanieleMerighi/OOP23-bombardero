@@ -1,1 +1,1 @@
-rootProject.name = "OOP23-BOMBARDERO"
+rootProject.name = "Bombardero"
