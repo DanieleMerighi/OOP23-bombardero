@@ -6,6 +6,7 @@
 \usepackage{float}
 \usepackage{hyperref}
 \usepackage{markdown}
+\usepackage{menukeys}
 
 % Questo commentalo se vuoi scrivere in inglese.
 \usepackage[italian]{babel}
@@ -106,7 +107,7 @@ Queste \verb|Cell| potranno essere di diverso tipo:
 \caption{Schema UML sulle relazioni tra le varie entità di tipo Cell}
 \end{figure}
 
-Il \verb|Character| si divide in \verb|Player| e \verb|Enemy|. Qualsiasi personaggio può piazzare delle bombe sulle celle libere della mappa che una volta esplose generano una serie di fiamme. Le fiamme interagiscono con i muri, con i potenziamenti e con le bombe modificando la struttura della mappa, distruggendo ciò che ci trova nella stessa Cell ed espandendosi attraverso le celle libere. Un muro, se distrutto, può lasciare un potenziamento al suo posto. 
+Il \verb|Character| si divide in \verb|Player| e \verb|Enemy|. Qualsiasi personaggio può piazzare delle bombe sulle celle libere della mappa che una volta esplose generano una serie di fiamme. Le fiamme interagiscono con i muri, con i potenziamenti e con le bombe modificando la struttura della mappa, distruggendo ciò che si trova nella stessa Cell ed espandendosi attraverso le celle libere. Un muro, se distrutto, può lasciare un potenziamento al suo posto. 
 
 Il tutto viene racchiuso nell'interfaccia \verb|GameManager|, di cui si parlerà in dettaglio nella prossima sezione, nella seguente maniera: 
 
@@ -120,12 +121,12 @@ Il tutto viene racchiuso nell'interfaccia \verb|GameManager|, di cui si parlerà
 
 \section{Architettura}
 
-In questo applicativo è stato utilizzato il pattern architetturale model-view-controller. Le interfacce che compongono in pattern sono \verb|Controller|, \verb|GraphicsEngine| e 
+In questo applicativo è stato utilizzato il pattern architetturale model-view-controller. Le interfacce che compongono il pattern sono \verb|Controller|, \verb|GraphicsEngine| e 
 \verb|GameManager| mentre per quanto riguarda il game loop necessario ad aggiornare ciclicamente le componenti di gioco sia di model che di view è stata creata l'interfaccia \verb|Engine|.
 \par
 L'interfaccia \verb|GameManager| è il punto d'ingresso al model. Si occupa dell'aggiornamento degli aspetti dinamici delle componenti del dominio e della gestione delle dinamiche di gioco.
 \par
-\verb|Controller| è l'interfaccia rappresentante omonimo componente dell'architettura M.V.C. esso fa da tramite tra la view, rappresentata da \verb|GraphicsEngine|, \verb|GameManager| e l'interfaccia di gestione degli input dell'utente \verb|KeyListener| 
+\verb|Controller| è l'interfaccia rappresentante l'omonimo componente dell'architettura M.V.C. esso fa da tramite tra la view, rappresentata da \verb|GraphicsEngine| e \verb|GameManager|; infine vi è l'interfaccia di gestione degli input dell'utente \verb|KeyListener|.
 
 \begin{figure}[h]
 \centering{}
@@ -134,57 +135,54 @@ L'interfaccia \verb|GameManager| è il punto d'ingresso al model. Si occupa dell
 \end{figure}
 
 \par 
-Per quanto riguarda la indipendenza degli elementi di questa architettura l'interfaccia grafica, il controller mette a disposizione i metodi necessari per poter comunicare all'interfaccia grafica quali sono gli elementi da mostrare. A sua volta l'interfaccia grafica mette a disposizione diversi metodi per permettere al controller di modificare la vista ed impostare visuali diverse.
+Per quanto riguarda la indipendenza degli elementi di questa architettura l'interfaccia grafica, il controller mette a disposizione i metodi necessari per poter comunicare all'interfaccia grafica quali sono gli elementi da mostrare. A sua volta l'interfaccia grafica mette a disposizione diversi metodi per permettere al controller di modificare la vista ed impostare visuali diverse. La conclusione è che l'interfaccia grafica è facilmente sostituibile con una nuova interfaccia al momento del bisogno, a meno di certi aggiustamenti che potrebbero essere necessari dal punto di vista implementativo. 
 
 \section{Design dettagliato}
 
-\subsection{qualcosa di Federico Bagattoni}
-\subsection{Luca Venturini}
-\subsection*{1. Problema da Risolvere}
+\subsection{Federico Bagattoni}
 
+\subsubsection{Generazione della mappa di gioco}\label{map-generator-subsection}
 \par
-Fare in modo che i personaggi all'interno dell'arena non possano oltrepassare i muri della mappa e aluni tipi di Cell utilizzando un movimento su un piano continuo.
+Le caratteristiche della mappa stabilite in fase di analisi impongono che essa sia formata, inizialmente, da muri distruttibili ed indistruttibili i primi disposti in ordine casuale ed i secondi disposti sempre nella stessa maniera a creare una griglia. 
 %
-\subsection*{1. Soluzione Proposta}
+Inoltre, durante la fase di collasso della mappa, le mura devono seguire un certo ordine nella loro caduta. 
+\newline
+Al fine di generare i vari elementi sulla mappa è stata creata l'interfaccia \verb|MapGenerator|, questa genera su richiesta i diversi elementi da inserire nella mappa.
+%
+\begin{figure}[H]
+    \centering{}
+    \includegraphics[width=0.3\textwidth]{img/mapgenerator-gamemap.png}
+    \caption{Schema UML generale riguardo la generazione della mappa}
+    \label{img:mapgenerator-gamemap}
+\end{figure}
+%
+\paragraph{Problema:} E' necessaria una maggiore flessibilità nella generazione del \verb|collapse order| da parte di \verb|MapGenerator|.
+%
+\paragraph{Soluzione:} Si fa uso del pattern \texttt{Strategy} nella generazione del \texttt{collapse order} servendosi dell'interfaccia \texttt{MatrixTraversalStrategy}. Infatti il problema viene visto come un problema di travel attraverso una matrice e tramite l'interfaccia menzionata vengono forniti diversi modi di affrontare il problema.
+\newline
+A questo punto, la \texttt{GameMap} può scegliere facilmente quale strategia può utilizzare per il collasso della mappa. L'utilizzo del pattern consente di avere maggiore flessibilità anche nel caso si voglia espandere il gioco ed avere fantasia nella generazione di pattern di collasso.
+%
+\begin{figure}[H]
+    \centering{}
+    \includegraphics[width=0.5\textwidth]{img/matrix-trav-strat.png}
+    \caption{Schema UML del pattern strategy}
+    \label{img:mapgenerator-gamemap}
+\end{figure}
+\subsubsection{Riuso del codice per la creazione della guida di gioco}
+Essendo l'interfaccia \texttt{GameManager} deputata alla organizzazione e sincronizzazione di tutti gli elementi di gioco viene necessario approfondire questa tematica quando si vuole creare una \textit{guida intertattiva} che permetta ad un giocatore principiante di imparare le basi del gioco.
+\paragraph{Problema:}è necessario creare diverse versioni di \texttt{GameManager} specializzate in diverse parti del gioco. 
+\paragraph{Soluzione:} creazione di una classe comune che vada a favorire il riuso specializzandola in diverse classi a seconda della modalità di gioco che si vuole controllare. Inoltre viene creata un interfaccia \texttt{GuideManager} che estende il contratto di \texttt{GameManager}. 
 
 \begin{figure}[H]
-\centering{}
-\includegraphics[width=\textwidth]{report-src/img/RectangleBox.png}
-\caption{Schema UML riassuntivo della classe RectangleBoundingBox}
+    \centering{}
+    \includegraphics[width=0.7\textwidth]{img/managers.png}
+    \caption{Schema UML sul riuso nel contesto di \texttt{GameManager} e \texttt{GuideManager}}
+    \label{img:mapgenerator-gamemap}
 \end{figure}
 
-\par
-Per risolvere questo problema è stato utilizzato il pattern \verb|Adapter| dove la classe RectangleBoundingBox si compone di un Rectangle2D per descrivere la parte solida di un Character o di una Cell, di fatto RectangleBoundingBox utilizza i metodi di un Rectangle2D per ricavare informazioni utili, come nel caso di una collisione la distanza che il Character deve percorrere per non collidere più rispetto ad un muro.
-Con questa implementazione si lascia poco spazio a nuove BoundingBox magari di forme diverse, però abbiamo valutato che in questo caso sia appropriata dati gli elementi di gioco presenti nel dominio e l'utilizzo che ne viene fatta.
+Infatti la classe \texttt{BasicBombarderoGameManager} implementa un comportamento standard che \textit{tutti} i \textit{manager} dovrebbero avere cioè quello di aggiornare tutte le componenti, finire la partita in vittoria o sconfitta e generare nelle posizioni corrette i diversi elemenenti. 
 
-
-\begin{figure}[H]
-\centering{}
-\includegraphics[width=\textwidth]{report-src/img/CollisionEngine.png}
-\caption{Schema UML riassuntivo della classe BombarderoCollision}
-\end{figure}
-
-\par
-Inoltre per gestire le collisioni il GameManager necessita di una Collision Engine ovvero una classe che gestisca le collisioni, questa viene passata come \verb|Strategia| da costruttore all'inizio di una partita. A sua volta l'implementazione utilizzata BombarderoCollision necessita di un CollisionHandler che risolva le collisioni da lei trovate, anche questa passata come \verb|Strategia| da costruttore. grazie a questa implementazione si possono creare nuovi modi per gestire le collisioni del gioco.
-\subsection*{2. Problema da Risolvere}
-\par
-Nel gioco alcuni PowerUp danno il potere ai giocatori di utilizzare delle bombe che hanno effetti diversi come poter perforare i muri o esplodere da remoto
-
-\begin{figure}[H]
-\centering{}
-\includegraphics[width=\textwidth]{report-src/img/bombFactory.png}
-\caption{Schema UML riassuntivo della classe BombFactoryImpl}
-\end{figure}
-
-\subsection*{2. Soluzione Proposta}
-\par
-Per la creazione delle bombe viene utilizzata una BombFactory ovvero una classe che segue il pattern \verb|Symple Factory| per cui con ogni suo metodo restituisce una Bomb con caratteristiche diverse.tutti Character che sono in gioco quando creati richiedono una BombFactory alla quale quando, dovranno piazzare delle bombe, chiederanno la Bomb equivalente al PowerUp che hanno preso. Anche in questo caso l'utilizzo del pattern \verb|Strategy| rende possibile una nuova implementazione di BombFactory.  L'implementazione delle diverse Bomb nella classe BombfactoryImpl viene fatta a partire dalla abtract class BasicBomb, sfruttando al massimo il riutilizzo del codice.
-
-
-\subsection*{2. Alternativa Considerata}
-\par
-Nei metodi della BombFactoryImpl inizialmente era stato pensato l'utilizzo del pattern \verb|Decorator| in alternativa all'implementazione delle Bomb a partire da una classe astratta per dare la possibilita di avere bombe con piu effetti (per esempio una bomba che perfori i muri e venga fatta esplodere da remoto), questa modalità è stata scartata quando il gruppo ha deciso di tenere fede al gioco originale e non lasciare la possibilita di mescolare i tipi di bomba.
-
+\subsection{qualcosa di Luca Venturini}
 \subsection{Jacopo Turchi}
 
 
@@ -195,7 +193,7 @@ Nei metodi della BombFactoryImpl inizialmente era stato pensato l'utilizzo del p
 \caption{Schema UML della \texttt{PowerUpFactory} e della sua implementazione}
 \label{img:uml-power-up-factory}
 \end{figure}
-\paragraph{Problema:} I \texttt{PowerUp} devono essere generati a seguito della rottura di un \texttt{BreackableWall} in base alla loro rarità. Bisogna sviluppare una soluzione intelligente che permetta di creare PowerUp diversi.
+\paragraph{Problema:} I \texttt{PowerUp} devono essere generati a seguito della rottura di un \texttt{BreakableWall} in base alla loro rarità. Bisogna sviluppare una soluzione intelligente che permetta di creare PowerUp diversi.
 \paragraph{Soluzione:} Seguendo il pattern \textit{Method Factory}, come da
 \Cref{img:uml-power-up-factory} rispettiamo i principi SRP, OCP e DIP, dato che potenzialmente possono essere aggiunti nuovi PowerUp senza modificare il codice esistente, ma aggiungendone solo. Inoltre la factory ha il solo compito di creare i PowerUp e non dipende da implementazioni, ma dall'interfaccia.
 
@@ -369,35 +367,43 @@ La classe \texttt{TestPlayer} verifica che la classe Player e la sua classe astr
 \end{itemize}
 
 \par
-La classe \texttt{TestBomb} : verifica che la BombFactoryImpl e le Bomb funzionino nel modo corretto
+La classe \texttt{TestMap} verifica che l'apparato descritto nella sezione \ref{map-generator-subsection}:
 \begin{itemize}
-    \item verifica l'interazione dell'esplosione con vari tipi di Cell 
-    \item verifica il corretto piazzamento dei diversi tipi di Bomb
-    \item verifica gli effetti di tutti i tipi di Bomb
+    \item{generi un certo numero di muri indistruttibili in determinate posizioni (devono essere di una quantità fissa) ed il loro posizionamento nella mappa}
+    \item{generi un certo numero di muri indistruttibili (in funzione della percentuale sul terreno libero che viene impostata dal gioco)}
+    \item{non generi muri distruttibili in corrispondenza delle tre celle ad ogni angolo della mappa (un blocco in questi punti non darebbe possibilità di piazzare bombe in sicurezza al giocatore)}
 \end{itemize}
-
-\par
-La classe \texttt{TestCollision} : verifica le classi RectangleBoundingBox, BombarderoCollision e CollisionHandler 
-\begin{itemize}
-    \item verifica che le collisioni con un ostacolo siamo riscontrate in tutte e 4 le direzioni e successivamente risolte  
-    \item verifica quando un personaggio si trova sopra ad una Cell di tipo Powerup o Flame
-\end{itemize}
-\par
-per il testing specifico della risoluzione delle collisioni si è preferito fare test di persona così da poter decidere la grandezza delle BoundingBox
 
 \section{Note di sviluppo}
 
-\subsection{qualcosa di Federico Bagattoni}
-\subsection{Luca Venturini}
+\subsection{Federico Bagattoni}
+\subsubsection{Utilizzo di \texttt{Lambda Expression}}
+Utilizzo di \texttt{Lambda Expression} in diversi punti, ad esempio per la creazione
+delle procedure nella guida interattiva si veda: \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/b621c490e0f6aebeb2d828b960f0263de4801cb0/src/main/java/it/unibo/bombardero/core/impl/BombarderoGuideManager.java#L60-L80}
 
-\subsubsection{Utilizzo di Stream Java}
-\textbf{Permalink:} \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/43c0418f98602e303e34baf20629ccd1dd0a7c1b/src/main/java/it/unibo/bombardero/bomb/impl/BasicBomb.java#L115-L140}
+\subsubsection{Utilizzo di Java \texttt{Stream}}
+Utilizzo di Java \texttt{Stream}, per esempio per la generazione delle posizioni dei muri si veda:
+\url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/b621c490e0f6aebeb2d828b960f0263de4801cb0/src/main/java/it/unibo/bombardero/map/impl/MapGeneratorImpl.java#L49-L58} 
 
-\subsubsection{Utilizzo di generici e Functional Interface}
-\textbf{Permalink:} \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/a94a829f9745cfda90a3125da40c183ad68c571e/src/main/java/it/unibo/bombardero/map/api/GenPair.java#L46-L57}
+\subsubsection{Utilizzo di \texttt{functional interfaces}}
+Utilizzo di lambda interfaces come \texttt{BiPredicate} e \texttt{BiConsumer}, per esempio nella creazione delle procedura della guida interattiva, si veda:
+\url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/b621c490e0f6aebeb2d828b960f0263de4801cb0/src/main/java/it/unibo/bombardero/core/api/GuideStep.java#L15}
 
-\subsubsection{Functional Interface e Lambda expression}
-\textbf{Permalink:} \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/a94a829f9745cfda90a3125da40c183ad68c571e/src/main/java/it/unibo/bombardero/map/api/Functions.java#L22-L85}
+\subsubsection{Algoritmo di traversal in spirale di una matrice}
+Trovo moralmente giusto menzionare, in quanto non di mia creazione, la fonte dell'algoritmo di traversal di una matrice in forma spirale che viene usato nella generazione del \texttt{collapse order}, cito la fonte che ho usato anche se le prime ricerche danno tutte lo stesso risultato:
+\newline
+Permalink allo snippet nel progetto: \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/3cd34d82edae666c7312e2901513517cadcdd165/src/main/java/it/unibo/bombardero/map/impl/SpiralTraversalStrategy.java#L15-L44}
+\newline
+Permalink al sito web da cui si è preso il codice: \url{https://takeuforward.org/data-structure/spiral-traversal-of-matrix/}
+
+\subsubsection{Riadattamento della classe \texttt{BombarderoEngine} a partire da una già esistente}
+Per lo sviluppo della classe \texttt{BombarderoEngine} è stata riadattata la classe \texttt{GameEngine} sviluppata dal Prof. Alessandro Ricci durante il seminario \textit{Game Programming Patterns in Java} nell'a.a. 2022-2023.
+\newline
+Permalink al seminario: \url{https://github.com/pslab-unibo/oop-game-prog-patterns-2022/blob/master/step-01-game-loop/src/rollball/core/GameEngine.java#L1-L71}
+\newline
+Permalink a \texttt{BombarderoEngine}: \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/b621c490e0f6aebeb2d828b960f0263de4801cb0/src/main/java/it/unibo/bombardero/core/BombarderoEngine.java#L37-L65}
+
+\subsection{qualcosa di Luca Venturini}
 
 \subsection{Jacopo Turchi}
 
@@ -432,106 +438,15 @@ Permalink: \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/a94a829f
 Utilizzando dove è stato possibile, il seguente è un singolo esempio: 
 \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/a94a829f9745cfda90a3125da40c183ad68c571e/src/main/java/it/unibo/bombardero/character/AI/impl/EnemyGraphReasonerImpl.java#L75C5-L85C6}
 
-%
-In questa sezione, \textit{dopo l'elenco},
-vanno menzionati ed attributi con precisione eventuali pezzi di codice ``riadattati'' (o scopiazzati...) da Internet o da altri progetti,
-pratica che tolleriamo ma che non raccomandiamo.
-%
-Si rammenta agli studenti che non è consentito partire da progetti esistenti e procedere per modifiche successive.
-%
-Si ricorda anche che i docenti hanno in mano strumenti antiplagio piuttosto raffinati e che ``capiscono'' il codice e la storia delle modifiche del progetto,
-per cui tecniche banali come cambiare nomi (di classi, metodi, campi, parametri, o variabili locali),
-aggiungere o togliere commenti,
-oppure riordinare i membri di una classe vengono individuate senza problemi.
-%
-Le regole del progetto spiegano in dettaglio l'approccio dei docenti verso atti gravi come il plagiarismo.
-
-I pattern di design \textbf{non} vanno messi qui.
-%
-L'uso di pattern di design (come suggerisce il nome) è un aspetto avanzato di design, non di implementazione,
-e non va in questa sezione.
-
-\subsection*{Elementi positivi}
-
-\begin{itemize}
-	\item Si elencano gli aspetti avanzati di linguaggio che sono stati impiegati
-	\item Si elencano le librerie che sono state utilizzate
-	\item Per ciascun elemento, si fornisce un permalink
-	\item Ogni permalink fa riferimento ad uno snippet di codice scritto dall'autore della sezione (i docenti verificheranno usando \texttt{git blame})
-	\item Se si è utilizzato un particolare algoritmo, se ne cita la fonte originale.
-	Ad esempio, se si è usato Mersenne Twister per la generazione di numeri pseudo-random, si cita \cite{mersenne}.
-	\item Si identificano parti di codice prese da altri progetti, dal web, o comunque scritte in forma originale da altre persone.
-	In tal senso, si ricorda che agli ingegneri non è richiesto di re-inventare la ruota continuamente:
-	se si cita debitamente la sorgente è tollerato fare uso di di snippet di codice open source per risolvere velocemente problemi non banali.
-	Nel caso in cui si usino snippet di codice di qualità discutibile,
-	oltre a menzionarne l'autore originale si invitano gli studenti ad adeguare tali parti di codice agli standard e allo stile del progetto.
-	Contestualmente, si fa presente che è largamente meglio fare uso di una libreria che copiarsi pezzi di codice:
-	qualora vi sia scelta (e tipicamente c'è), si preferisca la prima via.
-\end{itemize}
-
-\subsection*{Elementi negativi}
-\begin{itemize}
-	\item Si elencano feature core del linguaggio invece di quelle segnalate. Esempi di feature core da non menzionare sono:
-    \begin{itemize}
-        \item eccezioni;
-        \item classi innestate;
-        \item enumerazioni;
-        \item interfacce.
-    \end{itemize}
-	\item Si elencano applicazioni di terze parti (peggio se per usarle occorre licenza, e lo studente ne è sprovvisto) che non c'entrano nulla con lo sviluppo, ad esempio:
-    \begin{itemize}
-        \item Editor di grafica vettoriale come Inkscape o Adobe Illustrator;
-        \item Editor di grafica scalare come GIMP o Adobe Photoshop;
-        \item Editor di audio come Audacity;
-        \item Strumenti di design dell'interfaccia grafica come SceneBuilder: il codice è in ogni caso inteso come sviluppato da voi.
-    \end{itemize}
-	\item Si descrivono aspetti di scarsa rilevanza, o si scende in dettagli inutili.
-	\item Sono presenti parti di codice sviluppate originalmente da altri che non vengono debitamente segnalate.
-	In tal senso, si ricorda agli studenti che i docenti hanno accesso a tutti i progetti degli anni passati,
-	a Stack Overflow,
-	ai principali blog di sviluppatori ed esperti Java,
-	ai blog dedicati allo sviluppo di soluzioni e applicazioni
-	(inclusi blog dedicati ad Android e allo sviluppo di videogame),
-	nonché ai vari GitHub, GitLab, e Bitbucket.
-	Conseguentemente, è \emph{molto} conveniente \emph{citare} una fonte ed usarla invece di tentare di spacciare per proprio il lavoro di altri.
-	\item Si elencano design pattern
-\end{itemize}
-
-\subsection{Esempio}
-
-\subsubsection{Utilizzo della libreria SLF4J}
-
-Utilizzata in vari punti.
-Un esempio è \url{https://github.com/AlchemistSimulator/Alchemist/blob/5c17f8b76920c78d955d478864ac1f11508ed9ad/alchemist-swingui/src/main/java/it/unibo/alchemist/boundary/swingui/effect/impl/EffectBuilder.java#L49}
-
-\subsubsection{Utilizzo di \texttt{LoadingCache} dalla libreria Google Guava}
-
-Permalink: \url{https://github.com/AlchemistSimulator/Alchemist/blob/d8a1799027d7d685569e15316a32e6394632ce71/alchemist-incarnation-protelis/src/main/java/it/unibo/alchemist/protelis/AlchemistExecutionContext.java#L141-L143}
-
-\subsubsection{Utilizzo di \texttt{Stream} e lambda expressions}
-
-Usate pervasivamente. Il seguente è un singolo esempio.
-Permalink: \url{https://github.com/AlchemistSimulator/Alchemist/blob/d8a1799027d7d685569e15316a32e6394632ce71/alchemist-incarnation-protelis/src/main/java/it/unibo/alchemist/model/ProtelisIncarnation.java#L98-L120}
-
-\subsubsection{Scrittura di metodo generico con parametri contravarianti}
-
-Permalink: \url{https://github.com/AlchemistSimulator/Alchemist/blob/d8a1799027d7d685569e15316a32e6394632ce71/alchemist-incarnation-protelis/src/main/java/it/unibo/alchemist/protelis/AlchemistExecutionContext.java#L141-L143}
-
-\subsubsection{Protezione da corse critiche usando \texttt{Semaphore}}
-
-Permalink: \url{https://github.com/AlchemistSimulator/Alchemist/blob/d8a1799027d7d685569e15316a32e6394632ce71/alchemist-incarnation-protelis/src/main/java/it/unibo/alchemist/model/ProtelisIncarnation.java#L388-L440}
-
-
 \chapter{Commenti finali}
 
-In quest'ultimo capitolo si tirano le somme del lavoro svolto e si delineano eventuali sviluppi
-futuri.
-
-\textit{Nessuna delle informazioni incluse in questo capitolo verrà utilizzata per formulare la valutazione finale}, a meno che non sia assente o manchino delle sezioni obbligatorie.
-%
-Al fine di evitare pregiudizi involontari, l'intero capitolo verrà letto dai docenti solo dopo aver formulato la valutazione.
-
 \section{Autovalutazione e lavori futuri}
+
+\subsection{Federico Bagattoni}
+Sono particolarmente contento della collaborazione e della riuscita del progetto. Essendo una persona competitiva, ma per le cose inutili, tenevo particolarmente alla riuscita della parte grafica e della user experience che in certi punti mi ha lasciato amareggiato a causa dei ritardi nella settimana antecedente la consegna. 
+Per quanto riguarda la parte di modello avrei sicuramente svolto una notevole fase di progettazione prima di iniziare a scrivere codice, quando in realtà questa strada non è stata seguita.
+Complessivamente, essendo al primo progetto di queste dimensioni, mi ritengo soddisfatto unicamente per averlo portato a termine con un risultato che mi aggrada, considerando anche altre attività al di fuori dell'università che dovevo continuare a perseguire.
+
 \subsection{Daniele Merighi}
 \par
 In qualità di membro del gruppo responsabile dello sviluppo del nemico, ritengo di aver raggiunto i requisiti inizialmente prefissati in fase di progettazione. Tuttavia essendo la prima volta che realizzo un progetto basato su un videogioco ho dovuto affrontare problematiche concettualmente nuove. Sicuramente il codice attualmente presente è una buona base su cui partire per lo sviluppo di un’entità più complessa, ma se dovessi ripensare alla classe Enemy la strutturerei diversamente. Il nemico è progettato per essere espandibile e riusabile ma adotterei tecniche più evolute per la sua parte comportamentale, adoperando ad esempio un Decision Tree. Anche il grafo lo penserei in maniera differente, creando dei “sotto grafi” specifici per ogni azione, ad esempio uno con solo il suo campo visivo, uno con solo le zone di pericolo ecc. Sarebbe opportuno che l’agent avesse sempre un suo obiettivo andando a ridurre al minimo, se non zero, la parte di movimento casuale. Dopo aver affrontato il corso di metodi numerici si intende proseguire il progetto andando ad implementare anche una parte di Deep Learning per rendere il nemico una vera e propria AI.
@@ -540,88 +455,33 @@ In qualità di membro del gruppo responsabile dello sviluppo del nemico, ritengo
 \par
 Inizio con lo scrivere che questo progetto è stato formativo in quanto non avevo mai progettato in gruppo e soprattutto non avevo mai programmato ad oggetti e infatti mi è risultato difficile partire da zero. Però col tempo ho preso il mio ritmo e sono riuscito a fare la mia parte di questo gioco che ha segnato la mia infanzia. Sono molto contento del prodotto ottenuto e mi ritengo soddisfatto soprattuto di come sia evoluto il mio codice col procedere del progetto. Partendo da una banale estensione della classe Character, fino ad arrivare ad utilizzare anche diversi pattern di programmazione per i PowerUp, che ritengo essere il mio punto forte. Un mio punto debole è stato partire un po' in ritardo e non contribuire molto alla struttura iniziale del progetto, ma sono riuscito a portare una boccata d'aria nello sviluppo quando, a stato avanzato, l'umore generale non era alle stelle. Potessi tornare inidetro probabilmente non rifarei alcune delle prime scelte di programmazione, ma tutto sommato mi ritengo soddisfatto del mio lavoro
 
-
-\subsection{Luca Venturini}
-\par
-Personalmente sono soddisfatto del mio lavoro svolto all'interno di questo gruppo sia a livello di codice sia a livello di collaborazione con gli altri membri del gruppo, soprattutto nelle ultime settimane dove il lavoro si è intensificato. Sono consapevole della mia inesperienza nel programmare videogiochi, proprio per questo sono convinto che alcune cose potrebbero esser state fatte in maniera migliore per esempio l'analisi iniziale che a parer mio non e stata poi ottimale per lo sviluppo , d'altra parte sono contento di come ho sviluppato alcune feature come le collisioni.
-Lavorare in gruppo mi ha sicuramente spinto a lavorare più seriamente al progetto visto che non sei responsabile solo del tuo risultato ma di anche quello degli altri, proprio per questo ho cercato di essere il più disponibile possibile.
-
-\textbf{È richiesta una sezione per ciascun membro del gruppo, obbligatoriamente}.
-%
-Ciascuno dovrà autovalutare il proprio lavoro, elencando i punti di forza e di debolezza in quanto prodotto.
-Si dovrà anche cercare di descrivere \emph{in modo quanto più obiettivo possibile} il proprio ruolo all'interno del gruppo.
-Si ricorda, a tal proposito, che ciascuno studente è responsabile solo della propria sezione: non è un problema se ci sono opinioni contrastanti, a patto che rispecchino effettivamente l'opinione di chi le scrive.
-Nel caso in cui si pensasse di portare avanti il progetto, ad esempio perché effettivamente impiegato, o perché sufficientemente ben riuscito da poter esser usato come dimostrazione di esser capaci progettisti, si descriva brevemente verso che direzione portarlo.
-
 \section{Difficoltà incontrate e commenti per i docenti}
-
-Questa sezione, \textbf{opzionale}, può essere utilizzata per segnalare ai docenti eventuali problemi o difficoltà incontrate nel corso o nello svolgimento del progetto, può essere vista come una seconda possibilità di valutare il corso (dopo quella offerta dalle rilevazioni della didattica) avendo anche conoscenza delle modalità e delle difficoltà collegate all'esame, cosa impossibile da fare usando le valutazioni in aula per ovvie ragioni.
-%
-È possibile che alcuni dei commenti forniti vengano utilizzati per migliorare il corso in futuro: sebbene non andrà a vostro beneficio, potreste fare un favore ai vostri futuri colleghi.
-%
-Ovviamente \textit{il contenuto della sezione non impatterà il voto finale}.
-
+\subsection{Federico Bagattoni}
+Le principali difficoltà che io sento di aver incontrato durante il progetto sono: 
+\begin{itemize}
+    \item la fretta nell'iniziare la scrittura del codice (e soprattutto la \textbf{voglia})
+    \item la \textbf{poca voglia} (al contrario del punto precedente) nel voler fare una adeguata analisi e progettazione
+    \item senso di impotenza scaturito dall'imperante regolamento e formalismi che talvolta possono intimorire lo studente nella fase iniziale
+\end{itemize}
+Interessante notare invece che col procedere del progetto il focus cambia rispetto alle tre condizioni sopracitate. Infatti la fretta di scrivere codice si placa e la necessità di una maggiore progettazione affiora, notando l'accumularsi di difetti di progettazione che si devono aggirare tramite numerosi refactor. Mentre il senso di impotenza (almeno per me) si è trasformato, una volta capito quale era l'ambiente, in una grande volontà di voler essere preciso, formale e teorico. 
+\par 
+Tirando le somme percepisco che durante il corso si è affermata nella mia mente (e sono sicuro anche in quella di molti altri studenti) non la figura del "Corso di \textit{Programmazione (\textbf{progettazione e design}) ad oggetti}" quanto più il "Corso di \textit{Java}" ed è per questo che valuto così tanto, solo alla fine, gli aspetti progettuali di questo corso che certamente mi spronano ad avere più pazienza ed essere più teorico nel mesterie dell'ingegnere che il corpo docente insegna con una notevole passione.
 \appendix
 \chapter{Guida utente}
+Il menu di gioco mostra all'utente due possibilità: iniziare una partita o intraprendere la guida. Incoraggiamo fortemente un principiante a seguire il secondo punto al fine di comprendere in prima persona il funzionamento del gioco.
+\subsection{Match}
+All'inizio di un match si è generati nell'angolo in alto a sinistra di una mappa quadrata. L'obbiettivo del gioco è rimanere l'ultimo giocatore in vita. 
+Premendo \keys{W}, \keys{A}, \keys{S}, \keys{D} il giocatore può muoversi.
+Tramite la barra spaziatrice \keys{space} è possibile piazzare una bomba.
+Ogni giocatore, all'inizio della partita, può piazzare una sola bomba mentre raccogliendo il relativo powerup allarga il suo inventario.
+\newline
+I powerup permettono di potenziare o depotenziare le statistiche del giocatore oppure forniscono una bomba \textit{one-time-use} come per esempio la line bomb, che premendo il tasto \keys{L} permette di piazzare tre bombe nella direzione in cui si sta guardando.
+oppure la bomba remote che può essere detonata unicamente premendo il tasto \keys{P}.
+\newline
+Un powerup da cui si deve stare in guardia è lo \texttt{Skull} che dona uno svantaggio casuale al player per un periodo limitato di tempo, tra cui: velocità estremamente grande o piccola, drop di bombe costante mentre il player cammina e nessuna bomba. 
+\newline
+Dopo 2 minuti la mappa inizierà a collassare partendo dall'angolo in alto a sinistra e seguendo una forma a spirale, se si è colpiti da un muro si viene eliminati.
 
-Capitolo in cui si spiega come utilizzare il software. Nel caso in cui il suo uso sia del tutto
-banale, tale capitolo può essere omesso.
-%
-A tal riguardo, si fa presente agli studenti che i docenti non hanno mai utilizzato il software
-prima, per cui aspetti che sembrano del tutto banali a chi ha sviluppato l'applicazione possono non
-esserlo per chi la usa per la prima volta.
-%
-Se, ad esempio, per cominciare una partita con un videogioco è necessario premere la barra
-spaziatrice, o il tasto ``P'', è necessario che gli studenti lo segnalino.
-
-\subsection*{Elementi positivi}
-
-\begin{itemize}
- \item Si istruisce in modo semplice l'utente sull'uso dell'applicazione, eventualmente facendo uso di schermate e descrizioni.
-\end{itemize}
-
-\subsection*{Elementi negativi}
-\begin{itemize}
- \item Si descrivono in modo eccessivamente minuzioso tutte le caratteristiche, anche minori, del software in oggetto.
- \item Manca una descrizione che consenta ad un utente qualunque di utilizzare almeno le funzionalità primarie dell'applicativo.
-\end{itemize}
-
-\chapter{Esercitazioni di laboratorio}
-
-In questo capitolo ciascuno studente elenca gli esercizi di laboratorio che ha svolto
-(se ne ha svolti),
-elencando i permalink dei post sul forum dove è avvenuta la consegna.
-%
-Questa sezione potrebbe essere processata da strumenti automatici,
-per cui link a oggetti diversi dal permalink della consegna,
-errori nell'email o nel nome del laboratorio possono portare ad ignorare alcune consegne,
-si raccomanda la massima precisione.
-
-\section*{Esempio}
-
-\subsection{paolino.paperino@studio.unibo.it}
-
-\begin{itemize}
- \item Laboratorio 04: \url{https://virtuale.unibo.it/mod/forum/discuss.php?d=12345#p123456}
- \item Laboratorio 06: \url{https://virtuale.unibo.it/mod/forum/discuss.php?d=22222#p222222}
- \item Laboratorio 09: \url{https://virtuale.unibo.it/mod/forum/discuss.php?d=99999#p999999}
-\end{itemize}
-
-\subsection{paperon.depaperoni@studio.unibo.it}
-
-\begin{itemize}
- \item Laboratorio 04: \url{https://virtuale.unibo.it/mod/forum/discuss.php?d=12345#p123456}
- \item Laboratorio 05: \url{https://virtuale.unibo.it/mod/forum/discuss.php?d=22222#p222222}
- \item Laboratorio 06: \url{https://virtuale.unibo.it/mod/forum/discuss.php?d=99999#p999999}
- \item Laboratorio 07: \url{https://virtuale.unibo.it/mod/forum/discuss.php?d=22222#p222222}
- \item Laboratorio 08: \url{https://virtuale.unibo.it/mod/forum/discuss.php?d=99999#p999999}
- \item Laboratorio 09: \url{https://virtuale.unibo.it/mod/forum/discuss.php?d=22222#p222222}
- \item Laboratorio 10: \url{https://virtuale.unibo.it/mod/forum/discuss.php?d=99999#p999999}
- \item Laboratorio 11: \url{https://virtuale.unibo.it/mod/forum/discuss.php?d=22222#p222222}
-\end{itemize}
-
-
-\bibliographystyle{alpha}
-\bibliography{13-template}
-
+\chapter{Esercitazioni di laboratorio} 
+Nessuno studente ha mai consegnato i laboratori di programmazione ad oggetti. 
 \end{document}
