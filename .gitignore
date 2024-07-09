@@ -15,3 +15,5 @@ bin/
 
 # ignore .DS_STORE MacOS System files
 *.DS_STORE
+# Ignore photoshop files
+*.psd
