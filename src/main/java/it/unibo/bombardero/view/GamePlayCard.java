@@ -292,7 +292,7 @@ public abstract class GamePlayCard extends JPanel {
 
     /**
      * Clears the view of everything that has been displayed during the 
-     * game phase:
+     * game phase.
      * <ul>
      *  <li> Removes sprites </li>
      *  <li> Removes messages </li>
