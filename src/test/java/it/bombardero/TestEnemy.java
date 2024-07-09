@@ -34,7 +34,7 @@ class TestEnemy {
         this.controller = new ControllerForTesting();
         this.manager = new MyGameManager();
         this.manager.setEnemyCoord(0, 0);
-        this.manager.getEnemy().setSpeed(SPEED);
+        this.manager.setEnemySpeed(SPEED);
     }
 
     /**
@@ -46,13 +46,13 @@ class TestEnemy {
         // CHECKSTYLE: MagicNumber OFF
         manager.setPlayerCoord(0, 5);
         // CHECKSTYLE: MagicNumber ON
-        manager.getEnemy().update(manager, STANDARD_ELAPSED_TIME, CharacterType.ENEMY);
+        manager.getEnemies().get(0).update(manager, STANDARD_ELAPSED_TIME, CharacterType.ENEMY);
 
         // Verify enemy state is PATROL
-        assertTrue(manager.getEnemy().isStateEqualTo(new PatrolState()));
+        assertTrue(manager.isEnemyStateEqualTo(new PatrolState()));
         // We can't directly verify moveRandomly is called, but we can check if nextMove
         // is set through random movement
-        assertTrue(manager.getEnemy().getNextMove().isPresent());
+        assertTrue(manager.getEnemyNextMove().isPresent());
     }
 
     /**
@@ -65,7 +65,7 @@ class TestEnemy {
         manager.updateGame(STANDARD_ELAPSED_TIME, controller);
 
         // Verify enemy state is CHASE
-        assertTrue(manager.getEnemy().isStateEqualTo(new ChaseState()));
+        assertTrue(manager.isEnemyStateEqualTo(new ChaseState()));
     }
 
     /**
@@ -75,13 +75,13 @@ class TestEnemy {
     void testEnemyChaseLosesPlayerChangesToPatrolState() {
         // Set initial player position within detection radius in TestGameManager
         manager.setPlayerCoord(2, 1);
-        manager.getEnemy().setNumBomb(0);
+        manager.setEnemyBombs(0);
         // We need more than 1 sec to move between cells
         manager.updateGame(STANDARD_ELAPSED_TIME, controller);
 
         // Verify enemy state is CHASE
-        assertTrue(manager.getEnemy().isStateEqualTo(new ChaseState()));
-        assertEquals(new GenPair<Integer, Integer>(1, 0), manager.getEnemy().getIntCoordinate());
+        assertTrue(manager.isEnemyStateEqualTo(new ChaseState()));
+        assertEquals(new GenPair<Integer, Integer>(1, 0), manager.getEnemyCoord());
 
         // Set player moving away after initial detection
         // CHECKSTYLE: MagicNumber OFF
@@ -90,7 +90,7 @@ class TestEnemy {
         manager.updateGame(STANDARD_ELAPSED_TIME, controller);
 
         // Verify enemy state is PATROL
-        assertTrue(manager.getEnemy().isStateEqualTo(new PatrolState()));
+        assertTrue(manager.isEnemyStateEqualTo(new PatrolState()));
     }
 
     /**
@@ -99,16 +99,16 @@ class TestEnemy {
     @Test
     void testEnemyEscapeChangesToPatrol() {
         // Set enemy position inside a danger zone
-        this.manager.getEnemy().setSpeed(NEWSPEED);
+        this.manager.setEnemySpeed(NEWSPEED);
         this.manager.addBomb(new GenPair<Integer, Integer>(0, 1));
-        this.manager.getEnemy().update(manager, STANDARD_ELAPSED_TIME, CharacterType.ENEMY);
+        this.manager.enemySingleUpdate();
 
-        assertTrue(manager.getEnemy().isStateEqualTo(new EscapeState()));
+        assertTrue(manager.isEnemyStateEqualTo(new EscapeState()));
         this.manager.updateGame(STANDARD_ELAPSED_TIME, controller);
-        assertEquals(new GenPair<Integer, Integer>(1, 0), manager.getEnemy().getIntCoordinate());
+        assertEquals(new GenPair<Integer, Integer>(1, 0), manager.getEnemyCoord());
         this.manager.updateGame(STANDARD_ELAPSED_TIME, controller);
         // Verify enemy state is Patrol
-        assertTrue(manager.getEnemy().isStateEqualTo(new PatrolState()));
+        assertTrue(manager.isEnemyStateEqualTo(new PatrolState()));
 
     }
 
@@ -119,15 +119,15 @@ class TestEnemy {
     void testEnemyPatrolBreakableWallNextToEnemyPlacesBomb() {
         // Set enemy next to a breakable wall
         manager.setPlayerCoord(1, 2);
-        manager.getEnemy().setNumBomb(STARTING_BOMBS); // 1 bomb added to enemy
-        manager.getGameMap().addBreakableWall(new GenPair<Integer, Integer>(0, 1));
-        manager.getGameMap().addBreakableWall(new GenPair<Integer, Integer>(2, 0));
-        manager.getEnemy().update(manager, STANDARD_ELAPSED_TIME, CharacterType.ENEMY);
+        manager.setEnemyBombs(STARTING_BOMBS);
+        manager.addBreakableWall(new GenPair<Integer, Integer>(0, 1));
+        manager.addBreakableWall(new GenPair<Integer, Integer>(2, 0));
+        manager.enemySingleUpdate();
 
-        assertTrue(manager.getEnemy().isStateEqualTo(new ChaseState()));
+        assertTrue(manager.isEnemyStateEqualTo(new ChaseState()));
         manager.updateGame(STANDARD_ELAPSED_TIME, controller);
         manager.updateGame(STANDARD_ELAPSED_TIME, controller);
         // Verify bomb is placed on the enemy's position
-        assertEquals(STARTING_BOMBS - 1, manager.getEnemy().getNumBomb());
+        assertEquals(STARTING_BOMBS - 1, manager.getEnemyNumBombs());
     }
 }

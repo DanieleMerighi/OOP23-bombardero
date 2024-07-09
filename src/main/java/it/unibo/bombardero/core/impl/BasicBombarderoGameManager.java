@@ -49,7 +49,6 @@ public class BasicBombarderoGameManager implements GameManager {
      * <p>
      * A enemy for each element of the list will be spawned.
      * 
-     * @param controller        the game's controller
      * @param playerSpawnPoint  the main player's spawnpoint
      * @param enemiesSpawnpoint a list of the enemies spawnpoints
      * @param generateWalls     wether the breakable walls have to be generated or not
@@ -118,6 +117,14 @@ public class BasicBombarderoGameManager implements GameManager {
     @Override
     public Optional<Long> getTimeLeft() {
         return Optional.empty();
+    }
+
+    /**
+     * Adds a breakable wall to the map.
+     * @param coordinate the coordinate where to add the wall.
+     */
+    protected final void addBreakableWall(final GenPair<Integer, Integer> coordinate) {
+        map.addBreakableWall(coordinate);
     }
 
     /**

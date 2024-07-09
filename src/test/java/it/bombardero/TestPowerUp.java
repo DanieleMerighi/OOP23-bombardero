@@ -35,6 +35,13 @@ class TestPowerUp {
     private PowerUp powerUP;
 
     /**
+     * Constructor to initialize manager.
+     */
+    TestPowerUp() {
+        this.manager = new MyGameManager();
+    }
+
+    /**
      * Sets up the test environment before each test.
      * Initializes the game manager and the spawn coordinates of the PowerUp.
      */

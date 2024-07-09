@@ -155,7 +155,6 @@ public final class GuideCard extends GamePlayCard {
     @Override
     public void clear() {
         super.clear();
-        spritesPlacingPoint.clear();
         currentShowedSprite = Optional.empty();
         removeEndView();
     }

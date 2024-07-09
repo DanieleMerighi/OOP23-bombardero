@@ -33,7 +33,7 @@ public final class BombarderoController implements Controller {
 
     private boolean isGamePaused = true;
     private boolean isGameStarted;
-    private boolean isGameOver;
+    private final boolean isGameOver;
 
     /**
      * Creates a new controller, creating and storing the {@GraphicsEngine} that will
@@ -43,6 +43,7 @@ public final class BombarderoController implements Controller {
      */
     public BombarderoController() {
         this.graphics = new BombarderoGraphics(this);
+        isGameOver = false;
     }
 
     @Override
@@ -70,6 +71,7 @@ public final class BombarderoController implements Controller {
         isGameStarted = true;
         graphics.showGameScreen(GraphicsEngine.ViewCards.GUIDE);
         toggleMessage(BombarderoViewMessages.EXPLAIN_MOVEMENT);
+        graphics.update(getMap(), getPlayers(), getEnemies(), getTimeLeft());
     }
 
     @Override
@@ -77,7 +79,7 @@ public final class BombarderoController implements Controller {
         if (isGameStarted) {
             isGamePaused = true;
             isGameStarted = false;
-            graphics.update(getMap(), List.of(), getEnemies(), getTimeLeft());
+            graphics.clearView();
         }
     }
 

@@ -54,7 +54,6 @@ class TestMap {
         map = new GameMapImpl();
         computeMapCorners();
         computeUnbreakableWallsCoordinates();
-        /* print2DArray(generatePrintableMap()); */
     }
 
     /**
@@ -68,7 +67,6 @@ class TestMap {
                 .count();
 
         assertEquals(expectedUnbreakableWallsNumber, unbreakableWallsPresent);
-        System.out.println("OK, all the unbreakable walls are present: " + unbreakableWallsPresent);
 
         assertEquals(
                 expectedUnbreakableWallsCoordinates,
@@ -76,7 +74,6 @@ class TestMap {
                         .map(entry -> entry.getKey())
                         .filter(pair -> map.isUnbreakableWall(pair))
                         .collect(Collectors.toSet()));
-        System.out.println("OK, all the unbreakable walls are in the right position");
     }
 
     /**
@@ -132,11 +129,11 @@ class TestMap {
     // );
     // }
 
-    /**
+    /*
      * 
      * @param coordinate
      * @return a String
-     */
+     *
     private String fromClassToInteger(final GenPair<Integer, Integer> coordinate) {
         if (this.map.isBreakableWall(coordinate)) {
             return "B";
@@ -176,7 +173,7 @@ class TestMap {
         }
         System.out.print("\n\n");
     }
-
+    */
     private void computeUnbreakableWallsCoordinates() {
         for (int i = 1; i < Utils.MAP_ROWS; i += 2) {
             for (int j = 1; j < Utils.MAP_COLS; j += 2) {
@@ -202,7 +199,7 @@ class TestMap {
         this.mapCorners.add(new GenPair<Integer, Integer>(1, Utils.MAP_COLS - 1));
         this.mapCorners.add(new GenPair<Integer, Integer>(0, Utils.MAP_COLS - 2));
     }
-
+    /*
     private void computeMatrixTraversal() {
         final String[][] matrixTraversal = new String[Utils.MAP_ROWS][Utils.MAP_COLS];
         int top = 0, left = 0;
@@ -236,6 +233,6 @@ class TestMap {
             }
         }
         printPlain2DArray(matrixTraversal);
-    }
+    }*/
 
 }
