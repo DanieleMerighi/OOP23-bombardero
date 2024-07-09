@@ -15,47 +15,13 @@
 
 \title{Relazione per\\"Bombardero: the Bomberman Remake"}
 
-\author{Bello Figo Gu}
+\author{Federico Bagattoni, Daniele Merighi, Jacopo Turchi, Luca Venturini}
 \date{\today}
 
 
 \begin{document}
 
 \maketitle
-
-\begin{abstract}
-Questo documento è una relazione di meta livello, ossia una relazione che spiega come scrivere la relazione.
-%
-Lo scopo di questo documento è quello di aiutare gli studenti a comprendere quali punti trattare nella loro relazione, ed in che modo farlo, evitando di perdere del tempo prezioso in prolisse discussioni di aspetti marginali tralasciando invece aspetti di maggior rilievo.
-%
-Per ciascuna delle sezioni del documento sarà fornita una descrizione di ciò che ci si aspetta venga prodotto dal team di sviluppo, assieme ad un elenco (per forza di cose non esaustivo) di elementi che \emph{non} dovrebbero essere inclusi.
-
-Il modello della relazione segue il processo tradizionale di ingegneria del software fase per fase (in maniera semplificata).
-%
-La struttura della relazione non è indicativa ma \textit{obbligatoria}.
-%
-Gli studenti dovranno produrre un documento che abbia la medesima struttura, non saranno accettati progetti la cui relazione non risponda al requisito suddetto.
-%
-Lo studente attento dovrebbe sforzarsi di seguire le tappe suggerite in questa relazione anche per l'effettivo sviluppo del progetto: oltre ad una considerevole semplificazione del processo di redazione di questo documento, infatti, il gruppo beneficerà di un processo di sviluppo più solido e collaudato, di tipo top-down.
-
-La meta-relazione verrà fornita corredata di un template \LaTeX{} per coloro che volessero cimentarsi nell'uso.
-%
-L'uso di \LaTeX{} è vantaggioso per chi ama l'approccio ``what you mean is what you get'', ossia voglia disaccoppiare il contenuto dall'effettivo rendering del documento, accollando al motore \LaTeX{} l'onere di produrre un documento gradevole con la struttura ed il contenuto forniti.
-%
-Chi non volesse installare l'ambiente di compilazione in locale può valutare l'utilizzo dell'applicazione web \href{https://www.overleaf.com/}{Overleaf}.
-%
-L'eventuale utilizzo di \LaTeX{} non è fra i requisiti,
-non è parte del corso di Programmazione ad Oggetti, e non sarà ovviamente valutato.
-%
-I docenti accetteranno qualunque relazione in formato standard Portable Document Format (pdf) o Markdown (md), indipendentemente dal software con cui tale documento sarà redatto.
-
-Per la realizzazione degli schemi UML, si raccomanda l'utilizzo di MermaidJS\footnote{\url{https://mermaid.live/}} o PlantUML \footnote{\url{https://plantuml.com/}}.
-%
-Gli schemi in questa relazione furono realizzati con StarUML.
-%
-Come per la prosa, non è importante quale strumento sia utilizzato, ma è vitale che gli schemi siano di buona qualità e ben leggibili.
-
-\end{abstract}
 
 \tableofcontents
 
@@ -122,7 +88,7 @@ Il tutto viene racchiuso nell'interfaccia \verb|GameManager|, di cui si parlerà
 \section{Architettura}
 
 In questo applicativo è stato utilizzato il pattern architetturale model-view-controller. Le interfacce che compongono il pattern sono \verb|Controller|, \verb|GraphicsEngine| e 
-\verb|GameManager| mentre per quanto riguarda il game loop necessario ad aggiornare ciclicamente le componenti di gioco sia di model che di view è stata creata l'interfaccia \verb|Engine|.
+\verb|GameManager| mentre per quanto riguarda il game loop necessario ad aggiornare ciclicamente le componenti di gioco sia di model che di view è stata creata l'interfaccia \verb|Engine|. Il tutto è descritto in figura \ref{img:MVC-fig}
 \par
 L'interfaccia \verb|GameManager| è il punto d'ingresso al model. Si occupa dell'aggiornamento degli aspetti dinamici delle componenti del dominio e della gestione delle dinamiche di gioco.
 \par
@@ -132,6 +98,7 @@ L'interfaccia \verb|GameManager| è il punto d'ingresso al model. Si occupa dell
 \centering{}
 \includegraphics[width=\textwidth]{img/mvc.png}
 \caption{Schema UML riassuntivo dell'architettura M.V.C. dell'applicativo}
+\label{img:MVC-fig}
 \end{figure}
 
 \par 
@@ -182,7 +149,52 @@ Essendo l'interfaccia \texttt{GameManager} deputata alla organizzazione e sincro
 
 Infatti la classe \texttt{BasicBombarderoGameManager} implementa un comportamento standard che \textit{tutti} i \textit{manager} dovrebbero avere cioè quello di aggiornare tutte le componenti, finire la partita in vittoria o sconfitta e generare nelle posizioni corrette i diversi elemenenti. 
 
-\subsection{qualcosa di Luca Venturini}
+\subsection{Luca Venturini}
+\subsection*{1. Problema da Risolvere}
+
+\par
+Fare in modo che i personaggi all'interno dell'arena non possano oltrepassare i muri della mappa e aluni tipi di Cell utilizzando un movimento su un piano continuo.
+%
+\subsection*{1. Soluzione Proposta}
+
+\begin{figure}[H]
+\centering{}
+\includegraphics[width=\textwidth]{img/RectangleBoundingBox.png}
+\caption{Schema UML riassuntivo della classe RectangleBoundingBox}
+\end{figure}
+
+\par
+Per risolvere questo problema è stato utilizzato il pattern \verb|Adapter| dove la classe RectangleBoundingBox si compone di un Rectangle2D per descrivere la parte solida di un Character o di una Cell, di fatto RectangleBoundingBox utilizza i metodi di un Rectangle2D per ricavare informazioni utili, come nel caso di una collisione la distanza che il Character deve percorrere per non collidere più rispetto ad un muro.
+Con questa implementazione si lascia poco spazio a nuove BoundingBox magari di forme diverse però ho valutato che in un dominio come questo fosse appropriata per la sua semplicità.
+
+
+\begin{figure}[H]
+\centering{}
+\includegraphics[width=\textwidth]{img/CollisionEngine.png}
+\caption{Schema UML riassuntivo della classe BombarderoCollision}
+\end{figure}
+
+\par
+Inoltre per gestire le collisioni il GameManager necessita di una Collision Engine ovvero una classe che gestisca le collisioni, questa viene passata come \verb|Strategia| da costruttore all'inizio di una partita. A sua volta l'implementazione utilizzata BombarderoCollision necessita di un CollisionHandler che risolva le collisioni da lei trovate, anche questa passata come \verb|Strategia| da costruttore. grazie a questa implementazione si possono creare nuovi modi per gestire le collisioni del gioco.
+
+\subsection*{2. Problema da Risolvere}
+\par
+Nel gioco alcuni PowerUp danno il potere ai giocatori di utilizzare delle bombe che hanno effetti diversi come poter perforare i muri o esplodere da remoto
+
+\begin{figure}[H]
+\centering{}
+\includegraphics[width=\textwidth]{img/bombFactory.png}
+\caption{Schema UML riassuntivo della classe BombFactoryImpl}
+\end{figure}
+
+\subsection*{2. Soluzione Proposta}
+\par
+Per la creazione delle bombe viene utilizzata una BombFactory ovvero una classe che segue il pattern \verb|Symple Factory| per cui con ogni suo metodo restituisce una Bomb con caratteristiche diverse.tutti Character che sono in gioco quando creati richiedono una BombFactory alla quale quando, dovranno piazzare delle bombe, chiederanno la Bomb equivalente al PowerUp che hanno preso. Anche in questo caso l'utilizzo del pattern \verb|Strategy| rende possibile una nuova implementazione di BombFactory.  L'implementazione delle diverse Bomb nella classe BombfactoryImpl viene fatta a partire dalla abtract class BasicBomb, sfruttando al massimo il riutilizzo del codice.
+
+
+\subsection*{2. Alternativa Considerata}
+\par
+Nei metodi della BombFactoryImpl inizialmente era stato pensato l'utilizzo del pattern \verb|Decorator| in alternativa all'implementazione delle Bomb a partire da una classe astratta per dare la possibilita di avere bombe con piu effetti (per esempio una bomba che perfori i muri e venga fatta esplodere da remoto), questa modalità è stata scartata quando il gruppo ha deciso di tenere fede al gioco originale e non lasciare la possibilita di mescolare i tipi di bomba.
 \subsection{Jacopo Turchi}
 
 
@@ -374,6 +386,23 @@ La classe \texttt{TestMap} verifica che l'apparato descritto nella sezione \ref{
     \item{non generi muri distruttibili in corrispondenza delle tre celle ad ogni angolo della mappa (un blocco in questi punti non darebbe possibilità di piazzare bombe in sicurezza al giocatore)}
 \end{itemize}
 
+\par
+La classe \texttt{TestBomb} : verifica che la BombFactoryImpl e le Bomb funzionino nel modo corretto
+\begin{itemize}
+    \item verifica l'interazione dell'esplosione con vari tipi di Cell 
+    \item verifica il corretto piazzamento dei diversi tipi di Bomb
+    \item verifica gli effetti di tutti i tipi di Bomb
+\end{itemize}
+
+\par
+La classe \texttt{TestCollision} : verifica le classi RectangleBoundingBox, BombarderoCollision e CollisionHandler 
+\begin{itemize}
+    \item verifica che le collisioni con un ostacolo siamo riscontrate in tutte e 4 le direzioni e successivamente risolte  
+    \item verifica quando un personaggio si trova sopra ad una Cell di tipo Powerup o Flame
+\end{itemize}
+\par
+per il testing specifico della risoluzione delle collisioni si è preferito fare test di persona così da poter decidere la grandezza delle BoundingBox
+
 \section{Note di sviluppo}
 
 \subsection{Federico Bagattoni}
@@ -403,7 +432,16 @@ Permalink al seminario: \url{https://github.com/pslab-unibo/oop-game-prog-patter
 \newline
 Permalink a \texttt{BombarderoEngine}: \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/b621c490e0f6aebeb2d828b960f0263de4801cb0/src/main/java/it/unibo/bombardero/core/BombarderoEngine.java#L37-L65}
 
-\subsection{qualcosa di Luca Venturini}
+\subsection{Luca Venturini}
+
+\subsubsection{Utilizzo di Stream Java}
+\textbf{Permalink:} \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/43c0418f98602e303e34baf20629ccd1dd0a7c1b/src/main/java/it/unibo/bombardero/bomb/impl/BasicBomb.java#L115-L140}
+
+\subsubsection{Utilizzo di generici e Functional Interface}
+\textbf{Permalink:} \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/a94a829f9745cfda90a3125da40c183ad68c571e/src/main/java/it/unibo/bombardero/map/api/GenPair.java#L46-L57}
+
+\subsubsection{Functional Interface e Lambda expression}
+\textbf{Permalink:} \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/a94a829f9745cfda90a3125da40c183ad68c571e/src/main/java/it/unibo/bombardero/map/api/Functions.java#L22-L85}
 
 \subsection{Jacopo Turchi}
 
@@ -446,6 +484,8 @@ Utilizzando dove è stato possibile, il seguente è un singolo esempio:
 Sono particolarmente contento della collaborazione e della riuscita del progetto. Essendo una persona competitiva, ma per le cose inutili, tenevo particolarmente alla riuscita della parte grafica e della user experience che in certi punti mi ha lasciato amareggiato a causa dei ritardi nella settimana antecedente la consegna. 
 Per quanto riguarda la parte di modello avrei sicuramente svolto una notevole fase di progettazione prima di iniziare a scrivere codice, quando in realtà questa strada non è stata seguita.
 Complessivamente, essendo al primo progetto di queste dimensioni, mi ritengo soddisfatto unicamente per averlo portato a termine con un risultato che mi aggrada, considerando anche altre attività al di fuori dell'università che dovevo continuare a perseguire.
+\newline
+Di questo progetto mi rimane la voglia ad avere più pazienza ed essere più teorico nel mesterie dell'ingegnere
 
 \subsection{Daniele Merighi}
 \par
@@ -454,6 +494,11 @@ In qualità di membro del gruppo responsabile dello sviluppo del nemico, ritengo
 \subsection{Jacopo Turchi}
 \par
 Inizio con lo scrivere che questo progetto è stato formativo in quanto non avevo mai progettato in gruppo e soprattutto non avevo mai programmato ad oggetti e infatti mi è risultato difficile partire da zero. Però col tempo ho preso il mio ritmo e sono riuscito a fare la mia parte di questo gioco che ha segnato la mia infanzia. Sono molto contento del prodotto ottenuto e mi ritengo soddisfatto soprattuto di come sia evoluto il mio codice col procedere del progetto. Partendo da una banale estensione della classe Character, fino ad arrivare ad utilizzare anche diversi pattern di programmazione per i PowerUp, che ritengo essere il mio punto forte. Un mio punto debole è stato partire un po' in ritardo e non contribuire molto alla struttura iniziale del progetto, ma sono riuscito a portare una boccata d'aria nello sviluppo quando, a stato avanzato, l'umore generale non era alle stelle. Potessi tornare inidetro probabilmente non rifarei alcune delle prime scelte di programmazione, ma tutto sommato mi ritengo soddisfatto del mio lavoro
+
+\subsection{Luca Venturini}
+\par
+Personalmente sono soddisfatto del mio lavoro svolto all'interno di questo gruppo sia a livello di codice sia a livello di collaborazione con gli altri membri del gruppo, soprattutto nelle ultime settimane dove il lavoro si è intensificato. Sono consapevole della mia inesperienza nel programmare videogiochi, proprio per questo sono convinto che alcune cose potrebbero esser state fatte in maniera migliore per esempio l'analisi iniziale che a parer mio non e stata poi ottimale per lo sviluppo , d'altra parte sono contento di come ho sviluppato alcune feature come le collisioni.
+Lavorare in gruppo mi ha sicuramente spinto a lavorare più seriamente al progetto visto che non sei responsabile solo del tuo risultato ma di anche quello degli altri, proprio per questo ho cercato di essere il più disponibile possibile.
 
 \section{Difficoltà incontrate e commenti per i docenti}
 \subsection{Federico Bagattoni}
@@ -465,23 +510,29 @@ Le principali difficoltà che io sento di aver incontrato durante il progetto so
 \end{itemize}
 Interessante notare invece che col procedere del progetto il focus cambia rispetto alle tre condizioni sopracitate. Infatti la fretta di scrivere codice si placa e la necessità di una maggiore progettazione affiora, notando l'accumularsi di difetti di progettazione che si devono aggirare tramite numerosi refactor. Mentre il senso di impotenza (almeno per me) si è trasformato, una volta capito quale era l'ambiente, in una grande volontà di voler essere preciso, formale e teorico. 
 \par 
-Tirando le somme percepisco che durante il corso si è affermata nella mia mente (e sono sicuro anche in quella di molti altri studenti) non la figura del "Corso di \textit{Programmazione (\textbf{progettazione e design}) ad oggetti}" quanto più il "Corso di \textit{Java}" ed è per questo che valuto così tanto, solo alla fine, gli aspetti progettuali di questo corso che certamente mi spronano ad avere più pazienza ed essere più teorico nel mesterie dell'ingegnere che il corpo docente insegna con una notevole passione.
+Tirando le somme percepisco che durante il corso si è affermata nella mia mente (e sono sicuro anche in quella di molti altri studenti) non la figura del "Corso di \textit{Programmazione (\textbf{progettazione e design}) ad oggetti}" quanto più il "Corso di \textit{Java}" ed è per questo che valuto (e rimpiango), solo alla fine, gli aspetti progettuali di questo corso che il corpo docente insegna con una notevole passione.
 \appendix
 \chapter{Guida utente}
 Il menu di gioco mostra all'utente due possibilità: iniziare una partita o intraprendere la guida. Incoraggiamo fortemente un principiante a seguire il secondo punto al fine di comprendere in prima persona il funzionamento del gioco.
 \subsection{Match}
-All'inizio di un match si è generati nell'angolo in alto a sinistra di una mappa quadrata. L'obbiettivo del gioco è rimanere l'ultimo giocatore in vita. 
+All'inizio di un match si è generati nell'angolo in alto a sinistra di una mappa quadrata. L'obbiettivo del gioco è rimanere l'ultimo giocatore in vita eliminando gli altri giocatori attraverso l'esplosione di una bomba.   
 Premendo \keys{W}, \keys{A}, \keys{S}, \keys{D} il giocatore può muoversi.
 Tramite la barra spaziatrice \keys{space} è possibile piazzare una bomba.
-Ogni giocatore, all'inizio della partita, può piazzare una sola bomba mentre raccogliendo il relativo powerup allarga il suo inventario.
+Ogni giocatore, all'inizio della partita, può piazzare una sola bomba mentre raccogliendo il relativo powerup \textit{allarga} il suo inventario.
 \newline
-I powerup permettono di potenziare o depotenziare le statistiche del giocatore oppure forniscono una bomba \textit{one-time-use} come per esempio la line bomb, che premendo il tasto \keys{L} permette di piazzare tre bombe nella direzione in cui si sta guardando.
-oppure la bomba remote che può essere detonata unicamente premendo il tasto \keys{P}.
+I powerup si presentano come dei cubi verdi con un immagine centrata al loro interno. Permettono di potenziare o depotenziare le statistiche del giocatore oppure forniscono una bomba \textit{one-time-use} come per esempio la line bomb, che premendo il tasto \keys{L} permette di piazzare tre bombe nella direzione in cui si sta guardando.
+Oppure la bomba remote che può essere detonata unicamente premendo il tasto \keys{P}.
 \newline
-Un powerup da cui si deve stare in guardia è lo \texttt{Skull} che dona uno svantaggio casuale al player per un periodo limitato di tempo, tra cui: velocità estremamente grande o piccola, drop di bombe costante mentre il player cammina e nessuna bomba. 
-\newline
-Dopo 2 minuti la mappa inizierà a collassare partendo dall'angolo in alto a sinistra e seguendo una forma a spirale, se si è colpiti da un muro si viene eliminati.
+Un powerup da cui si deve stare in guardia è lo \texttt{Skull} (v. figura \ref{img:fig-skull}) che dona uno svantaggio casuale al player per un periodo limitato di tempo, tra cui: velocità estremamente alta o bassa, drop di bombe costante mentre il player cammina o nessuna bomba disponibile. 
+
+\begin{figure}[h]
+\centering{}
+\includegraphics{img/powerups/skull.png}
+\caption{Powerup Skull nel gioco}
+\label{img:fig-skull}
+\end{figure}
+Dopo 2 minuti la mappa inizierà a \textbf{collassare} partendo dall'angolo in alto a sinistra e seguendo una forma a spirale, se si è colpiti da un muro si viene eliminati.
 
 \chapter{Esercitazioni di laboratorio} 
-Nessuno studente ha mai consegnato i laboratori di programmazione ad oggetti. 
+Nessuno studente ha consegnato i laboratori di programmazione ad oggetti. 
 \end{document}
