@@ -6,7 +6,7 @@
 \usepackage{float}
 \usepackage{hyperref}
 \usepackage{markdown}
-\usepackage{menukeys}
+\usepackage{menukeys} 
 
 % Questo commentalo se vuoi scrivere in inglese.
 \usepackage[italian]{babel}
@@ -37,8 +37,8 @@ Il giocatore controlla un personaggio, in grado di muoversi liberamente nei conf
                 \item Muri indistruttibili: generati in maniera fissa a scacchiera
                 \item Muri deboli: che verranno piazzati casualmente per riempire parzialmente i restanti spazi vuoti della griglia
             \end{itemize}
-	\item Dopo un minuto e mezzo dall’inizio della partita i muri indistruttibili che formano il confine dell’arena inizieranno a collassare verso il centro, riducendo l’area calpestabile ed eliminando i giocatori che si trovano nelle loro prossimità al momento del crollo. I muri cominciano il loro crollo a partire dall’angolo in basso a sinistra, uno per volta, procedendo in senso orario.
-	\item Si dovrà implementare un giocatore principale, controllabile da parte dell’utente mediante tastiera utilizzando i tasti W, A, S e D rispettivamente per il movimento verso l’alto, verso il sinistra, verso il basso e verso destra. Verrà utilizzato il tasto B per il piazzamento delle bombe.
+	\item Dopo due minuti dall’inizio della partita i muri indistruttibili che formano il confine dell’arena inizieranno a collassare verso il centro, riducendo l’area calpestabile ed eliminando i giocatori che si trovano nelle loro prossimità al momento del crollo. I muri cominciano il loro crollo a partire dall’angolo in basso a sinistra, uno per volta, procedendo in senso orario.
+	\item Si dovrà implementare un giocatore principale, controllabile da parte dell’utente mediante tastiera utilizzando i tasti W, A, S e D rispettivamente per il movimento verso l’alto, verso il sinistra, verso il basso e verso destra. Verrà utilizzata la barra spaziatrice per il piazzamento delle bombe.
 	\item Dovranno essere presenti tre nemici, controllati dal computer, il cui scopo sarà quello di sconfiggere gli altri giocatori presenti nella mappa.
 	\item Ogni entità presente potrà piazzare delle bombe nella propria posizione corrente, che esploderanno dopo qualche secondo (permettendo ai giocatori di allontanarsi)
         \item L’esplosione causerà delle fiamme, che espandendosi verticalmente e orizzontalmente per un certo numero di caselle, cambieranno la conformazione dell’arena e danneggeranno le entità vicine. Inoltre, se la fiamma di una bomba ne colpisce un’altra, allora anche quest'ultima dovrà esplodere innestando un effetto a catena.
@@ -92,7 +92,7 @@ In questo applicativo è stato utilizzato il pattern architetturale model-view-c
 \par
 L'interfaccia \verb|GameManager| è il punto d'ingresso al model. Si occupa dell'aggiornamento degli aspetti dinamici delle componenti del dominio e della gestione delle dinamiche di gioco.
 \par
-\verb|Controller| è l'interfaccia rappresentante l'omonimo componente dell'architettura M.V.C. esso fa da tramite tra la view, rappresentata da \verb|GraphicsEngine| e \verb|GameManager|; infine vi è l'interfaccia di gestione degli input dell'utente \verb|KeyListener|.
+\verb|Controller| è l'interfaccia rappresentante l'omonimo componente dell'architettura M.V.C. esso fa da tramite tra la view, rappresentata da \verb|GraphicsEngine| e \verb|GameManager|; infine vi è l'interfaccia di gestione degli input dell'utente \verb|KeyboardInput|.
 
 \begin{figure}[h]
 \centering{}
@@ -165,7 +165,7 @@ Fare in modo che i personaggi all'interno dell'arena non possano oltrepassare i 
 
 \par
 Per risolvere questo problema è stato utilizzato il pattern \verb|Adapter| dove la classe RectangleBoundingBox si compone di un Rectangle2D per descrivere la parte solida di un Character o di una Cell, di fatto RectangleBoundingBox utilizza i metodi di un Rectangle2D per ricavare informazioni utili, come nel caso di una collisione la distanza che il Character deve percorrere per non collidere più rispetto ad un muro.
-Con questa implementazione si lascia poco spazio a nuove BoundingBox magari di forme diverse però ho valutato che in un dominio come questo fosse appropriata per la sua semplicità.
+Con questa implementazione si lascia poco spazio a nuove BoundingBox magari di forme diverse però è stato valutato che in un dominio come questo fosse appropriata per la sua semplicità.
 
 
 \begin{figure}[H]
@@ -175,7 +175,7 @@ Con questa implementazione si lascia poco spazio a nuove BoundingBox magari di f
 \end{figure}
 
 \par
-Inoltre per gestire le collisioni il GameManager necessita di una Collision Engine ovvero una classe che gestisca le collisioni, questa viene passata come \verb|Strategia| da costruttore all'inizio di una partita. A sua volta l'implementazione utilizzata BombarderoCollision necessita di un CollisionHandler che risolva le collisioni da lei trovate, anche questa passata come \verb|Strategia| da costruttore. grazie a questa implementazione si possono creare nuovi modi per gestire le collisioni del gioco.
+Inoltre per gestire le collisioni il GameManager necessita di una Collision Engine ovvero una classe che trovi le collisioni, questa viene passata come \verb|Strategia| da costruttore all'inizio di una partita. A sua volta l'implementazione utilizzata BombarderoCollision necessita di un CollisionHandler che risolva le collisioni da lei trovate, anche questa passata come \verb|Strategia| da costruttore. Grazie a questa implementazione si potranno creare nuovi modi per gestire le collisioni del gioco.
 
 \subsection*{2. Problema da Risolvere}
 \par
@@ -189,7 +189,7 @@ Nel gioco alcuni PowerUp danno il potere ai giocatori di utilizzare delle bombe 
 
 \subsection*{2. Soluzione Proposta}
 \par
-Per la creazione delle bombe viene utilizzata una BombFactory ovvero una classe che segue il pattern \verb|Symple Factory| per cui con ogni suo metodo restituisce una Bomb con caratteristiche diverse.tutti Character che sono in gioco quando creati richiedono una BombFactory alla quale quando, dovranno piazzare delle bombe, chiederanno la Bomb equivalente al PowerUp che hanno preso. Anche in questo caso l'utilizzo del pattern \verb|Strategy| rende possibile una nuova implementazione di BombFactory.  L'implementazione delle diverse Bomb nella classe BombfactoryImpl viene fatta a partire dalla abtract class BasicBomb, sfruttando al massimo il riutilizzo del codice.
+Per la creazione delle bombe viene utilizzata una BombFactory ovvero una classe che segue il pattern \verb|Simple Factory| per cui con ogni suo metodo restituisce una Bomb con caratteristiche diverse.tutti Character che sono in gioco quando creati richiedono una BombFactory alla quale quando, dovranno piazzare delle bombe, chiederanno la Bomb equivalente al PowerUp che hanno preso. Anche in questo caso l'utilizzo del pattern \verb|Strategy| rende possibile una nuova implementazione di BombFactory.  L'implementazione delle diverse Bomb nella classe BombfactoryImpl viene fatta a partire dalla abtract class BasicBomb, sfruttando al massimo il riutilizzo del codice.
 
 
 \subsection*{2. Alternativa Considerata}
@@ -408,14 +408,14 @@ per il testing specifico della risoluzione delle collisioni si è preferito fare
 \subsection{Federico Bagattoni}
 \subsubsection{Utilizzo di \texttt{Lambda Expression}}
 Utilizzo di \texttt{Lambda Expression} in diversi punti, ad esempio per la creazione
-delle procedure nella guida interattiva si veda: \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/b621c490e0f6aebeb2d828b960f0263de4801cb0/src/main/java/it/unibo/bombardero/core/impl/BombarderoGuideManager.java#L60-L80}
+delle procedure nella guida interattiva. Si veda: \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/b621c490e0f6aebeb2d828b960f0263de4801cb0/src/main/java/it/unibo/bombardero/core/impl/BombarderoGuideManager.java#L60-L80}
 
 \subsubsection{Utilizzo di Java \texttt{Stream}}
-Utilizzo di Java \texttt{Stream}, per esempio per la generazione delle posizioni dei muri si veda:
+Utilizzo di Java \texttt{Stream}, per esempio per la generazione delle posizioni dei muri. Si veda:
 \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/b621c490e0f6aebeb2d828b960f0263de4801cb0/src/main/java/it/unibo/bombardero/map/impl/MapGeneratorImpl.java#L49-L58} 
 
 \subsubsection{Utilizzo di \texttt{functional interfaces}}
-Utilizzo di lambda interfaces come \texttt{BiPredicate} e \texttt{BiConsumer}, per esempio nella creazione delle procedura della guida interattiva, si veda:
+Utilizzo di lambda interfaces come \texttt{BiPredicate} e \texttt{BiConsumer}, per esempio nella creazione delle procedura della guida interattiva. Si veda:
 \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/b621c490e0f6aebeb2d828b960f0263de4801cb0/src/main/java/it/unibo/bombardero/core/api/GuideStep.java#L15}
 
 \subsubsection{Algoritmo di traversal in spirale di una matrice}
