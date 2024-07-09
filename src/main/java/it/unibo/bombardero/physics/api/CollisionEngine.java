@@ -24,7 +24,7 @@ public interface CollisionEngine {
 
 
     /**
-     * check if the character is over an UnbreckableWall
+     * check if the character is over an UnbreckableWall.
      * @param character
      * @param map
      */
