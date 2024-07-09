@@ -290,6 +290,23 @@ public abstract class GamePlayCard extends JPanel {
         repaint(0);
     }
 
+    /**
+     * Clears the view of everything that has been displayed during the 
+     * game phase:
+     * <ul>
+     *  <li> Removes sprites </li>
+     *  <li> Removes messages </li>
+     *  <li> Removes eventual paused views </li>
+     * </ul>
+     */
+    public void clear() {
+        setUnpausedView();
+        charactersImages.clear();
+        dyingCharactersMap.clear();
+        updateGameState(Map.of(), List.of(), List.of());
+        repaint(0);
+    }
+
     /** 
      * Displays a "pause screen" to appropriately indicate that the game is
      * paused and displays alterantives for the user to choose.

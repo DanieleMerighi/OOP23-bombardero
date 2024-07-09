@@ -59,6 +59,7 @@ public final class BombarderoController implements Controller {
             isGamePaused = true;
             isGameStarted = false;
         }
+        graphics.clearView();
         graphics.showGameScreen(ViewCards.MENU);
     }
 

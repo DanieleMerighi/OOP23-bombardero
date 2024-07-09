@@ -153,6 +153,14 @@ public final class GuideCard extends GamePlayCard {
     }
 
     @Override
+    public void clear() {
+        super.clear();
+        spritesPlacingPoint.clear();
+        currentShowedSprite = Optional.empty();
+        removeEndView();
+    }
+
+    @Override
     public void showMessage(final BombarderoViewMessages message) {
         messageBox.setText(message.getMessage());
         showAnimatedKeys(message);
@@ -197,5 +205,12 @@ public final class GuideCard extends GamePlayCard {
             case PLACE_BOMB -> Optional.of(spacebarSprite);
             default -> Optional.empty();
         };
+    }
+
+    private void removeEndView() {
+        this.remove(start);
+        this.remove(back);
+        this.revalidate();
+        this.repaint(0);
     }
 }

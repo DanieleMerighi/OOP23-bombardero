@@ -115,6 +115,11 @@ public final class BombarderoGraphics implements GraphicsEngine {
     }
 
     @Override
+    public void clearView() {
+        cardsMap.get(currentCard).clear();
+    }
+
+    @Override
     public ResizingEngine getResizingEngine() {
         return this.resizingEngine;
     }

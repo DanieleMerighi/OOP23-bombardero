@@ -88,6 +88,12 @@ public final class GameCard extends GamePlayCard {
         g.drawImage(clockImage, imageClockPosition.width, imageClockPosition.height, null);
     }
 
+    @Override
+    public void clear() {
+        super.clear();
+        removeEndView();
+    }
+
     /**
      * Sets the time left for the displayed timer.
      * @param timeLeft the time left, in milliseconds
@@ -115,6 +121,15 @@ public final class GameCard extends GamePlayCard {
             this.add(winningBannerLabel);
         }
         this.add(backButton);
+        this.revalidate();
+        this.repaint(0);
+    }
+
+    private void removeEndView() {
+        this.remove(backButton);
+        this.remove(winningBannerLabel);
+        this.remove(losingBannerLabel);
+        this.darkenView(0.0f);
         this.revalidate();
         this.repaint(0);
     }
