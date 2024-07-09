@@ -30,6 +30,8 @@ import java.util.Map;
  */
 public final class GameCard extends GamePlayCard {
 
+    private static final int FONT_SIZE = 14;
+
     private static final String TIMER_FORMAT = "mm:ss";
 
     private final Image clockImage;
@@ -84,7 +86,7 @@ public final class GameCard extends GamePlayCard {
         super.paintComponent(g);
         final int fontYOffset = (int) (g.getFontMetrics(clockFont).getAscent() / 2);
         final SimpleDateFormat timerFormatter = new SimpleDateFormat(TIMER_FORMAT, Locale.ITALY);
-        g.setFont(clockFont.deriveFont(Font.PLAIN, 14));
+        g.setFont(clockFont.deriveFont(Font.PLAIN, FONT_SIZE));
         g.setColor(Color.BLACK);
         g.drawString(timerFormatter.format(timeLeft), timerPosition.width, timerPosition.height + fontYOffset);
         g.drawImage(clockImage, imageClockPosition.width, imageClockPosition.height, null);

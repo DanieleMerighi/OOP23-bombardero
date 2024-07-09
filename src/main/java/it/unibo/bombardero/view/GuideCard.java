@@ -47,6 +47,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 public final class GuideCard extends GamePlayCard {
 
+    private static final float FONT_SIZE = 9.0f;
     private static final int LAYOUT_ROWS = 5;
     private static final int LAYOUT_COLS = 1;
 
@@ -118,7 +119,7 @@ public final class GuideCard extends GamePlayCard {
 
         messageBox.setHorizontalTextPosition(SwingConstants.CENTER);
         messageBox.setVerticalTextPosition(SwingConstants.CENTER);
-        messageBox.setFont(font.deriveFont(9.0f));
+        messageBox.setFont(font.deriveFont(FONT_SIZE));
 
         back.setBorder(null);
         start.setBorder(null);
