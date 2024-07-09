@@ -53,7 +53,7 @@ public final class BombarderoCollision implements CollisionEngine {
         if (!cells.isEmpty()) {
             final Optional<Cell> collidingCell = cells.stream()
                     .filter(p -> map.containsKey(p))
-                    .map(p -> map.get(p))
+                    .map(map::get)
                     .filter(c -> c.haveBoundingCollision()
                             && c.getBoundingBox().get().isColliding(character.getBoundingBox()))
                     .findFirst();
@@ -76,7 +76,7 @@ public final class BombarderoCollision implements CollisionEngine {
                     getAdjacent(character.getCharacterPosition().x(), character.getIntCoordinate().x()),
                     character.getIntCoordinate().y()).apply(Functions.sumInt(dir.getPair())));
         }
-        l.removeIf(p -> isOutOfBound(p));
+        l.removeIf(this::isOutOfBound);
         return l;
     }
 
