@@ -437,7 +437,7 @@ public abstract class GamePlayCard extends JPanel {
             .filter(enemy -> !charactersImages.keySet().contains(enemy) && enemy.isAlive())
             .forEach(enemy -> {
                 final String colorCode =  colorCodes.isEmpty() ? "red" : colorCodes.get(0);
-                colorCodes = !colorCodes.isEmpty() ? colorCodes.subList(1, colorCodes.size()) : List.of();
+                colorCodes = !colorCodes.isEmpty() ? colorCodes.subList(1, colorCodes.size()) : List.of("black", "blue", "red");
                 final OrientedSprite sprite = new BombarderoOrientedSprite(
                     "character/" + colorCode + "/walking",
                     resourceGetter,
