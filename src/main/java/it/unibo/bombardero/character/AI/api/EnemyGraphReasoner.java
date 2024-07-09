@@ -96,4 +96,15 @@ public interface EnemyGraphReasoner {
      *         power-up if found, otherwise an empty {@code Optional}
      */
     Optional<GenPair<Integer, Integer>> findNearestPowerUp(GameMap map, GenPair<Integer, Integer> enemyCoord);
+
+    /**
+     * Finds the nearest cell within a limited radius from the enemy's current
+     * coordinates.
+     *
+     * @param map the game map
+     * @param enemyCoord the current coordinates of the enemy
+     * @return an {@code Optional<Pair>} containing the coordinates of the nearest
+     *         cell if found, otherwise an empty {@code Optional}
+     */
+    Optional<GenPair<Integer, Integer>> findNearestCell(GameMap map, GenPair<Integer, Integer> enemyCoord);
 }

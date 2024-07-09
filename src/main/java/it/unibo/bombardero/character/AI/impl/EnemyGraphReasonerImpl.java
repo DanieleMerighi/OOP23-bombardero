@@ -240,6 +240,17 @@ public class EnemyGraphReasonerImpl implements EnemyGraphReasoner {
                         calculateDistance(enemyCoord, cell2)));
     }
 
+    public Optional<GenPair<Integer, Integer>> findNearestCell(final GameMap map, final GenPair<Integer, Integer> enemyCoord) {
+        final BreadthFirstIterator<GenPair<Integer, Integer>, DefaultWeightedEdge> bfsIterator = new BreadthFirstIterator<>(
+                graph,
+                enemyCoord);
+        return StreamSupport.stream(
+                    Spliterators.spliteratorUnknownSize(bfsIterator, Spliterator.ORDERED), false)
+                    .filter(cell -> bfsIterator.getDepth(cell) > bfsIterator.getDepth(enemyCoord))
+                    .filter(cell -> map.isEmpty(cell))
+                    .findAny();
+    }
+
     /**
      * Updates the internal graph representation of the game map with a new map.
      *
