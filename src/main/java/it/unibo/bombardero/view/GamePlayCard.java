@@ -257,10 +257,10 @@ public abstract class GamePlayCard extends JPanel {
                 );
         });
         /* Drawing the player and the enemies */
-        charactersImages.entrySet().forEach(enemy -> {
+        for (final Entry<Character, SpriteImageCombo> enemy : charactersImages.entrySet()) {
             final Dimension enemyPos = resizingEngine.getCharacterPlacingPoint(enemy.getKey().getCharacterPosition());
             g.drawImage(enemy.getValue().displayedImage(), enemyPos.width, enemyPos.height, null);
-        });
+        }
         dyingCharactersMap.entrySet().forEach(entry -> {
             final Dimension pos = resizingEngine.getCharacterPlacingPoint(entry.getKey().getCharacterPosition());
             g.drawImage(
