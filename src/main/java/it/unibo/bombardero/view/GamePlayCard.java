@@ -385,7 +385,7 @@ public abstract class GamePlayCard extends JPanel {
      */
     protected void updateSprites() {
         checkForNewCharacters();
-        /* TODO: concurrent mod exception */
+
         charactersImages.entrySet().forEach(character -> {
             character.getValue().sprite.update();
             OrientedSprite sprite = character.getValue().sprite();
