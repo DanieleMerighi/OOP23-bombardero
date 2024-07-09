@@ -2,6 +2,7 @@ package it.bombardero;
 
 import it.unibo.bombardero.bomb.impl.BombFactoryImpl;
 import it.unibo.bombardero.character.Character;
+import it.unibo.bombardero.character.Character.CharacterType;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;
 import it.unibo.bombardero.core.api.Controller;
@@ -98,7 +99,7 @@ public class MyGameManager implements GameManager {
     public void updateGame(final long elapsed, final Controller controller) {
         // 60 fps
         for (int i = 0; i < LENGHT; i++) {
-            enemy.update(this, STANDARD_ELAPSED_TIME);
+            enemy.update(this, STANDARD_ELAPSED_TIME, CharacterType.ENEMY);
         }
     }
 

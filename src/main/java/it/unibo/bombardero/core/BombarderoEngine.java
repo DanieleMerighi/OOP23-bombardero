@@ -4,6 +4,12 @@ import it.unibo.bombardero.core.api.Controller;
 import it.unibo.bombardero.core.api.Engine;
 import it.unibo.bombardero.core.impl.BombarderoController;
 /**
+ * Due to the small size of the project, a logging system will not be implemented.
+ * The command line is used instead.
+ */
+@SuppressWarnings("PMD.SystemPrintln")
+
+/**
  * This class implements the concept of the game engine expressed 
  * in the {@link Engine} interface; to do so it extends the Thread 
  * class so that the {@link  #run()} method can be run in a separate

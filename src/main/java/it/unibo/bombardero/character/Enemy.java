@@ -190,9 +190,8 @@ public class Enemy extends Character {
      * @param elapsedTime the time elapsed since the last update
      */
     @Override
-    public void update(final GameManager manager, final long elapsedTime) {
+    public void performCharacterActions(final GameManager manager, final long elapsedTime) {
         updateGraph(manager.getGameMap());
-        updateSkull(manager, elapsedTime, CharacterType.ENEMY);
         if (nextMove.isEmpty()) {
             computeNextDir(manager);
         } else if (canMoveOn(manager.getGameMap(), nextMove.get())) {

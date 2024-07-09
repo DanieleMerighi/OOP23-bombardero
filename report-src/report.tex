@@ -106,7 +106,7 @@ Queste \verb|Cell| potranno essere di diverso tipo:
 \caption{Schema UML sulle relazioni tra le varie entità di tipo Cell}
 \end{figure}
 
-Il \verb|Character| si divide in \verb|Player| e \verb|Enemy|. Qualsiasi personaggio può piazzare delle bombe sulle celle libere della mappa che una volta esplose generano una serie di fiamme. Le fiamme interagiscono con , con i muri, i potenziamenti e con le bomb modificando la struttura della mappa, distruggendo ciò che ci trova nella stessa Cell ed espandendosi attraverso le celle libere. Un muro, se distrutto, può lasciare un potenziamento al suo posto. 
+Il \verb|Character| si divide in \verb|Player| e \verb|Enemy|. Qualsiasi personaggio può piazzare delle bombe sulle celle libere della mappa che una volta esplose generano una serie di fiamme. Le fiamme interagiscono con i muri, con i potenziamenti e con le bombe modificando la struttura della mappa, distruggendo ciò che ci trova nella stessa Cell ed espandendosi attraverso le celle libere. Un muro, se distrutto, può lasciare un potenziamento al suo posto. 
 
 Il tutto viene racchiuso nell'interfaccia \verb|GameManager|, di cui si parlerà in dettaglio nella prossima sezione, nella seguente maniera: 
 
@@ -140,7 +140,45 @@ Per quanto riguarda la indipendenza degli elementi di questa architettura l'inte
 
 \subsection{qualcosa di Federico Bagattoni}
 \subsection{qualcosa di Luca Venturini}
-\subsection{qualcosa di Jacopo Turchi}
+\subsection{Jacopo Turchi}
+
+
+\subsubsection{Creazione dei PowerUp}
+\begin{figure}[H]
+\centering{}
+\includegraphics[width=1.0\columnwidth]{img/power-up-factory-uml.png}
+\caption{Schema UML della \texttt{PowerUpFactory} e della sua implementazione}
+\label{img:uml-power-up-factory}
+\end{figure}
+\paragraph{Problema:} I \texttt{PowerUp} devono essere generati a seguito della rottura di un \texttt{BreackableWall} in base alla loro rarità. Bisogna sviluppare una soluzione intelligente che permetta di creare PowerUp diversi.
+\paragraph{Soluzione:} Seguendo il pattern \textit{Method Factory}, come da
+\Cref{img:uml-power-up-factory} rispettiamo i principi SRP, OCP e DIP, dato che potenzialmente possono essere aggiunti nuovi PowerUp senza modificare il codice esistente, ma aggiungendone solo. Inoltre la factory ha il solo compito di creare i PowerUp e non dipende da implementazioni, ma dall'interfaccia.
+
+\subsubsection{Gestione degli effetti dei PowerUp}
+\begin{figure}[H]
+\centering{}
+\includegraphics[width=1.0\columnwidth]{img/power-up-effect-strategy-uml.png}
+\caption{Schema UML del pattern Strategy per gli effetti dei \texttt{PowerUp}}
+\label{img:uml-power-up-effect-strategy}
+\end{figure}
+\paragraph{Problema:} I \texttt{PowerUp} sono caratterizzati da un \texttt{PowerUpEffect} che stabilisce l'effetto da applicare al \texttt{Character}. Questo effetto notiamo che deve essere intercambiabile ed è quindi necessario pensare a come incapsularne la logica.
+\paragraph{Soluzione:} Seguendo il pattern \textit{Strategy}, come da
+\Cref{img:uml-power-up-effect-strategy} abbiamo l'interfaccia \texttt{PowerUpEffect} che rappresenta la strategia da implementare con tutte le sue implementazioni. Con questa soluzione rispettiamo i principi SRP e OCP, dato che potenzialmente possono essere aggiunti nuovi effetti senza modificare il codice esistente (come l'abilità di passare attraverso i muri).
+\paragraph{Alternativa considerata:} Un'altra alternativa valutata all'inizio era quella di inserire la responsabilità della creazione degli effetti nella \texttt{PowerUpFactory}, soluzione scartata per alleggerire la Factory e rispettare il SRP.
+
+\subsubsection{Riuso del codice di Character}
+\begin{figure}[H]
+\centering{}
+\includegraphics[width=1.0\columnwidth]{img/character-template-method-uml.png}
+\caption{Schema UML dell’applicazione del pattern \textit{Template Method} per il riuso del codice di \texttt{Character}}
+\label{img:uml-character-template-method}
+\end{figure}
+\paragraph{Problema:} Sono presenti due personaggi nel gioco, il \texttt{Player} e gli \texttt{Enemy}. E' facile notare che sono caratterizzati da molti metodi uguali portando a duplicazione di codice.
+\paragraph{Soluzione:} Seguendo il pattern \textit{Template Method}, come da
+\Cref{img:uml-character-template-method} abbiamo la classe astratta \texttt{Character} che con il suo template method \textit{update} detta i passi da implementare nelle sue sotto-classi. In particolare esse devono implementare il metodo astratto \texttt{performCharacterActions}. Con questa soluzione sfruttiamo il pattern insieme all'uso dell'ereditarietà per diminuire la dublicazione di codice e massimizzare il riuso.
+\paragraph{Alternativa considerata:} Un'altra alternativa valutata all'inizio era quella di sfruttare la composizione per andare a definire dei manager che gestissero certe parti del \texttt{Character} come il movimento e il piazzamento di bombe (movementManager e bombManager). Tale soluzione è stata scartata in quanto si voleva evitare di complicare inutilmente la struttura e avere codice meno leggibile soprattutto in caso di chiamata da classi esterne.
+
+
 \subsection{Daniele Merighi}
 
 \par
@@ -148,7 +186,7 @@ Bomberman, come descritto precedentemente, è un gioco a tema labirintico, dove 
 
 \begin{figure}[h]
 \centering{}
-\includegraphics[width=\textwidth]{report-src/img/enemyGenerics.png}
+\includegraphics[width=\textwidth]{img/enemyGenerics.png}
 \caption{Schema UML riassuntivo della classe Enemy}
 \end{figure}
 
@@ -182,7 +220,7 @@ Ogni stato estende la classe AbstractEnemyState, progettata per ridurre la ridon
 
 \begin{figure}[h]
 \centering{}
-\includegraphics[width=\textwidth]{report-src/img/enemyState.png}
+\includegraphics[width=\textwidth]{img/enemyState.png}
 \caption{Schema UML che rappresenta i vari State dell'Enemy}
 \end{figure}
 
@@ -201,7 +239,7 @@ L'interfaccia MovementStrategy definisce il contratto per calcolare il prossimo 
 
 \begin{figure}[h]
 \centering{}
-\includegraphics[width=\textwidth]{report-src/img/enemyState.png}
+\includegraphics[width=\textwidth]{img/enemyMovement.png}
 \caption{Schema UML che rappresenta i vari Movement dell'Enemy}
 \end{figure}
 
@@ -228,7 +266,7 @@ Una volta definito il grafo, sono state scelte due tipologie di algoritmi per la
 
 \begin{figure}[h]
 \centering{}
-\includegraphics[width=\textwidth]{report-src/img/enemyGraph.png}
+\includegraphics[width=\textwidth]{img/enemyGraph.png}
 \caption{Schema UML che rappresenta la classe del Grafo}
 \end{figure}
 
@@ -262,11 +300,52 @@ La classe \texttt{TestEnemy} verifica il giusto comportamento del nemico al veri
     \item verifica se il nemico posiziona una bomba se tra lui e il player è presente un muro distruttibile
 \end{itemize}
 
+\par
+La classe \texttt{TestInput} verifica che la classe KeyboardInput gestisca correttamente i vari input che riceve. Di seguito sono descritti i principali casi di test:
+\begin{itemize}
+    \item verifica la corretta funzione dei vari tasti (ESC, SPACE, L, P, W, A, S, D)
+    \item verifica il corretto funzionamento di movimenti complessi
+    \item verifica la possibilità di piazzare bombe mentre il personaggio si muove
+\end{itemize}
+
+\par
+La classe \texttt{TestPowerUp} verifica che la classe PowerUp e la sua corrispettiva factory funzionino. In particolare:
+\begin{itemize}
+    \item verifica la corretta creazione dei PowerUp
+    \item verifica che lo SkullEffect funzioni correttamente
+\end{itemize}
+
+\par
+La classe \texttt{TestPlayer} verifica che la classe Player e la sua classe astratta Character da cui eredita i metodi funzionino. In particolare:
+\begin{itemize}
+    \item verifica la capacità del player di girarsi nelle quattro direzioni possibili
+    \item verifica che il movimento del player venga eseguito correttamente
+    \item verifica che il player sia in grado di piazzare le bombe
+\end{itemize}
+
 \section{Note di sviluppo}
 
 \subsection{qualcosa di Federico Bagattoni}
 \subsection{qualcosa di Luca Venturini}
-\subsection{qualcosa di Jacopo Turchi}
+
+\subsection{Jacopo Turchi}
+
+\subsubsection{Uso di lambda expression in vari punti, in particolare per la Strategy, combinato all'uso di Runnable, Method Reference e Optional}
+\textbf{Permalink:} \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/43c0418f98602e303e34baf20629ccd1dd0a7c1b/src/main/java/it/unibo/bombardero/cell/powerUp/impl/SkullEffect.java#L54C9-L72C11}
+
+\subsubsection{Uso di stream in vari punti, per esempio:}
+\textbf{Permalink:} \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/43c0418f98602e303e34baf20629ccd1dd0a7c1b/src/main/java/it/unibo/bombardero/cell/powerUp/impl/PowerUpImpl.java#L41-L62}
+
+\subsubsection{Uso di Supplier e Consumer:}
+\textbf{Permalink:} \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/43c0418f98602e303e34baf20629ccd1dd0a7c1b/src/main/java/it/unibo/bombardero/cell/powerUp/impl/PowerUpFactoryImpl.java#L64C9-L68C67}
+\textbf{Permalink:} \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/43c0418f98602e303e34baf20629ccd1dd0a7c1b/src/main/java/it/unibo/bombardero/cell/powerUp/impl/PowerBombEffect.java#L27C5-L29C6}
+
+\subsubsection{Uso della libreria Apache Commons}
+\textbf{Permalink:} \url{https://github.com/DanieleMerighi/OOP23-bombardero/blob/43c0418f98602e303e34baf20629ccd1dd0a7c1b/src/main/java/it/unibo/bombardero/cell/powerUp/impl/PowerUpEnumeratedDistribution.java#L25-L40}
+
+
+
+
 \subsection{Daniele Merighi}
 \par
 \subsubsection{Utilizzo della libreria jgrapht.Graph}
@@ -385,6 +464,10 @@ Al fine di evitare pregiudizi involontari, l'intero capitolo verrà letto dai do
 \subsection{Daniele Merighi}
 \par
 In qualità di membro del gruppo responsabile dello sviluppo del nemico, ritengo di aver raggiunto i requisiti inizialmente prefissati in fase di progettazione. Tuttavia essendo la prima volta che realizzo un progetto basato su un videogioco ho dovuto affrontare problematiche concettualmente nuove. Sicuramente il codice attualmente presente è una buona base su cui partire per lo sviluppo di un’entità più complessa, ma se dovessi ripensare alla classe Enemy la strutturerei diversamente. Il nemico è progettato per essere espandibile e riusabile ma adotterei tecniche più evolute per la sua parte comportamentale, adoperando ad esempio un Decision Tree. Anche il grafo lo penserei in maniera differente, creando dei “sotto grafi” specifici per ogni azione, ad esempio uno con solo il suo campo visivo, uno con solo le zone di pericolo ecc. Sarebbe opportuno che l’agent avesse sempre un suo obiettivo andando a ridurre al minimo, se non zero, la parte di movimento casuale. Dopo aver affrontato il corso di metodi numerici si intende proseguire il progetto andando ad implementare anche una parte di Deep Learning per rendere il nemico una vera e propria AI.
+
+\subsection{Jacopo Turchi}
+\par
+Inizio con lo scrivere che questo progetto è stato formativo in quanto non avevo mai progettato in gruppo e soprattutto non avevo mai programmato ad oggetti e infatti mi è risultato difficile partire da zero. Però col tempo ho preso il mio ritmo e sono riuscito a fare la mia parte di questo gioco che ha segnato la mia infanzia. Sono molto contento del prodotto ottenuto e mi ritengo soddisfatto soprattuto di come sia evoluto il mio codice col procedere del progetto. Partendo da una banale estensione della classe Character, fino ad arrivare ad utilizzare anche diversi pattern di programmazione per i PowerUp, che ritengo essere il mio punto forte. Un mio punto debole è stato partire un po' in ritardo e non contribuire molto alla struttura iniziale del progetto, ma sono riuscito a portare una boccata d'aria nello sviluppo quando, a stato avanzato, l'umore generale non era alle stelle. Potessi tornare inidetro probabilmente non rifarei alcune delle prime scelte di programmazione, ma tutto sommato mi ritengo soddisfatto del mio lavoro
 
 \textbf{È richiesta una sezione per ciascun membro del gruppo, obbligatoriamente}.
 %

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import it.unibo.bombardero.character.Character.CharacterType;
 import it.unibo.bombardero.character.ai.impl.ChaseState;
 import it.unibo.bombardero.character.ai.impl.EscapeState;
 import it.unibo.bombardero.character.ai.impl.PatrolState;
@@ -45,7 +46,7 @@ class TestEnemy {
         // CHECKSTYLE: MagicNumber OFF
         manager.setPlayerCoord(0, 5);
         // CHECKSTYLE: MagicNumber ON
-        manager.getEnemy().update(manager, STANDARD_ELAPSED_TIME);
+        manager.getEnemy().update(manager, STANDARD_ELAPSED_TIME, CharacterType.ENEMY);
 
         // Verify enemy state is PATROL
         assertTrue(manager.getEnemy().isStateEqualTo(new PatrolState()));
@@ -100,7 +101,7 @@ class TestEnemy {
         // Set enemy position inside a danger zone
         this.manager.getEnemy().setSpeed(NEWSPEED);
         this.manager.addBomb(new GenPair<Integer, Integer>(0, 1));
-        this.manager.getEnemy().update(manager, STANDARD_ELAPSED_TIME);
+        this.manager.getEnemy().update(manager, STANDARD_ELAPSED_TIME, CharacterType.ENEMY);
 
         assertTrue(manager.getEnemy().isStateEqualTo(new EscapeState()));
         this.manager.updateGame(STANDARD_ELAPSED_TIME, controller);
@@ -121,7 +122,7 @@ class TestEnemy {
         manager.getEnemy().setNumBomb(STARTING_BOMBS); // 1 bomb added to enemy
         manager.getGameMap().addBreakableWall(new GenPair<Integer, Integer>(0, 1));
         manager.getGameMap().addBreakableWall(new GenPair<Integer, Integer>(2, 0));
-        manager.getEnemy().update(manager, STANDARD_ELAPSED_TIME);
+        manager.getEnemy().update(manager, STANDARD_ELAPSED_TIME, CharacterType.ENEMY);
 
         assertTrue(manager.getEnemy().isStateEqualTo(new ChaseState()));
         manager.updateGame(STANDARD_ELAPSED_TIME, controller);

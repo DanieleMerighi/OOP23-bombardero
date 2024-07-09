@@ -36,11 +36,10 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
      * <p>
      * The spawnpoints are represented by the fields {@link #PLAYER_GUIDE_SPAWNPOINT} 
      * and {@link #CRATE_GUIDE_SPAWNPOINT}
-     * @param controller the reference to the game's {@link Controller}.
      * @param cEngine the collision engine related to this instance of the game.
      */
-    public BombarderoGuideManager(final Controller controller, final CollisionEngine cEngine) {
-        super(controller, GuideManager.PLAYER_GUIDE_SPAWNPOINT, List.of(), false, cEngine);
+    public BombarderoGuideManager(final CollisionEngine cEngine) {
+        super(GuideManager.PLAYER_GUIDE_SPAWNPOINT, List.of(), false, cEngine);
         this.getGameMap().addBreakableWall(CRATE_GUIDE_SPAWNPOINT);
         initialiseProcedures();
     }
@@ -102,8 +101,8 @@ public final class BombarderoGuideManager extends BasicBombarderoGameManager imp
         }
 
         @Override
-        public void update(final GameManager manager, final long elapsedTime) {
-
+        protected void performCharacterActions(GameManager manager, long elapsedTime) {
+            
         }
     }
 

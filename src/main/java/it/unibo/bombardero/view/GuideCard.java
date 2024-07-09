@@ -25,10 +25,15 @@ import it.unibo.bombardero.view.api.GraphicsEngine.ViewCards;
 import it.unibo.bombardero.view.sprites.api.Sprite;
 import it.unibo.bombardero.view.sprites.impl.SimpleBombarderoSprite;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 /**
  * This class will never be serialised.
  */
 @SuppressWarnings("serial")
+@SuppressFBWarnings(
+    value="SE_TRANSIENT_FIELD_NOT_RESTORED",
+    justification = "This class will never be serialized"
+)
 /**
  * This class contains the panel for the Guide of
  * the game. It essentially works the same as the {@link GameCard}
@@ -148,6 +153,14 @@ public final class GuideCard extends GamePlayCard {
     }
 
     @Override
+    public void clear() {
+        super.clear();
+        spritesPlacingPoint.clear();
+        currentShowedSprite = Optional.empty();
+        removeEndView();
+    }
+
+    @Override
     public void showMessage(final BombarderoViewMessages message) {
         messageBox.setText(message.getMessage());
         showAnimatedKeys(message);
@@ -192,5 +205,12 @@ public final class GuideCard extends GamePlayCard {
             case PLACE_BOMB -> Optional.of(spacebarSprite);
             default -> Optional.empty();
         };
+    }
+
+    private void removeEndView() {
+        this.remove(start);
+        this.remove(back);
+        this.revalidate();
+        this.repaint(0);
     }
 }

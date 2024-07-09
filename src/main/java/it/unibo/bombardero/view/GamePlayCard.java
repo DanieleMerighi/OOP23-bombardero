@@ -95,7 +95,7 @@ public abstract class GamePlayCard extends JPanel {
     private final transient Sprite normalBomb;
     private transient Image bombImage;
     private transient Map<Character, TimedBombarderoSprite> dyingCharactersMap = new HashMap<>();
-    private List<String> colorCodes = List.of("black", "blue", "red", "main");
+    private List<String> colorCodes = List.of("black", "blue", "red");
 
     /* Static positions for quicker access: */
     private final Dimension mapPlacingPoint;
@@ -103,7 +103,7 @@ public abstract class GamePlayCard extends JPanel {
     /* Pause state buttons: */
     private final JButton resumeButton;
     private final JButton quitButton;
-    private float darkenValue = 0.0f;
+    private float darkenValue;
 
     /**
      * Creates a new GamePlayCard creating all the sprites needed and setting the initial state 
@@ -121,7 +121,7 @@ public abstract class GamePlayCard extends JPanel {
         final List<Character> playersList,
         final List<Character> enemies
         ) {
-        this.resizingEngine = graphics.getResizingEngine().getNewEngine(graphics);
+        this.resizingEngine = graphics.getResizingEngine().getNewEngine();
         this.setMinimumSize(graphics.getResizingEngine().getMapSize());
         this.setLayout(new BorderLayout());
 
@@ -290,6 +290,23 @@ public abstract class GamePlayCard extends JPanel {
         repaint(0);
     }
 
+    /**
+     * Clears the view of everything that has been displayed during the 
+     * game phase:
+     * <ul>
+     *  <li> Removes sprites </li>
+     *  <li> Removes messages </li>
+     *  <li> Removes eventual paused views </li>
+     * </ul>
+     */
+    public void clear() {
+        setUnpausedView();
+        charactersImages.clear();
+        dyingCharactersMap.clear();
+        updateGameState(Map.of(), List.of(), List.of());
+        repaint(0);
+    }
+
     /** 
      * Displays a "pause screen" to appropriately indicate that the game is
      * paused and displays alterantives for the user to choose.
@@ -372,7 +389,7 @@ public abstract class GamePlayCard extends JPanel {
         charactersImages.entrySet().forEach(character -> {
             character.getValue().sprite.update();
             OrientedSprite sprite = character.getValue().sprite();
-            Image image = character.getValue().displayedImage();
+            Image image;
             if (character.getKey().isStationary()) {
                 image = character.getValue().sprite().getStandingImage();
             } else if (

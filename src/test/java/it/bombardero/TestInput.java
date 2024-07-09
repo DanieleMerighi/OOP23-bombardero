@@ -43,10 +43,7 @@ class TestInput {
      */
     @Test
     void testKeyTypedEscape() {
-        // Simulate pressing the ESC key (Menu button)
-        keyEvent = new KeyEvent(new java.awt.Component() {
-        }, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0, KeyEvent.VK_UNDEFINED, (char) KeyEvent.VK_ESCAPE);
-        keyboardInput.keyTyped(keyEvent);
+        pressESC();
         // Verify that the escape method was called on the controller
         assertTrue(controller.isGamePaused());
     }
@@ -69,10 +66,7 @@ class TestInput {
     void testKeyTypedLineBomb() {
         // Set line bomb powerup to true
         controller.getPlayers().get(playerIndex).setLineBomb(true);
-        // Simulate pressing the 'L' key (place line bomb button)
-        keyEvent = new KeyEvent(new java.awt.Component() {
-        }, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0, KeyEvent.VK_UNDEFINED, 'L');
-        keyboardInput.keyTyped(keyEvent);
+        pressL();
 
         // Verify that the setHasToPlaceLineBomb method was called on the player
         assertTrue(controller.getPlayers().get(playerIndex).isHasToPlaceLineBomb());
@@ -85,10 +79,7 @@ class TestInput {
     void testKeyTypedRemoteBomb() {
         // Set type bomb to remote bomb
         controller.getPlayers().get(playerIndex).setBombType(Optional.of(PowerUpType.REMOTE_BOMB));
-        // Simulate pressing the 'P' key (explode remote bomb button)
-        keyEvent = new KeyEvent(new java.awt.Component() {
-        }, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0, KeyEvent.VK_UNDEFINED, 'P');
-        keyboardInput.keyTyped(keyEvent);
+        pressP();
 
         // Verify that the setHasToExplodeRemoteBomb method was called on the player
         assertTrue(controller.getPlayers().get(playerIndex).isHasToExplodeRemoteBomb());
@@ -204,6 +195,27 @@ class TestInput {
         assertEquals(Direction.UP, controller.getPlayers().get(playerIndex).getFacingDirection());
         // Verify that the setHasToPlaceBomb method was called on the player
         assertTrue(controller.getPlayers().get(playerIndex).isHasToPlaceBomb());
+    }
+
+    private void pressESC() {
+        // Simulate pressing the ESC key (Menu button)
+        keyEvent = new KeyEvent(new java.awt.Component() {
+        }, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0, KeyEvent.VK_UNDEFINED, (char) KeyEvent.VK_ESCAPE);
+        keyboardInput.keyTyped(keyEvent);
+    }
+
+    private void pressL() {
+        // Simulate pressing the 'L' key (place line bomb button)
+        keyEvent = new KeyEvent(new java.awt.Component() {
+        }, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0, KeyEvent.VK_UNDEFINED, 'L');
+        keyboardInput.keyTyped(keyEvent);
+    }
+
+    private void pressP() {
+        // Simulate pressing the 'P' key (explode remote bomb button)
+        keyEvent = new KeyEvent(new java.awt.Component() {
+        }, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0, KeyEvent.VK_UNDEFINED, 'P');
+        keyboardInput.keyTyped(keyEvent);
     }
 
     /**

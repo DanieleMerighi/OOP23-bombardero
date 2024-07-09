@@ -32,8 +32,8 @@ public final class BombarderoController implements Controller {
     private GameManager manager;
 
     private boolean isGamePaused = true;
-    private boolean isGameStarted = false;
-    private boolean isGameOver = false;
+    private boolean isGameStarted;
+    private boolean isGameOver;
 
     /**
      * Creates a new controller, creating and storing the {@GraphicsEngine} that will
@@ -47,7 +47,7 @@ public final class BombarderoController implements Controller {
 
     @Override
     public void startGame() {
-        this.manager = new FullBombarderoGameManager(this, new BombarderoCollision(new CollisionHandlerImpl()));
+        this.manager = new FullBombarderoGameManager(new BombarderoCollision(new CollisionHandlerImpl()));
         isGamePaused = false;
         isGameStarted = true;
         graphics.showGameScreen(GraphicsEngine.ViewCards.GAME);
@@ -59,12 +59,13 @@ public final class BombarderoController implements Controller {
             isGamePaused = true;
             isGameStarted = false;
         }
+        graphics.clearView();
         graphics.showGameScreen(ViewCards.MENU);
     }
 
     @Override
     public void startGuide() {
-        this.manager = new BombarderoGuideManager(this,  new BombarderoCollision(new CollisionHandlerImpl()));
+        this.manager = new BombarderoGuideManager(new BombarderoCollision(new CollisionHandlerImpl()));
         isGamePaused = false;
         isGameStarted = true;
         graphics.showGameScreen(GraphicsEngine.ViewCards.GUIDE);

@@ -17,11 +17,10 @@ public final class FullBombarderoGameManager extends BasicBombarderoGameManager 
     /**
      * Creates a new {@link FullBombarderoGameManager} spawning the player, the enemies and 
      * generating the breakable walls in the map.
-     * @param controller the game's controller
      * @param cEngine the collision engine related to this instance of the game.
      */
-    public FullBombarderoGameManager(final Controller controller, final CollisionEngine cEngine) {
-        super(controller, Utils.PLAYER_SPAWNPOINT,
+    public FullBombarderoGameManager(final CollisionEngine cEngine) {
+        super(Utils.PLAYER_SPAWNPOINT,
             Utils.ENEMIES_SPAWNPOINT.subList(0, 1),
             true,
             cEngine);

@@ -36,11 +36,7 @@ public class Player extends Character {
      * @param elapsedTime   the time elapsed since the last update
      */
     @Override
-    public void update(final GameManager manager, final long elapsedTime) {
-        // Skeleton effect:
-        if (getResetEffect().isPresent()) { // If there's a Task to reset
-            updateSkull(manager, elapsedTime, CharacterType.PLAYER);
-        }
+    public void performCharacterActions(final GameManager manager, final long elapsedTime) {
         // Player movement:
         if (!isStationary()) { // If he's not stationary, computes the new position
             setCharacterPosition(computeNewPlayerPosition());

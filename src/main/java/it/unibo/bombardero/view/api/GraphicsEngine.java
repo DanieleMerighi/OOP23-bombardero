@@ -134,4 +134,9 @@ public interface GraphicsEngine {
      */
     ResourceGetter getResourceGetter();
 
+    /**
+     * Resets the view, supposedly after the end of a phase.
+     * Clearing everything that has been displayed during the game.
+     */
+    void clearView();
 }

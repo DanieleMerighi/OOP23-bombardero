@@ -1,7 +1,5 @@
 package it.unibo.bombardero.view;
 
-import javax.swing.JFrame;
-
 import it.unibo.bombardero.guide.api.GuideManager;
 import it.unibo.bombardero.map.api.GenPair;
 import it.unibo.bombardero.utils.Utils;
@@ -23,8 +21,10 @@ import java.awt.image.BufferedImage;
  */
 public final class ResizingEngine {
 
+    private static final double SPACE_DISTANCE_FROM_CELL = 1.5;
     private static final double DEFAULT_SCALE = 1.125;
     private static final int HIGH_RES_THRESHOLD = 200;
+    private static final double HIGH_RES_SCALE = 1.25;
     private static final double MENU_LOGO_SCALE = 0.90;
 
     /* A mischevious padding no one knows its reason to exist: */
@@ -54,10 +54,17 @@ public final class ResizingEngine {
     private final Dimension buttonSize;
     private final Dimension menuLogoSize;
 
-    public ResizingEngine(final GraphicsEngine graphics, final Insets insets) {
+    /**
+     * The class that manages the dynamic resizing of the game, choosing and setting 
+     * a {@link #currentScale} that uses to proportionally enlarge every item in the game.
+     * <p>
+     * The scale is choosen by checking the display's resolution.
+     * @param insets the insets of the frame, used to compute the total window size
+     */
+    public ResizingEngine(final Insets insets) {
         final int resolution = Toolkit.getDefaultToolkit().getScreenResolution();
         if (resolution >= HIGH_RES_THRESHOLD) {
-            currentScale = 1.25;
+            currentScale = HIGH_RES_SCALE;
         }
         frameInsets = new Insets(insets.top, insets.left, insets.bottom, insets.right);
         scaledCellSize = (int) (currentScale * Utils.CELL_SIZE);
@@ -73,28 +80,42 @@ public final class ResizingEngine {
         menuLogoSize = initLogoSize();
     }
 
-    public ResizingEngine getNewEngine(final GraphicsEngine graphics) {
-        return new ResizingEngine(graphics, frameInsets);
+    /**
+     * Returns a cloned version of the current instance with the same values.
+     * @param graphics the {@link GraphicsEngine} related to this instance
+     * @return a new cloned {@link ResizingEngine}
+     */
+    public ResizingEngine getNewEngine() {
+        return new ResizingEngine(frameInsets);
     }
 
     /* FRAME-RELATED METHODS */
 
-    /*
-     * The initial windows size is calculated scaling the map and adding some grass
-     * on the sides, other than the insets
+    /**
+     * Returns the size of the whole window, taking into account insets,
+     * map's size and a little bit of grass.
+     * @return the width and height of the game's window
      */
-    public Dimension getGameWindowSize(final JFrame frame) {
+    public Dimension getGameWindowSize() {
         return new Dimension(
                 gameWindowSize.width,
                 gameWindowSize.height);
     }
 
+    /**
+     * Returns the scaled map's image size, in pixels.
+     * @return the width and height of the image, in pixels
+     */
     public Dimension getMapSize() {
         return new Dimension(
                 (int) (Utils.MAP_WIDTH * currentScale),
                 (int) (Utils.MAP_HEIGHT * currentScale));
     }
 
+    /**
+     * Returns the scaled background image size, in pixels.
+     * @return the width and height of the image, in pixels
+    */
     public Dimension getBackgroundImageSize() {
         return new Dimension(
                 (int) (Utils.BG_WIDTH * currentScale),
@@ -103,68 +124,126 @@ public final class ResizingEngine {
 
     /* GENERAL UTILITY GETTERS */
 
+    /**
+     * Returns the scale by which everything is scaled.
+     * @return the scale of the view
+     */
     public double getScale() {
         return currentScale;
     }
 
+    /**
+     * Returns the Cell's size, scaled by the current scale.
+     * @return the scaled cell size
+     */
     public int getScaledCellSize() {
         return scaledCellSize;
     }
 
-    public boolean hasScaleChanged() {
-        return false;
-    }
-
     /* SCALING-RELATED METHODS: */
     // CHECKSTYLE: MagicNumber OFF
+    /**
+     * Scales a passed image using the view's scale.
+     * @param cellImage the image to scale
+     * @return the scaledc cell image
+     */
     public Image getScaledCellImage(final Image cellImage) {
         return cellImage.getScaledInstance(getScaledCellSize(), (int) (getScaledCellSize() + 7 * getScale()),
                 Image.SCALE_SMOOTH);
     }
 
+    /**
+     * Scales a Character's image using the view's scale.
+     * @param characterImage the image to scale
+     * @return the scaled character image
+     */
     public Image getScaledCharacterImage(final Image characterImage) {
         return characterImage.getScaledInstance((int) Math.floor(31 * getScale()), (int) Math.floor(49 * getScale()),
                 Image.SCALE_SMOOTH);
     }
     // CHECKSTYLE: MagicNumber ON
 
+    /**
+     * Scales a bomb's image using the view's scale.
+     * @param bombImage the image to scale
+     * @return the scaled bomb's image
+     */
     public Image getScaledBombImage(final Image bombImage) {
         return bombImage;
     }
 
+    /**
+     * Scales the background image using the view's scale.
+     * @param backgroundImage the image to scale
+     * @return the scaled bomb's image
+     */
     public Image getScaledBackgroundImage(final Image backgroundImage) {
         return backgroundImage.getScaledInstance(getBackgroundImageSize().width, getBackgroundImageSize().height,
                 Image.SCALE_SMOOTH);
     }
 
+    /**
+     * Scales the map's image using the view's scale.
+     * @param mapImage the image to scale
+     * @return the scaled map's image
+     */
     public Image getScaledMapImage(final Image mapImage) {
         return mapImage.getScaledInstance(getMapSize().width, getMapSize().height, Image.SCALE_SMOOTH);
     }
 
+    /**
+     * Scales the clock's image using the view's scale.
+     * @param clockImage the image to scale
+     * @return the scaled map's image
+     */
     public Image getScaledClockImage(final Image clockImage) {
         return clockImage.getScaledInstance(getScaledCellSize(), getScaledCellSize(), Image.SCALE_SMOOTH);
     }
 
     // CHECKSTYLE: MagicNumber OFF
+    /**
+     * Scales the sprite's image using the view's scale.
+     * @param wasdImage the image to scale
+     * @return the sprite's scaled image
+     */
     public Image getScaledWASDImage(final Image wasdImage) {
         return wasdImage.getScaledInstance((int) Math.floor(39 * 2.5 * getScale()),
                 (int) Math.floor(24 * 2.5 * getScale()), Image.SCALE_SMOOTH);
     }
 
-    public Image getScaledSpaceImage(final Image wasdImage) {
-        return wasdImage.getScaledInstance((int) Math.floor(30 * 2 * getScale()), (int) Math.floor(12 * 2 * getScale()),
+    /** 
+     * Scales the sprite's image using the view's scale.
+     * @param spaceBarImage the image to scale
+     * @return the sprite's scaled image
+     */
+    public Image getScaledSpaceImage(final Image spaceBarImage) {
+        return spaceBarImage.getScaledInstance((int) Math.floor(30 * 2 * getScale()), (int) Math.floor(12 * 2 * getScale()),
                 Image.SCALE_SMOOTH);
     }
     // CHECKSTYLE: MagicNumber ON
-
+    /** 
+     * Scales the button's image using the view's scale.
+     * @param buttonImage the image to scale
+     * @return the sprite's scaled image
+     */
     public Image getScaledButtonImage(final Image buttonImage) {
         return buttonImage.getScaledInstance(buttonSize.width, buttonSize.height, Image.SCALE_SMOOTH);
     }
 
+    /** 
+     * Scales the menu's image using the view's scale.
+     * @param menuLogoImage the image to scale
+     * @return the sprite's scaled image
+     */
     public Image getScaledMenuLogoImage(final Image menuLogoImage) {
         return menuLogoImage.getScaledInstance(menuLogoSize.width, menuLogoSize.height, Image.SCALE_SMOOTH);
     }
 
+    /** 
+     * Crops the background image passed.
+     * @param menuBackgroundImage the image to scale
+     * @return the sprite's scaled image
+     */
     public Image getSubImageFromBackground(final BufferedImage menuBackgroundImage) {
         final Dimension cropSize = gameWindowSize;
         return menuBackgroundImage.getSubimage(
@@ -176,6 +255,10 @@ public final class ResizingEngine {
 
     /* GAME-RELATED METHODS: */
 
+    /** 
+     * Returns the coordinates where the map has to be rendered.
+     * @return the top-left corner of where the map will be placed
+     */
     public Dimension getMapPlacingPoint() {
         return new Dimension(
                 mapPlacingPoint.width,
@@ -183,7 +266,9 @@ public final class ResizingEngine {
     }
 
     /**
-     * Returns the corner of the north-eastern cell of the map
+     * Returns the corner of the top-left cell of the map.
+     * @return the coordinate of the top-left corner of the top-left cell
+     * of the map
      */
     public Dimension getEntityPlacingPoint() {
         return new Dimension(
@@ -192,7 +277,9 @@ public final class ResizingEngine {
     }
 
     /**
-     * Returns the upper-left corner of the cell at {@link #cooordinate}
+     * Returns the upper-left corner of the cell at the {@link #cooordinate} of the map.
+     * @param coordinate the position of the cell on the map
+     * @return the coordinate of the top-left corner of the requested cell.
      */
     public Dimension getCellPlacingPoint(final GenPair<Integer, Integer> coordinate) {
         return new Dimension(
@@ -200,6 +287,11 @@ public final class ResizingEngine {
                 entityPlacingPoint.height + (int) (getScaledCellSize() * coordinate.y()));
     }
 
+    /**
+     * Returns the point where the bomb has to be drawed.
+     * @param coordinate the cell where the bomb sits
+     * @return the coordinate of the top-left corner of the bomb's image
+     */
     public Dimension getBombPlacingPoint(final GenPair<Integer, Integer> coordinate) {
         final Dimension placingPoint = getCellPlacingPoint(coordinate);
         return new Dimension(
@@ -208,6 +300,11 @@ public final class ResizingEngine {
     }
 
     // CHECKSTYLE: MagicNumber OFF
+    /**
+     * Returns the character's placing point.
+     * @param playerPosition the position of the character in the map, as a couple of floats.
+     * @return the upper-left corner of the character's image where the image will be drawed
+     */
     public Dimension getCharacterPlacingPoint(final GenPair<Float, Float> playerPosition) {
         return new Dimension(
                 (int) Math.floor(
@@ -221,37 +318,57 @@ public final class ResizingEngine {
     }
     // CHECKSTYLE: MagicNumber ON
 
+    /**
+     * Returns the position where the clock will be drawed.
+     * @return the upper-left corner of the clock's image
+     */
     public Dimension getImageClockPosition() {
         return new Dimension(
                 imageClockPosition.width,
                 imageClockPosition.height);
     }
 
+    /**
+     * Returns the position where the timer will be drawed.
+     * @return the position where the first character of the timer will be drawed
+     */
     public Dimension getTimerPosition() {
         return new Dimension(
                 timerPosition.width,
                 timerPosition.height);
     }
 
+    /** 
+     * Returns the position where the WASD sprite will be drawed.
+     * @return the position of the upper-left corner of the sprite 
+     */
     public Dimension getWasdGuidePosition() {
         return new Dimension(
                 wasdGuidePosition.width,
                 wasdGuidePosition.height);
     }
 
+    /** 
+     * Returns the position where the SPACEBAR sprite will be drawed.
+     * @return the position of the upper-left corner of the sprite 
+     */
     public Dimension getSpaceGuidePosition() {
         return new Dimension(
                 spaceGuidePosition.width,
                 spaceGuidePosition.height);
     }
 
+    /** 
+     * Returns the position where the menu's logo will be drawed.
+     * @return the position of the upper-left corner of the image 
+     */
     public Dimension getMenuLogoSize() {
         return new Dimension(
                 menuLogoSize.width,
                 menuLogoSize.height);
     }
 
-    public Dimension initGameWindowSize(final Insets frameInsets) {
+    private Dimension initGameWindowSize(final Insets frameInsets) {
         return new Dimension(
                 frameInsets.left + frameInsets.right
                         + (int) (Utils.MAP_WIDTH * currentScale + Utils.GRASS_PADDING_RATIO * Utils.MAP_WIDTH),
@@ -265,16 +382,12 @@ public final class ResizingEngine {
                 gameWindowSize.height / 2 - getMapSize().height / 2 - frameInsets.top + frameInsets.bottom);
     }
 
-    /**
-     * Returns the corner of the north-eastern cell of the map
-     */
     // CHECKSTYLE: MagicNumber OFF
     private Dimension initEntityPlacingPoint() {
         return new Dimension(
                 getMapPlacingPoint().width + getScaledCellSize() + (int) (getScale() * MISCHIEVOUS_PADDING),
                 getMapPlacingPoint().height + 2 * getScaledCellSize() - (int) (7 * getScale()));
     }
-    // CHECKSTYLE: MagicNumber ON
 
     private Dimension initImageClockPosition() {
         return new Dimension(
@@ -289,7 +402,6 @@ public final class ResizingEngine {
                 (int) Math.floor(getMapPlacingPoint().height + getScaledCellSize() * 1.2));
     }
 
-    // CHECKSTYLE: MagicNumber OFF
     private Dimension initWASDPosition() {
         final Dimension cell = getCharacterPlacingPoint(GuideManager.PLAYER_GUIDE_SPAWNPOINT);
         return new Dimension(
@@ -302,7 +414,7 @@ public final class ResizingEngine {
         final Dimension cell = getCellPlacingPoint(GuideManager.CRATE_GUIDE_SPAWNPOINT);
         return new Dimension(
                 cell.width - getScaledCellSize(),
-                (int) Math.floor(cell.height + 1.5 * getScaledCellSize()));
+                (int) Math.floor(cell.height + SPACE_DISTANCE_FROM_CELL * getScaledCellSize()));
     }
 
     private Dimension initButtonSize() {

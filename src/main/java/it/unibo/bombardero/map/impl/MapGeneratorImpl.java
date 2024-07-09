@@ -91,8 +91,8 @@ public final class MapGeneratorImpl implements MapGenerator {
      * @return the list of walls in collpase-order, the first element being the first to fall 
      */
     @Override
-    public List<GenPair<Integer, Integer>> generateCollapseOrder(final MatrixTraversalStrategy strategy) {
-        return strategy.compute(GameMap.ROWS, GameMap.COLS);
+    public List<GenPair<Integer, Integer>> generateCollapseOrder(final MatrixTraversalStrategy collapseStrategy) {
+        return collapseStrategy.compute(GameMap.ROWS, GameMap.COLS);
     }
 
     /** 
