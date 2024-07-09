@@ -22,7 +22,7 @@ public final class FullBombarderoGameManager extends BasicBombarderoGameManager 
      */
     public FullBombarderoGameManager(final CollisionEngine cEngine) {
         super(Utils.PLAYER_SPAWNPOINT,
-            Utils.ENEMIES_SPAWNPOINT.subList(0, 1),
+            Utils.ENEMIES_SPAWNPOINT,
             true,
             cEngine);
     }
