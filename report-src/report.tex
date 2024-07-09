@@ -139,7 +139,52 @@ Per quanto riguarda la indipendenza degli elementi di questa architettura l'inte
 \section{Design dettagliato}
 
 \subsection{qualcosa di Federico Bagattoni}
-\subsection{qualcosa di Luca Venturini}
+\subsection{Luca Venturini}
+\subsection*{1. Problema da Risolvere}
+
+\par
+Fare in modo che i personaggi all'interno dell'arena non possano oltrepassare i muri della mappa e aluni tipi di Cell utilizzando un movimento su un piano continuo.
+%
+\subsection*{1. Soluzione Proposta}
+
+\begin{figure}[H]
+\centering{}
+\includegraphics[width=\textwidth]{report-src/img/RectangleBox.png}
+\caption{Schema UML riassuntivo della classe RectangleBoundingBox}
+\end{figure}
+
+\par
+Per risolvere questo problema è stato utilizzato il pattern \verb|Adapter| dove la classe RectangleBoundingBox si compone di un Rectangle2D per descrivere la parte solida di un Character o di una Cell, di fatto RectangleBoundingBox utilizza i metodi di un Rectangle2D per ricavare informazioni utili, come nel caso di una collisione la distanza che il Character deve percorrere per non collidere più rispetto ad un muro.
+Con questa implementazione si lascia poco spazio a nuove BoundingBox magari di forme diverse, però abbiamo valutato che in questo caso sia appropriata dati gli elementi di gioco presenti nel dominio e l'utilizzo che ne viene fatta.
+
+
+\begin{figure}[H]
+\centering{}
+\includegraphics[width=\textwidth]{report-src/img/CollisionEngine.png}
+\caption{Schema UML riassuntivo della classe BombarderoCollision}
+\end{figure}
+
+\par
+Inoltre per gestire le collisioni il GameManager necessita di una Collision Engine ovvero una classe che gestisca le collisioni, questa viene passata come \verb|Strategia| da costruttore all'inizio di una partita. A sua volta l'implementazione utilizzata BombarderoCollision necessita di un CollisionHandler che risolva le collisioni da lei trovate, anche questa passata come \verb|Strategia| da costruttore. grazie a questa implementazione si possono creare nuovi modi per gestire le collisioni del gioco.
+\subsection*{2. Problema da Risolvere}
+\par
+Nel gioco alcuni PowerUp danno il potere ai giocatori di utilizzare delle bombe che hanno effetti diversi come poter perforare i muri o esplodere da remoto
+
+\begin{figure}[H]
+\centering{}
+\includegraphics[width=\textwidth]{report-src/img/bombFactory.png}
+\caption{Schema UML riassuntivo della classe BombFactoryImpl}
+\end{figure}
+
+\subsection*{2. Soluzione Proposta}
+\par
+Per la creazione delle bombe viene utilizzata una BombFactory ovvero una classe che segue il pattern \verb|Symple Factory| per cui con ogni suo metodo restituisce una Bomb con caratteristiche diverse.tutti Character che sono in gioco quando creati richiedono una BombFactory alla quale quando, dovranno piazzare delle bombe, chiederanno la Bomb equivalente al PowerUp che hanno preso. Anche in questo caso l'utilizzo del pattern \verb|Strategy| rende possibile una nuova implementazione di BombFactory.  L'implementazione delle diverse Bomb nella classe BombfactoryImpl viene fatta a partire dalla abtract class BasicBomb, sfruttando al massimo il riutilizzo del codice.
+
+
+\subsection*{2. Alternativa Considerata}
+\par
+Nei metodi della BombFactoryImpl inizialmente era stato pensato l'utilizzo del pattern \verb|Decorator| in alternativa all'implementazione delle Bomb a partire da una classe astratta per dare la possibilita di avere bombe con piu effetti (per esempio una bomba che perfori i muri e venga fatta esplodere da remoto), questa modalità è stata scartata quando il gruppo ha deciso di tenere fede al gioco originale e non lasciare la possibilita di mescolare i tipi di bomba.
+
 \subsection{Jacopo Turchi}
 
 
@@ -322,6 +367,23 @@ La classe \texttt{TestPlayer} verifica che la classe Player e la sua classe astr
     \item verifica che il movimento del player venga eseguito correttamente
     \item verifica che il player sia in grado di piazzare le bombe
 \end{itemize}
+
+\par
+La classe \texttt{TestBomb} : verifica che la BombFactoryImpl e le Bomb funzionino nel modo corretto
+\begin{itemize}
+    \item verifica l'interazione dell'esplosione con vari tipi di Cell 
+    \item verifica il corretto piazzamento dei diversi tipi di Bomb
+    \item verifica gli effetti di tutti i tipi di Bomb
+\end{itemize}
+
+\par
+La classe \texttt{TestCollision} : verifica le classi RectangleBoundingBox, BombarderoCollision e CollisionHandler 
+\begin{itemize}
+    \item verifica che le collisioni con un ostacolo siamo riscontrate in tutte e 4 le direzioni e successivamente risolte  
+    \item verifica quando un personaggio si trova sopra ad una Cell di tipo Powerup o Flame
+\end{itemize}
+\par
+per il testing specifico della risoluzione delle collisioni si è preferito fare test di persona così da poter decidere la grandezza delle BoundingBox
 
 \section{Note di sviluppo}
 
