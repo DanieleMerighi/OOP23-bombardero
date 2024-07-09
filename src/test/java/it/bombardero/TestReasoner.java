@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -23,13 +22,12 @@ import it.unibo.bombardero.map.impl.GameMapImpl;
  */
 class TestReasoner {
 
-    private GameMap map;
+    private final GameMap map;
 
     /**
-     * Setup method executed before each test.
+     * Constructor to initialize map.
      */
-    @BeforeEach
-    void setup() {
+    TestReasoner() {
         map = new GameMapImpl(false);
     }
 

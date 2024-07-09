@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.unibo.bombardero.map.api.GameMap;
@@ -22,7 +21,7 @@ import it.unibo.bombardero.character.ai.impl.GraphBuilderImpl;
  */
 class TestGraphBuilder {
 
-    private GameMap map;
+    private final GameMap map;
     private Graph<GenPair<Integer, Integer>, DefaultWeightedEdge> graph;
 
     private static final int VERTEX_SIZE = 133;
@@ -31,10 +30,9 @@ class TestGraphBuilder {
     private static final double STANDARD_WEIGHT = 1.0;
 
     /**
-     * Setup method executed before each test.
+     * Constructor to initialize map.
      */
-    @BeforeEach
-    void setup() {
+    TestGraphBuilder() {
         map = new GameMapImpl(false);
     }
 

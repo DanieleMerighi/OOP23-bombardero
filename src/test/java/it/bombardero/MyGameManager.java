@@ -3,6 +3,7 @@ package it.bombardero;
 import it.unibo.bombardero.bomb.impl.BombFactoryImpl;
 import it.unibo.bombardero.character.Character;
 import it.unibo.bombardero.character.Character.CharacterType;
+import it.unibo.bombardero.character.ai.api.EnemyState;
 import it.unibo.bombardero.character.Enemy;
 import it.unibo.bombardero.character.Player;
 import it.unibo.bombardero.core.api.Controller;
@@ -73,9 +74,9 @@ public class MyGameManager implements GameManager {
         this.map.addBomb(new MyBomb(pos), pos);
     }
 
-
     /**
      * add a power up to the map.
+     * 
      * @param pos position
      */
     public void addPowerUp(final GenPair<Integer, Integer> pos) {
@@ -104,15 +105,6 @@ public class MyGameManager implements GameManager {
     }
 
     /**
-     * Gets the enemy.
-     *
-     * @return the enemy
-     */
-    public Enemy getEnemy() {
-        return this.enemy;
-    }
-
-    /**
      * Gets the list of enemies.
      *
      * @return the list of enemies
@@ -129,7 +121,7 @@ public class MyGameManager implements GameManager {
      */
     @Override
     public GameMap getGameMap() {
-        return map;
+        return map.getCopiedGameMap();
     }
 
     /**
@@ -151,5 +143,77 @@ public class MyGameManager implements GameManager {
     @Override
     public List<Character> getPlayers() {
         return Arrays.asList(player);
+    }
+
+    /**
+     * Sets the speed of the enemy.
+     *
+     * @param speed the speed to set for the enemy
+     */
+    public void setEnemySpeed(final float speed) {
+        this.enemy.setSpeed(speed);
+    }
+
+    /**
+     * Sets the number of bombs the enemy can place.
+     *
+     * @param num the number of bombs to set for the enemy
+     */
+    public void setEnemyBombs(final int num) {
+        this.enemy.setNumBomb(num);
+    }
+
+    /**
+     * Checks if the enemy's state is equal to another state.
+     *
+     * @param other the other state to compare with
+     * @return true if the states are equal, false otherwise
+     */
+    public boolean isEnemyStateEqualTo(final EnemyState other) {
+        return this.enemy.isStateEqualTo(other);
+    }
+
+    /**
+     * Gets the integer coordinates of the enemy.
+     *
+     * @return the coordinates of the enemy as a GenPair
+     */
+    public GenPair<Integer, Integer> getEnemyCoord() {
+        return this.enemy.getIntCoordinate();
+    }
+
+    /**
+     * Gets the next move of the enemy.
+     *
+     * @return an Optional containing the next move of the enemy, or empty if there
+     *         is no next move
+     */
+    public Optional<GenPair<Integer, Integer>> getEnemyNextMove() {
+        return this.enemy.getNextMove();
+    }
+
+    /**
+     * Updates the enemy state.
+     */
+    public void enemySingleUpdate() {
+        this.enemy.update(this, STANDARD_ELAPSED_TIME, CharacterType.ENEMY);
+    }
+
+    /**
+     * Gets the number of bombs the enemy can place.
+     *
+     * @return the number of bombs the enemy can place
+     */
+    public int getEnemyNumBombs() {
+        return this.enemy.getNumBomb();
+    }
+
+    /**
+     * Adds a breakable wall at the specified position.
+     *
+     * @param pos the position to add the breakable wall
+     */
+    public void addBreakableWall(final GenPair<Integer, Integer> pos) {
+        this.map.addBreakableWall(pos);
     }
 }
