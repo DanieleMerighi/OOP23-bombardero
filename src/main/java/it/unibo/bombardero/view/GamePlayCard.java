@@ -9,10 +9,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.swing.JPanel;
+
 import javax.swing.JButton;
 import java.awt.GridLayout;
 import javax.swing.JLabel;
@@ -95,8 +98,7 @@ public abstract class GamePlayCard extends JPanel {
     private final transient Sprite normalBomb;
     private transient Image bombImage;
     private transient Map<Character, TimedBombarderoSprite> dyingCharactersMap = new HashMap<>();
-    private List<String> colorCodes = List.of("black", "blue", "red");
-
+    private List<String> colorCodes = new ArrayList<>();
     /* Static positions for quicker access: */
     private final Dimension mapPlacingPoint;
 
@@ -142,6 +144,8 @@ public abstract class GamePlayCard extends JPanel {
             graphics.getResourceGetter().loadImage("overlay/buttons/RESUME_PRESSED")
         );
 
+        colorCodes.addAll(List.of("black", "blue", "red"));
+        Collections.shuffle(colorCodes);
         updateGameState(map, playersList, enemies);
         scaleEverything();
 
@@ -304,6 +308,7 @@ public abstract class GamePlayCard extends JPanel {
         charactersImages.clear();
         dyingCharactersMap.clear();
         updateGameState(Map.of(), List.of(), List.of());
+        Collections.shuffle(colorCodes);
         repaint(0);
     }
 
@@ -438,8 +443,8 @@ public abstract class GamePlayCard extends JPanel {
         enemiesList.stream()
             .filter(enemy -> !charactersImages.keySet().contains(enemy) && enemy.isAlive())
             .forEach(enemy -> {
-                final String colorCode =  colorCodes.isEmpty() ? "red" : colorCodes.get(0);
-                colorCodes = !colorCodes.isEmpty() ? colorCodes.subList(1, colorCodes.size()) : List.of("black", "blue", "red");
+                final String colorCode = colorCodes.get(0);
+                Collections.rotate(colorCodes, 1);
                 final OrientedSprite sprite = new BombarderoOrientedSprite(
                     "character/" + colorCode + "/walking",
                     resourceGetter,
