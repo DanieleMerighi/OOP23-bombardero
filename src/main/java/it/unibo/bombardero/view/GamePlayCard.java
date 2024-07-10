@@ -98,7 +98,7 @@ public abstract class GamePlayCard extends JPanel {
     private final transient Sprite normalBomb;
     private transient Image bombImage;
     private transient Map<Character, TimedBombarderoSprite> dyingCharactersMap = new HashMap<>();
-    private List<String> colorCodes = new ArrayList<>();
+    private final List<String> colorCodes = new ArrayList<>();
     /* Static positions for quicker access: */
     private final Dimension mapPlacingPoint;
 
