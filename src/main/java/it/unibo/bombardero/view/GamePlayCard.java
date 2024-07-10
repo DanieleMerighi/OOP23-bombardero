@@ -403,7 +403,7 @@ public abstract class GamePlayCard extends JPanel {
             }
             newCharactersImages.put(
                 character.getKey(),
-                new SpriteImageCombo(sprite, image, "main")
+                new SpriteImageCombo(sprite, image, character.getValue().colorCode())
             );
         });
         charactersImages.putAll(newCharactersImages);
