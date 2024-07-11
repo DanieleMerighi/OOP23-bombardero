@@ -192,7 +192,7 @@ Nel gioco alcuni PowerUp danno il potere ai giocatori di utilizzare delle bombe 
 
 \subsection*{2. Soluzione Proposta}
 \par
-Per la creazione delle bombe viene utilizzata una BombFactory ovvero una classe che segue il pattern \verb|Simple Factory| per cui con ogni suo metodo restituisce una Bomb con caratteristiche diverse. Tutti Character che sono in gioco quando creati richiedono una BombFactory alla quale quando, dovranno piazzare delle bombe, chiederanno la Bomb equivalente al PowerUp che hanno preso. Anche in questo caso l'utilizzo del pattern \verb|Strategy| rende possibile una nuova implementazione di BombFactory.  L'implementazione delle diverse Bomb nella classe BombfactoryImpl viene fatta a partire dalla abtract class BasicBomb, sfruttando al massimo il riutilizzo del codice.
+Per la creazione delle bombe viene utilizzata una BombFactory ovvero una classe che segue il pattern \verb|Simple Factory| per cui con ogni suo metodo restituisce una Bomb con caratteristiche diverse. Tutti Character che sono in gioco quando creati richiedono una BombFactory alla quale quando, dovranno piazzare delle bombe, chiederanno la Bomb equivalente al PowerUp che hanno preso. Anche in questo caso l'utilizzo del pattern \verb|Strategy| rende possibile una nuova implementazione di BombFactory nel caso di nuove modalita di gioco.  L'implementazione delle diverse Bomb nella classe BombfactoryImpl viene fatta a partire dalla abtract class BasicBomb, sfruttando al massimo il riutilizzo del codice.
 Queste classi seguono il principio DIP e SRP in quanto tutte sono definite come interfacce con la loro relativa implementazione.
 
 
