@@ -38,14 +38,14 @@ Il giocatore controlla un personaggio, in grado di muoversi liberamente nei conf
                 \item Muri deboli: che verranno piazzati casualmente per riempire parzialmente i restanti spazi vuoti della griglia
             \end{itemize}
 	\item Dopo due minuti dall’inizio della partita i muri indistruttibili che formano il confine dell’arena inizieranno a collassare verso il centro, riducendo l’area calpestabile ed eliminando i giocatori che si trovano nelle loro prossimità al momento del crollo. I muri cominciano il loro crollo a partire dall’angolo in basso a sinistra, uno per volta, procedendo in senso orario.
-	\item Si dovrà implementare un giocatore principale, controllabile da parte dell’utente mediante tastiera utilizzando i tasti W, A, S e D rispettivamente per il movimento verso l’alto, verso il sinistra, verso il basso e verso destra. Verrà utilizzata la barra spaziatrice per il piazzamento delle bombe.
+	\item Si dovrà implementare un giocatore principale, controllabile da parte dell’utente mediante tastiera utilizzando i tasti W, A, S e D rispettivamente per il movimento verso l’alto, verso sinistra, verso il basso e verso destra. Verrà utilizzata la barra spaziatrice per il piazzamento delle bombe.
 	\item Dovranno essere presenti tre nemici, controllati dal computer, il cui scopo sarà quello di sconfiggere gli altri giocatori presenti nella mappa.
 	\item Ogni entità presente potrà piazzare delle bombe nella propria posizione corrente, che esploderanno dopo qualche secondo (permettendo ai giocatori di allontanarsi)
         \item L’esplosione causerà delle fiamme, che espandendosi verticalmente e orizzontalmente per un certo numero di caselle, cambieranno la conformazione dell’arena e danneggeranno le entità vicine. Inoltre, se la fiamma di una bomba ne colpisce un’altra, allora anche quest'ultima dovrà esplodere innestando un effetto a catena.
         \item Normalmente, una volta piazzata una bomba in una cella non sarà possibile attraversarla fino a quando essa non esplode. 
         \item I giocatori possono attraversare celle in cui sono presenti anche altri player senza che essi presentino un ostacolo.
         \item Saranno presenti ostacoli nella griglia (muri deboli), che potranno essere distrutti dalle esplosioni delle bombe, permettendo al personaggio di passare attraverso lo spazio vuoto appena creato, diversamente dai muri indistruttibili che non potranno essere alterati.
-        \item Dalle esplosioni degli ostacoli si possono generare degli oggetti speciali (power up oppure dei malus), che cambieranno le abilità delle singole entità. Per ottenerli basterà raccoglierli passandoci sopra.
+        \item Dalle esplosioni degli ostacoli si possono generare degli oggetti speciali (powerup oppure malus), che cambieranno le abilità delle singole entità. Per ottenerli basterà raccoglierli passandoci sopra.
         \item Il software deve includere una breve guida che insegni all'utente come giocare e come muoversi all'interno del gioco
 \end{itemize}
 
@@ -73,7 +73,7 @@ Queste \verb|Cell| potranno essere di diverso tipo:
 \caption{Schema UML sulle relazioni tra le varie entità di tipo Cell}
 \end{figure}
 
-Il \verb|Character| si divide in \verb|Player| e \verb|Enemy|. Qualsiasi personaggio può piazzare delle bombe sulle celle libere della mappa che una volta esplose generano una serie di fiamme. Le fiamme interagiscono con i muri, con i potenziamenti e con le bombe modificando la struttura della mappa, distruggendo ciò che si trova nella stessa Cell ed espandendosi attraverso le celle libere. Un muro, se distrutto, può lasciare un potenziamento al suo posto. 
+Il \verb|Character| si divide in \verb|Player| e \verb|Enemy|. Qualsiasi personaggio può piazzare delle bombe sulle celle libere della mappa che una volta esplose generano una serie di fiamme. Le fiamme interagiscono con i muri, con i potenziamenti e con le bombe modificando la struttura della mappa, distruggendo ciò che si trova nella stessa \verb|Cell| ed espandendosi attraverso le celle libere. Un muro, se distrutto, può lasciare un potenziamento al suo posto. 
 
 Il tutto viene racchiuso nell'interfaccia \verb|GameManager|, di cui si parlerà in dettaglio nella prossima sezione, nella seguente maniera: 
 
@@ -102,7 +102,7 @@ L'interfaccia \verb|GameManager| è il punto d'ingresso al model. Si occupa dell
 \end{figure}
 
 \par 
-Per quanto riguarda la indipendenza degli elementi di questa architettura l'interfaccia grafica, il controller mette a disposizione i metodi necessari per poter comunicare all'interfaccia grafica quali sono gli elementi da mostrare. A sua volta l'interfaccia grafica mette a disposizione diversi metodi per permettere al controller di modificare la vista ed impostare visuali diverse. La conclusione è che l'interfaccia grafica è facilmente sostituibile con una nuova interfaccia al momento del bisogno, a meno di certi aggiustamenti che potrebbero essere necessari dal punto di vista implementativo. 
+Per quanto riguarda l'indipendenza degli elementi di questa architettura, il controller mette a disposizione i metodi necessari per poter comunicare all'interfaccia grafica quali sono gli elementi da mostrare. A sua volta l'interfaccia grafica mette a disposizione diversi metodi per permettere al controller di modificare la vista ed impostare visuali diverse. La conclusione è che l'interfaccia grafica è facilmente sostituibile con una nuova interfaccia al momento del bisogno, a meno di certi aggiustamenti che potrebbero essere necessari dal punto di vista implementativo. 
 
 \section{Design dettagliato}
 
@@ -497,7 +497,7 @@ In qualità di membro del gruppo responsabile dello sviluppo del nemico, ritengo
 
 \subsection{Jacopo Turchi}
 \par
-Inizio con lo scrivere che questo progetto è stato formativo in quanto non avevo mai progettato in gruppo e soprattutto non avevo mai programmato ad oggetti e infatti mi è risultato difficile partire da zero. Però col tempo ho preso il mio ritmo e sono riuscito a fare la mia parte di questo gioco che ha segnato la mia infanzia. Sono molto contento del prodotto ottenuto e mi ritengo soddisfatto soprattuto di come sia evoluto il mio codice col procedere del progetto. Partendo da una banale estensione della classe Character, fino ad arrivare ad utilizzare anche diversi pattern di programmazione per i PowerUp, che ritengo essere il mio punto forte. Un mio punto debole è stato partire un po' in ritardo e non contribuire molto alla struttura iniziale del progetto, ma sono riuscito a portare una boccata d'aria nello sviluppo quando, a stato avanzato, l'umore generale non era alle stelle. Potessi tornare inidetro probabilmente non rifarei alcune delle prime scelte di programmazione, ma tutto sommato mi ritengo soddisfatto del mio lavoro
+Inizio con lo scrivere che questo progetto è stato formativo in quanto non avevo mai progettato in gruppo e soprattutto non avevo mai programmato ad oggetti e infatti mi è risultato difficile partire da zero. Però col tempo ho preso il mio ritmo e sono riuscito a fare la mia parte di questo gioco che ha segnato la mia infanzia. Sono molto contento del prodotto ottenuto e mi ritengo soddisfatto soprattuto di come si sia evoluto il mio codice col procedere del progetto. Partendo da una banale estensione della classe Character, fino ad arrivare ad utilizzare anche diversi pattern di programmazione per i PowerUp, che ritengo essere il mio punto forte. Un mio punto debole è stato partire un po' in ritardo e non contribuire molto alla struttura iniziale del progetto, ma sono riuscito a portare una boccata d'aria nello sviluppo quando, a stato avanzato, l'umore generale non era alle stelle. Potessi tornare inidetro probabilmente non rifarei alcune delle prime scelte di programmazione, ma tutto sommato mi ritengo soddisfatto del mio lavoro
 
 \subsection{Luca Venturini}
 \par
