@@ -166,7 +166,7 @@ Fare in modo che i personaggi all'interno dell'arena non possano oltrepassare i 
 
 \par
 Per risolvere questo problema è stato utilizzato il pattern \verb|Adapter| dove la classe RectangleBoundingBox si compone di un Rectangle2D per descrivere la parte solida di un Character o di una Cell, di fatto RectangleBoundingBox utilizza i metodi di un Rectangle2D per ricavare informazioni utili, come nel caso di una collisione la distanza che il Character deve percorrere per non collidere più rispetto ad un muro.
-Con questa implementazione si lascia poco spazio a nuove BoundingBox magari di forme diverse però è stato valutato che in un dominio come questo fosse appropriata per la sua semplicità.
+Con questa implementazione si lascia poco spazio a nuove BoundingBox magari di forme diverse però è stato valutato che in un dominio come questo fosse appropriata per la sua semplicità. 
 
 
 \begin{figure}[H]
@@ -176,7 +176,9 @@ Con questa implementazione si lascia poco spazio a nuove BoundingBox magari di f
 \end{figure}
 
 \par
-Inoltre per gestire le collisioni il GameManager necessita di una Collision Engine ovvero una classe che trovi le collisioni, questa viene passata come \verb|Strategia| da costruttore all'inizio di una partita. A sua volta l'implementazione utilizzata BombarderoCollision necessita di un CollisionHandler che risolva le collisioni da lei trovate, anche questa passata come \verb|Strategia| da costruttore. Grazie a questa implementazione si potranno creare nuovi modi per gestire le collisioni del gioco.
+Inoltre per rendere più libera la gestione delle collisioni il GameManager si affida ad una CollisionEngine, ovvero un interfaccia che si occupi di rilevare e risolvere le collisioni passatagli come \verb|Strategia|.
+A sua volta l'implementazione utilizzata BombarderoCollision necessita di un CollisionHandler che sappia come risolvere le collisioni, visto che questa classe si occupa solo ti trovarle,anche questa passata come \verb|Strategia|, così facendo si rispettano i principi DIP e SRP.
+Si è pensato che in questo modo nel caso di nuove modalità di gioco con interazioni diverse tra Character e Cells è facile aggiungere nuove implementazioni.
 
 \subsection*{2. Problema da Risolvere}
 \par
@@ -190,7 +192,8 @@ Nel gioco alcuni PowerUp danno il potere ai giocatori di utilizzare delle bombe 
 
 \subsection*{2. Soluzione Proposta}
 \par
-Per la creazione delle bombe viene utilizzata una BombFactory ovvero una classe che segue il pattern \verb|Simple Factory| per cui con ogni suo metodo restituisce una Bomb con caratteristiche diverse.tutti Character che sono in gioco quando creati richiedono una BombFactory alla quale quando, dovranno piazzare delle bombe, chiederanno la Bomb equivalente al PowerUp che hanno preso. Anche in questo caso l'utilizzo del pattern \verb|Strategy| rende possibile una nuova implementazione di BombFactory.  L'implementazione delle diverse Bomb nella classe BombfactoryImpl viene fatta a partire dalla abtract class BasicBomb, sfruttando al massimo il riutilizzo del codice.
+Per la creazione delle bombe viene utilizzata una BombFactory ovvero una classe che segue il pattern \verb|Simple Factory| per cui con ogni suo metodo restituisce una Bomb con caratteristiche diverse. Tutti Character che sono in gioco quando creati richiedono una BombFactory alla quale quando, dovranno piazzare delle bombe, chiederanno la Bomb equivalente al PowerUp che hanno preso. Anche in questo caso l'utilizzo del pattern \verb|Strategy| rende possibile una nuova implementazione di BombFactory.  L'implementazione delle diverse Bomb nella classe BombfactoryImpl viene fatta a partire dalla abtract class BasicBomb, sfruttando al massimo il riutilizzo del codice.
+Queste classi seguono il principio DIP e SRP in quanto tutte sono definite come interfacce con la loro relativa implementazione.
 
 
 \subsection*{2. Alternativa Considerata}
