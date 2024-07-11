@@ -529,13 +529,13 @@ Premendo \keys{W}, \keys{A}, \keys{S}, \keys{D} il giocatore può muoversi.
 Tramite la barra spaziatrice \keys{space} è possibile piazzare una bomba.
 Ogni giocatore, all'inizio della partita, può piazzare una sola bomba mentre il giocatore può allargare questo spazio con l'uso di potenziamenti.
 \newline
-Detonare le bombe vicino alle casse permetterà di distruggerle fornendo spazio di movimento al giocatore e da la possibilità alla apparizione di un potenziamento (power up).
+Detonare le bombe vicino alle casse permetterà di distruggerle fornendo spazio di movimento al giocatore e da la possibilità alla apparizione di un potenziamento (powerup).
 \newline
-I powerup si presentano come dei cubi verdi con un immagine centrata al loro interno. Permettono di potenziare o depotenziare le statistiche del giocatore oppure forniscono una bomba \textit{one-time-use} come per esempio la line bomb
-oppure la bomba remote, spiegate nella sezione \ref{sec:puexpl}.
-I powerup danno il loro effetto sul giocatore nel momento che sono raccolti, per i powerup \textit{one time use} se ne viene raccolto un altro prima dell'utilizzo di uno precedente questo viene sovrascritto.
+I powerup si presentano come dei cubi verdi con un immagine centrata al loro interno. Permettono di potenziare o depotenziare le statistiche del giocatore oppure forniscono una \textit{abilità speciale} come per esempio la \textit{line bomb}
+oppure la \textit{remote bomb}, spiegate nella sezione \ref{sec:puexpl}.
+I powerup danno il loro effetto sul giocatore nel momento in cui sono raccolti. Per i powerup che forniscono una \textit{abilità speciale} se ne viene raccolto un altro della stessa categoria, il precedente viene sovrascritto.
 \newline
-Un powerup da cui si deve stare in guardia è lo \texttt{Skull} (v. figura \ref{img:fig-skull}) che dona uno svantaggio casuale al player per un periodo limitato di tempo, tra cui: velocità estremamente alta o bassa, drop di bombe costante mentre il player cammina o nessuna bomba disponibile. 
+Un powerup da cui si deve stare in guardia è lo \texttt{Skull} (v. figura \ref{img:fig-skull}) che dona uno svantaggio casuale al player per un periodo limitato di tempo, tra cui: velocità estremamente alta o bassa, piazzamento di bombe involontario e costante mentre il player cammina o l'impossibilità di piazzarle a piacimento. 
 
 \begin{figure}[h]
     \centering{}
@@ -547,26 +547,26 @@ Dopo 2 minuti la mappa inizierà a \textbf{collassare} partendo dall'angolo in a
 
 \begin{figure}[h]
     \centering{}
-    \includegraphics[width=0.7\textwidth]{img/map-collapse.PNG}
+    \includegraphics[width=0.7\textwidth]{img/powerups/map-collapse.PNG}
     \caption{Collasso dell'arena a seguito dello scadere del tempo, il personaggio in basso a sinistra è stato appena colpito da un muro}
 \end{figure}
 
 \label{sec:puexpl}\subsubsection{Powerup con comportamento particolare}
 E' opportuno segnalare all'utente che i seguenti powerup hanno un comportamento particolare che potrebbe non essere compreso immediatamente:
 \begin{itemize}
-    \item{Remote bomb: la \textbf{prossima bomba piazzata} è remota e viene detonata esclusivamente premendo il tasto \keys{P}}
+    \item{Remote bomb: le bombe piazzate sono \textbf{telecomandate} e vengono detonate esclusivamente premendo il tasto \keys{P}}
     \begin{figure}[h]
         \centering{}
         \includegraphics{img/powerups/bomb_remote.png}
         \caption{Remote bomb powerup}
     \end{figure}
-    \item{Line bomb: premendo il tasto \keys{L} è possibile piazzare tutte le bombe che si ha nell'inventario (a meno di incontrare un muro) nella direzione in cui si sta guardando. E' comunque possibile piazzare una bomba normale premendo \keys{Space}}
+    \item{Line bomb: premendo il tasto \keys{L} è possibile piazzare tutte le bombe che si ha nell'inventario (a meno di incontrare un ostacolo) nella direzione in cui si sta guardando. E' comunque possibile piazzare una bomba normale premendo \keys{Space}}
     \begin{figure}[h]
         \centering{}
         \includegraphics{img/powerups/line_bomb.png}
         \caption{Line bomb powerup}
     \end{figure}
-    \item{Piercing bomb: la fiamma generata dalla prossima bomba piazzata distruggerà tutti i muri che incontra fino a raggiungere il suo range massimo, distruggendo eventualmente tutti i powerup generati da questi muri}
+    \item{Piercing bomb: la fiamma generata dalla bomba piazzata distruggerà \textbf{tutti} i muri che incontra fino a raggiungere il suo range massimo, distruggendo eventualmente tutti i powerup generati da questi muri}
     \begin{figure}[h]
         \centering{}
         \includegraphics{img/powerups/bomb_pierce.png}
