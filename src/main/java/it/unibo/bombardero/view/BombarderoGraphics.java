@@ -90,7 +90,7 @@ public final class BombarderoGraphics implements GraphicsEngine {
         final List<Character> playerList,
         final List<Character> enemiesList,
         final Optional<Long> timeLeft) {
-        if (!currentCard.equals(ViewCards.MENU)) {
+        if (cardsMap.containsKey(currentCard)) {
             cardsMap.get(currentCard).update(map, playerList, enemiesList);
             cardsMap.get(currentCard).setTimeLeft(timeLeft.orElse(0L));
             cardsMap.get(currentCard).repaint(0L);
@@ -99,22 +99,30 @@ public final class BombarderoGraphics implements GraphicsEngine {
 
     @Override
     public void setPausedView() {
-        cardsMap.get(currentCard).setPausedView();
+        if (cardsMap.containsKey(currentCard)) {
+            cardsMap.get(currentCard).setPausedView();
+        }
     }
 
     @Override
     public void setUnpausedView() {
-        cardsMap.get(currentCard).setUnpausedView();
+        if (cardsMap.containsKey(currentCard)) {
+            cardsMap.get(currentCard).setUnpausedView();
+        }
     }
 
     @Override
     public void setMessage(final BombarderoViewMessages message) {
-        cardsMap.get(currentCard).showMessage(message);
+        if (cardsMap.containsKey(currentCard)) {
+            cardsMap.get(currentCard).showMessage(message);
+        }
     }
 
     @Override
     public void showEndScreen(final EndGameState gameState) {
-        cardsMap.get(currentCard).displayEndView(gameState);
+        if (cardsMap.containsKey(currentCard)) {
+            cardsMap.get(currentCard).displayEndView(gameState);
+        }
     }
 
     @Override
