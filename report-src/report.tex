@@ -135,6 +135,7 @@ A questo punto, la \texttt{GameMap} può scegliere facilmente quale strategia pu
     \caption{Schema UML del pattern strategy}
     \label{img:mapgenerator-gamemap}
 \end{figure}
+\paragraph{Alternativa considerata:} l'alternativa considerata era quella di implementare in maniera statica l'algoritmo, questa soluzione non favorisce il riuso, la dinamicità del codice e non è propensa a cambiamenti futuri.
 \subsubsection{Riuso del codice per la creazione della guida di gioco}
 Essendo l'interfaccia \texttt{GameManager} deputata alla organizzazione e sincronizzazione di tutti gli elementi di gioco viene necessario approfondire questa tematica quando si vuole creare una \textit{guida intertattiva} che permetta ad un giocatore principiante di imparare le basi del gioco.
 \paragraph{Problema:}è necessario creare diverse versioni di \texttt{GameManager} specializzate in diverse parti del gioco. 
